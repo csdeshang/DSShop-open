@@ -1,0 +1,39 @@
+  <div id="account" class="double">
+    <div class="outline">
+      <div class="user-account">
+        <ul>
+          <li id="pre-deposit"><a href="{:url('Predeposit/pd_log_list')}" title="{$Think.lang.check_my_balance}">
+            <h5>{$Think.lang.ds_predepositnum}</h5>
+            <span class="icon iconfont">&#xe6f5;</span> <span class="value">￥<em>{$member_info.available_predeposit}</em></span></a> </li>
+          <li id="voucher"><a href="{:url('Membervoucher/index')}" title="{$Think.lang.check_my_voucher}">
+            <h5>{$Think.lang.ds_vouchers}</h5>
+            <span class="icon iconfont">&#xe64f;</span> <span class="value"><em>{$home_member_info.voucher_count|default='0'}</em>{$Think.lang.ds_zhang}</span></a> </li>
+          <li id="points"><a href="{:url('Memberpoints/index')}" title="{$Think.lang.check_my_points}">
+            <h5>{$Think.lang.ds_pointsnum}</h5>
+            <span class="icon iconfont">&#xe757;</span> <span class="value"><em>{$member_info.member_points}</em>{$Think.lang.credit_unit}</span></a> </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div id="security" class="normal">
+    <div class="outline">
+        <div class="SAM">
+            <h5>{$Think.lang.account_security}</h5>
+            {if $home_member_info['security_level'] <= 1}
+            <div id="low" class="SAM-info"><strong>{$Think.lang.low}</strong><i><span><em></em></span></i>
+                {elseif $home_member_info['security_level'] == 2 /}
+                <div id="normal" class="SAM-info"><strong>{$Think.lang.medium}</strong><i><span><em></em></span></i>
+                    {else/}
+                    <div id="high" class="SAM-info"><strong>{$Think.lang.high}</strong><i><span><em></em></span></i>
+                        {/if}
+                        {if $home_member_info['security_level'] < 3}
+                        <a href="{:url('Membersecurity/index')}" title="{$Think.lang.security_settings}">{$Think.lang.promotion}></a>
+                        {/if}
+                    </div>
+                    <div class="SAM-handle">
+                        <span><i class="iconfont mobile">&#xe60e;</i>{$Think.lang.mobile_phone}：{if $home_member_info['member_mobilebind'] == 1}<em>{$Think.lang.bound}</em>{else/}<a href="{:url('Membersecurity/auth',['type'=>'modify_mobile'])}" title="{$Think.lang.bind_mobile_phone}">{$Think.lang.unbound}</a>{/if}</span>
+                        <span><i class="mail iconfont">&#xe75a;</i>{$Think.lang.email}：{if $home_member_info['member_emailbind'] == 1}<em>{$Think.lang.bound}</em>{else/}<a href="{:url('Membersecurity/auth',['type'=>'modify_email'])}" title="{$Think.lang.bind_mailbox}">{$Think.lang.unbound}</a>{/if}</span>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -1,0 +1,52 @@
+
+<form id="post_form" method="post" action="{:url('Memberreturn/ship',['return_id'=>$return.refund_id])}">
+  <h3>{$Think.lang.fill_return_shipping_information}</h3>
+  <dl>
+    <dt>{$Think.lang.logistics_company}{$Think.lang.ds_colon}</dt>
+    <dd>
+      <select name="express_id">
+        <option value="0">{$Think.lang.ds_please_choose}</option>
+        {notempty name="express_list"}
+        {foreach name="express_list" item="val"  }
+        <option value="{$val.express_id}">{$val.express_name}</option>
+        {/foreach}
+        {/notempty}
+      </select>
+    </dd>
+  </dl>
+  <dl>
+    <dt><i class="required">*</i>{$Think.lang.logistics_order_number}{$Think.lang.ds_colon}</dt>
+    <dd>
+      <input type="text" class="text w150" name="invoice_no" value="" />
+      <p class="hint">{$Think.lang.delivery} {$return_delay} {$Think.lang.notice_delivery1}
+        {$Think.lang.notice_delivery2} {$return_confirm} {$Think.lang.notice_delivery3}</p>
+    </dd>
+  </dl>
+  <div class="bottom">
+      <input type="submit" class="submit" id="confirm_button" value="{$Think.lang.ds_ok}" />
+      <a href="javascript:history.go(-1);" class="dsm-btn ml10"><i class="iconfont">&#xe74e;</i>{$Think.lang.return_list}</a>
+  </div>
+</form>
+<script type="text/javascript">
+$(function(){
+    $('#post_form').validate({
+        errorLabelContainer: $('#warning'),
+        invalidHandler: function(form, validator) {
+               $('#warning').show();
+        },
+		submitHandler:function(form){
+			ds_ajaxpost('post_form', 'url', '{:url('Memberreturn/index')}')
+		},
+        rules : {
+            invoice_no : {
+                required   : true
+            }
+        },
+        messages : {
+            invoice_no  : {
+                required   : '{$Think.lang.fill_logistics_form_number}'
+            }
+        }
+    });
+});
+</script>

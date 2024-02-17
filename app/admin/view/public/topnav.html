@@ -1,0 +1,27 @@
+<div class="admincp-header">
+    <div class="logo">
+        <img src="{$Think.ADMIN_SITE_ROOT}/images/backlogo.png"/>
+    </div>
+    <div class="navbar">
+        <ul class="fl" style="float:left;">
+            {foreach name="menu_list" item="menu"}
+            <li id="nav_{$menu.name}" {if !$menu.show}style="display:none"{/if}>
+                <a href="javascript:void(0)" onclick="openItem('{$menu.name}')">{$menu.text}</a>
+            </li>
+            {/foreach}
+        </ul>
+        <ul class="fr" style="float:right">
+            <li>
+                <span>您好,{:session('admin_name')}</span>
+                <div class="sub-meun">
+                    <dl>
+                        <dd><a href="{:url('Index/modifypw')}" target="main-frame"><i class="iconfont">&#xe67b;</i>修改密码</a></dd>
+                        <dd><a href="javascript:dsLayerConfirm('{:url('Login/logout')}','您确定退出吗?')"><i class="iconfont">&#xe70c;</i>安全退出</a></dd>
+                    </dl>
+                </div>
+            </li>
+            <li><a href="javascript:dsLayerConfirm('{:url('Index/clear')}','确定清理全部缓存?')" target="main-frame">{$Think.lang.ds_cache}</a></li>
+            <li><a href="{:url('/home/Index/index')}" target="_blank">访问首页</a></li>
+        </ul>
+    </div>
+</div>

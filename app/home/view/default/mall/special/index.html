@@ -1,0 +1,15 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.SuperSlide.2.1.1.js"></script>
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/editable_page.css">
+{foreach name='config_list' item='item' key='key'}
+<div data-type="html" data-id="{$key+1}">{$item.html|raw}</div>
+{/foreach}
+<script>
+    {foreach name='config_list' item='item' key='key'}
+    if(typeof(window['loadHtml{$item.val.editable_page_model_id}'])!='undefined'){
+        window['loadHtml{$item.val.editable_page_model_id}']($('*[data-type="html"][data-id={$key+1}]'))
+    }
+    {/foreach}
+</script>
+{/block}

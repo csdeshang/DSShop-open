@@ -1,0 +1,75 @@
+<style type="text/css">
+.goods-guess-like { border: solid 1px #EEE; margin: 0 auto 20px auto;}
+.goods-guess-like .title {  font: bold 14px/20px "microsoft yahei"; color: #666; padding: 8px 19px; border-bottom: solid 1px #EEE;}
+.goods-guess-like .content{position: relative;overflow: hidden}
+.goods-guess-like .content li{width:25%;float:left;position:relative}
+.goods-guess-like .goods-pic { width: 200px; height: 200px; margin: 15px auto 0 auto;}
+.goods-guess-like .goods-pic a { line-height: 0; text-align: center; vertical-align: middle; display: table-cell; *display: block; width: 200px; height: 200px; padding: 0; overflow: hidden;}
+.goods-guess-like .goods-pic a img { max-width: 200px; max-height: 200px; margin-top:expression(200-this.height/2); *margin-top:expression(100-this.height/2)/*IE6,7*/;}
+.goods-guess-like .goods-info { width: 200px; margin: 5px auto 15px auto;}
+.goods-guess-like .goods-info dt { line-height: 18px; height: 36px; overflow: hidden;}
+.goods-guess-like .goods-info dd { font: bold 12px/20px Verdana; color: #C00;}
+.goods-guess-like .goods-info dd em { font-size: 14px; font-weight: 600; margin: 0 4px;}
+.goods-guess-like .goods-promotion { color: #FFFFFF;text-align: center; width: 35px; height: 35px; padding-top: 10px;padding-right: 17px; position: absolute; top: 5px; right: 5px; z-index: 2;background: #f42424;border-bottom-left-radius: 50%;}
+.goods-guess-like .goods-promotion span{position:relative;z-index:2;font-weight:700;height:35px;line-height:35px;display:block;}
+.goods-guess-like .noguess { color: #AAA; text-align: center; padding: 50px 0;}
+
+
+/* 图片滚动
+-------------------------------------------*/
+.ds-carousel-prev-horizontal,
+.ds-carousel-next-horizontal {font-size: 16px;color:#ddd; width: 9px; height: 16px; padding: 10px 13px; position: absolute; z-index: 9; top: 40%; cursor: pointer;}
+.ds-carousel-prev-horizontal { left: 0; }
+.ds-carousel-prev-horizontal:hover,
+.ds-carousel-prev-horizontal:focus,
+.ds-carousel-prev-horizontal:active { color: #C00;}
+.ds-carousel-next-horizontal { right: 0; }
+.ds-carousel-next-horizontal:hover,
+.ds-carousel-next-horizontal:focus,
+.ds-carousel-next-horizontal:active { color: #C00}
+
+
+</style>
+<div class="goods-guess-like">
+  <div class="title">{$Think.lang.guess_your_favorite_baby}</div>
+  <div class="content">
+    {notempty name="goodslist"}
+    <ul id="mycarousel" class="ds-carousel-skin">
+      {foreach name="goodslist" item="v"}
+      <li>
+        <div class="goods-pic">
+          <a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" target="_blank">
+          <img src="{:goods_cthumb($v.goods_image)}">
+          </a>
+        </div>
+        {if $v.goods_promotion_type == 1}
+        <div class="goods-promotion"><span>{$Think.lang.snap_up_goods}</span></div>
+        {elseif $v.goods_promotion_type == 2}
+        <div class="goods-promotion"><span>{$Think.lang.limited_time_discount}</span></div>
+        {/if}
+        <dl class="goods-info">
+          <dt><a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" title="{$v.goods_name}" target="_blank">{$v.goods_name}</a></dt>
+          <dd>
+            <div>￥<em>{:ds_price_format($v.goods_promotion_price)}</em></div>
+          </dd>
+        </dl>
+      </li>
+      {/foreach}
+    </ul>
+    <div class="ds-carousel-prev ds-carousel-prev-horizontal iconfont" style="display: block;">&#xe619;</div>
+    <div class="ds-carousel-next ds-carousel-next-horizontal iconfont" style="display: block;">&#xe618;</div>
+   {else /}
+    <div class="noguess">{$Think.lang.no_goods_recommended}</div>
+    {/notempty}
+  </div>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.SuperSlide.2.1.1.js"></script>
+<script type="text/javascript">
+
+
+$(function(){
+    jQuery(".goods-guess-like").slide({mainCell:".content ul",prevCell:".ds-carousel-prev",nextCell:".ds-carousel-next",effect:"left",autoPlay:true,vis:4});
+
+});
+
+</script>

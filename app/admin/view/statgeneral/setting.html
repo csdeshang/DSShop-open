@@ -1,0 +1,92 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3></h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>设置商品价格区间，当对商品价格进行相关统计时按照以下设置的价格区间进行统计和显示</li>
+            <li>设置价格区间的几点建议：一、建议设置的第一个价格区间起始额为0；二、价格区间应该设置完整，不要缺少任何一个起始额和结束额；三、价格区间数值应该连贯例如0~100,101~200</li>
+        </ul>
+    </div>
+    
+    
+    <form method="post"  name="pricerangeform" id="pricerangeform">
+        <table id="pricerang_table" class="ds-default-table">
+            <thead class="thead">
+            <tr class="space">
+                <th colspan='4'><a id="addrow" href="javascript:void(0);" class="btn btn-mini"><span>增加一行</span></a></th>
+            </tr>
+            <tr>
+                <th>起始额</th>
+                <th>结束额</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="list_setting.stat_pricerange"}
+            {foreach name="list_setting.stat_pricerange" item="v"}
+            <tr id="row_{$key}">
+                <td><input type="text" class="txt" value="{$v.s}" name="pricerange[{$key}][s]"></td>
+                <td><input type="text" class="txt" value="{$v.e}" name="pricerange[{$key}][e]"></td>
+                <td><a href="JavaScript:void(0);" onclick="delrow({$key});">{$Think.lang.ds_del}</a></td>
+            </tr>
+            {/foreach}
+            {/notempty}
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="4" class="align-center"><a id="dssubmit" class="btn" href="JavaScript:void(0);"><span>提交</span></a></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    function delrow(i){
+        $("#row_"+i).remove();
+    }
+    $(function(){
+        var i = {:count($list_setting.stat_pricerange)};
+        i += 1;
+        var html = '';
+        /*新增一行*/
+        $('#addrow').click(function(){
+            html = '<tr id="row_'+i+'">';
+            html += '<td><input type="text" class="txt" name="pricerange['+i+'][s]" value="0"/></td>';
+            html += '<td><input type="text" class="txt" name="pricerange['+i+'][e]" value="0"/></td>';
+            html += '<td><a href="JavaScript:void(0);" onclick="delrow('+i+');">{$Think.lang.ds_del}</a></td>';
+            $('#pricerang_table').find('tbody').append(html);
+            i += 1;
+        });
+
+        $('#dssubmit').click(function(){
+            var result = true;
+            $("#pricerang_table").find("[name^='pricerange']").each(function(){
+                if(!$(this).val()){
+                    result = false;
+                }
+            });
+            if(result){
+                $('#pricerangeform').submit();
+            } else {
+                layer.alert('请将价格区间填写完整');
+            }
+        });
+    })
+</script>

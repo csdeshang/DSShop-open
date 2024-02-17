@@ -1,0 +1,24 @@
+<ul class="goods-list">
+    {if $compare_list}
+    {foreach name="compare_list" item="v"}
+    <li><dl class="goods-info">
+        <dt class="goods-pic"> <a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" title="{$v.goods_name}"> <img src="{:goods_cthumb($v.goods_image,240)}" alt="{$v.goods_name}" title="{$v.goods_name}"/> </a> </dt>
+        <dd class="goods-opt"><span class="del" onclick="javascript:delCompare({$v.goods_id},'mini');">{$Think.lang.ds_delete}</span></dd> </dl>
+    </li>
+    {/foreach}
+    {/if}
+    {if $freemaxnum>0}
+    {for start="0" end="$freemaxnum"}
+    <li><div class="no-compare">{$Think.lang.no_comparison_term}</div></li>
+    {/for}
+    {/if}
+</ul>
+<div class="btn-box" style="text-align: right">
+    {if (count($compare_list)>1)}
+    <span style="background-color: #E74649; color: #FFFFFF; cursor: pointer; padding: 5px 10px;" onclick="javascript:window.open('{:url('Compare/index',['gids'=>$goodsid_str])}');">{$Think.lang.to_contrast}</span>
+    {else /}
+    <!--对比商品小于等于1件则对比按钮不可用-->
+    <span style=" background-color: #FFFFFF; border: 1px solid #DDDDDD; color: #CCCCCC; padding: 5px 10px; cursor: default;">{$Think.lang.to_contrast}</span>
+    {/if}
+    <span style="background-color: #E6E6E6; cursor: pointer; padding: 5px 10px;" onclick="javascript:delCompare('all','mini');">{$Think.lang.compare_empty}</span>
+</div>

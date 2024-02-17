@@ -1,0 +1,28 @@
+{include file="public/header" /}
+
+<div class="page">
+    <form id="user_form" enctype="multipart/form-data" method="post">
+        <table class="ds-default-table">
+            <tbody>
+            <tr>
+                <td class="noborder">
+                <td class="required w120"><label>价格:</label></td>
+                <td><input type="text" name="xianshi_price" class="text" value="{$xianshi_price}"/> ￥</td>
+                <td class="vatop tips">修改的价格</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+    <script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#region").ds_region();
+        });
+    </script>
+</div>    

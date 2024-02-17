@@ -1,0 +1,16 @@
+<div class="ds-login-content tc" id="login_container"></div>
+<script>
+$(function(){
+    $.getScript("{$Think.HTTP_TYPE}res.wx.qq.com/connect/zh_CN/htmledition/js/wxLogin.js", function(){
+        var obj = new WxLogin({
+            id:"login_container",
+            appid: "{$Think.config.ds_config.weixin_appid}",
+            scope: "snsapi_login",
+            redirect_uri: "{:urlencode(HOME_SITE_URL.'/connectwx/get_info.html')}",
+            state: "",
+            style: "",
+            href: ""
+        });
+    });
+});
+</script>

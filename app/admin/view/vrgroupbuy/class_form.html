@@ -1,0 +1,87 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+
+
+    <form id="add_form" method="post" enctype="multipart/form-data">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label class="validation" for="vrgclass_name">分类名称{$Think.lang.ds_colon}</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <input type="text" name="vrgclass_name" id="vrgclass_name" class="txt" value="{$class.vrgclass_name|default=''}">
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                {empty name="$class"}
+                <tr>
+                    <td colspan="2" class="required"><label for="vrgclass_parent_id">上级分类{$Think.lang.ds_colon}</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><select id="vrgclass_parent_id" name="vrgclass_parent_id" class="valid" >
+                            <option value="0">{$Think.lang.ds_please_choose}...</option>
+                            {notempty name="vrgroupbuyclass_list"}
+                            {foreach name="vrgroupbuyclass_list" item="val"}
+                            <option value="{$val.vrgclass_id}" {if $vrgclass_parent_id == $val.vrgclass_id}selected{/if}>{$val.vrgclass_name}</option>
+                            {/foreach}
+                            {/notempty}
+                        </select>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                {/empty}
+                <tr>
+                    <td colspan="2" class="required"><label for="vrgclass_sort" class="validation">{$Think.lang.ds_sort}{$Think.lang.ds_colon}</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input id="vrgclass_sort" name="vrgclass_sort" type="text" class="txt" value="{$class.vrgclass_sort|default=''}" /></td>
+                    <td class="vatop tips">{$Think.lang.class_sort_explain}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2">
+                        <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#add_form').validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                vrgclass_name: {
+                    required : true,
+                    maxlength : 10
+                },
+                vrgclass_sort: {
+                    required : true,
+                    max: 255,
+                    min: 0
+                }
+            },
+            messages : {
+                vrgclass_name: {
+                    required : "分类名称不能为空",
+                    maxlength : "分类名称长度最多10个字符"
+                },
+                vrgclass_sort: {
+                    required : "排序不能为空",
+                    max : "排序必须是数字,且数值0-255",
+                    min : "排序必须是数字,且数值0-255"
+                }
+            }
+        });
+    });
+</script>

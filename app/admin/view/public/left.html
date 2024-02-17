@@ -1,0 +1,11 @@
+<div id="mainMenu">
+{foreach name="menu_list" item="menu" key="menu_k" }
+<ul id="sort_{$menu.name}" {if condition="$menu_k neq 'dashboard'"}style="display:none"{/if}>
+    {foreach name="menu.children" item="submenu" key="submenu_key"}
+    {php}$args_array = explode(",",$submenu['args']);{/php}
+    <li id="left_{php}echo $args_array[2].$args_array[1].$args_array[0]{/php}"><a href="javascript:void(0)"  onclick="openItem('{$submenu.args}')" ><i class="iconfont">{$submenu.ico|raw|default='&#xe652;'}</i>{$submenu.text}</a></li>
+    {/foreach}
+</ul>
+{/foreach}
+</div>
+

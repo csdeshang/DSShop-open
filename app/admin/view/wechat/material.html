@@ -1,0 +1,42 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.wechat_material}</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="material-list">
+        {foreach name='list' item='item' key='key'}
+        <div class="material-item" id="ds_row_{$key}">
+            <img class="material-image" src='{:url("Wechat/get_material_image")}?media_id={$item.content.news_item[0]["thumb_media_id"]}' />
+            <div class="material-title">{$item.content.news_item[0]["title"]}</div>
+            <div class="material-time">更新于{:date('Y-m-d H:i',$item["update_time"])}</div>
+            <div class="material-btn-wrapper">
+                <div class="material-btn iconfont" onclick="dsLayerConfirm('{:url('Wechat/material_del',['media_id'=>$item.media_id])}','{$Think.lang.ds_ensure_del}',{$key})">&#xe725;</div>
+                <a href='{:url("Wechat/material_edit")}?media_id={$item.media_id}'><div class="material-btn iconfont">&#xe72e;</div></a>
+                <div class="material-btn iconfont" onclick="dsLayerConfirm('{:url('Wechat/freepublish_submit',['media_id'=>$item.media_id])}','{$Think.lang.ensure_submit}')">&#xe6bf;</div>
+            </div>
+        </div>
+        {/foreach}
+    </div>
+    {$show_page|raw}
+</div>
+<style>
+    .material-list{overflow: hidden;}
+    .material-list .material-item{float:left;width:250px;height: 300px;margin-right:10px;margin-top:10px;border:1px solid #e1e1e1;position:relative}
+    .material-list .material-item .material-add{text-align: center}
+    .material-list .material-item .material-add .material-add-icon{font-size:50px;margin-top:100px;margin-bottom:10px;color:#333;}
+    .material-list .material-item .material-add .material-add-text{font-size:24px;color:#333;}
+    .material-list .material-item .material-image{width:100%;height: 200px;object-fit: cover}
+    .material-list .material-item .material-title{font-size:16px;line-height: 17px;height: 34px;padding:0 10px;margin:10px 0;box-sizing: border-box;width:100%;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
+    .material-list .material-item .material-time{font-size:14px;color:#999;padding:0 10px;}
+    .material-list .material-item .material-btn-wrapper{position:absolute;top:10px;right:0;display: none}
+    .material-list .material-item:hover .material-btn-wrapper{display: block}
+    .material-list .material-item .material-btn-wrapper .material-btn{display: inline-block;margin-right:10px;width:50px;height: 50px;line-height: 50px;font-size:20px;text-align:center;border-radius: 50%;border:1px solid #e1e1e1;background: #fff;color:#333;cursor: pointer;}
+</style>

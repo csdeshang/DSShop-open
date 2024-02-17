@@ -1,0 +1,17 @@
+{include file="public/header" /}
+<form method="post" name="form1" id="form1" action="{:url('Goods/goods_lockup')}">
+    <input type="hidden" value="{$commonids}" name="commonids">
+    <input type="hidden" value="{$type}" name="type">
+    <table class="ds-default-table nobdb">
+        <tbody>
+            <tr class="noborder">
+                <td class="vatop rowform"><textarea rows="8" class="tarea" cols="80" name="close_reason" id="close_reason"></textarea></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr class="tfoot">
+                <td colspan="2"><input type="submit" value="{$Think.lang.ds_submit}"  class="btn" /></td>
+            </tr>
+        </tfoot>
+    </table>
+</form>

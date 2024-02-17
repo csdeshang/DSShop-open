@@ -1,0 +1,62 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form id="add_form" method="post" enctype="multipart/form-data">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="required w120"><label class="validation" for="editable_page_name">{$Think.lang.editable_page_name}:</label></td>
+                <td class="vatop rowform"><input type="text" id="editable_page_name" name="editable_page_name" class="txt" value="{$editable_page.editable_page_name|default=''}"></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120"><label for="editable_page_path">{$Think.lang.editable_page_path}:</label></td>
+                <td class="vatop rowform">
+                    
+                    <label class="radio-label">
+                        <i  class="radio-common {if !isset($editable_page) || !$editable_page['editable_page_path']}selected{/if}">
+                            <input type="radio" value="" name="editable_page_path" {if !isset($editable_page) || !$editable_page['editable_page_path']}checked="checked"{/if}>
+                        </i>
+                        <span>{$Think.lang.none}</span>
+                    </label>
+                    
+                    <label class="radio-label">
+                        <i  class="radio-common {if isset($editable_page) && $editable_page['editable_page_path']=='index/index'}selected{/if}">
+                            <input type="radio" value="index/index" name="editable_page_path" {if isset($editable_page) && $editable_page['editable_page_path']=='index/index'}checked="checked"{/if}>
+                        </i>
+                        <span>{$Think.lang.editable_page_path_list['index/index']}</span>
+                    </label>
+                    
+                    <label class="radio-label">
+                        <i  class="radio-common {if isset($editable_page) && $editable_page['editable_page_path']=='activity/detail'}selected{/if}">
+                            <input type="radio" value="activity/detail" name="editable_page_path" {if isset($editable_page) && $editable_page['editable_page_path']=='activity/detail'}checked="checked"{/if}>
+                        </i>
+                        <span>{$Think.lang.editable_page_path_list['activity/detail']}</span>
+                    </label>
+                
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120"><label for="editable_page_item_id">{$Think.lang.editable_page_item_id}:</label></td>
+                <td class="vatop rowform"><input type="text" id="editable_page_item_id" name="editable_page_item_id" class="txt" value="{$editable_page.editable_page_item_id|default=''}"></td>
+                <td class="vatop tips">{$Think.lang.editable_page_item_id_tips}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120">{$Think.lang.back_color}:</td>
+                <td class="vatop rowform"><input type="text" id="back_color" name="back_color" class="txt" value="{$editable_page.editable_page_theme_config.back_color|default=''}"></td>
+                <td class="vatop tips">{$Think.lang.back_color_tips}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="2">
+                    <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>

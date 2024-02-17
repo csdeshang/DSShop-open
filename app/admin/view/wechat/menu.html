@@ -1,0 +1,446 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>微信菜单</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+            <a href="{:url('Wechat/pub_menu')}"  class="btn btn-small" style="float: right">更新菜单</a>
+        </div>
+    </div>
+     <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>1.自定义菜单最多包括3个一级菜单，每个一级菜单最多包含5个二级菜单</li>
+            <li>2.一级菜单最多4个汉字，二级菜单最多7个汉字，多出来的部分将会以“...”代替。</li>
+            <li>3.创建自定义菜单后，菜单的刷新策略是，在用户进入公众号会话页或公众号profile页时，如果发现上一次拉取菜单的请求在5分钟以前，就会拉取一下菜单，如果菜单有更新，就会刷新客户端的菜单。测试时可以尝试取消关注公众账号后再次关注，则可以看到创建后的效果。</li>
+            <li>4.目前支持的菜单类型的命令：hot点击率高的商品 commend店铺推荐商品 sale销售量 collect收藏量</li>
+            <li>5.菜单添加完成后点击右上角更新菜单按钮同步菜单到公众号</li>
+        </ul>
+    </div>
+    <div class='material-wrapper'>
+        <div class='material-left'>
+            <div class="material-mobile">
+                <img class="material-mobile-head" src='{$Think.ADMIN_SITE_ROOT}/images/mobile_head.png' />
+                <div class='material-mobile-content'>
+                    
+                </div>
+                <img class="material-mobile-head" style="border-top:1px solid #e1e1e1" src='{$Think.ADMIN_SITE_ROOT}/images/mobile_foot.png' />
+                <div class="menu-wrapper">
+                    <div class="menu-block" {notpresent name='menu_list[0]'}style="display: none"{/notpresent}>
+                        <div class="menu-list">
+                            <div class="menu-item" {notpresent name='menu_list[0]["child"][0]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[0]["child"][0]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[0]["child"][1]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[0]["child"][1]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[0]["child"][2]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[0]["child"][2]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[0]["child"][3]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[0]["child"][3]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[0]["child"][4]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[0]["child"][4]['name']|default='子菜单名称'}</div>
+                            <div class="menu-btn" {if isset($menu_list[0]['child']) && count($menu_list[0]['child'])>=5}style="display: none"{/if} onclick="addMenu($(this))">+</div>
+                        </div>
+                        <div class="menu-item menu-foot" onclick="getMenu($(this))">{$menu_list[0]['name']|default='菜单名称'}</div>
+                    </div>
+                    <div class="menu-block" {notpresent name='menu_list[1]'}style="display: none"{/notpresent}>
+                        <div class="menu-list">
+                            <div class="menu-item" {notpresent name='menu_list[1]["child"][0]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[1]["child"][0]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[1]["child"][1]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[1]["child"][1]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[1]["child"][2]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[1]["child"][2]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[1]["child"][3]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[1]["child"][3]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[1]["child"][4]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[1]["child"][4]['name']|default='子菜单名称'}</div>
+                            <div class="menu-btn" {if isset($menu_list[1]['child']) && count($menu_list[1]['child'])>=5}style="display: none"{/if} onclick="addMenu($(this))">+</div>
+                        </div>
+                        <div class="menu-item menu-foot" onclick="getMenu($(this))">{$menu_list[1]['name']|default='菜单名称'}</div>
+                    </div>
+                    <div class="menu-block" {notpresent name='menu_list[2]'}style="display: none"{/notpresent}>
+                        <div class="menu-list">
+                            <div class="menu-item" {notpresent name='menu_list[2]["child"][0]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[2]["child"][0]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[2]["child"][1]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[2]["child"][1]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[2]["child"][2]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[2]["child"][2]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[2]["child"][3]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[2]["child"][3]['name']|default='子菜单名称'}</div>
+                            <div class="menu-item" {notpresent name='menu_list[2]["child"][4]'}style="display: none"{/notpresent} onclick="getMenu($(this))">{$menu_list[2]["child"][4]['name']|default='子菜单名称'}</div>
+                            <div class="menu-btn" {if isset($menu_list[2]['child']) && count($menu_list[2]['child'])>=5}style="display: none"{/if} onclick="addMenu($(this))">+</div>
+                        </div>
+                        <div class="menu-item menu-foot" onclick="getMenu($(this))">{$menu_list[2]['name']|default='菜单名称'}</div>
+                    </div>
+                    <div class="menu-block" {if isset($menu_list) && count($menu_list)>=3}style="display: none"{/if}>
+                        <div class="menu-btn menu-foot" onclick="addMenu($(this))">+</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class='material-right'>
+            <div class="material-right-content" {empty name='menu_list'}style="display: none"{/empty}>
+                <div class="material-editor-head">
+                    <div class="material-editor-head-title menu-title">菜单（<span class='menu-number'>1</span>）</div>
+                    <div class="material-editor-head-title menu-sub-title" style="display: none">子菜单（<span class='menu-number'>1</span>-<span class='menu-sub-number'>1</span>）</div>
+                    <div class="material-editor-head-btn" onclick='delMenu()'>删除</div>
+                </div>
+                <div class="material-editor-content">
+                    <form method="post" enctype="multipart/form-data" id="form1" action="">
+                        <div class="ncap-form-default">
+                            <dl>
+                                <dt><label class="validation">菜单名称</label></dt>
+                                <dd>
+                                    <input name="name" value="{$material_info[0]["title"]|default=""}" class="input-txt" type="text" onchange='setTitle($(this))'>
+                                </dd>
+                            </dl>
+                            <dl dstype="menu">
+                                <dt><label class="validation">菜单内容</label></dt>
+                                <dd>
+                                    <label class="radio-label">
+                                        <i  class="radio-common {if !isset($editable_page) || !$editable_page['type']}selected{/if}">
+                                            <input type="radio" value="media_id" name="type" {if !isset($editable_page) || !$editable_page['type']}checked="checked"{/if}>
+                                        </i>
+                                        <span>发送消息素材</span>
+                                    </label>
+
+                                    <label class="radio-label">
+                                        <i  class="radio-common {if isset($editable_page) && $editable_page['type']=='index/index'}selected{/if}">
+                                            <input type="radio" value="click" name="type" {if isset($editable_page) && $editable_page['type']=='index/index'}checked="checked"{/if}>
+                                        </i>
+                                        <span>发送命令</span>
+                                    </label>
+
+                                    <label class="radio-label">
+                                        <i  class="radio-common {if isset($editable_page) && $editable_page['type']=='activity/detail'}selected{/if}">
+                                            <input type="radio" value="view" name="type" {if isset($editable_page) && $editable_page['type']=='activity/detail'}checked="checked"{/if}>
+                                        </i>
+                                        <span>跳转到网页</span>
+                                    </label>
+
+                                    <label class="radio-label">
+                                        <i  class="radio-common {if isset($editable_page) && $editable_page['type']=='activity/detail'}selected{/if}">
+                                            <input type="radio" value="miniprogram" name="type" {if isset($editable_page) && $editable_page['type']=='activity/detail'}checked="checked"{/if}>
+                                        </i>
+                                        <span>跳转小程序</span>
+                                    </label>
+                                </dd>
+                            </dl>
+                        </div>
+                        <div class="ncap-form-default" dstype="menu">
+                            <div data-menu-type="media_id">
+                                <dl>
+                                    <dt><label class="validation">消息素材</label></dt>
+                                    <dd>
+                                        <input type="hidden" name="media_id" value="{$material_info[0]["title"]|default=""}" />
+                                        <div class="material-box" onclick="dsLayerOpen('{:url('Wechat/material_select')}','从素材库选择')">
+                                            <div class="material-box-icon iconfont">&#xe74b;</div>
+                                            <div class="material-box-text">从素材库选择</div>
+                                        </div>
+                                        <div class="material-item" style="display:none" onclick="dsLayerOpen('{:url('Wechat/material_select')}','从素材库选择')">
+                                            <img class="material-image" src='' />
+                                            <div class="material-title"></div>
+                                            <div class="material-time"></div>
+                                        </div>
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div data-menu-type="click" style="display: none">
+                                <dl>
+                                    <dt><label class="validation">命令值</label></dt>
+                                    <dd>
+                                        <input name="key" value="{$material_info[0]["title"]|default=""}" class="input-txt" type="text">
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div data-menu-type="view" style="display: none">
+                                <dl>
+                                    <dt><label class="validation">页面地址</label></dt>
+                                    <dd>
+                                        <input name="url1" value="{$material_info[0]["title"]|default=""}" class="input-txt" type="text">
+                                    </dd>
+                                </dl>
+                            </div>
+                            <div data-menu-type="miniprogram" style="display: none">
+                                <dl>
+                                    <dt><label class="validation">备用网页</label></dt>
+                                    <dd>
+                                        <input name="url2" value="{$material_info[0]["title"]|default=""}" class="input-txt" type="text">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt><label class="validation">小程序APPID</label></dt>
+                                    <dd>
+                                        <input name="appid" value="{$material_info[0]["title"]|default=""}" class="input-txt" type="text">
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt><label class="validation">小程序页面路径</label></dt>
+                                    <dd>
+                                        <input name="pagepath" value="{$material_info[0]["title"]|default=""}" class="input-txt" type="text">
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="menu-notice" {notempty name='menu_list'}style="display:none"{/notempty}>点击左侧按钮 + 添加菜单</div>
+        </div>
+    </div>
+    <div class="btn-wrapper">
+        <a href="JavaScript:void(0);" class="btn" onclick="submit()">{$Think.lang.ds_confirm_submit}</a>
+    </div>
+ </div>
+ <style>
+     .material-wrapper{display: flex;margin-top:20px}
+     .material-wrapper .material-left{margin-right:20px;}
+     .material-wrapper .material-left .material-mobile{width:320px;border:1px solid #e1e1e1;font-size: 0;position:relative;}
+     .material-wrapper .material-left .material-mobile .material-mobile-head{width:100%;}
+     .material-wrapper .material-left .material-mobile .material-mobile-content{padding:20px;width:100%;box-sizing: border-box;height: 456px}
+     .material-wrapper .material-right{flex:1;position:relative;border:1px solid #e1e1e1;background: #f4f5f9}
+     .material-wrapper .material-right .material-right-content .material-editor-head{display: flex;align-items:center;border-bottom: 1px solid #e1e1e1;padding:10px 20px;}
+     .material-wrapper .material-right .material-right-content .material-editor-head .material-editor-head-title{font-size:16px;flex:1;}
+     .material-wrapper .material-right .material-right-content .material-editor-head .material-editor-head-btn{background: #fff;border:1px solid #e1e1e1;text-align: center;line-height: 40px;width:100px;font-size:14px;cursor: pointer}
+     .material-wrapper .material-right .material-right-content .material-editor-content{margin:20px;}
+     .menu-wrapper{position:absolute;right: -1px;bottom:0;width:277px;display: flex;}
+     .menu-wrapper .menu-block{flex:1;position:relative;}
+     .menu-wrapper .menu-block .menu-item{width:100%;height: 50px;text-align: center;line-height: 50px;white-space: nowrap;overflow: hidden;text-overflow:ellipsis;font-size:14px;box-sizing: border-box;background: #fafafa;cursor: pointer}
+     .menu-wrapper .menu-block .menu-btn{width:100%;height: 50px;text-align: center;line-height: 50px;font-size:14px;box-sizing: border-box;background: #fafafa;cursor: pointer}
+     .menu-wrapper .menu-block .menu-list{position:absolute;width:100%;bottom:60px;right:0;border:1px solid #e1e1e1;border-top:0;}
+     .menu-wrapper .menu-block .menu-list .menu-item{border-top:1px solid #e1e1e1;}
+     .menu-wrapper .menu-block .menu-list .menu-btn{border-top:1px solid #e1e1e1;}
+     .menu-wrapper .menu-block .menu-foot{border-right:1px solid #e1e1e1;box-sizing: border-box}
+     .menu-active{border: 1px solid #8b8b8b !important;}
+     .menu-notice{font-size:14px;position:absolute;top:50%;left:50%;margin-left:-79px;}
+     .btn-wrapper{text-align: center}
+     .btn-wrapper .btn{margin:20px auto;}
+     .material-box{border:1px solid #e1e1e1;border-radius: 5px;width:300px;height: 160px;text-align: center;cursor: pointer}
+     .material-box .material-box-icon{font-size:50px;line-height:50px;font-weight: bold;padding-top:40px;}
+     .material-box .material-box-text{font-size:16px;font-weight: bold;}
+     
+     .material-item{float:left;width:250px;height: 300px;margin-right:10px;margin-top:10px;border:1px solid #e1e1e1;position:relative;cursor: pointer}
+     .material-item .material-add{text-align: center}
+     .material-item .material-add .material-add-icon{font-size:50px;margin-top:100px;margin-bottom:10px;color:#333;}
+     .material-item .material-add .material-add-text{font-size:24px;color:#333;}
+     .material-item .material-image{width:100%;height: 200px;object-fit: cover}
+     .material-item .material-title{font-size:16px;line-height: 17px;height: 34px;padding:0 10px;margin:10px 0;box-sizing: border-box;width:100%;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;}
+     .material-item .material-time{font-size:14px;color:#999;padding:0 10px;}
+ </style>
+ 
+ <script>
+     var menuIndex=-1
+     var menuSubIndex=-1
+     var menuList={:json_encode($menu_json)};
+     if(menuList[0]){
+         getMenu($('.menu-block').eq(0).find('.menu-item.menu-foot'),false)
+     }
+     $(function(){
+         $('.radio-label').click(function(){
+             $('[data-menu-type]').hide()
+             $('[data-menu-type="'+$(this).find('input').val()+'"]').show()
+         })
+     })
+     function addMenu(obj){
+         if(menuSubIndex>-1){
+             menuList[menuIndex][menuList[menuIndex].length-1]['child'][menuSubIndex]=$("#form1").serializeArray()
+         }else if(menuIndex>-1){
+             var temp=menuList[menuIndex][menuList[menuIndex].length-1]['child']
+             menuList[menuIndex]=$("#form1").serializeArray()
+             menuList[menuIndex].push({'child':temp})
+         }
+         $('.menu-active').removeClass('menu-active')
+         if(obj.attr('class').indexOf("menu-foot") != -1 ){
+             $('.menu-list').hide()
+             menuSubIndex=-1
+             menuList.push([{child:[]}])
+             menuIndex=menuList.length-1
+             $('.menu-block').eq(menuIndex).show()
+             $('.menu-block').eq(menuIndex).find('.menu-list').show()
+             $('.menu-block').eq(menuIndex).find('.menu-item.menu-foot').addClass('menu-active')
+             $('.menu-number').text(menuIndex+1)
+             $('.menu-title').show()
+             $('.menu-sub-title').hide()
+         }else{
+             menuList[menuIndex][menuList[menuIndex].length-1]['child'].push([])
+             menuSubIndex=menuList[menuIndex][menuList[menuIndex].length-1]['child'].length-1
+             $('.menu-block').eq(menuIndex).find('.menu-list .menu-item').eq(menuSubIndex).addClass('menu-active').show()
+             $('.menu-sub-number').text(menuSubIndex+1)
+             $('.menu-title').hide()
+             $('.menu-sub-title').show()
+         }
+         if(menuIndex>=2){
+             $('.menu-btn.menu-foot').parents('.menu-block').hide()
+         }
+         if(menuSubIndex>=4){
+             $('.menu-block').eq(menuIndex).find('.menu-btn').hide()
+         }
+         $('.material-right-content').show()
+         $('.menu-notice').hide()
+         $('#form1 input[type="text"]').val('')
+         $('#form1 input[type="hidden"]').val('')
+         $('.radio-common').removeClass('selected')
+         $('input[name="type"]').removeAttr('checked')
+         $('#form1 input[name="type"][value="media_id"]').attr('checked','checked')
+         $('#form1 input[name="type"][value="media_id"]').parents('label').click()
+         $('#form1 input[name="type"][value="media_id"]').parents('.radio-common').addClass('selected')
+         $('.material-item').hide()
+         $('.material-box').show()
+     }
+     function getMenu(obj,if_save=true){
+         if(if_save){
+             if(menuSubIndex>-1){
+                 menuList[menuIndex][menuList[menuIndex].length-1]['child'][menuSubIndex]=$("#form1").serializeArray()
+             }else if(menuIndex>-1){
+                 var temp=menuList[menuIndex][menuList[menuIndex].length-1]['child']
+                 menuList[menuIndex]=$("#form1").serializeArray()
+                 menuList[menuIndex].push({'child':temp})
+             }
+         }
+         $('.menu-active').removeClass('menu-active')
+         var data
+         if(obj.attr('class').indexOf("menu-foot") != -1 ){
+             $('.menu-list').hide()
+             menuIndex=obj.parents('.menu-block').index()
+             menuSubIndex=-1
+             $('.menu-block').eq(menuIndex).show()
+             $('.menu-block').eq(menuIndex).find('.menu-list').show()
+             $('.menu-block').eq(menuIndex).find('.menu-item.menu-foot').addClass('menu-active')
+             $('.menu-number').text(menuIndex+1)
+             $('.menu-title').show()
+             $('.menu-sub-title').hide()
+             data=menuList[menuIndex]
+             if(data[data.length-1]['child'].length){
+                 $('[dstype="menu"]').hide()
+             }else{
+                 $('[dstype="menu"]').show()
+             }
+         }else{
+             $('[dstype="menu"]').show()
+             menuSubIndex=obj.index()
+             $('.menu-block').eq(menuIndex).find('.menu-list .menu-item').eq(menuSubIndex).addClass('menu-active').show()
+             $('.menu-sub-number').text(menuSubIndex+1)
+             $('.menu-title').hide()
+             $('.menu-sub-title').show()
+             data=menuList[menuIndex][menuList[menuIndex].length-1]['child'][menuSubIndex]
+         }
+         for(var i in data){
+             if(data[i]['name']){
+                 if(data[i]['name']=='type'){
+                     $('.radio-common').removeClass('selected')
+                     $('input[name="type"]').removeAttr('checked')
+                     $('[name="'+data[i]['name']+'"][value="'+data[i]['value']+'"]').attr('checked','checked')
+                     $('[name="'+data[i]['name']+'"][value="'+data[i]['value']+'"]').parents('label').click()
+                     $('[name="'+data[i]['name']+'"][value="'+data[i]['value']+'"]').parents('.radio-common').addClass('selected')
+                 }else{
+                     $('[name="'+data[i]['name']+'"]').val(data[i]['value'])
+                     if(data[i]['name']=='media_id'){
+                         if(data[i]['value']!=''){
+                             selectMaterial(data[i]['value'])
+                         }else{
+                             $('.material-item').hide()
+                             $('.material-box').show()
+                         }
+                     }
+                 }
+             }
+         }
+     }
+     function delMenu(){
+         if(menuSubIndex==-1){
+             $('.menu-btn.menu-foot').parents('.menu-block').show()
+             menuList.splice(menuIndex,1)
+             var obj=$('.menu-block').eq(menuIndex)
+             obj.find('.menu-list .menu-item').text('子菜单名称')
+             obj.find('.menu-item.menu-foot').text('菜单名称')
+             obj.find('.menu-list .menu-item').hide()
+             obj.find('.menu-list .menu-btn').show()
+             obj.hide()
+             obj.parent().find('.menu-btn.menu-foot').parents('.menu-block').before(obj)
+             if((menuList.length-1)<menuIndex){
+                 menuIndex=menuList.length-1
+             }
+             if(menuIndex<=-1){
+                 $('.material-right-content').hide()
+                 $('.menu-notice').show()
+             }else{
+                 menuSubIndex=-1
+                 getMenu($('.menu-block').eq(menuIndex).find('.menu-item.menu-foot'),false)
+             }
+         }else{
+             $('.menu-block').eq(menuIndex).find('.menu-btn').show()
+             menuList[menuIndex][menuList[menuIndex].length-1]['child'].splice(menuSubIndex,1)
+             var obj=$('.menu-block').eq(menuIndex).find('.menu-list .menu-item').eq(menuSubIndex)
+             obj.text('子菜单名称')
+             obj.hide()
+             obj.parent().find('.menu-btn').before(obj)
+             if((menuList[menuIndex][menuList[menuIndex].length-1]['child'].length-1)<menuSubIndex){
+                 menuSubIndex=menuList[menuIndex][menuList[menuIndex].length-1]['child'].length-1
+             }
+             if(menuSubIndex>-1){
+                 getMenu($('.menu-block').eq(menuIndex).find('.menu-list .menu-item').eq(menuSubIndex),false)
+             }else{
+                 getMenu($('.menu-block').eq(menuIndex).find('.menu-item.menu-foot'),false)
+             }
+         }
+     }
+     function selectMaterial(media_id){
+         $.getJSON('{:url("Wechat/get_material_image")}',{media_id:media_id,if_not_image:1},function(res){
+             if(res.code){
+                 $('[name="media_id"]').val(media_id)
+                 $('.material-image').attr('src','{:url("admin/Wechat/get_material_image")}?media_id='+res.data.news_item[0]["thumb_media_id"])
+                 $('.material-title').text(res.data.news_item[0]["title"])
+                 var d = new Date(res.data.update_time*1000)
+                 $('.material-time').text('更新于'+d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate()+' '+d.getHours()+':'+d.getMinutes())
+                 $('.material-item').show()
+                 $('.material-box').hide()
+                 layer.closeAll('iframe')
+             }else{
+                 layer.msg(res.msg)
+             }
+         })
+     }
+     function setTitle(obj){
+         var title=obj.val()
+         
+         if(menuSubIndex>-1){
+             if(title==''){
+                 title='子菜单名称'
+             }
+             $('.menu-block').eq(menuIndex).find('.menu-list .menu-item').eq(menuSubIndex).text(title)
+         }else{
+             if(title==''){
+                 title='菜单名称'
+             }
+             $('.menu-block').eq(menuIndex).find('.menu-item.menu-foot').text(title)
+         }
+     }
+     function submit(){
+         $('label.error').remove()
+         if(menuSubIndex>-1){
+             menuList[menuIndex][menuList[menuIndex].length-1]['child'][menuSubIndex]=$("#form1").serializeArray()
+         }else if(menuIndex>-1){
+             var temp=menuList[menuIndex][menuList[menuIndex].length-1]['child']
+             menuList[menuIndex]=$("#form1").serializeArray()
+             menuList[menuIndex].push({'child':temp})
+         }
+             $.ajax({
+                 type: "POST",
+                 url: '{:url("admin/Wechat/add_menu")}',
+                 dataType: 'json',
+                 data: {menus:menuList},
+                 success: function (res) {
+                     if (res.code == 10000) {
+                         layer.msg(res.message)
+                     }else{
+                         if(res.result){
+                             $('[name="'+res.result.name+'"]').parents('dd').append('<label class="error">不能为空</label>')
+                             if(res.result.index2>-1){
+                                 getMenu($('.menu-block').eq(res.result.index1).find('.menu-list .menu-item').eq(res.result.index2),false)
+                             }else{
+                                 getMenu($('.menu-block').eq(res.result.index1).find('.menu-item.menu-foot'),false)
+                             }
+                         }else{
+                             layer.msg(res.message)
+                         }
+                     }
+                 }
+             })
+     }
+ </script>

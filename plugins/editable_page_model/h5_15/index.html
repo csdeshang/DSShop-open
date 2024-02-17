@@ -1,0 +1,17 @@
+<div class="model-15">
+    <div class="cube-wrapper style-{$config_info.show_format|default='1'}" style="background-color:{$config_info.back_color|default='unset'};">
+        <div class="item">
+            <img src="{if isset($config_info['adv'][0]) && !empty($config_info['adv'][0]['image'])}{$config_info['adv'][0]['image']}{else}{:goods_thumb()}{/if}" {if isset($config_info.show_format) && empty($config_info['adv'][0]['image'])}style="{if $config_info.show_format==2}height:200px{/if}{if $config_info.show_format==3}height:200px{/if}"{/if} />
+        </div>
+        <div class="line">
+            <div class="item">
+                <img src="{if isset($config_info['adv'][1]) && !empty($config_info['adv'][1]['image'])}{$config_info['adv'][1]['image']}{else}{:goods_thumb()}{/if}" {if isset($config_info.show_format) && empty($config_info['adv'][1]['image'])}style="{if $config_info.show_format==2}height:100px{/if}"{/if} />
+            </div>
+            {if isset($config_info.show_format) && $config_info.show_format!=1}
+            <div class="item">
+                <img src="{if isset($config_info['adv'][2]) && !empty($config_info['adv'][2]['image'])}{$config_info['adv'][2]['image']}{else}{:goods_thumb()}{/if}" {if isset($config_info.show_format) && empty($config_info['adv'][2]['image'])}style="{if $config_info.show_format==2}height:100px{/if}"{/if} />
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>

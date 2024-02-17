@@ -1,0 +1,45 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="dsg-buyer">
+    <thead>
+        <tr>
+            <th width="25%">{$Think.lang.text_buyer}</th>
+            <th width="15%">{$Think.lang.text_buy_count}</th>
+            <th width="15%">{$Think.lang.ds_unit_price}</th>
+            <th>{$Think.lang.order_time}</th>
+        </tr>
+    </thead>
+    {notempty name="order_goods_list"}
+    <tbody>
+        {foreach name="order_goods_list" item="order" }
+        <tr>
+            <td>
+                {if $order.buyer_name}{$order.buyer_name}{else/}{$order_list[$order['order_id']]['buyer_name']}{/if}
+            </td>
+            <td>{$order.goods_num}</td>
+            <td>{$Think.lang.currency}{$order.goods_price}</td>
+            <td>{php}echo $order['add_time'] ? date('Y-m-d H:i:s', $order['add_time']) : date('Y-m-d H:i:s', $order_list[$order['order_id']]['add_time']);{/php}</td>
+        </tr>
+        {/foreach}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="10">
+                <div class="pagination"> {$show_page|raw}</div>
+            </td>
+        </tr>
+    </tfoot>
+    {else /}
+    <tbody>
+        <tr><td colspan="20"><p class="no-buyer">{$Think.lang.no_purchase}</p></td></tr>
+    </tbody>
+    {/notempty}
+</table>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#groupbuy_order').find('ul.pagination li a').ajaxContent({
+        event:'click',
+        loaderType:"img",
+        loadingMsg:"{$Think.HOME_SITE_ROOT}/images/treetable/transparent.gif",
+        target:'#groupbuy_order'
+    });
+});
+</script>

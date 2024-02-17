@@ -1,0 +1,112 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>地区管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.instructions_sale_area}</li>
+        </ul>
+    </div>
+    
+    
+    {notempty name="transport_list"}
+<table class="ds-default-table order">
+    <thead>
+        <tr>
+            <th class="w20"></th>
+            <th class="cell-area tl">{$Think.lang.transport_to}</th>
+            <th class="w150">{$Think.lang.transport_price}</th>
+        </tr>
+    </thead>
+    {foreach name="transport_list" item="v"}
+    <tbody>
+        <tr>
+            <td colspan="20" class="sep-row"></td>
+        </tr>
+        <tr>
+            <th colspan="20">
+                {if $Request.param.type == 'select'}
+                <a class="ml5 dssc-btn-mini dssc-btn-orange" data-param="{name:'{$v.transport_title}',id:'{$v.transport_id}',price:'{$v.transport_id.price}'}" href="javascript:void(0)"><i class="iconfont">&#xe6f1;</i>{$Think.lang.transport_applay}</span></a>
+                {/if}
+    <h3>{$v.transport_title}=={$v.transport_id}</h3>
+    <span class="fr mr5">
+        <time title="{$Think.lang.transport_tpl_edit_time}"><i class="iconfont">&#xe736;</i>{:date('Y-m-d H:i:s',$v.transport_updatetime)}</time>
+        <a class="J_Clone dssc-btn-mini" href="javascript:void(0)" data-id="{$v.transport_id}"><i class="iconfont">&#xe756;</i>{$Think.lang.transport_tpl_copy}</a>
+        <a class="J_Modify dssc-btn-mini" href="javascript:void(0)" data-id="{$v.transport_id}"><i class="iconfont">&#xe731;</i>{$Think.lang.transport_tpl_edit}</a>
+        <a class="J_Delete dssc-btn-mini" href="javascript:void(0)" data-id="{$v.transport_id}"><i class="iconfont">&#xe725;</i>{$Think.lang.transport_tpl_del}</a>
+    </span>
+</th>
+</tr>
+{notempty name="extend[$v.transport_id]['data']"}
+{foreach name="extend[$v.transport_id]['data']" item="value"}
+<tr>
+    <td></td>
+    <td class="cell-area tl">{$value.transportext_area_name}</td>
+    <td>{$value.transportext_sprice}</td>
+</tr>
+{/foreach}
+{/notempty}
+</tbody>
+{/foreach}
+</table>
+{else}
+<div class="warning-option"><i class="iconfont">&#xe64c;</i><span>{$Think.lang.no_record}</span></div>
+{/notempty}
+{notempty name="transport_list"}
+<div class="pagination">{$show_page|raw}</div>
+{/notempty}
+    <script src="{$Think.PLUGINS_SITE_ROOT}/js/dialog/dialog.js" id="dialog_js" charset="utf-8"></script>
+
+<script>
+    $(function(){
+        $('a[class="J_Delete dssc-btn-mini"]').click(function(){
+            var id = $(this).attr('data-id');
+            if(typeof(id) == 'undefined') return false;
+            ds_get_confirm('{$Think.lang.transport_del_confirm}','{:url('Transport/delete')}?id='+id);
+        });
+
+        $('a[class="J_Modify dssc-btn-mini"]').click(function(){
+            var id = $(this).attr('data-id');
+            if(typeof(id) == 'undefined') return false;
+            $(this).attr('href','{:url('Transport/edit')}?id='+id);
+            return true;
+        });
+
+        $('a[class="J_Clone dssc-btn-mini"]').click(function(){
+
+            var id = $(this).attr('data-id');
+            if(typeof(id) == 'undefined') return false;
+            $(this).attr('href','{:url('Transport/cloned')}?id='+id);
+            return true;
+        });
+        $('a[class="ml5 dssc-btn-mini dssc-btn-orange"]').click(function(){
+            var data_str = '';
+            eval('data_str = ' + $(this).attr('data-param'));
+            $("#postageName", opener.document).css('display','inline-block').html(data_str.name);
+            $("#transport_title", opener.document).val(data_str.name);
+            $("#transport_id", opener.document).val(data_str.id);
+            $("#g_freight", opener.document).val(data_str.price);
+            window.close();
+        });
+
+    });
+</script>
+    
+</div>
+
+

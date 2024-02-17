@@ -1,0 +1,83 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_consulting}</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="fixed-empty"></div>
+    <form method="post" name="form_typeadd" id="form_typeadd">
+        <input type="hidden" name="consulttype_id" value="{$consulttype_info.consulttype_id}" />
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td colspan="2" class="required"><label class="validation">{$Think.lang.consulting_type_name}</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input class="txt" type="text" name="consulttype_name" value="{$consulttype_info.consulttype_name}" /></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label class="validation">{$Think.lang.ds_sort}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    <input class="txt" type="text" name="consulttype_sort" value="{$consulttype_info.consulttype_sort}" />
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label>{$Think.lang.consulting_type_notes}</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop">
+                    {$build_editor|raw}
+                    <textarea name="consulttype_introduce" id="consulttype_introduce"></textarea>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="2" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form> 
+
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $("#form_typeadd").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                consulttype_name : {
+                    required : true,
+                    maxlength : 10
+                },
+                consulttype_sort : {
+                    required : true,
+                    range : [0,255]
+                }
+            },
+            messages : {
+                consulttype_name : {
+                    required : '{$Think.lang.consulting_type_required}',
+                    maxlength : '{$Think.lang.consulting_type_maxlength}'
+                },
+                consulttype_sort : {
+                    required : '{$Think.lang.consulting_type_sort}',
+                    range : '{$Think.lang.consulting_type_sort}'
+                }
+            }
+        });
+    });
+</script>

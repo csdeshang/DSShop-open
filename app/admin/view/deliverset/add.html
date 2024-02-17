@@ -1,0 +1,95 @@
+{include file="public/header" /}
+<div class="eject_con">
+    <div id="warning" class="alert alert-error"></div>
+    <form method="post" action="{:url('Deliverset/daddress_add',['address_id'=>$address_info.daddress_id])}" id="address_form">
+        <input type="hidden" value="{$address_info.city_id}" name="city_id" id="_area_2">
+        <input type="hidden" value="{$address_info.area_id}" name="area_id" id="_area">
+        <input type="hidden" name="address_id" value="{$address_info.daddress_id}" />
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.daddress_receiver_name} {$Think.lang.ds_colon}</dt>
+            <dd>
+                <input type="text" class="text" name="seller_name" value="{$address_info.seller_name}"/>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.daddress_location}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <div>
+                    <input type="hidden" name="region" id="region" value="{$address_info.area_info}"/>
+                </div>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.daddress_address}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input class="text w300" type="text" name="daddress_detail" value="{$address_info.daddress_detail}"/>
+                <p class="hint">{$Think.lang.daddress_not_repeat}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.daddress_phone_num}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input type="text" class="text" name="daddress_telphone" value="{$address_info.daddress_telphone}"/>
+            </dd>
+        </dl>
+        <dl>
+            <dt class="required">{$Think.lang.daddress_company}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input type="text" class="text" name="daddress_company" value="{$address_info.daddress_company}"/>
+            </dd>
+        </dl>
+        <div class="bottom">
+           <input type="submit" dstype="address_add_submit" class="btn" value="{$Think.lang.ds_common_button_save}" />
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function(){
+
+        $("#region").ds_region();
+        $('#address_form').validate({
+            errorLabelContainer: $('#warning'),
+            invalidHandler: function(form, validator) {
+                var errors = validator.numberOfInvalids();
+                if(errors)
+                {
+                    $('#warning').show();
+                }
+                else
+                {
+                    $('#warning').hide();
+                }
+            },
+            rules : {
+                seller_name : {
+                    required : true
+                },
+                region : {
+                    checklast: true
+                },
+                address : {
+                    required : true
+                },
+                telphone : {
+                    required : true,
+                    minlength : 6
+                }
+            },
+            messages : {
+                seller_name : {
+                    required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.daddress_input_receiver}'
+                },
+                region : {
+                    checklast : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_complete_area}'
+                },
+                address : {
+                    required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.daddress_input_address}'
+                },
+                telphone : {
+                    required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.daddress_phone_rule}',
+                    minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.daddress_phone_rule}'
+                }
+            }
+        });
+    });
+</script> 

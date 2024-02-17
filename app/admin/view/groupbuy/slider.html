@@ -1,0 +1,183 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>抢购管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.groupbuy_slider_help1}</li>
+            <li>{$Think.lang.groupbuy_slider_help2}</li>
+            <li>{$Think.lang.groupbuy_slider_help3}</li>
+            <li>{$Think.lang.groupbuy_slider_help4}</li>
+        </ul>
+    </div>
+    
+    <form id="live_form" method="post" enctype="multipart/form-data">
+        <table class="ds-default-table">
+            <tbody>
+            <tr>
+                <td class="required"><label>滚动图片1:</label></td>
+                <td><label>链接地址:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    {notempty name="$list_setting.live_pic1"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic('home/groupbuy/slider',$list_setting.live_pic1)}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box">
+                        <input type='text' name='textfield1' id='textfield1' class='type-file-text' />
+                        <input type='button' name='button' id='button' value='上传' class='type-file-button' />
+                        <input name="live_pic1" type="file" class="type-file-file" id="live_pic1" size="30" hidefocus="true" />
+                    </span>
+                </td>
+                <td class="vatop"><input type="text" name="live_link1" class="w200" value="{$list_setting.live_link1}"></td>
+            </tr>
+            <tr>
+                <td class="required"><label>滚动图片2:</label></td>
+                <td><label>链接地址:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    {notempty name="$list_setting.live_pic2"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic('home/groupbuy/slider',$list_setting.live_pic2)}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box">
+                        <input type='text' name='textfield2' id='textfield2' class='type-file-text' />
+                        <input type='button' name='button' id='button' value='上传' class='type-file-button' />
+                        <input name="live_pic2" type="file" class="type-file-file" id="live_pic2" size="30" hidefocus="true" />
+                    </span>
+                </td>
+                <td class="vatop tips"><input type="text" name="live_link2" class="w200" value="{$list_setting.live_link2}"></td>
+            </tr>
+            <tr>
+                <td class="required"><label>滚动图片3:</label></td>
+                <td><label>链接地址:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    {notempty name="$list_setting.live_pic3"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic('home/groupbuy/slider',$list_setting.live_pic3)}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box">
+                        <input type='text' name='textfield3' id='textfield3' class='type-file-text' />
+                        <input type='button' name='button' id='button' value='上传' class='type-file-button' />
+                        <input name="live_pic3" type="file" class="type-file-file" id="live_pic3" size="30" hidefocus="true" />
+                    </span>
+                </td>
+                <td class="vatop tips"><input type="text" name="live_link3" class="w200" value="{$list_setting.live_link3}"></td>
+            </tr>
+            <tr>
+                <td class="required"><label>滚动图片4:</label></td>
+                <td><label>链接地址:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    {notempty name="$list_setting.live_pic4"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic('home/groupbuy/slider',$list_setting.live_pic4)}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box">
+                        <input type='text' name='textfield4' id='textfield4' class='type-file-text' />
+                        <input type='button' name='button' id='button' value='上传' class='type-file-button' />
+                        <input name="live_pic4" type="file" class="type-file-file" id="live_pic4" size="30" hidefocus="true" />
+                    </span>
+                </td>
+                <td class="vatop tips"><input type="text" name="live_link4" class="w200" value="{$list_setting.live_link4}"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2">
+                     <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                    <input class="btn" type="button" id="clearBtn" value="{$Think.lang.ds_clear}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<script>
+    //按钮先执行验证再提交表单
+    $(function(){
+        // 图片js
+        $("#live_pic1").change(function(){$("#textfield1").val($("#live_pic1").val());});
+        $("#live_pic2").change(function(){$("#textfield2").val($("#live_pic2").val());});
+        $("#live_pic3").change(function(){$("#textfield3").val($("#live_pic3").val());});
+        $("#live_pic4").change(function(){$("#textfield4").val($("#live_pic4").val());});
+
+        $('#live_form').validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+
+            rules : {
+                live_link1: {
+                    url : true
+                },
+                live_link2:{
+                    url : true
+                },
+                live_link3:{
+                    url : true
+                },
+                live_link4:{
+                    url : true
+                },
+            },
+            messages : {
+                live_link1: {
+                    url : '链接地址格式不正确'
+                },
+                live_link2:{
+                    url : '链接地址格式不正确'
+                },
+                live_link3:{
+                    url : '链接地址格式不正确'
+                },
+                live_link4:{
+                    url : '链接地址格式不正确'
+                },
+            }
+        });
+
+        $('#clearBtn').click(function(){
+            layer.confirm('确认清空虚拟抢购幻灯片设置？', {
+                btn: ['确定', '取消'],
+                title: false,
+            }, function () {
+            $.ajax({
+                type:'get',
+                url:"{:url('Groupbuy/slider_clear')}",
+                dataType:'json',
+                success:function(result){
+                    if(result.result){
+                        layer.alert('清空成功');
+                        location.reload();
+                    }
+                }
+            });
+        });
+    });
+</script>

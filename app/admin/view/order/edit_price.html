@@ -1,0 +1,72 @@
+{include file="public/header" /}
+
+<div class="page">
+    <form id="user_form" enctype="multipart/form-data" method="post">
+
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="required w120"><label>买家:</label></td>
+                <td class="vatop rowform">{$order_info.buyer_name}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label>订单号:</label></td>
+                <td class="vatop rowform"><label style="color: #1b926c;font-weight: bold">{$order_info.order_sn}</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label>修改运费:</label></td>
+                <td class="vatop rowform"><input type="text" id="shipping_fee" name="shipping_fee" value="{$order_info.shipping_fee}" class="txt"></td>
+                <td class="vatop tips">请选择您要修改的运费，0.00表示免运费</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+    <script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js" charset="utf-8"></script>
+    <script type="text/javascript">
+        $(function() {
+            $("#region").ds_region();
+            $('#user_form').validate({
+                errorPlacement: function(error, element) {
+                    error.appendTo(element.parent().parent().find('td:last'));
+                },
+                rules: {
+                    member_password: {
+                        maxlength: 20,
+                        minlength: 6
+                    },
+                    member_email: {
+                        required: true,
+                        email: true,
+                        remote: {
+                            url: ADMINSITEURL+'/Member/ajax.html?branch=check_email',
+                            type: 'get',
+                            data: {
+                                user_name: function() {
+                                    return $('#member_email').val();
+                                },
+                            }
+                        }
+                    }
+                },
+                messages: {
+                    member_password: {
+                        maxlength: '{$Think.lang.member_edit_password_tip}',
+                        minlength: '{$Think.lang.member_edit_password_tip}'
+                    },
+                    member_email: {
+                        required: '{$Think.lang.member_edit_email_null}',
+                        email: '{$Think.lang.member_edit_valid_email}',
+                        remote: '{$Think.lang.member_edit_email_exists}'
+                    }
+                }
+            });
+        });
+    </script>
+</div>    

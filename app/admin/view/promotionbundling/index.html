@@ -1,0 +1,87 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>优惠套装</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.bundling_name}</dt>
+                <dd><input type="text" value="{$Request.get.bundling_name}" name="bundling_name" id="bundling_name" class="txt" style="width:100px;"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.ds_state}</dt>
+                <dd>
+                    <select name="state">
+                        <option>{$Think.lang.bundling_state_all}</option>
+                        <option {eq name="Request.get.state" value="1" }selected="selected"{/eq}>{$Think.lang.ds_open}</option>
+                        <option {eq name="Request.get.state" value="0" }selected="selected"{/eq}>{$Think.lang.ds_close}</option>
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Promotionbundling/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+    <!-- 帮助 -->
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.bundling_quota_prompts}</li>
+        </ul>
+    </div>
+    
+    <!-- 列表 -->
+    <form id="list_form" method="post">
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="align-center">{$Think.lang.bundling_name}</th>
+                <th class="align-center">{$Think.lang.bundling_price}</th>
+                <th class="align-center">{$Think.lang.bundling_goods_count}</th>
+                <th class="align-center">{$Think.lang.ds_state}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody id="treet1">
+            {notempty name="pbundling_list"}
+            {foreach name="pbundling_list" item="val"}
+            <tr class="hover">
+                <td class="align-center">{$val.bl_name}</td>
+                <td class="align-center">{$val.bl_discount_price}</td>
+                <td class="align-center">{$val.count}</td>
+                <td class="align-center">
+                    {$state_array[$val.bl_state]}
+                </td>
+                <td class="nowrap align-center">
+                    <a target="block" href="{:url('home/Goods/index',['goods_id'=>$val.goods_id])}"  class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_view}</a>
+                    <a href="{:url('Promotionbundling/del_bundling',['bl_id'=>$val.bl_id])}"  class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="16">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+        </table>
+        {$show_page|raw}
+    </form>
+
+</div>

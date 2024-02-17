@@ -1,0 +1,105 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+ <div class="alert alert-block">
+            <h4>{$Think.lang.rules_integral_acquisition}</h4>
+            <ul>
+                <li>{$Think.lang.rule_description1}<em>{$Think.config.ds_config.points_reg}</em>{$Think.lang.rule_description2}<em>{$Think.config.ds_config.points_login}</em>{$Think.lang.rule_description3}<em>{$Think.config.ds_config.points_comments}</em>{$Think.lang.points_unit}。
+                </li>
+                {if $Think.config.ds_config.points_orderrate}
+               <li>{$Think.lang.rule_description4}{php}printf('%s',number_format(100/config('ds_config.points_orderrate')));{/php}%{if $Think.config.ds_config.points_ordermax}（{$Think.lang.rule_description5}{$Think.config.ds_config.points_ordermax}）{/if}{$Think.lang.points_unit}。</li>
+                {/if}
+                <li>{$Think.lang.rule_description6}</li>
+            </ul>
+        </div>
+        <form method="get" action="">
+            <table class="dsm-search-table">
+                <tr>
+                    <td class="w10">&nbsp;</td>
+                    <td><strong> {$Think.lang.points_log_pointscount}</strong><strong style="color: #F00;">{$member_points.member_points}</strong>
+                    </td>
+                    <th>{$Think.lang.points_addtime}</th>
+                    <td class="w240"><input type="text" id="stime" name="stime" class="text w70"  value="{$Request.get.stime}">
+                        <label class="add-on"><i class="iconfont">&#xe8d6;</i></label>&nbsp;&#8211;&nbsp;
+                        <input type="text" id="etime" name="etime" class="text w70" value="{$Request.get.etime}">
+                        <label class="add-on"><i class="iconfont">&#xe8d6;</i></label>
+                    </td>
+                    <th> {$Think.lang.ds_handle}</th>
+                    <td class="w100">
+                        <select name="stage">
+                            <option value="" {if !$Request.get.stage}selected=selected{/if}>
+                                {$Think.lang.ds_please_choose}
+                            </option>
+                            <option value="regist" {if $Request.get.stage == 'regist'}selected=selected{/if}>{$Think.lang.points_stage_regist}</option>
+                            <option value="login" {if $Request.get.stage == 'login'}selected=selected{/if}>{$Think.lang.points_stage_login}</option>
+                            <option value="comments" {if $Request.get.stage == 'comments'}selected=selected{/if}>{$Think.lang.points_stage_comments}</option>
+                            <option value="order" {if $Request.get.stage == 'order'}selected=selected{/if}>{$Think.lang.points_stage_order}</option>
+                            <option value="system" {if $Request.get.stage == 'system'}selected=selected{/if}>{$Think.lang.points_stage_system}</option>
+                            <option value="pointorder" {if $Request.get.stage == 'pointorder'}selected=selected{/if}>{$Think.lang.points_stage_pointorder}</option>
+                            <option value="app" {if $Request.get.stage == 'app'}selected=selected{/if}>{$Think.lang.points_stage_app}</option>
+                        </select>
+                    </td>
+                    <th>{$Think.lang.points_pointsdesc}</th>
+                    <td class="w160"><input type="text" class="text w150" id="description" name="description" value="{$Request.get.description}"></td>
+                    <td class="w70 tc">
+                        <input type="submit" class="submit" value="{$Think.lang.ds_search}" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <table class="dsm-default-table">
+            <thead>
+            <tr>
+                <th class="w200">{$Think.lang.points_addtime}</th>
+                <th class="w150">{$Think.lang.points_pointsnum}</th>
+                <th class="w300">{$Think.lang.ds_handle}</th>
+                <th class="tl">{$Think.lang.points_pointsdesc}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="list_log"}
+           {foreach name="list_log" item="log"}
+            <tr class="bd-line">
+                <td class="goods-time">{$log.pl_addtime|date="Y-m-d"}</td>
+                <td class="goods-price">{$log.pl_points>0 ? '+' : ''}{$log.pl_points}</td>
+                <td>{php}$lang='points_stage_'.$log['pl_stage'];echo lang($lang);{/php}</td>
+                <td class="tl">{$log.pl_desc}</td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr>
+                <td colspan="20" class="norecord">
+                    <div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span>
+                    </div>
+                </td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="list_log"}
+            <tr>
+                <td colspan="20">
+                    <div class="pagination">{$show_page|raw}</div>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+
+
+
+<script language="javascript">
+    $(function(){
+        $('#stime').datepicker({dateFormat: 'yy-mm-dd'});
+        $('#etime').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+</script>
+
+
+
+{/block}
+

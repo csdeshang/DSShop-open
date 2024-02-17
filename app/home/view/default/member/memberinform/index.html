@@ -1,0 +1,112 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<form id="list_form" method="get">
+    <table class="dsm-search-table">
+        <tr>
+            <td></td>
+            <td class="w100 tr">
+                <select name="select_inform_state">
+                    <option value="0" {if !$Request.get.select_inform_state}selected=true{/if}>{$Think.lang.inform_state_all}</option>
+                    <option value="1" {if $Request.get.select_inform_state == '1'}selected=true{/if}> {$Think.lang.inform_state_unhandle} </option>
+                    <option value="2" {if $Request.get.select_inform_state== '2'}selected=true{/if}> {$Think.lang.inform_state_handled} </option>
+                </select>
+            </td>
+            <td class="w70 tc">
+                <input type="submit" class="submit" onclick="submit_search_form()" value="{$Think.lang.ds_search}" />
+            </td>
+        </tr>
+    </table>
+</form>
+        <table class="dsm-default-table">
+            <thead>
+                <tr>
+                    <th class="w10"></th>
+                    <th colspan="2">{$Think.lang.inform_goods_name}</th>
+                    <th class="w240">&nbsp;</th>
+                    <th class="w120">{$Think.lang.inform_datetime}</th>
+                    <th class="w120">{$Think.lang.ds_state}{$Think.lang.inform_handle_type}</th>
+                    <th class="w110">{$Think.lang.ds_handle}</th>
+                </tr>
+            </thead>
+            {notempty name="inform_list"}
+            <tbody>
+                {foreach name="inform_list" item="val"}
+                <tr class="bd-line">
+                    <td></td>
+                    <td class="w50">
+                        <div class="pic-thumb">
+                            <a href="{:url('Goods/index',['goods_id'=>$val.inform_goods_id])}" target="_blank">
+                                <img src="{:goods_cthumb($val.inform_goods_image)}"/>
+                            </a>
+                        </div>
+                    </td>
+                    <td class="tl">
+                        <dl class="goods-name">
+                            <dt><a href="{:url('Goods/index',['goods_id'=>$val.inform_goods_id])}" target="_blank">{$val.inform_goods_name} </a></dt>
+                        </dl>
+                    </td>
+                    <td class="tl">
+                        <p>{$Think.lang.inform_type}：{$val.informsubject_type_name}</p>
+                        <p>{$Think.lang.inform_subject}：{$val.informsubject_content}
+                    </td>
+                    <td>{$val.inform_datetime|date="Y-m-d"}</td>
+                    <td><p>
+                            {if $val.inform_state == '1'}
+                            {$Think.lang.inform_state_unhandle}
+                            {elseif $val.inform_state == '2'}
+                            {$Think.lang.inform_state_handled}
+                            {/if}
+                        </p>
+                        <p>
+                            {if $val.inform_handle_type == '1'}
+                            {$Think.lang.inform_handle_type_unuse}
+                            {elseif $val.inform_handle_type == '2'}
+                            {$Think.lang.inform_handle_type_venom}
+                            {elseif $val.inform_handle_type == '3'}
+                            {$Think.lang.inform_handle_type_valid}
+                            {/if}
+                        </p></td>
+                    <td class="dsm-table-handle">
+                        <span>
+                            <a href="{:url('Memberinform/inform_info',['inform_id'=>$val.inform_id])}" class="btn-blue"><i class="iconfont">&#xe70b;</i><p>{$Think.lang.ds_view}</p></a>
+                        </span>
+                        {if $val.inform_state == '1'}
+                        <span>
+                            <a class="btn-orange" href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('Memberinform/inform_cancel',['inform_id'=>$val.inform_id])}','{$Think.lang.inform_cancel_confirm}');"><i class="iconfont">&#xe754;</i>
+                                <p>{$Think.lang.ds_cancel}</p>
+                            </a>
+                        </span>
+                        {/if}
+                    </td>
+                </tr>
+                {/foreach}
+                {else /}
+                <tr>
+                    <td colspan="20" class="norecord">
+                        <div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div>
+                    </td>
+                </tr>
+                {/notempty}
+            </tbody>
+            <tfoot>
+                {notempty name="inform_list"}
+                <tr>
+                    <td colspan="20">
+                        <div class="pagination">{$show_page|raw}</div>
+                    </td>
+                </tr>
+                {/notempty}
+            </tfoot>
+        </table>
+
+
+
+
+
+
+
+
+{/block}

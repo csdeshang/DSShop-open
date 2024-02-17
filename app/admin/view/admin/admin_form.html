@@ -1,0 +1,101 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form method="post" id="admin_form">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.admin_index_username}</td>
+                    {if isset($admin)}
+                    <td class="vatop rowform">{$admin.admin_name}</td>
+                    {else /}
+                    <td class="vatop rowform"><input id="admin_name" name="admin_name" value="" class="input-txt" type="text"></td>
+                    <td class="vatop tips">{$Think.lang.admin_add_username_tip}</td>
+                    {/if}
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.admin_edit_admin_pw}</td>
+                    <td class="vatop rowform"><input id="admin_password" name="admin_password" value="" class="input-txt" type="password"></td>
+                    <td class="vatop tips">{$Think.lang.admin_edit_pwd_tip1}</td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.admin_edit_admin_pw2}</td>
+                    <td class="vatop rowform"><input id="admin_password2" name="admin_password2" value="" class="input-txt" type="password"></td>
+                    <td></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.gadmin_name}</td>
+                    <td class="vatop rowform">
+                        <select name="gid">
+                            {foreach name="gadmin" item="v"}
+                            <option value="{$v.gid}">{$v.gname}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.admin_add_gid_tip}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>					
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<script>
+                    $(document).ready(function() {
+                        $("#admin_form").validate({
+                            errorPlacement: function(error, element) {
+                                error.appendTo(element.parent().parent().find('td:last'));
+                            },
+                            rules: {
+                                admin_name: {
+                                    required: true,
+                                    remote: {
+                                        url: ADMINSITEURL+'/admin/ajax.html?branch=check_admin_name',
+                                        type: 'get',
+                                        data: {
+                                            gname: function() {
+                                                return $('#admin_name').val();
+                                            }
+                                        }
+                                    }
+                                },
+                                admin_password: {
+                                    minlength: 6,
+                                    maxlength: 20
+                                },
+                                admin_password2: {
+                                    minlength: 6,
+                                    maxlength: 20,
+                                    equalTo: '#admin_password'
+                                },
+                                gid: {
+                                    required: true
+                                }
+                            },
+                            messages: {
+                                admin_name: {
+                                    required: '{$Think.lang.ds_none_input}',
+                                    remote: '{$Think.lang.admin_add_admin_not_exists}'
+                                },
+                                admin_password: {
+                                    minlength: '{$Think.lang.admin_add_password_max}',
+                                    maxlength: '{$Think.lang.admin_add_password_max}'
+                                },
+                                admin_password2: {
+                                    minlength: '{$Think.lang.admin_add_password_max}',
+                                    maxlength: '{$Think.lang.admin_add_password_max}',
+                                    equalTo: '{$Think.lang.admin_edit_repeat_error}'
+                                },
+                                gid: {
+                                    required : '{$Think.lang.admin_add_gid_null}',
+                                }
+                            }
+                        });
+                    });
+</script>

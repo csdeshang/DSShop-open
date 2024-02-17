@@ -1,0 +1,127 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>代金券</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.admin_voucher_template_adddate}</dt>
+                <dd>
+                    <input type="text" id="sdate" name="sdate" class="txt date" value="{$Request.get.sdate}">~
+                    <input type="text" id="edate" name="edate" class="txt date" value="{$Request.get.edate}">
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.ds_state}</dt>
+                <dd>
+                    <select name="state">
+                        <option value="0"
+                         {eq name="Request.get.state" value="0"}selected{/eq}>{$Think.lang.ds_state}</option>
+                        {notempty name="templatestate_arr"}
+                        {foreach name="templatestate_arr" item="val"}
+                        <option value="{$val.0}" {eq name="val.0" value="$Request.get.state" }selected{/eq}>{$val.1}</option>
+                        {/foreach}
+                        {/notempty}
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>是否推荐</dt>
+                <dd>
+                    <select name="recommend">
+                        <option value="" selected>是否推荐</option>
+                        <option value="1" {eq name="Request.get.recommend" value="1" }selected{/eq}>已推荐</option>
+                        <option value="0" {eq name="Request.get.recommend" value="0" }selected{/eq}>未推荐</option>
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Voucher/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+    <!-- 帮助 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.admin_voucher_template_list_tip}</li>
+        </ul>
+    </div>
+    
+    
+    <!-- 列表 -->
+    <form id="list_form" method="post">
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="w24">&nbsp;</th>
+                <th class="align-left"><span>{$Think.lang.admin_voucher_template_title}</span></th>
+                <th class="align-center"><span>{$Think.lang.admin_voucher_template_price}</span></th>
+                <th class="align-center"><span>{$Think.lang.admin_voucher_template_orderpricelimit}</span></th>
+                <th class="align-center"><span>{$Think.lang.admin_voucher_template_enddate}</span></th>
+                <th class="align-center"><span>{$Think.lang.admin_voucher_template_adddate}</span></th>
+                <th class="align-center"><span>{$Think.lang.ds_state}</span></th>
+                <th class="align-center">{$Think.lang.ds_recommend}</th>
+                <th class="align-center"><span>{$Think.lang.ds_handle}</span></th>
+            </tr>
+            </thead>
+            <tbody id="treet1">
+            {notempty name="vouchertemplate_list"}
+            {foreach name="vouchertemplate_list" item="val"}
+            <tr class="hover">
+                <td>&nbsp;</td>
+                <td class="align-left"><span>{$val.vouchertemplate_title}</span></td>
+                <td class="align-center"><span>{$val.vouchertemplate_price}</span></td>
+                <td class="align-center"><span>{$val.vouchertemplate_limit}</span></td>
+                <td class="align-center"><span>{$val.vouchertemplate_enddate|date="Y-m-d"}</span></td>
+                <td class="align-center"><span>{$val.vouchertemplate_adddate|date="Y-m-d"}</span></td>
+                <td class="align-center">
+                    <span>
+                    {foreach name="templatestate_arr" item="v"}
+                    {eq name="val.vouchertemplate_state" value="$v.0"}{$v.1}{/eq}
+                    {/foreach}
+                    </span>
+                </td>
+                <td class="align-center yes-onoff">
+                    {eq name="val.vouchertemplate_recommend" value="0"}
+                    <a href="JavaScript:void(0);" class="disabled" ajax_branch='vouchertemplate_recommend' ds_type="inline_edit" fieldname="vouchertemplate_recommend" fieldid="{$val.vouchertemplate_id}" fieldvalue="0" title="{$Think.lang.ds_editable}"><img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif"></a>
+                    {else /}
+                    <a href="JavaScript:void(0);" class="enabled" ajax_branch='vouchertemplate_recommend' ds_type="inline_edit" fieldname="vouchertemplate_recommend" fieldid="{$val.vouchertemplate_id}" fieldvalue="1" title="{$Think.lang.ds_editable}"><img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif"></a>
+                    {/eq}</td>
+                <td class="nowrap align-center">
+                    <a href="{:url('Voucher/templateedit',['tid'=>$val.vouchertemplate_id])}" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                </td>
+            </tr>
+           {/foreach}
+           {else}
+            <tr class="no_data">
+                <td colspan="16">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+        </table>
+        {$show_page|raw}
+    </form>
+
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>
+<script language="javascript">
+    $(function () {
+        $('#sdate').datepicker({dateFormat: 'yy-mm-dd'});
+        $('#edate').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+</script>

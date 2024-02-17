@@ -1,0 +1,237 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>空间管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="upload-con" id="uploader" style="display: none;">
+        <form method="post" action="" id="fileupload" enctype="multipart/form-data">
+            <div class="upload-con-div">{$Think.lang.select_file}：
+                <div class="dssc-upload-btn"> <a href="javascript:void(0);"><span>
+                            <input type="file" hidefocus="true" size="1" class="input-file" name="file" multiple="multiple"/>
+                        </span>
+                        <p><i class="iconfont">&#xe733;</i>{$Think.lang.album_class_list_img_upload}</p>
+                    </a> </div>
+            </div>
+            <div dstype="file_msg"></div>
+            <div class="upload-pmgressbar" dstype="file_loading"></div>
+            <div class="upload-txt"><span>{$Think.lang.album_batch_upload_description}{$Think.config.ds_config.image_max_filesize}KB{$Think.lang.album_batch_upload_description_1}</span> </div>
+        </form>
+    </div>
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.g_album_keyword}</dt>
+                <dd><input class="txt" name="keyword" id="keyword" value="{$Request.get.keyword}" type="text"></dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Goodsalbum/pic_list',['aclass_id'=>$Request.param.aclass_id])}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="ds-search-form">
+        <th>{$Think.lang.album_plist_batch_processing}</th>
+        <td>
+            {notempty name="albumpic_list"}
+            <a href="JavaScript:void(0);" class="dssc-btn-mini" onClick="checkAll()"><i class="iconfont">&#xe64d;</i>全选</a>
+            <a href="JavaScript:void(0);" class="dssc-btn-mini" onClick="uncheckAll()"><i class="iconfont">&#xe64d;</i>取消</a>
+            <a href="JavaScript:void(0);" class="dssc-btn-mini" onClick="switchAll()"><i class="iconfont">&#xe762;</i>{$Think.lang.album_plist_inverse}</a>
+            <a href="JavaScript:void(0);" class="dssc-btn-mini" onClick="submit_form('del')"><i class="iconfont">&#xe725;</i>{$Think.lang.album_class_delete}</a>
+            <a href="JavaScript:void(0);" class="dssc-btn-mini" onClick="submit_form('watermark')"><i class="iconfont">&#xe71f;</i>{$Think.lang.album_plist_add_watermark}</a>
+            {/notempty}
+            <dd id="batchClass" style=" display:none;">
+                {notempty name="class_list"}
+                <span>{$Think.lang.album_plist_move_album_change}{$Think.lang.ds_colon}</span>
+                <select name="cid" id="cid" style="width:100px;">
+                    {foreach name="class_list" item="v"}
+                    <option value="{$v.aclass_id}" style="width:80px;">{$v.aclass_name}</option>
+                    {/foreach}
+                </select>
+                <input type="button" onClick="submit_form('move')" value="{$Think.lang.album_plist_move_album_begin}" />
+                {else /}
+                <span>
+                {$Think.lang.album_plist_move_album_only_one}
+                <a href="JavaScript:void(0);" uri="{:url('Selleralbum/album_add')}" ds_type="dialog" dialog_title="{$Think.lang.album_class_add}">{$Think.lang.album_class_add}</a>
+                {$Think.lang.album_plist_move_album_only_two}
+            </span>
+                {/notempty}
+            </dd>
+        </td>
+    </div>
+
+    <div class="dssc-picture-list">
+        <form name="checkboxform" id="checkboxform" method="POST" action="">
+        <div class="alert alert-info"> <strong>{$Think.lang.album_plist_replace_same_type}</strong> </div>
+        <ul>
+            {foreach name="albumpic_list" item="v" }
+            <li>
+                <dl>
+                    <dt>
+                        <input class="checkitem checkbox" type="checkbox" name="id[]" value="{$v.apic_id}" >
+                        <div class="picture"><a data-lightbox="lightbox-image" data-title="{$v.apic_size},{$Think.lang.upload_to}{$v.apic_uploadtime|date='Y-m-d'}" href="{:goods_thumb($v,1280)}"> <img id="img_{$v.apic_id}" src="{:goods_thumb($v)}"></a></div>
+                        <input id="{$v.apic_id}" class="editInput1" readonly onDblClick="$(this).unbind();_focus($(this));" value="{$v.apic_name}" title="{$Think.lang.album_plist_double_click_edit}" style="cursor:pointer;">
+                        <span onDblClick="_focus($(this).prev());" title="{$Think.lang.album_plist_double_click_edit}"><i class="iconfont">&#xe731;</i></span></dt>
+                    <dd class="date">
+                        <p>{$Think.lang.album_plist_upload_time}{$Think.lang.ds_colon}{$v.apic_uploadtime|date="Y-m-d"}</p>
+                        <p>{$Think.lang.album_plist_original_size}{$Think.lang.ds_colon}{$v.apic_spec}</p>
+                    </dd>
+                    <dd class="buttons">
+                        <div class="upload-btn"><a href="javascript:void(0);"> <span>
+                                    <input type="file" name="file_{$v.apic_id}" id="file_{$v.apic_id}" class="input-file" size="1" hidefocus="true" dstype="replace_image" />
+                                </span>
+                                <div class="upload-button"><i class="iconfont">&#xe733;</i>{$Think.lang.album_plist_replace_upload}</div>
+                                <input id="submit_button" style="display:none" type="button" value="{$Think.lang.slide_image_upload}" onClick="submit_form($(this))" />
+                            </a>
+                        </div>
+                        <!--<a href="javascript:dsLayerOpen('{:url('Goodsalbum/album_pic_move',['id'=>$v.apic_id])}','{$Think.lang.album_plist_move_album}')"><i class="iconfont">&#xe9cf;</i>{$Think.lang.album_plist_move_album}</a>-->
+                        <!--<a href="javascript:void(0)" onclick='submit_delete({$v.apic_id})'><i class="iconfont">&#xe725;</i>{$Think.lang.album_plist_delete_img}</a>-->
+                    </dd>
+                </dl>
+            </li>
+            {/foreach}
+        </ul>
+        </form>
+    </div>
+    {$show_page|raw}
+</div>
+<script>
+    jQuery.browser = {};
+    (function () {
+        jQuery.browser.msie = false;
+        jQuery.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)./)) {
+            jQuery.browser.msie = true;
+            jQuery.browser.version = RegExp.$1;
+        }
+    })();
+</script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.iframe-transport.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.ui.widget.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.fileupload.js" charset="utf-8"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.poshytip.min.js"></script>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script>
+    $(function () {
+        $('.tip').poshytip({
+            className: 'tip-yellowsimple',
+            alignTo: 'target',
+            alignX: 'center',
+            alignY: 'bottom',
+            offsetX: 0,
+            offsetY: 5,
+            allowTipHover: false
+        });
+
+
+        // 替换图片
+        $('input[dstype="replace_image"]').each(function () {
+            $(this).fileupload({
+                dataType: 'json',
+                url: ADMINSITEURL + '/Goodsalbum/replace_image_upload.html?id=' + $(this).attr('id'),
+                done: function (e, data) {
+                    var param = data.result;
+                    if (param.state == 'true') {
+                        img_refresh(param.id);
+                    } else {
+                        alert(param.message);
+                    }
+                }
+            });
+        });
+
+    });
+// 重新加载图片，替换上传使用
+    function img_refresh(id) {
+        $('#img_' + id).attr('src', $('#img_' + id).attr('src') + "?" + 100 * Math.random());
+    }
+    //控制图片名称input焦点可编辑
+    function _focus(o) {
+        var name;
+        obj = o;
+        name = obj.val();
+        obj.removeAttr("readonly");
+        obj.attr('class', 'editInput2');
+        obj.select();
+        obj.blur(function () {
+            if (name != obj.val()) {
+                _save(this);
+            } else {
+                obj.attr('class', 'editInput1');
+                obj.attr('readonly', 'readonly');
+            }
+        });
+    }
+    function _save(obj) {
+        $.post("{:url('Goodsalbum/change_pic_name')}", {id: obj.id, name: obj.value}, function (data) {
+            if (data == 'false') {
+                layer.msg('{$Think.lang.ds_common_op_fail}');
+            } else {
+                layer.msg('{$Think.lang.ds_common_op_succ}');
+            }
+        });
+        obj.className = "editInput1";
+        obj.readOnly = true;
+    }
+//    function submit_delete(ids_str) {
+//        _uri = ADMINSITEURL + "/Goodsalbum/del_album_pic.html?apic_id=" + ids_str;
+//        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+//    }
+    // 全选
+    function checkAll() {
+        $('#batchClass').hide();
+        $('input[type="checkbox"]').each(function(){
+            $(this).prop('checked',true);
+        });
+    }
+    // 取消
+    function uncheckAll() {
+        $('#batchClass').hide();
+        $('input[type="checkbox"]').each(function(){
+            $(this).prop('checked',false);
+        });
+    }
+    // 反选
+    function switchAll() {
+        $('#batchClass').hide();
+        $('input[type="checkbox"]').each(function(){
+            $(this).prop('checked',!$(this).prop('checked'));
+        });
+    }
+    function submit_form(type){
+        if(type != 'move'){
+            $('#batchClass').hide();
+        }
+        var id='';
+        $('input[type=checkbox]:checked').each(function(){
+            if(!isNaN($(this).val())){
+                id += $(this).val()+',';
+            }
+        });
+        if(id == ''){
+            layer.msg('{$Think.lang.album_plist_select_img}');
+            return false;
+        }
+        if(type=='del'){
+            if(!confirm('{$Think.lang.album_plist_delete_confirm_message}')){
+                return false;
+            }
+        }
+        if(type=='move'){
+            $('#checkboxform').append('<input type="hidden" name="cid" value="'+$('#cid').val()+'" />');
+        }
+        $('#checkboxform').attr('action',ADMINSITEURL+'/Goodsalbum/album_pic_'+type+'.html');
+        $('#checkboxform').submit();
+    }
+</script>

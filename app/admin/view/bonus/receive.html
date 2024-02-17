@@ -1,0 +1,33 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.ds_member_name}</th>
+                <th>{$Think.lang.bonusreceive_time}</th>
+                <th>{$Think.lang.bonusreceive_transformed}</th>
+                <th>{$Think.lang.bonusreceive_price}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="bonusreceive_list"}
+            {foreach name="bonusreceive_list" item="bonusreceive"}
+            <tr>
+                <td>{$bonusreceive.member_name|default=''}</td>
+                <td>{if $bonusreceive.bonusreceive_time neq 0}{$bonusreceive.bonusreceive_time|date="Y-m-d H:i:s"}{/if}</td>
+                <td>{$bonusreceive.bonusreceive_transformed}</td>
+                <td>{$bonusreceive.bonusreceive_price}</td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>

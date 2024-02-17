@@ -1,0 +1,41 @@
+{include file="public/header" /}
+
+<div class="eject_con">
+    <div class="adds" style=" min-height:240px;">
+        <table class="dssc-default-table">
+            {notempty name="address_list"}
+            <thead>
+            <tr>
+                <th class="w80">{$Think.lang.deliver_man}</th>
+                <th>{$Think.lang.deliver_daddress}</th>
+                <th class="w100">{$Think.lang.deliver_telphone}</th>
+                <th class="w80">{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {foreach name="address_list" item="value" key="key" }
+            <tr class="bd-line">
+                <td class="tc">{$value.seller_name}</td>
+                <td style="color:#999;background-color:#FFF;text-align:center;padding:10px 0;">{$value.area_info} {$value.daddress_detail}</td>
+                <td class="tc">{$value.daddress_telphone}</td>
+                <td class="tc"><a href="{:url('Deliver/send_address_save',['order_id'=>$order_id,'daddress_id'=>$value.daddress_id])}">选择</a>
+                </td>
+            </tr>
+            {/foreach}
+            <tr class="bd-line">
+                <td colspan="20"></td>
+            </tr>
+            </tbody>
+            {else /}
+            <tboby>
+                <tr>
+                    <td colspan="5">{$Think.lang.deliver_none_set}</td>
+                </tr>
+            </tboby>
+            {/notempty}
+        </table>
+    </div>
+</div>
+
+

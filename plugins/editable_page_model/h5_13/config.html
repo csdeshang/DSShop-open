@@ -1,0 +1,91 @@
+<!-- 公告 -->
+<form onchange="changeForm($(this),13)">
+<input type="hidden" name="model_id" value="13" />
+<h2 class="attr-title">公告</h2>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">背景颜色</label>
+    <div class="layui-input-block">
+        <div class="color-wrapper">
+            <input data-js="color" type="text" name="back_color" value="{$config_info.back_color|default=''}" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">公告图标</label>
+    <div class="layui-input-block">
+        <div class="uploader-wrapper">
+            <div class="uploader-image-wrapper" {if !isset($config_info.notice_image) || !$config_info.notice_image}style="display:none" {/if}>
+                                        <img class='uploader-image' src='{$config_info.notice_image|default=""}' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+            <div class='uploader-content' {if isset($config_info.notice_image) && $config_info.notice_image}style="display:none" {/if}>
+                <div class="uploader-icon iconfont">&#xe6bf;</div>
+                <div class="uploader-text">点击上传</div>
+                <div class="uploader-notice">94×44</div>
+                <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+            <input type='hidden' name='notice_image' value='{$config_info.notice_image|default=""}'>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">跳转页面</label>
+    <div class="layui-input-block">
+        <input type="text" name="notice_link" value="{$config_info.notice_link|default=''}" placeholder="请输入跳转页面" class="layui-input">
+    </div>
+</div>
+{if isset($config_info['notice_title']) && !empty($config_info['notice_title'])}
+{foreach name='config_info.notice_title' item='item' key='key'}
+<div class="model-item"{if $key==0} id="notice_item"{/if}>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">公告文字</label>
+        <div class="layui-input-block">
+            <input type="text" name="notice_title[i_{$key}][text]" value="{$item.text|default=''}" placeholder="请输入公告文字" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">跳转页面</label>
+        <div class="layui-input-block">
+            <input type="text" name="notice_title[i_{$key}][link]" value="{$item.link|default=''}" placeholder="请输入跳转页面" class="layui-input">
+        </div>
+    </div>
+</div>
+{/foreach}
+{else}
+<div class="model-item" id="notice_item">
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">公告文字</label>
+        <div class="layui-input-block">
+            <input type="text" name="notice_title[i_0][text]" value="" placeholder="请输入公告文字" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">跳转页面</label>
+        <div class="layui-input-block">
+            <input type="text" name="notice_title[i_0][link]" value="" placeholder="请输入跳转页面" class="layui-input">
+        </div>
+    </div>
+</div>
+{/if}
+<div class="model-btn" onclick="addModel($(this),13)">
+    <span>+</span>
+    <span>添加一条公告</span>
+</div>
+
+</form>
+<script>
+    if(typeof(loadConfig13)=='undefined'){
+        function loadConfig13(obj){
+            obj.find('[data-js="color"]').colorpicker({showOn: 'both'});
+        }
+    }
+    $(function(){
+        if(typeof(index['i_13'])=='undefined'){
+            index['i_13']={if isset($config_info['notice_title'])}{:count($config_info['notice_title'])}{else}0{/if};
+            html['i_13']=$('#notice_item').html()
+        }
+    })
+    
+    
+</script>

@@ -1,0 +1,48 @@
+<div class="dsm-flow-item">
+    <div class="title">{$Think.lang.commodity_transaction_information}</div>
+    <div class="item-goods">
+      {notempty name="order"}
+      <dl>
+        <dt>
+          <div class="dsm-goods-thumb-mini"><a target="_blank" href="{:url('Goods/index',['goods_id'=>$order.goods_id])}">
+            <img src="{:goods_thumb($order)}"/></a></div>
+        </dt>
+        <dd><a target="_blank" href="{:url('Goods/index',['goods_id'=>$order.goods_id])}">{$order.goods_name}</a>
+          {$Think.lang.currency}{$order.goods_price} * {$order.goods_num} <font color="#AAA">({$Think.lang.ds_quantity})</font>
+        </dd>
+      </dl>
+      {/notempty}
+    </div>
+    <div class="item-order">
+      <dl>
+        <dt>{$Think.lang.use_aging}：</dt>
+        <dd>{$Think.lang.from_now_on} {:date('Y-m-d',$order.vr_indate)}</dd>
+      </dl>
+      <dl>
+        <dt>{$Think.lang.total_order_amount}：</dt>
+        <dd><strong>{$Think.lang.currency}{:ds_price_format($order.order_amount)}
+          {if $order.refund_amount > 0}
+          ({$Think.lang.refund_add}{$Think.lang.ds_colon}{$Think.lang.currency}{$order.refund_amount})
+         {/if}
+          </strong> </dd>
+      </dl>
+      <dl class="line">
+        <dt>{$Think.lang.refund_order_ordersn}：</dt>
+        <dd><a target="_blank" href="{:url('Membervrorder/show_order',['order_id'=>$order.order_id])}">{$order.order_sn}</a>
+            <a href="javascript:void(0);" class="a">{$Think.lang.ds_more}<i class="iconfont">&#xe689;</i>
+          <div class="more"> <span class="arrow"></span>
+            <ul>
+              <li>{$Think.lang.ds_payment_method}{$Think.lang.ds_colon}<span>{$order.payment_name}</span></li>
+              <li>{$Think.lang.order_time}{$Think.lang.ds_colon}<span>{:date('Y-m-d H:i:s',$order.add_time)}</span></li>
+              {if $order.payment_time}
+              <li>{$Think.lang.member_show_order_pay_time}{$Think.lang.ds_colon}<span>{:date('Y-m-d H:i:s',$order.payment_time)}</span></li>
+              {/if}
+              {if $order.finnshed_time > 0}
+              <li>{$Think.lang.member_show_order_finish_time}{$Think.lang.ds_colon}<span>{:date('Y-m-d H:i:s',$order.finnshed_time)}</span></li>
+              {/if}
+            </ul>
+          </div>
+          </a> </dd>
+      </dl>
+    </div>
+  </div>

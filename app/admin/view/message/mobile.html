@@ -1,0 +1,238 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_message}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="post">
+        <table class="ds-default-table">
+            <tbody>
+            <tr>
+                <td class="required w120">{$Think.lang.smscf_sign}</td>
+                <td class="vatop rowform">
+                    <input type="text" name="smscf_sign" id="smscf_sign" value="{$list_config.smscf_sign}" class="w200"/>
+                </td>
+                <td class="vatop tips">{$Think.lang.smscf_sign_tips}</td>
+            </tr>
+            <tr>
+                <td class="required w120">{$Think.lang.smscf_type}</td>
+                <td class="vatop rowform">
+                    <select id="smscf_type" name="smscf_type">
+                        <option value="wj" {if $list_config.smscf_type=='wj'}selected{/if}>{$Think.lang.smscf_type_wj}</option>
+                        <option value="ali" {if $list_config.smscf_type=='ali'}selected{/if}>{$Think.lang.smscf_type_ali}</option>
+                        <option value="ten" {if $list_config.smscf_type=='ten'}selected{/if}>{$Think.lang.smscf_type_ten}</option>
+                    </select>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder smscf_type_wj" {if $list_config.smscf_type!='wj'}style="display:none"{/if}>
+                <td class="required w120">{$Think.lang.smscf_wj_username}</td>
+                <td class="vatop rowform">
+                    <input type="text" name="smscf_wj_username" id="smscf_wj_username" value="{$list_config.smscf_wj_username}" class="w200"/>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder smscf_type_wj" {if $list_config.smscf_type!='wj'}style="display:none"{/if}>
+                <td class="required w120">{$Think.lang.smscf_wj_key}</td>
+                <td class="vatop rowform">
+                    <input type="text" name="smscf_wj_key" id="smscf_wj_key" value="{$list_config.smscf_wj_key}" class="w200"/>
+                    <a href="http://sms.webchinese.com.cn/" target="_blank" class="btn btn-blue btn-mini">{$Think.lang.ds_apply}</a>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            {notempty name='smscf_num'}
+            <tr class="noborder">
+                <td class="required w120">{$Think.lang.smscf_num}</td>
+                <td>{$smscf_num}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            {/notempty}
+            <tr class="noborder smscf_type_ali" {if $list_config.smscf_type!='ali'}style="display:none"{/if}>
+                <td class="required w120">{$Think.lang.smscf_ali_id}</td>
+                <td class="vatop rowform">
+                    <input type="text" name="smscf_ali_id" id="smscf_ali_id" value="{$list_config.smscf_ali_id}" class="w200"/>
+                    <a href="https://www.aliyun.com/product/sms" target="_blank" class="btn btn-blue btn-mini">{$Think.lang.ds_apply}</a>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder smscf_type_ali" {if $list_config.smscf_type!='ali'}style="display:none"{/if}>
+                <td class="required w120">{$Think.lang.smscf_ali_secret}</td>
+                <td class="vatop rowform">
+                    <input type="text" name="smscf_ali_secret" id="smscf_ali_secret" value="{$list_config.smscf_ali_secret}" class="w200"/>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder smscf_type_ten" {if $list_config.smscf_type!='ten'}style="display:none"{/if}>
+            <td class="required w120">{$Think.lang.smscf_ten_id}</td>
+            <td class="vatop rowform">
+                <input type="text" name="smscf_ten_id" id="smscf_ten_id" value="{$list_config.smscf_ten_id}" class="w200"/>
+                <a href="https://cloud.tencent.com/product/sms" target="_blank" class="btn btn-blue btn-mini">{$Think.lang.ds_apply}</a>
+            </td>
+            <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder smscf_type_ten" {if $list_config.smscf_type!='ten'}style="display:none"{/if}>
+            <td class="required w120">{$Think.lang.smscf_ten_secret}</td>
+            <td class="vatop rowform">
+                <input type="text" name="smscf_ten_secret" id="smscf_ten_secret" value="{$list_config.smscf_ten_secret}" class="w200"/>
+            </td>
+            <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120">{$Think.lang.sms_register}</td>
+                <td class="vatop rowform">
+                    <div class="onoff">
+                        <label for="sms_register_show1" class="cb-enable {if condition="$list_config.sms_register eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                        <label for="sms_register_show0" class="cb-disable {if condition="$list_config.sms_register eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                        <input id="sms_register_show1" name="sms_register" value="1" type="radio" {if condition="$list_config.sms_register eq 1"} checked="checked"{/if}>
+                        <input id="sms_register_show0" name="sms_register" value="0" type="radio" {if condition="$list_config.sms_register eq 0"} checked="checked"{/if}>
+                    </div>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required">{$Think.lang.sms_login}</td>
+                <td class="vatop rowform">
+                    <div class="onoff">
+                        <label for="sms_login_show1" class="cb-enable {if condition="$list_config.sms_login eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                        <label for="sms_login_show0" class="cb-disable {if condition="$list_config.sms_login eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                        <input id="sms_login_show1" name="sms_login" value="1" type="radio" {if condition="$list_config.sms_login eq 1"} checked="checked"{/if}>
+                        <input id="sms_login_show0" name="sms_login" value="0" type="radio" {if condition="$list_config.sms_login eq 0"} checked="checked"{/if}>
+                    </div>
+                </td>
+            </tr>
+            <tr class="noborder">
+                <td class="required">{$Think.lang.sms_password}</td>
+                <td class="vatop rowform">
+                    <div class="onoff">
+                        <label for="sms_password_show1" class="cb-enable {if condition="$list_config.sms_password eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                        <label for="sms_password_show0" class="cb-disable {if condition="$list_config.sms_password eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                        <input id="sms_password_show1" name="sms_password" value="1" type="radio" {if condition="$list_config.sms_password eq 1"} checked="checked"{/if}>
+                        <input id="sms_password_show0" name="sms_password" value="0" type="radio" {if condition="$list_config.sms_password eq 0"} checked="checked"{/if}>
+                    </div>
+                </td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120">{$Think.lang.test_mobile_address}</td>
+                <td class="vatop rowform">
+                    <input type="text" name="mobile_test" id="mobile_test" value="" class="w200"/>
+                    <input type="button" value="{$Think.lang.test_mail}" name="send_test_mobile" class="btn btn-small" id="send_test_mobile" >
+                </td>
+            </tr>
+            <tr class="noborder smscf_type_ali" {if $list_config.smscf_type!='ali'}style="display:none"{/if}>
+                <td class="required w120">{$Think.lang.ali_template_code}</td>
+                <td class="vatop rowform">
+                    <input type="text" name="ali_template_code" id="ali_template_code" value="" class="w200"/>
+                </td>
+            </tr>
+            <tr class="noborder smscf_type_ali" {if $list_config.smscf_type!='ali'}style="display:none"{/if}>
+                <td class="required w120">{$Think.lang.ali_template_content}</td>
+                <td class="vatop rowform">
+                    <textarea name="ali_template_content" id="ali_template_content" class="w200"></textarea>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder smscf_type_ali" {if $list_config.smscf_type!='ali'}style="display:none"{/if}>
+                <td class="required w120">{$Think.lang.ali_template_param}</td>
+                <td class="vatop rowform">
+                    <textarea name="ali_template_param" id="ali_template_param" class="w200"></textarea>
+                </td>
+                <td class="vatop tips">{$Think.lang.ali_template_param_tips}</td>
+            </tr>
+            <tr class="noborder smscf_type_ten" {if $list_config.smscf_type!='ten'}style="display:none"{/if}>
+            <td class="required w120">{$Think.lang.ten_template_code}</td>
+            <td class="vatop rowform">
+                <input type="text" name="ten_template_code" id="ten_template_code" value="" class="w200"/>
+            </td>
+            </tr>
+            <tr class="noborder smscf_type_ten" {if $list_config.smscf_type!='ten'}style="display:none"{/if}>
+            <td class="required w120">{$Think.lang.ten_template_content}</td>
+            <td class="vatop rowform">
+                <textarea name="ten_template_content" id="ten_template_content" class="w200"></textarea>
+            </td>
+            <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder smscf_type_ten" {if $list_config.smscf_type!='ten'}style="display:none"{/if}>
+            <td class="required w120">{$Think.lang.ten_template_param}</td>
+            <td class="vatop rowform">
+                <textarea name="ten_template_param" id="ten_template_param" class="w200"></textarea>
+            </td>
+            <td class="vatop tips">{$Think.lang.ten_template_param_tips}</td>
+            </tr>
+            <tr class="noborder smscf_type_wj" {if $list_config.smscf_type!='wj'}style="display:none"{/if}>
+                <td class="required w120">{$Think.lang.test_mobile_content}</td>
+                <td class="vatop rowform">
+                    <textarea name="mobile_test_content" id="mobile_test_content" class="w200"></textarea>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td></td>
+                <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>
+<script>
+    $(document).ready(function(){
+        $('#send_test_mobile').click(function(){
+            $.ajax({
+                type:'POST',
+                url:"{:url('Message/mobile_testing')}",
+                data:{
+                    'smscf_sign':$('#smscf_sign').val(),
+                    'smscf_type':$('#smscf_type').val(),
+                    'smscf_ali_secret':$('#smscf_ali_secret').val(),
+                    'smscf_ali_id':$('#smscf_ali_id').val(),
+                    'ali_template_content':$('#ali_template_content').val(),
+                    'ali_template_param':$('#ali_template_param').val(),
+                    'ali_template_code':$('#ali_template_code').val(),
+                    'smscf_ten_secret':$('#smscf_ten_secret').val(),
+                    'smscf_ten_id':$('#smscf_ten_id').val(),
+                    'ten_template_content':$('#ten_template_content').val(),
+                    'ten_template_param':$('#ten_template_param').val(),
+                    'ten_template_code':$('#ten_template_code').val(),
+                    'mobile_test_content':$('#mobile_test_content').val(),
+                    'smscf_wj_username':$('#smscf_wj_username').val(),
+                    'smscf_wj_key':$('#smscf_wj_key').val(),
+                    'mobile_test':$('#mobile_test').val()
+                },
+                error:function(html){
+                    layer.alert('{$Think.lang.ds_common_op_fail}');
+                },
+                success:function(html){
+                    if(html.msg){
+                        layer.alert(html.msg);
+                    }
+                },
+                dataType:'json'
+            });
+        });
+        $('#smscf_type').change(function(){
+            if($(this).val()=='wj'){
+                $('.smscf_type_ali').hide()
+                $('.smscf_type_wj').show()
+                $('.smscf_type_ten').hide()
+            }
+            if($(this).val()=='ali'){
+                $('.smscf_type_ali').show()
+                $('.smscf_type_wj').hide()
+                $('.smscf_type_ten').hide()
+            }
+            if($(this).val()=='ten'){
+                $('.smscf_type_ali').hide()
+                $('.smscf_type_wj').hide()
+                $('.smscf_type_ten').show()
+            }
+        })
+    });
+</script>

@@ -1,0 +1,207 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_deliver}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="wrap">
+        <div class="step-title"><em>{$Think.lang.deliver_first_step}</em>{$Think.lang.deliver_confirm_trade}</div>
+        <form name="deliver_form" method="POST" id="deliver_form" action="{:url('Deliver/send',['order_id'=>$order_info.order_id])}">
+            <input type="hidden" id="shipping_express_id" value="{$order_info['extend_order_common']['shipping_express_id']}"
+                   name="shipping_express_id">
+            <input type="hidden" value="{$order_info['extend_order_common']['reciver_name']}" name="reciver_name" id="reciver_name">
+            <input type="hidden" value="{$order_info['extend_order_common']['reciver_info']['area']}" name="reciver_area" id="reciver_area">
+            <input type="hidden" value="{$order_info['extend_order_common']['reciver_info']['street']}" name="reciver_street" id="reciver_street">
+            <input type="hidden" value="{$order_info['extend_order_common']['reciver_info']['mob_phone']}" name="reciver_mob_phone"
+                   id="reciver_mob_phone">
+            <input type="hidden" value="{$order_info['extend_order_common']['reciver_info']['tel_phone']}" name="reciver_tel_phone"
+                   id="reciver_tel_phone">
+            <table class="dssc-default-table order deliver">
+                <tbody>
+                {notempty name="order_info"}
+                <tr>
+                    <td colspan="20" class="sep-row"></td>
+                </tr>
+                <tr>
+                    <th colspan="20"><a href="{:url('order/index',['order_id'=>$order_info.order_id])}" target="_blank" class="fr"
+                                        title="{$Think.lang.show_order_printorder}"/><i class="print-order"></i></a><span
+                            class="fr mr30"></span><span
+                            class="ml10">{$Think.lang.order_order_sn}{$Think.lang.ds_colon}{$order_info.order_sn}</span><span class="ml20">{$Think.lang.order_time}{$Think.lang.ds_colon}<em
+                            class="goods-time">{$order_info.add_time|date="Y-m-d H:i:s"}</em></span>
+                </tr>
+                {foreach name="$order_info.extend_order_goods" item="goods_info" key="k" }
+                <tr>
+                    <td class="bdl w10"></td>
+                    <td class="w50">
+                        <div class="pic-thumb"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank"><img
+                                src="{:goods_thumb($goods_info, 240)}"/></a></div>
+                    </td>
+                    <td class="tl">
+                        <dl class="goods-name">
+                            <dt><a target="_blank" href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}">{$goods_info.goods_name}</a></dt>
+                            <dd><strong>￥{$goods_info.goods_price}</strong>&nbsp;x&nbsp;<em>{$goods_info.goods_num}</em>{$Think.lang.piece}</dd>
+                        </dl>
+                    </td>
+                    {if (count($order_info['extend_order_goods']) > 1 && $k ==0) || (count($order_info['extend_order_goods']) == 1)}
+                    <td class="bdl bdr order-info w500" rowspan="{:count($order_info['extend_order_goods'])}">
+                        <dl>
+                            <dt>{$Think.lang.order_total_transport}{$Think.lang.ds_colon}</dt>
+                            <dd>
+                                {if !empty($order_info['shipping_fee']) && $order_info['shipping_fee'] != '0.00'}
+                                {$order_info.shipping_fee}
+                                {else/}
+                                （{$Think.lang.product_shipping_mfee}）
+                                {/if}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.deliver_forget}{$Think.lang.ds_colon}</dt>
+                            <dd>
+                                <textarea name="deliver_explain" cols="100" rows="2" class="w400 tip-t"
+                                          title="{$Think.lang.deliver_forget_tips}">{$order_info['extend_order_common']['deliver_explain']}</textarea>
+                            </dd>
+                        </dl>
+                    </td>
+                    {/if}
+                </tr>
+                {/foreach}
+                <tr>
+                    <td colspan="20" class="tl bdl bdr" style="padding:8px" id="address"><strong class="fl">{$Think.lang.deliver_buyer_adress}{$Think.lang.ds_colon}</strong><span id="buyer_address_span" class="left">{$order_info['extend_order_common']['reciver_name']}&nbsp;{$order_info['extend_order_common']['reciver_info']['phone']}&nbsp;{$order_info['extend_order_common']['reciver_info']['address']}</span>
+                        <a href="javascript:dsLayerOpen('{:url('deliver/buyer_address_edit',['order_id'=>$order_info.order_id])}','编辑收货人-{$order_info['extend_order_common']['reciver_name']}-信息')" class="dssc-btn-mini fr"><i class="iconfont">&#xe731;</i>编辑</a>
+                    </td>
+                </tr>
+                {else /}
+                <tr>
+                    <td colspan="20" class="norecord"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></td>
+                </tr>
+                {/notempty}
+                </tbody>
+            </table>
+            <div class="step-title mt30"><em>{$Think.lang.deliver_second_step}</em>{$Think.lang.deliver_confirm_daddress}</div>
+            <div class="deliver-sell-info"><strong class="fl">{$Think.lang.deliver_my_daddress}{$Think.lang.ds_colon}</strong>
+                <a href="javascript:dsLayerOpen('{:url('deliver/send_address_select',['order_id'=>$order_info.order_id])}','编辑发货人-{$order_info['extend_order_common']['reciver_name']}-信息')" class="dssc-btn-mini fr"><i class="iconfont">&#xe731;</i>编辑</a>
+
+                <span id="seller_address_span">
+                {empty name="daddress_info"}
+                {$Think.lang.deliver_none_set}
+                {else /}
+                {$daddress_info.seller_name}&nbsp;{$daddress_info.daddress_telphone}&nbsp;{$daddress_info.area_info}&nbsp;{$daddress_info.daddress_detail}
+                {/empty}
+            </span>
+            </div>
+            {notempty name="daddress_info"}
+            <input type="hidden" name="daddress_id" id="daddress_id" value="{$daddress_info.daddress_id}">
+            {/notempty}
+            <div class="step-title mt30"><em></em>{$Think.lang.deliver_third_step}{$Think.lang.deliver_express_select}</div>
+            <div class="alert alert-success">{$Think.lang.common_cargo_logistics}<span
+                    class="red">[{$Think.lang.deliver_express_wx}]</span>{$Think.lang.tab_operation}。
+            </div>
+            <div class="dssc-goods-spec">
+                <div class="spec-tabmenu">
+                    <ul class="tab pngFix">
+                        <li id="eli1" class="selected"><a href="javascript:void(0);" onclick="etab(1)">{$Think.lang.deliver_express_zx}</a></li>
+                        <li id="eli2" class="normal"><a href="javascript:void(0);" onclick="etab(2)">{$Think.lang.deliver_express_wx}</a></li>
+                    </ul>
+                </div>
+            </div>
+            <table class="dssc-default-table order" id="texpress1">
+                <tbody>
+                <tr>
+                    <td class="bdl w150">{$Think.lang.deliver_company_name}</td>
+                    <td class="w250">{$Think.lang.deliver_shipping_code}</td>
+                    <td class="tc">{$Think.lang.deliver_bforget}</td>
+                    <td class="bdr w90 tc">{$Think.lang.ds_handle}</td>
+                </tr>
+                {notempty name="express_list"}
+                {foreach name="express_list" item="v" key="k" }
+                <tr>
+                    <td class="bdl">{$v.express_name}</td>
+                    <td class="bdl"><input name="shipping_code" type="text" class="text w200 tip-r"
+                                           title="{$Think.lang.deliver_shipping_code_tips}" maxlength="20" ds_type='eb'
+                                           ds_value="{$v.express_id}"/></td>
+                    <td class="bdl gray" ds_value="{$v.express_id}"></td>
+                    <td class="bdl bdr tc"><a ds_type='eb' ds_value="{$v.express_id}" href="javascript:void(0);" class="dssc-btn">{$Think.lang.ds_common_button_confirm}</a>
+                    </td>
+                </tr>
+                {/foreach}
+                {/notempty}
+                </tbody>
+            </table>
+            <table class="dssc-default-table order" id="texpress2" style="display:none">
+                <tbody>
+                <tr>
+                    <td colspan="2"></td>
+                </tr>
+                <tr>
+                    <td class="bdl tr">{$Think.lang.deliver_no_deliver_tips}</td>
+                    <td class="bdr tl w400">&emsp;<a ds_type='eb' ds_value="e1000" href="javascript:void(0);" class="dssc-btn">{$Think.lang.ds_common_button_confirm}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2"></td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        function etab(t) {
+            if (t == 1) {
+                $('#eli1').removeClass('normal').addClass('selected');
+                $('#eli2').removeClass('selected').addClass('normal');
+                $('#texpress1').css('display', '');
+                $('#texpress2').css('display', 'none');
+            } else {
+                $('#eli1').removeClass('selected').addClass('normal');
+                $('#eli2').removeClass('normal').addClass('selected');
+                $('#texpress1').css('display', 'none');
+                $('#texpress2').css('display', '');
+            }
+        }
+
+        $(function () {
+            $('a[ds_type="eb"]').on('click', function () {
+                if ($('input[ds_value="' + $(this).attr('ds_value') + '"]').val() == '') {
+                    layer.alert('{$Think.lang.store_deliver_shipping_code_pl}');
+                    return false;
+                }
+                $('input[ds_type="eb"]').prop('disabled', true);
+                $('input[ds_value="' + $(this).attr('ds_value') + '"]').prop('disabled', false);
+                $('#shipping_express_id').val($(this).attr('ds_value'));
+                ds_ajaxpost('deliver_form', 'url', "{:url('deliver/index')}")
+            });
+
+            $('#add_time_from').datepicker({dateFormat: 'yy-mm-dd'});
+            $('#add_time_to').datepicker({dateFormat: 'yy-mm-dd'});
+            $('.checkall_s').click(function () {
+                var if_check = $(this).prop('checked');
+                $('.checkitem').each(function () {
+                    if (!this.disabled) {
+                        $(this).prop('checked', if_check);
+                    }
+                });
+                $('.checkall_s').prop('checked', if_check);
+            });
+            {if $order_info.shipping_code != ''}
+            $('input[ds_value="{$order_info.extend_order_common.shipping_express_id}"]').val('{$order_info.shipping_code}');
+            $('td[ds_value="{$order_info.extend_order_common.shipping_express_id}"]').html('{$order_info.extend_order_common.deliver_explain}');
+            {/if}
+
+
+            $('#my_address_add').click(function () {
+                ajax_form('my_address_add', '{$Think.lang.deliver_add_daddress}', "{:url('Deliver/send_address_edit',['order_id'=>$order_info.order_id])}", 550, 0);
+            });
+        });
+    </script>
+
+
+</div>    

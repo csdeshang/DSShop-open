@@ -1,0 +1,99 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.customer_service}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form id="customer_set_form" method="post" enctype="multipart/form-data" name="form1">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="w150">{$Think.lang.customer_service_open}</td>
+                <td class="vatop rowform">
+                    <div class="onoff">
+                        <label for="customer_service_open1" class="cb-enable {if condition="$list_config.customer_service_open eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                        <label for="customer_service_open0" class="cb-disable {if condition="$list_config.customer_service_open eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                        <input id="customer_service_open1" name="customer_service_open" value="1" type="radio" {if condition="$list_config.customer_service_open eq 1"} checked="checked"{/if} />
+                        <input id="customer_service_open0" name="customer_service_open" value="0" type="radio" {if condition="$list_config.customer_service_open eq 0"} checked="checked"{/if} />
+                    </div>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="w150"><label for="customer_service_qq_1">{$Think.lang.customer_service_qq}:</label></td>
+                <td class="vatop rowform">
+                    <input id="customer_service_qq_1" name="customer_service_qq_1" value="{$list_config.customer_service_qq_1|default=''}" type="text">
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="w150"><label for="customer_service_qq_2">{$Think.lang.customer_service_qq}:</label></td>
+                <td class="vatop rowform">
+                    <input id="customer_service_qq_2" name="customer_service_qq_2" value="{$list_config.customer_service_qq_2|default=''}" type="text">
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="w150"><label for="customer_service_qq_3">{$Think.lang.customer_service_qq}:</label></td>
+                <td class="vatop rowform">
+                    <input id="customer_service_qq_3" name="customer_service_qq_3" value="{$list_config.customer_service_qq_3|default=''}" type="text">
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="w150"><label for="customer_service_ww_1">{$Think.lang.customer_service_ww}:</label></td>
+                <td class="vatop rowform">
+                    <input id="customer_service_ww_1" name="customer_service_ww_1" value="{$list_config.customer_service_ww_1|default=''}" type="text">
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="w150"><label for="customer_service_ww_2">{$Think.lang.customer_service_ww}:</label></td>
+                <td class="vatop rowform">
+                    <input id="customer_service_ww_2" name="customer_service_ww_2" value="{$list_config.customer_service_ww_2|default=''}" type="text">
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="w150"><label for="customer_service_ww_3">{$Think.lang.customer_service_ww}:</label></td>
+                <td class="vatop rowform">
+                    <input id="customer_service_ww_3" name="customer_service_ww_3" value="{$list_config.customer_service_ww_3|default=''}" type="text">
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td></td>
+                <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    $(function() {
+        $('#customer_set_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+
+            },
+            messages: {
+
+            }
+        });
+    });
+</script>

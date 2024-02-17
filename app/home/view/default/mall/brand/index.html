@@ -1,0 +1,72 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+<div class="w1200">
+   
+    <div class="dsh-recommend-borand">
+        <h2 class='title'><p>{$Think.lang.brand_index_recommend_brand}</p></h2>
+        <div class="dsh-barnd-list">
+            <ul>
+                {foreach name="brand_r" item="brand"}
+                <li>
+                    <dl>
+                        <dt><a href="{:url('Brand/brand_goods',array('brand_id'=>$brand.brand_id))}"><img class="lazyload" data-original="{:brand_image($brand.brand_pic)}" alt="{$brand.brand_name}"/></a></dt>
+                        <dd><a href="{:url('Brand/brand_goods',array('brand_id'=>$brand.brand_id))}"></a>{$brand.brand_name}</dd>
+                    </dl>
+                </li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+    <div class="dsh-brand-class">
+        <div class="dsh-brand-class-tab">
+            <ul class="tabs-nav">
+                {foreach name="brand_class" item="brand"}
+                <li class="{empty name='brand_index0'}tabs-selected{/empty}">
+                    <a title="{$brand.brand_class}" href="javascript:void(0)">{$brand.brand_class}</a>
+                </li>
+                {assign name="brand_index0" value="1" /}
+                {/foreach}
+            </ul>
+        </div>
+        {foreach name="brand_c" item="b_c"}
+        <div class="dsh-barnd-list tabs-panel {notempty name='brand_index'}tabs-hide{/notempty}">
+            <ul>
+                {notempty name="b_c.image"}
+                {foreach name="b_c.image" item="brand"}
+                <li>
+                    <dl>
+                        <dt><a href="{:url('Brand/brand_goods',array('brand_id'=>$brand.brand_id))}"><img class="lazyload" data-original="{:brand_image($brand.brand_pic)}"></a></dt>
+                        <dd><a href="{:url('Brand/brand_goods',array('brand_id'=>$brand.brand_id))}">{$brand.brand_name}</a></dd>
+                    </dl>
+                </li>
+                {/foreach}
+                {/notempty}
+            </ul>
+            {notempty name="b_c.text"}
+            <div class="dsh-barnd-list-text"><strong>{$Think.lang.brand_more_brands}：</strong>
+                {foreach name="b_c.text" item="brand"}
+                <a href="{:url('Brand/brand_goods',array('brand_id'=>$brand.brand_id))}">{$brand.brand_name}</a>
+                {/foreach}
+            </div>
+            {/notempty}
+        </div>
+        {assign name="brand_index" value="1" /}
+        {/foreach}
+    </div>
+</div>
+<script>
+    $(".tabs-nav > li > a").on('click', function() {
+            var tabs = $(this).parents('ul:first').children("li");
+            var panels = $(this).parents('.dsh-brand-class:first').children(".tabs-panel");
+            var index = $.inArray(this, $(this).parents('ul:first').find("a"));
+            if (panels.eq(index)[0]) {
+                tabs.removeClass("tabs-selected").eq(index).addClass("tabs-selected");
+                panels.addClass("tabs-hide").eq(index).removeClass("tabs-hide");
+            }
+    });
+</script>
+
+
+{/block}

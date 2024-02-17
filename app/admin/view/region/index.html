@@ -1,0 +1,76 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>地区管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>全站所有涉及的地区均来源于此处，强烈建议对此处谨慎操作。</li>
+            <li>所属大区为默认的全国性的几大区域，只有省级地区才需要填写大区域，目前全国几大区域有：华北、东北、华东、华南、华中、西南、西北、港澳台、海外</li>
+            <li>所在层级为该地区的所在的层级深度，如北京&gt;北京市&gt;朝阳区,其中北京层级为1，北京市层级为2，朝阳区层级为3</li>
+            <li>{$Think.lang.area_index_help1}</li>
+            <li>{$Think.lang.area_index_help2}</li>
+            <li>{$Think.lang.area_index_help3}</li>
+        </ul>
+    </div>
+    
+    
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th width="5%"></th>
+                <th width="15%">{$Think.lang.ds_sort}</th>
+                <th width="35%">{$Think.lang.area_name}</th>
+                <th width="15%">{$Think.lang.area_region}</th>
+                <th width="15%">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach name="region_list" item="area"}
+            <tr>
+                <td>
+                    <input type="checkbox" class="checkitem" value="{$area.area_id}">
+                    {if $area.switchs}
+                    <img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-expandable.gif" status="open" ds_type="flex"  fieldid="{$area.area_id}">
+                    {else}
+                    <img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-item.gif" status="close" ds_type="flex"  fieldid="{$area.area_id}">
+                    {/if}
+                </td>
+                <td class="sort">
+                    <span title="{$Think.lang.ds_editable}" ajax_branch="area_sort" datatype="number" fieldid="{$area.area_id}" fieldname="area_sort" ds_type="inline_edit" class="editable ">{$area.area_sort}</span>
+                </td>
+                <td class="name">
+                    <span class="node_name editable" ajax_branch="area_name" fieldid="{$area.area_id}" fieldname="area_name" ds_type="inline_edit" required="1" class="editable ">{$area.area_name}</span>
+                </td>
+                <td class="name"><span title="{$Think.lang.ds_editable}" ajax_branch="area_region" fieldid="{$area.area_id}" fieldname="area_region" ds_type="inline_edit" class="editable ">{$area.area_region}</span></td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Region/edit',['area_id'=>$area.area_id])}','{$Think.lang.ds_edit}-{$area.area_name}')"  class="dsui-btn-edit">{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Region/drop',['area_id'=>$area.area_id])}','{$Think.lang.ds_ensure_del}');"  class="dsui-btn-del">{$Think.lang.ds_del}</a>
+                    <a href="javascript:dsLayerOpen('{:url('Region/add',['area_id'=>$area.area_id])}','{$Think.lang.ds_add}')" class="dsui-btn-add">{$Think.lang.add_child}</a>
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+<script>
+    AJAX_URL_REGION = "{:url('Region/ajax_cate')}";
+</script>
+<script src="{$Think.ADMIN_SITE_ROOT}/js/region_tree.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>

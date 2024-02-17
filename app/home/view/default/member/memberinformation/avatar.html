@@ -1,0 +1,51 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+        <form action="{:url('Memberinformation/upload')}" enctype="multipart/form-data" id="form_avaster" method="post">
+            <div class="dsm-default-form">
+                <dl>
+                    <dt>{$Think.lang.home_member_avatar_thumb}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <div class="user-avatar"><span><img src="{:get_member_avatar($member_info.member_avatar)}?{:microtime()}>" alt="" ds_type="avatar" width='120' height="120" /></span></div>
+                        <p class="hint mt5">{$Think.lang.ds_member_avatar_hint|raw}</p>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.home_member_change_avatar}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <div class="dsm-upload-btn"> <a href="javascript:void(0);"><span>
+            <input type="file" hidefocus="true" size="1" class="input-file" name="pic" id="pic" file_id="0" multiple="" maxlength="0"/>
+            </span>
+                            <p><i class="iconfont">&#xe733;</i>{$Think.lang.home_member_avatar_upload}</p>
+                            <input id="submit_button" style="display:none" type="button" value="&nbsp;" onClick="submit_form($(this))" />
+                        </a> </div>
+                    </dd>
+                </dl>
+            </div>
+        </form>
+        
+<script type="text/javascript">
+    $(function(){
+          
+            $('#pic').change(function(){
+                var filepatd=$(this).val();
+                var extStart=filepatd.lastIndexOf(".");
+                var ext=filepatd.substring(extStart,filepatd.lengtd).toUpperCase();
+                if(ext!=".PNG"&&ext!=".GIF"&&ext!=".JPG"&&ext!=".JPEG"){
+                    alert("{$Think.lang.file_type_error}");
+                    $(this).attr('value','');
+                    return false;
+                }
+                if ($(this).val() == '') return false;
+                $("#form_avaster").submit();
+            });
+    });
+</script>
+
+
+
+
+
+
+{/block}

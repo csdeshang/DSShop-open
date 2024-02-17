@@ -1,0 +1,67 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+<form id="goodsevalform" method="get" class="tc">
+    <input type="hidden" name="type" value="{$Request.get.type}"/>
+    {if $goodsevallist}
+    <div class="dsm-evaluation-list">
+        {foreach name="goodsevallist" item="list"}
+        <div class="dsm-evaluation-timeline">
+            <div class="date">{$list.geval_addtime|date="Y-m-d H:i:s"}</div>
+            <div class="goods-thumb"><a target="_blank" href="{:url('Goods/index',['goods_id'=>$list.geval_goodsid])}">
+                    <img src="{:goods_cthumb($list.geval_goodsimage)}"> </a></div>
+            <dl class="detail">
+                <dt><a target="_blank" href="{:url('Goods/index',['goods_id'=>$list.geval_goodsid])}">{$list.geval_goodsname}</a> </dt>
+                <dd>{$Think.lang.commodity_rating}：
+                    <div class="raty" style="display:inline-block;" data-score="{$list.geval_scores}"></div>
+                </dd>
+                <dd>{$Think.lang.member_evaluation_my_evaluation}：{$list.geval_content} </dd>
+                <dd>
+                    {if $list.geval_image== ''}
+                    <a href="{:url('Memberevaluate/add_image',['geval_id'=>$list.geval_id])}" class="dsm-btn dsm-btn-orange">{$Think.lang.my_printout}</a>
+                    {/if}
+                    {if $list.geval_image !=''}
+                    {$Think.lang.print_picture}：
+                    <ul class="photos-thumb">
+                        {php}$image_array = explode(',', $list['geval_image']);{/php}
+                        {foreach name="image_array" item="value"}
+                        <li> <a data-lightbox="lightbox-image" href="{:sns_thumb($value)}"><img src="{:sns_thumb($value)}"></a></li>
+                        {/foreach}
+                    </ul>
+                    {/if}
+
+                </dd>
+                {if $list.geval_explain}
+                <dd>
+                    <p style="color:#996600;padding:5px 0px;">[{$Think.lang.member_evaluation_explain}]{$list.geval_explain}</p>
+                </dd>
+                {/if}
+            </dl>
+        </div>
+        {/foreach}
+    </div>
+    <div class="pagination mt30">{$show_page|raw}</div>
+    {else}
+    <div class="norecord">
+        <div class="warning-option"><i></i><span>{$Think.lang.no_record}</span></div>
+    </div>
+    {/if}
+</form>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $('.raty').raty({
+            path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+            readOnly: true,
+            score: function() {
+                return $(this).attr('data-score');
+            }
+        });
+    })
+</script>
+
+
+
+{/block}

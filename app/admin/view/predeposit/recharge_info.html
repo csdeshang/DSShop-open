@@ -1,0 +1,66 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+
+    <table class="ds-default-table">
+        <tbody>
+            <tr>
+                <td class="w120"><label>{$Think.lang.admin_predeposit_sn}:</label></td>
+                <td>{$info.pdr_sn}</td>
+            </tr>
+            <tr>
+                <td class="w120"><label>{$Think.lang.admin_predeposit_membername}:</label></td>
+                <td>{$info.pdr_member_name}</td>
+            </tr>
+            <tr>
+                <td class="w120"><label>{$Think.lang.admin_predeposit_recharge_price}({$Think.lang.ds_yuan}):</label></td>
+                <td>{$info.pdr_amount}</td>
+            </tr>
+            <tr>
+                <td class="w120"><label>{$Think.lang.refund_buyer_add_time}:</label></td>
+                <td>{$info.pdr_addtime|date="Y-m-d H:i:s"}</td>
+            </tr>
+            {if $info.pdr_paymenttime}
+            <tr>
+                <td class="w120"><label>{$Think.lang.admin_predeposit_payment}:</label></td>
+                <td>{:get_order_payment_name($info['pdr_payment_code'])}</td>
+            </tr>
+            <tr>
+                <td class="w120"><label>{$Think.lang.admin_predeposit_paytime}:</label></td>
+                <td>
+                    {if $info.pdr_paymenttime eq '0'}
+                    {$info.pdr_paymenttime|date="Y-m-d"}
+                    {else}
+                    {$info.pdr_paymenttime|date="Y-m-d H:i:s"}
+                    {/if}
+                </td>
+            </tr>
+            <tr>
+                <td class="w120"><label>第三方支付平台交易号:</label></td>
+                <td>{$info.pdr_trade_sn}</td>
+            </tr>
+            {/if}
+            <!-- 显示管理员名称 -->
+            {if $info.pdr_admin neq ''}
+            <tr>
+                <td class="w120"><label>{$Think.lang.admin_predeposit_adminname}:</label></td>
+                <td>{$info.pdr_admin}</td>
+            </tr>
+            {/if}
+        </tbody>
+        {if $info.pdr_payment_state eq '0'}
+        <tfoot >
+            <tr>
+                <td colspan="2">
+                    <a class="btn btn-small" href="{:url('Predeposit/recharge_edit',['id'=>$info.pdr_id])}"><span>{$Think.lang.admin_predeposit_payed}</span></a>
+                </td>
+            </tr>
+        </tfoot>
+        {/if}
+    </table>
+
+</div>

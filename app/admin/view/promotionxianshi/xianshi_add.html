@@ -1,0 +1,153 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>秒杀</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    
+    <div class="dssc-form-default">
+    {empty name="xianshi_info"}
+    <form id="add_form" action="" method="post">
+        {else /}
+        <form id="add_form" action="{:url('Promotionxianshi/xianshi_edit')}" method="post">
+            <input type="hidden" name="xianshi_id" value="{$xianshi_info.xianshi_id}">
+            {/empty}
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.xianshi_name}{$Think.lang.ds_colon}
+                </dt>
+                <dd>
+                    <input id="xianshi_name" name="xianshi_name" type="text" maxlength="25" class="text w400"
+                           value="{present name='xianshi_info'}{$xianshi_info.xianshi_name}{/present}"/>
+                    <span></span>
+                    <p class="hint">{$Think.lang.xianshi_name_explain}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.activity_title}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="xianshi_title" name="xianshi_title" type="text" maxlength="10" class="text w200"
+                           value="{present name='xianshi_info'}{$xianshi_info.xianshi_title}{/present}"/>
+                    <span></span>
+                    <p class="hint">{$Think.lang.xianshi_title_explain|raw}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.activity_description}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="xianshi_explain" name="xianshi_explain" type="text" maxlength="30"
+                           class="text w400"
+                           value="{present name='xianshi_info'}{$xianshi_info.xianshi_explain}{/present}"/>
+                    <span></span>
+                    <p class="hint">{$Think.lang.xianshi_explain_explain|raw}</p>
+                </dd>
+            </dl>
+            {empty name="xianshi_info"}
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.start_time}{$Think.lang.ds_colon}
+                </dt>
+                <dd>
+                    <input id="start_time" name="start_time" type="text" class="text w130"/><em class="add-on"><i class="iconfont">&#xe8d6;</i></em><span></span>
+                </dd>
+            </dl>
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.end_time}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="end_time" name="end_time" type="text" class="text w130"/><em class="add-on"><i
+                            class="iconfont">&#xe8d6;</i></em><span></span>
+                </dd>
+            </dl>
+            {/empty}
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.buy_lower_limit}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="lower_limit" name="lower_limit" type="text" class="text w130"
+                           value="{empty name='xianshi_info'}1{else}{$xianshi_info.xianshi_lower_limit}{/empty}"/><span></span>
+                    <p class="hint">{$Think.lang.minimum_purchase_quantity}</p>
+                </dd>
+            </dl>
+            <div class="bottom">
+                    <input id="submit_button" type="submit" class="btn" value="{$Think.lang.ds_submit}">
+            </div>
+        </form>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/i18n/jquery-ui-timepicker-zh-CN.js"></script>
+<script>
+    $(function () {
+        {empty name = "xianshi_info"}
+        $('#start_time').datetimepicker({dateFormat: 'yy-mm-dd'});
+        $('#end_time').datetimepicker({dateFormat: 'yy-mm-dd'});
+        {/empty}
+
+        jQuery.validator.methods.greaterThanDate = function (value, element, param) {
+            var date1 = new Date(Date.parse(param.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 < date2;
+        };
+        jQuery.validator.methods.lessThanDate = function (value, element, param) {
+            var date1 = new Date(Date.parse(param.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 > date2;
+        };
+        jQuery.validator.methods.greaterThanStartDate = function (value, element) {
+            var start_date = $("#start_time").val();
+            var date1 = new Date(Date.parse(start_date.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 < date2;
+        };
+//页面输入内容验证
+    $("#add_form").validate({
+    errorPlacement: function (error, element) {
+    var error_td = element.parent('dd').children('span');
+    error_td.append(error);
+    },
+            onfocusout: false,
+            submitHandler: function (form) {
+				ds_ajaxpost('add_form', 'url', "{:url('Promotionxianshi/index')}");
+            },
+                    rules: {
+                     xianshi_name: {
+                    required: true
+                    },
+					xianshi_title: {
+					required: true
+					},
+                    lower_limit: {
+                    required: true,
+                            digits:true,
+                            min:1
+                    }
+            },
+            messages : {
+                    xianshi_name : {
+                    required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.xianshi_name_error}'
+                    },
+					xianshi_title : {
+					required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.xianshi_title_error}'
+					},
+                    lower_limit: {
+                    required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.purchase_limits_cannot_empty}',
+                            digits: '<i class="iconfont">&#xe64c;</i>{$Think.lang.minimum_purchase_must_figure}',
+                            min: '<i class="iconfont">&#xe64c;</i>{$Think.lang.buy_lower_limit_minimum}'
+                    }
+            }
+    });
+    });
+</script>
+
+    
+    
+    
+    
+    
+</div>
+    

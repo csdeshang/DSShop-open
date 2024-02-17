@@ -1,0 +1,110 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_activity_manage}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.activity_index_title}</dt>
+                <dd><input type="text" name="searchtitle" id="searchtitle" class="txt" value='{$Request.get.searchtitle}'></dd>
+                <dd>
+                    <select name="searchstate">
+                        <option value="0">{$Think.lang.ds_state}</option>
+                        <option value="2" {eq name="Request.get.searchstate" value="2"}selected=selected{/eq}>{$Think.lang.ds_open}</option>
+                        <option value="1" {eq name="Request.get.searchstate" value="1"}selected=selected{/eq}>{$Think.lang.ds_close}</option>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.activity_index_periodofvalidity}</dt>
+                <dd>
+                    <input type="text" name="searchstartdate" id="searchstartdate" class="txt date" readonly='' value='{$Request.get.searchstartdate}'>~
+                    <input type="text" name="searchenddate" id="searchenddate" class="txt date" readonly='' value='{$Request.get.searchenddate}'>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Activity/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.activity_index_help1}</li>
+            <li>{$Think.lang.activity_index_help2}</li>
+            <li>{$Think.lang.activity_index_help3}</li>
+            <li>{$Think.lang.activity_index_help4}</li>
+        </ul>
+    </div>
+    
+    
+    <table class="ds-default-table">
+        <thead>
+            <tr class="thead">
+                <th class="w48 ">{$Think.lang.ds_sort}</th>
+                <th class="w270">{$Think.lang.activity_index_title}</th>
+                <th class="w96">{$Think.lang.activity_index_banner}</th>
+                <th class="w96 align-center">{$Think.lang.start_time}</th>
+                <th class="w96 align-center">{$Think.lang.end_time}</th>
+                <th class="w96 align-center">{$Think.lang.ds_state}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody id="treet1">
+            {notempty name="activity_list"}
+            {foreach name="activity_list" item="v"}
+            <tr class="hover edit row">
+                <td class="sort"><span class=" editable" title="{$Think.lang.ds_editable}" required="1" fieldid="{$v.activity_id}" ajax_branch='activity_sort' fieldname="activity_sort" ds_type="inline_edit" >{$v.activity_sort}</span></td>
+                <td class="name"><span class=" editable" title="{$Think.lang.ds_editable}" required="1" fieldid="{$v.activity_id}" ajax_branch='activity_title' fieldname="activity_title" ds_type="inline_edit" >{$v.activity_title}</span></td>
+                <td>
+                    <div class="link-logo">
+                        <span class="thumb size-logo"><i></i>
+                            <img height="31" width="88" src="{:ds_get_pic(ATTACH_ACTIVITY,$v.activity_banner)}" onload="javascript:ResizeImage(this,88,31);" />
+                        </span>
+                    </div>
+                </td>
+
+                <td class="nowrap align-center">{$v.activity_startdate|date="Y-m-d"}</td>
+                <td class="align-center">{$v.activity_enddate|date="Y-m-d"}</td>
+                <td class="align-center">{eq name="v.activity_state" value="1"}{$Think.lang.ds_open}{else/}{$Think.lang.ds_close}{/eq}</td>
+                <td class="align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Activity/edit',['activity_id'=>$v.activity_id])}','{$Think.lang.ds_edit}-{$v.activity_title}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    {if ($v.activity_state eq '0') OR ($v.activity_state lt TIMESTAMP)}
+                    <a href="javascript:dsLayerConfirm('{:url('Activity/del',['activity_id'=>$v.activity_id])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    {/if}
+                    <a href="{:url('Activity/activity_apply',['activity_id'=>$v.activity_id])}" class="dsui-btn-view"><i class="iconfont"></i>添加活动</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>
+<script type="text/javascript">
+    $("#searchstartdate").datepicker({dateFormat: 'yy-mm-dd'});
+    $("#searchenddate").datepicker({dateFormat: 'yy-mm-dd'});
+</script>

@@ -1,0 +1,150 @@
+{include file="public/header" /}
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商品管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  
+  <div class="explanation" id="explanation">
+      <div class="title" id="checkZoom">
+          <h4 title="提示相关设置操作时应注意的要点">{$Think.lang.ds_explanation}</h4>
+          <span id="explanationZoom" title="收起提示" class="arrow"></span>
+      </div>
+      <ul>
+          <li>{$Think.lang.repeat_choose_commodity}</li>
+          <li>{$Think.lang.special_goods_not_allowed}</li>
+          <li>{$Think.lang.gifts_normal_sales_goods}</li>
+          <li>{$Think.lang.gift_has_been_taken_shelf}</li>
+      </ul>
+  </div>
+  
+  
+  <form method="post" id="goods_gift" action="{:url('Goods/save_gift',['commonid'=>$Request.param.commonid])}">
+  <input type="hidden" name="ref_url" value="{$Request.param.ref_url}" />
+  {notempty name="goods_array"}
+  {foreach name="goods_array" item="value" }
+  <div class="dssc-form-goods-gift" data-gid="{$value.goods_id}">
+    <div class="goods-pic"> <span><img src="{:goods_thumb($value, 240)}"/></span></div>
+    <div class="goods-summary">
+      <h2>{$value.goods_name}<em>SKU：{$value.goods_id}</em></h2>
+      <dl>
+        <dt>{$Think.lang.goods_index_price}：</dt>
+        <dd>￥{$value.goods_price}</dd>
+      </dl>
+      <dl>
+        <dt>{$Think.lang.inventory_space|raw}：</dt>
+        <dd>{$value.goods_storage}</dd>
+      </dl>      
+      <dl>
+        <dt>{$Think.lang.gift_bound}：</dt>
+        <dd>
+          <ul class="goods-gift-list" dstype="choose_goods_list">
+            <?php if (!empty($gift_array[$value['goods_id']])) {?>
+            <?php foreach ($gift_array[$value['goods_id']] as $gift) {?>
+            <li>
+              <div class="pic-thumb"><span><img src="{:goods_cthumb($gift['gift_goodsimage'], '240')}"></span></div>
+              <dl class="goods_name">
+                <dt>{$gift.gift_goodsname}</dt>
+                <dd>{$Think.lang.number_gifts}：
+                  <input class="text" type="text" value="{$gift.gift_amount}" name="gift[{$value.goods_id}][{$gift.gift_goodsid}]">
+                </dd>
+              </dl>
+              <a class="gift-del" dstype="del_choosed" href="javascript:void(0);" title="{$Think.lang.delete_gifts}">X</a></li>
+            <?php }?>
+            <?php }?>
+          </ul>
+          <a class="dssc-btn-mini" dstype="select_goods" href="javascript:void(0);"><i class="iconfont">&#xe753;</i>{$Think.lang.choose_gifts}</a></dd>
+      </dl>
+    </div>
+    <div class="div-goods-select" style="display: none;">
+      <table class="search-form">
+        <thead>
+          <tr>
+            <td></td>
+            <th>{$Think.lang.ds_goods_name}</th>
+            <td class="w160"><input class="text" type="text" name="search_gift"></td>
+            <td class="tc w70"><a class="dssc-btn" href="javascript:void(0);" dstype="search_gift"><i class="iconfont">&#xe718;</i>{$Think.lang.ds_search}</a></td>
+            <td class="w10"></td>
+          </tr>
+        </thead>
+      </table>
+      <div class="search-result" dstype="gift_goods_list"></div>
+      <a class="close" href="javascript:void(0);" dstype="btn_hide_goods_select">X</a> </div>
+  </div>
+  {/foreach}
+  {/notempty}
+  <div class="bottom tc">
+      <input type="submit" class="btn" value="{$Think.lang.confirm_submit}" />
+  </div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#goods_gift').validate({
+            submitHandler:function(form){
+                ds_ajaxpost('goods_gift', 'url', '{$Request.param.ref_url}');
+            }
+        });
+    });
+$(function(){
+    // 选择赠品按钮
+    $('a[dstype="select_goods"]').click(function(){
+        $(this).parents('.goods-summary:first').nextAll('.div-goods-select').show()
+            .find('input[name="search_gift"]').val('').end()
+            .find('a[dstype="search_gift"]').click();
+    });
+
+    // 关闭按钮
+    $('a[dstype="btn_hide_goods_select"]').click(function(){
+        $(this).parent().hide();
+    });
+
+    // 所搜商品
+    $('a[dstype="search_gift"]').click(function(){
+        _url = "{:url('Goods/search_goods')}";
+        _name = $(this).parents('tr').find('input[name="search_gift"]').val();
+        $(this).parents('table:first').next().load(_url, {name: _name});
+    });
+
+    // 分页
+    $('div[dstype="gift_goods_list"]').on('click', '.pagination li a', function(){
+        $(this).parents('div[dstype="gift_goods_list"]').load($(this).attr('href'));
+        return false;
+    });
+
+    // 删除
+    $('ul[dstype="choose_goods_list"]').on('click', 'a[dstype="del_choosed"]', function(){
+        $(this).parents('li:first').remove();
+    });
+
+    // 选择商品
+    $('div[dstype="gift_goods_list"]').on('click', 'a[dstype="a_choose_goods"]', function(){
+        _owner_gid = $(this).parents('.dssc-form-goods-gift:first').attr('data-gid');
+        eval('var data_str = ' + $(this).attr('data-param'));
+        _li = $('<li></li>')
+            .append('<div class="pic-thumb"><span><img src="' + data_str.gimage + '"></span></div>')
+            .append('<dl class="goods_name"><dt>' + data_str.gname + '</dt><dd>{$Think.lang.number_gifts}：<input class="text" type="text" value="1" name="gift[' + _owner_gid + '][' + data_str.gid + ']"></dd></dl>')
+            .append('<a class="gift-del" dstype="del_choosed" href="javascript:void(0);" title="{$Think.lang.delete_gifts}">X</a>');
+        $(this).parents('.div-goods-select:first').prev().find('ul[dstype="choose_goods_list"]').append(_li);
+    });
+
+});
+</script> 
+
+  
+  
+</div>
+
+
+
+
+
+
+
+
+

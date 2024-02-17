@@ -1,0 +1,137 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+<div class="alert alert-success">
+    <h4>{$Think.lang.operating_hints}：</h4>
+    <ul>
+        <li>{$Think.lang.binding_information1}</li>
+        <li>{$Think.lang.binding_information2} <a href="{:url('Membersecurity/auth',['type'=>'modify_mobile'])}">{$Think.lang.binding_information3}</a> {$Think.lang.binding_information4}</li>
+        <li>{$Think.lang.binding_information5} <a href="{:url('Membersecurity/auth',['type'=>'modify_email'])}">{$Think.lang.binding_information6}</a> {$Think.lang.binding_information7}</li>
+        <li>{$Think.lang.binding_information8}</li>
+        <li>{$Think.lang.binding_information9}</li>
+    </ul>
+</div>
+<div class="dsm-default-form">
+    <form method="post" id="auth_form" action="">
+        <input type="hidden" name="type" value="{$Request.param.type}">
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.select_authentication_method}：</dt>
+            <dd><p>
+                    <select name="auth_type" id="auth_type">
+                        {if $member_info.member_mobile}
+                        <option value="mobile">{$Think.lang.ds_mobile} [{:encrypt_show($member_info['member_mobile'],4,4)}]</option>
+                        {/if}
+                        {if $member_info.member_email}
+                        <option value="email">{$Think.lang.ds_email} [{:encrypt_show($member_info['member_email'],4,4)}]</option>
+                        {/if}
+                    </select>
+                    <a href="javascript:void(0);" id="send_auth_code" class="dsm-btn ml5"><span id="sending" style="display:none">{$Think.lang.binding_validation_information1}</span><span class="send_success_tips"><strong id="show_times" class="red mr5"></strong>{$Think.lang.binding_validation_information2}</span>{$Think.lang.binding_validation_information3}</a></p>
+                <p class="send_success_tips hint mt10">{$Think.lang.binding_validation_information4}<strong>{$Think.lang.binding_validation_information5}</strong>{$Think.lang.binding_validation_information6}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.binding_validation_information7}：</dt>
+            <dd>
+                <input type="text" class="text"  maxlength="6" value="" name="auth_code" size="10" id="auth_code" autocomplete="off" />
+                <label for="auth_code" generated="true" class="error"></label>
+            </dd>
+        </dl>
+        <dl class="bottom">
+            <dt>&nbsp;</dt>
+            <dd>
+                <input type="button" class="submit" value="{$Think.lang.binding_validation_information8}" />
+            </dd>
+        </dl>
+    </form>
+</div>
+    <script type="text/javascript">
+                            $('.send_success_tips').hide();
+                            var ALLOW_SEND = true;
+                            $(function() {
+                                $('.submit').on('click', function() {
+                                    if (!$('#auth_form').valid()) {
+                                        document.getElementById('codeimage').src = HOMESITEURL+'/Seccode/makecode.html?t=' + Math.random();
+                                    } else {
+                                        $('#auth_form').submit();
+                                    }
+                                });
+                                function StepTimes() {
+                                    $num = parseInt($('#show_times').html());
+                                    $num = $num - 1;
+                                    $('#show_times').html($num);
+                                    if ($num <= 0) {
+                                        ALLOW_SEND = !ALLOW_SEND;
+                                        $('.send_success_tips').hide();
+                                    } else {
+                                        setTimeout(StepTimes, 1000);
+                                    }
+                                }
+                                $('#send_auth_code').on('click', function() {
+                                    if (!ALLOW_SEND)
+                                        return;
+                                    ALLOW_SEND = !ALLOW_SEND;
+                                    $('#sending').show();
+                                    $.getJSON("{:url('Membersecurity/send_auth_code')}", {type: $('#auth_type').val()}, function(data) {
+                                        if (data.state == 'true') {
+                                            $('#sending').hide();
+                                            $('#show_times').html(60);
+                                            $('.send_success_tips').show();
+                                            setTimeout(StepTimes, 1000);
+                                        } else {
+                                            ALLOW_SEND = !ALLOW_SEND;
+                                            $('#sending').hide();
+                                            layer.alert(data.msg);
+                                        }
+                                    });
+                                });
+
+                                $('#auth_form').validate({
+                                    rules: {
+                                        auth_code: {
+                                            required: true,
+                                            maxlength: 6,
+                                            minlength: 6,
+                                            digits: true
+                                        },
+                                        captcha: {
+                                            required: true,
+                                            minlength: 4,
+                                            remote: {
+                                                url: "{:url('Seccode/check')}",
+                                                type: 'get',
+                                                data: {
+                                                    captcha: function() {
+                                                        return $('#captcha').val();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    messages: {
+                                        auth_code: {
+                                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_verification_code}',
+                                            maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_verification_code}',
+                                            minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_verification_code}',
+                                            digits: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_verification_code}'
+                                        },
+                                        captcha: {
+                                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.enter_graphic_verification_code}',
+                                            minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.enter_graphic_verification_code}',
+                                            remote: '<i class="iconfont">&#xe64c;</i>{$Think.lang.enter_graphic_verification_code}'
+                                        }
+                                    }
+                                });
+                            });
+    </script> 
+
+
+
+
+
+
+
+{/block}
+

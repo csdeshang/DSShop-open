@@ -1,0 +1,127 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_message}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.message_ten_tpl_help1}</li>
+            <li>{$Think.lang.message_ten_tpl_help2}</li>
+            <li>{$Think.lang.message_ten_tpl_help3}</li>
+        </ul>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+
+            <tr class="thead">
+                <th class="w24">&nbsp;</th>
+                <th>{$Think.lang.ten_template_name}</th>
+                <th>{$Think.lang.ten_template_code}</th>
+                <th>{$Think.lang.ten_template_content}</th>
+                <th>{$Think.lang.ten_template_check}</th>
+                <th>{$Think.lang.ten_template_state}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach name="mmtpl_list" item="v" key="k" }
+            <tr class="hover" data-code='{$v.ten_template_code}'>
+                <td class="w24"></td>
+                <td>{$v.membermt_name}</td>
+                <td>{$v.ten_template_code}</td>
+                <td data-name='ten_template_content' data-content='{$v.membermt_short_content}'></td>
+                <td data-name='ten_template_check'></td>
+                <td data-name='ten_template_state'></td>
+                <td class="w60 align-center"><a href="javascript:editCode('membermsgtpl','{$v.membermt_code}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a></td>
+            </tr>
+            {/foreach}
+            {foreach name="mstpl_list" item="v" key="k" }
+            <tr class="hover" data-code='{$v.ten_template_code}'>
+                <td class="w24"></td>
+                <td>{$v.storemt_name}</td>
+                <td>{$v.ten_template_code}</td>
+                <td data-name='ten_template_content' data-content='{$v.storemt_short_content}'></td>
+                <td data-name='ten_template_check'></td>
+                <td data-name='ten_template_state'></td>
+                <td class="w60 align-center"><a href="javascript:editCode('storemsgtpl','{$v.storemt_code}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a></td>
+            </tr>
+            {/foreach}
+            {foreach name="templates_list" item="v" key="k" }
+            <tr class="hover" data-code='{$v.ten_template_code}'>
+                <td class="w24"></td>
+                <td>{$v.mailmt_name|raw}</td>
+                <td>{$v.ten_template_code}</td>
+                <td data-name='ten_template_content' data-content='{$v.mailmt_content}'></td>
+                <td data-name='ten_template_check'></td>
+                <td data-name='ten_template_state'></td>
+                <td class="w60 align-center"><a href="javascript:editCode('mailmsgtemlates','{$v.mailmt_code}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a></td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+
+</div>
+<script>
+    function editCode(type,name){
+        layer.prompt({title: '{$Think.lang.ten_template_code}'}, function(code, index){
+            if(code){
+                $.getJSON("{:url('Message/ten_tpl_edit')}?type="+type+"&name="+name+"&code="+code,function(res){
+                    layer.close(index);
+                    if(res.code==10000){
+                        location.reload();
+                    }else{
+                        layer.alert(res.message);
+                    }
+                })
+            }
+          
+        });
+    }
+    $(function(){
+        $('tr[data-code]').each(function(){
+            var code=$(this).attr('data-code')
+            var _this=$(this)
+            if(code){
+                $.getJSON("{:url('Message/ten_tpl_query')}?"+"code="+code,function(res){
+                    if(res.code==10000){
+                        var content=res.result.TemplateContent
+                        _this.find("td[data-name='ten_template_content']").text(content)
+                        var state=''
+                        switch(res.result.TemplateStatus){
+                            case 0:
+                                state='{$Think.lang.ten_template_state_text[0]}'
+                                break;
+                            case 1:
+                                state='{$Think.lang.ten_template_state_text[1]}'
+                                break;
+                            case 2:
+                                state='{$Think.lang.ten_template_state_text[2]}'
+                                break;
+                        }
+                        _this.find("td[data-name='ten_template_state']").text(state)
+                        if(content!=_this.find("td[data-name='ten_template_content']").attr('data-content')){
+                            _this.find("td[data-name='ten_template_check']").text('{$Think.lang.ten_template_check_not_same}')
+                        }else{
+                            _this.find("td[data-name='ten_template_check']").text('{$Think.lang.ten_template_check_same}')
+                        }
+                    }
+                })
+            }
+        })
+    })
+</script>

@@ -1,0 +1,74 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>举报管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="提示相关设置操作时应注意的要点">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="收起提示" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.inform_help4}</li>
+        </ul>
+    </div>
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th></th>
+                <th>{$Think.lang.inform_type}</th>
+                <th>{$Think.lang.informtype_desc}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="informsubjecttype_list"}
+            {foreach name="informsubjecttype_list" item="v"}
+            <tr class="hover">
+                <td class="w24"><input type="checkbox" name='informtype_id' value="{$v.informtype_id}" class="checkitem"></td>
+                <td>{$v.informtype_name}</td>
+                <td>{$v.informtype_desc}</td>
+                <td class="w72 align-center"><a href="JavaScript:void(0);" onclick="submit_delete('{$v.informtype_id}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a></td>
+            </tr>
+                {/foreach}
+               {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="informsubjecttype_list"}
+            <tr class="tfoot">
+                <td>
+                    {notempty name="informsubjecttype_list"}
+                    <input type="checkbox" class="checkall" id="checkall_1">
+                    {/notempty}
+                </td>
+                <td colspan="16"><label for="checkall_1">{$Think.lang.ds_select_all}</label>
+                    &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                    </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+        {$show_page|raw}
+
+</div>
+<script type="text/javascript">
+    
+    function submit_delete(ids_str) {
+        _uri = ADMINSITEURL + "/Inform/inform_subject_type_drop.html?informtype_id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+</script>

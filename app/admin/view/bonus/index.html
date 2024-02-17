@@ -1,0 +1,95 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_bonus}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.bonus_name}</dt>
+                <dd><input type="text" value="{$Request.param.bonus_name}" name="bonus_name" class="txt"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.bonus_type}</dt>
+                <dd>
+                    <select name="bonus_type">
+                        <option value="">{$Think.lang.ds_please_choose}...</option>
+                        {foreach name="bonus_type_list" item="v" key="k"}
+                        <option value="{$k}" {if condition="$Request.param.bonus_type eq $k"}selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.bonus_state}</dt>
+                <dd>
+                    <select name="bonus_state">
+                        <option value="">{$Think.lang.ds_please_choose}...</option>
+                        {foreach name="bonus_state_list" item="v" key="k"}
+                        <option value="{$k}" {if condition="$Request.param.bonus_state eq $k"}selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="{$Think.lang.ds_search}">
+                <a href="{:url('Bonus/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+    
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.bonus_name}</th>
+                <th>{$Think.lang.bonus_type}</th>
+                <th>{$Think.lang.bonus_totalprice}</th>
+                <th>{$Think.lang.bonus_receiveprice}</th>
+                <th>{$Think.lang.bonus_receivecount}</th>
+                <th>{$Think.lang.bonus_begintime}</th>
+                <th>{$Think.lang.bonus_endtime}</th>
+                <th>{$Think.lang.bonus_state}</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="bonus_list"}
+            {foreach name="bonus_list" item="bonus"}
+            <tr id="ds_row_{$bonus.bonus_id}">
+                <td>{$bonus.bonus_name}</td>
+                <td>{$bonus_type_list[$bonus['bonus_type']]}</td>
+                <td>{$bonus.bonus_totalprice}</td>
+                <td>{$bonus.bonus_receiveprice}</td>
+                <td>{$bonus.bonus_receivecount}</td>
+                <td>{$bonus.bonus_begintime|date="Y-m-d H:i:s"}</td>
+                <td>{$bonus.bonus_endtime|date="Y-m-d H:i:s"}</td>
+                <td>{$bonus_state_list[$bonus['bonus_state']]}</td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Bonus/receive',['bonus_id'=>$bonus.bonus_id])}','详情')" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_detail}</a>
+                    {if $bonus.bonus_state == 1}
+                    <a href="javascript:dsLayerOpen('{:url('Bonus/edit',['bonus_id'=>$bonus.bonus_id])}','编辑')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    {if $bonus.bonus_type == 1}<a href="javascript:dsLayerOpen('{:url('Bonus/link',['bonus_id'=>$bonus.bonus_id])}','{$Think.lang.ds_link}')" class="dsui-btn-link"><i class="iconfont"></i>{$Think.lang.ds_link}</a>{/if}
+                    <a href="javascript:dsLayerConfirm('{:url('Bonus/invalid',['bonus_id'=>$bonus.bonus_id])}','{$Think.lang.ds_ensure_del}')"  class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_invalid}</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>

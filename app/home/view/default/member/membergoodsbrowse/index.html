@@ -1,0 +1,105 @@
+{extend name="default/base/base_member" /}
+
+{block name="member_btn"}
+<a class="dsm-btn dsm-btn-red" href="javascript:void(0);" ds_type="delbtn" data-param='{"goods_id":"all"}'><i class="iconfont">&#xe725;</i>{$Think.lang.clear_all_footprints}</a>
+{/block}
+
+{block name="member_main"}
+
+
+
+
+<div class="dsm-browse">
+    <div class="dsm-browse-left">
+        {notempty name="browselist"}
+        <ul class="dsm-browse-list">
+            {foreach name="browselist" item="v"}
+            <li id="browserow_{$v.goods_id}">
+                <div class="browse-timeline">&nbsp;</div>
+                <div class="browse-time">{$v.browsetime_text}</div>
+                <div class="browse-goods">
+                    <div class="goods-thumb"><a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" target="_blank"><img src="{:goods_cthumb($v.goods_image,240)}" /></a> </div>
+                    <dl class="goods-info">
+                        <dt><a target="_blank" href="{:url('Goods/index',['goods_id'=>$v.goods_id])}">{$v.goods_name}</a></dt>
+                        <dd>{$Think.lang.mall_price}：
+                            <em class="sale-price">{$Think.lang.currency}{$v.goods_promotion_price}</em>
+                            <em class="market-price" title="{$Think.lang.market_price}">{$Think.lang.currency}{$v.goods_marketprice}</em>
+                        </dd>
+                    </dl>
+                    <a class="dsm-btn dsm-btn-orange" href="javascript:addcart({$v.goods_id},1,'','o');"><i class="iconfont">&#xe69a;</i>{$Think.lang.add_cart}</a>
+                    <br/><br/>
+                    <a class="dsm-btn" href="javascript:void(0);" ds_type="delbtn" data-param='{"goods_id":{$v.goods_id}}'><i class="iconfont">&#xe725;</i>{$Think.lang.delete_record}</a>
+                </div>
+            </li>
+            {/foreach}
+        </ul>
+        
+        {else /}
+        <div class="norecord">
+            <div class="warning-option"><i></i><span>{$Think.lang.no_record}</span></div>
+        </div>
+        {/notempty}
+    </div>
+    <div class="dsm-browse-class" style="display: none">
+        <div class="title"><a href="{:url('Membergoodsbrowse/listinfo')}" class="{$Request.param.gc_id ?'':'selected'}"> {$Think.lang.ds_full_history}</a></div>
+        <ul id="sidebarMenu">
+            {foreach name="browseclass_arr" item="v"}
+            <li class="side-menu"> <a href="{:url('Membergoodsbrowse/listinfo',['gc_id'=>$key])}" class="{if $Request.param.gc_id == $key}selected{/if}"><i></i>{$v.gc_name}</a>
+                <ul style="<?php echo in_array(input('param.gc_id'),array_keys($v['sonclass']))?'display: block;':'display: none;'; ?>">
+                    {foreach name="v.sonclass" item="v_son" key="k_son"}
+                    <li class="{if $Request.param.gc_id == $k_son}selected{/if}"><a href="{:url('Membergoodsbrowse/listinfo',['gc_id'=>$k_son])}">{$v_son.gc_name}</a></li>
+                    {/foreach}
+                </ul>
+            </li>
+            {/foreach}
+        </ul>
+    </div>
+</div>
+<form id="buynow_form" method="post" action="{:url('Buy/buy_step1')}" target="_blank">
+    <input id="goods_id" name="cart_id[]" type="hidden"/>
+</form>
+
+
+<script>
+    jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+</script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.poshytip.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        //清除单条浏览记录
+        $("[ds_type='delbtn']").on('click',function(){
+            var _this = $(this);
+            layer.confirm("{$Think.lang.ds_ensure_del}", {
+                btn: ['确定', '取消'],
+                title: false,
+            }, function () {
+                var data_str = _this.attr('data-param');
+                eval("data_str = "+data_str);
+                $.getJSON(HOMESITEURL+'/Membergoodsbrowse/del.html?goods_id='+data_str.goods_id,function(data){
+                    if(data.done == true){
+                        if(data_str.goods_id == 'all'){
+                            location.reload(true);
+                        } else {
+                            $("#browserow_"+data_str.goods_id).hide();
+			    layer.msg("{$Think.lang.ds_common_del_succ}");
+                        }
+                    }else{
+                        layer.alert(data.msg);
+                    }
+                });
+            });
+        });
+
+        //立即购买
+        $('a[dstype="buy_now"]').click(function(){
+            eval('var data_str = ' + $(this).attr('data-param'));
+            $("#goods_id").val(data_str.goods_id+'|1');
+            $("#buynow_form").submit();
+        });
+    });
+</script>
+
+
+
+
+{/block}

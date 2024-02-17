@@ -1,0 +1,143 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+<div class="w1200">
+
+    <div class="dsh-container mt10 mb10">
+        <div class="dsh-compare-title">{$Think.lang.comparison_basic_information}</div>
+        {if $compare_list}
+        <table class="dsh-compare-table">
+            {foreach name="compare_list" item="v"}
+            <!-- 显示商品图片及名称 -->
+            {if $v.key == 'goodsinfo'}
+            <tr id="comparetr_{$key}" class="goods_tr">
+                <th>{$v.name}</th>
+                {for start="0" end="$maxnum"}
+                {if $v[$i]}
+                <td>
+                    <dl class="goods-info">
+                    <dt class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$v[$i]['goods_id']])}" target="_blank"><img src="{:goods_cthumb($v[$i]['goods_image'],240)}"></a></dt>
+                    <dd class="goods-name"><a href="{:url('Goods/index',['goods_id'=>$v[$i]['goods_id']])}" target="_blank">{$v[$i]['goods_name']}</a></dd>
+                    {if $i>0}
+                    <dd class="del" onclick="javascript:delCompare({$v[$i]['goods_id']},'info');"><i class="iconfont">&#xe725;</i>{$Think.lang.ds_delete}</dd>
+                    {/if}
+                </dl>
+                </td>
+                {else /}
+                <td><div class="no-compare">
+                    <h3>{$Think.lang.no_comparison_term}</h3>
+                    <a href="{:url('Search/index',['cate_id'=>$cate_id])}" title="" target="_blank">{$Think.lang.compare_add}</a></div></td>
+                {/if}
+                {/for}
+            </tr>
+            {/if}
+            <!-- 显示商品价格 -->
+            {if $v.key == 'goodsprice'}
+            <tr id="comparetr_{$key}">
+                <th>{$v.name}</th>
+                {for start="0" end="$maxnum"}
+                <td><div class="goods-price">{$v[$i]?$Think.lang.currency.$v[$i]:''}&nbsp;</div></td>
+                {/for}
+            </tr>
+            {/if}
+            <!-- 显示品牌 -->
+            {if $v.key == 'brand'}
+            <tr id="comparetr_{$key}">
+                <th>{$v.name}</th>
+                {for start="0" end="$maxnum"}
+                <td>{if is_array($v[$i])}{$v[$i]['brand_name']}{else/}{$v[$i]}{/if}&nbsp;</td>
+                {/for}
+            </tr>
+            {/if}
+            <!-- 显示普通文字项 -->
+            {if !$v.key}
+            <tr id="comparetr_{$key}">
+                <th>{$v.name}
+                    <input type="hidden" name="isdiff[]" value="{$key}|{$v.isdiff}" /></th>
+                {for start="0" end="$maxnum"}
+                <td>{$v[$i]}&nbsp;</td>
+                {/for}
+            </tr>
+            {/if}
+           {/foreach}
+        </table>
+        <div class="dsh-compare-bottom"> <a href="javascript:void(0);" ds_type="comparediff" data-param='{"type":"light"}'><i class="iconfont">&#xe748;</i>{$Think.lang.highlight_different_items}</a> <a href="javascript:void(0);" ds_type="comparediff" data-param='{"type":"cancel"}' style="display: none;"><i class="iconfont">&#xe789;</i>{$Think.lang.unhighlight_different_items}</a> <a href="javascript:void(0);" ds_type="comparesame" data-param='{"type":"hide"}'><i class="iconfont">&#xe749;</i>{$Think.lang.hide_same_item}</a> <a href="javascript:void(0);" ds_type="comparesame" data-param='{"type":"show"}' style="display: none;"><i class="iconfont">&#xe7b0;</i>{$Think.lang.show_same_item}</a> <a href="javascript:void(0);" class="delall" onclick="javascript:delCompare('all','info');"><i class="iconfont">&#xe699;</i>{$Think.lang.empty_contrast_bar}</a></div>
+       {else /}
+        <table class="dsh-compare-table">
+            <tbody>
+            <tr>
+                <td class="dsh-compare-null"><p> <i class="iconfont">&#xe718;</i>{$Think.lang.uncorrelated_goods}</p></td>
+            </tr>
+            </tbody>
+        </table>
+      {/if}
+    </div>
+</div>
+<script type="text/javascript">
+    /* 当鼠标移到表格上是，当前一行背景变色 */
+    $(document).ready(function(){
+        $(".dsh-compare-table tr td").mouseover(function(){
+            $(this).parent().find("td").css("background-color","#F5F5F5");
+            $(this).parent().find("th").css("background-color","#F5F5F5");
+        });
+    })
+    /* 当鼠标在表格上移动时，离开的那一行背景恢复 */
+    $(document).ready(function(){
+        $(".dsh-compare-table tr td").mouseout(function(){
+            var bgc = $(this).parent().attr("bg");
+            $(this).parent().find("td").css("background-color","#FFFFFF");
+            $(this).parent().find("th").css("background-color","#FFFFFF");
+        });
+    })
+
+    $(function(){
+        //高亮显示和取消高亮不同项
+        $("[ds_type='comparediff']").click(function(){
+            //处理参数
+            var data_str = '';
+            eval('data_str =' + $(this).attr('data-param'));
+            var type = data_str.type;
+            $("[ds_type='comparediff']").show();
+            $(this).hide();
+            $("[name='isdiff[]']").each(function(){
+                var itemval = $(this).val();
+                if(itemval){
+                    itemval = itemval.split("|");
+                    if(type == 'light'){
+                        itemval[1] == 1?$("#comparetr_"+itemval[0]).addClass('diffrow'):'';
+                    } else {
+                        itemval[1] == 1?$("#comparetr_"+itemval[0]).removeClass('diffrow'):'';
+                    }
+                }
+            });
+        });
+        //隐藏和显示相同项
+        $("[ds_type='comparesame']").click(function(){
+            //处理参数
+            var data_str = '';
+            eval('data_str =' + $(this).attr('data-param'));
+            var type = data_str.type;
+            $("[ds_type='comparesame']").show();
+            $(this).hide();
+            $("[name='isdiff[]']").each(function(){
+                var itemval = $(this).val();
+                if(itemval){
+                    itemval = itemval.split("|");
+                    if(type == 'show'){
+                        itemval[1] == 0?$("#comparetr_"+itemval[0]).show():'';
+                    } else {
+                        itemval[1] == 0?$("#comparetr_"+itemval[0]).hide():'';
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+
+
+
+
+
+{/block}

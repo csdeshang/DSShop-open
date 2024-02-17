@@ -1,0 +1,98 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/point.css">
+{include file="default/member/pointprod/pointshop_minfo" /}
+<div class="dsp-container">
+
+  {if $Think.config.ds_config.voucher_allow == 1}
+  <div class="dsp-main-layout">
+    <div class="title">
+      <h3><i class="iconfont">&#xe6a1;</i>{$Think.lang.hot_voucher}</h3>
+      <span class="more">
+        <a href="{:url('Pointvoucher/index')}">{$Think.lang.ds_more}>></a>
+      </span>
+    </div>
+    {notempty name="recommend_voucher"}
+    <ul class="dsp-voucher-list">
+      {foreach name="recommend_voucher" item="v"}
+      <li>
+        <div class="coupon_item">
+            <div class="coupon_lk">
+                <div class="lazyimg lazyimg_loaded coupon_img">
+                    <img class="lazyload" data-original="{$v.vouchertemplate_customimg}" onerror="this.src='{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.default_goods_image)}'">
+                </div>
+                <a href="javascript:void(0);" ds_type="exchangebtn" data-param='{"vid":"{$v.vouchertemplate_id}"}'>
+                    <div class="coupon_more">
+                        <div class="coupon_more_inner">{$Think.lang.immediate_exchange}</div>
+                            
+                    </div>
+                </a>
+                <div class="coupon_info">
+                    <div class="mod_price coupon_price"><i>¥</i><span>{$v.vouchertemplate_price}</span></div>
+                    <div class="coupon_limit" title="{$Think.lang.ds_mansong_flag}{$v.vouchertemplate_limit}{$Think.lang.yuan_available}">{$Think.lang.ds_mansong_flag}{$v.vouchertemplate_limit}{$Think.lang.yuan_available}</div>
+                    <div class="coupon_desc" title="{$Think.lang.required}{$v.vouchertemplate_points}{$Think.lang.points_unit}">{$Think.lang.required}<em>{$v.vouchertemplate_points}</em>{$Think.lang.points_unit}</div>
+                        
+                </div>
+            </div>
+        </div>
+      </li>
+     {/foreach}
+    </ul>
+    {else /}
+    <div class="no_results">{$Think.lang.home_voucher_list_null}</div>
+    {/notempty}
+  </div>
+  {/if}
+  {if $Think.config.ds_config.pointprod_isuse == '1'}
+  <div class="dsp-main-layout mb30">
+    <div class="title">
+      <h3><i class="iconfont">&#xe753;</i>{$Think.lang.hot_gifts}</h3>
+      <span class="more">
+        <a href="{:url('Pointprod/plist')}">{$Think.lang.ds_more}>></a>
+      </span>
+    </div>
+    {notempty name="recommend_pointsprod"}
+    <ul class="dsp-exchange-list">
+      {foreach name="recommend_pointsprod" item="v"}
+      <li>
+        <div class="gift-pic">
+          <a href="{:url('Pointprod/pinfo',['id'=>$v.pgoods_id])}"  >
+            <img src="{$v.pgoods_image}" title="{$v.pgoods_name}" alt="{$v.pgoods_name}">
+          </a>
+        </div>
+          <div class="exchange-rule">
+            <span class="pgoods-points">{$Think.lang.points_unit}<strong>{$v.pgoods_points}</strong></span>
+            <span class="pgoods-price"><em>{$Think.lang.currency}{$v.pgoods_price}</em></span>
+          
+        </div>
+        <div class="gift-name">
+          <a href="{:url('Pointprod/pinfo',['id'=>$v.pgoods_id])}" >{$v.pgoods_name}</a>
+        </div>
+          <div class="sale-num"><span class="iconfont">&#xe753;</span>{$v.pgoods_salenum}{$Think.lang.person_exchange}</div>
+        <a href="{:url('Pointprod/pinfo',['id'=>$v.pgoods_id])}" class="ex-btn" target="_blank">{$Think.lang.immediate_exchange}</a>
+      </li>
+      {/foreach}
+    </ul>
+    {else /}
+    <div class="norecord">{$Think.lang.pointprod_list_null}</div>
+   {/notempty}
+  </div>
+  {/if}
+</div>
+<script>
+$(function(){
+	//代金券兑换功能
+    $("[ds_type='exchangebtn']").on('click',function(){
+    	var data_str = $(this).attr('data-param');
+        eval( "data_str = "+data_str);
+        {if session('is_login') != '1'}
+        login_dialog();
+        {else}
+        ajax_form('vexchange', '{$Think.lang.home_voucher_exchangtitle}', "{:url('Pointvoucher/voucherexchange')}?vid="+data_str.vid, 550);
+        {/if}
+        return false;
+    });
+});
+</script>
+{/block}

@@ -1,0 +1,97 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow up"></span>
+        </div>
+        <ul style="display:none">
+            <li>1.自定义菜单最多包括3个一级菜单，每个一级菜单最多包含5个二级菜单</li>
+            <li>2.一级菜单最多4个汉字，二级菜单最多7个汉字，多出来的部分将会以“...”代替。</li>
+            <li>3.创建自定义菜单后，菜单的刷新策略是，在用户进入公众号会话页或公众号profile页时，如果发现上一次拉取菜单的请求在5分钟以前，就会拉取一下菜单，如果菜单有更新，就会刷新客户端的菜单。测试时可以尝试取消关注公众账号后再次关注，则可以看到创建后的效果。</li>
+            <li>4.目前支持的菜单类型的命令：hot点击率高的商品 commend店铺推荐商品 sale销售量 collect收藏量</li>
+        </ul>
+    </div>
+
+        <form id="wechat_add_form" method="post">
+            <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120"><label class="validation" for="menu_name">{$Think.lang.menu_name}:</label></td>
+                        <td class="vatop rowform"><input id="menu_name" type="text" name="menu_name"  value="{$menu.name|default=''}" class="w300"/></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.menu_p_name}</td>
+                        <td class="vatop rowform">
+                            <select name="menu_pid">
+                                <option value="0">顶级</option>
+                                {foreach name="parents" item="parent"}
+                                <option value="{$parent.id}" {if $parent.id eq $menu.pid}selected{/if}>{$parent.name}</option>
+                                {/foreach}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.menu_type}</td>
+                        <td class="vatop rowform">
+                            <input type="radio" name="menu_type" value="view" title="{$Think.lang.menu_type_1}" {if $menu.type eq 'view'}checked{/if}>{$Think.lang.menu_type_1}
+                            <input type="radio" name="menu_type" value="click" title="{$Think.lang.menu_type_2}" {if $menu.type eq 'click'}checked{/if}>{$Think.lang.menu_type_2}
+                            <!--<input type="radio" name="menu_type" value="3" title="{$Think.lang.menu_type_3}" {if $menu.type eq '3'}checked{/if}>{$Think.lang.menu_type_3}-->
+                        </td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.menu_value}</td>
+                        <td class="vatop rowform"><input type="text" name="menu_value" value="{$menu.value|default=''}" style="width: 300px"/></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120"><label class="validation" for="menu_sort">{$Think.lang.menu_sort}:</label></td>
+                        <td class="vatop rowform"><input id="menu_sort" type="text" name="menu_sort"  value="{$menu.sort|default=''}" class="w300"/></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td class="tfoot"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+
+
+<script type="text/javascript">
+    $(function() {
+        $('#wechat_add_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                menu_name : {
+                    required: true,
+                },
+                menu_sort : {
+                    required: true,
+                    digits:true,
+                    min: 0,
+                    max: 255
+                }
+            },
+            messages: {
+                menu_name : {
+                    required:  '{$Think.lang.ds_none_input}{$Think.lang.menu_name}',
+                },
+                menu_sort : {
+                    required:  '{$Think.lang.ds_none_input}{$Think.lang.menu_sort}',
+                    digits:    '{$Think.lang.sort_error}',
+                    min:       '{$Think.lang.ds_none_input}大于或等于0的数',
+                    max:       '{$Think.lang.ds_none_input}小于等于255的数'
+                }
+            }
+        });
+    });
+</script>

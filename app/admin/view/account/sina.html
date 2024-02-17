@@ -1,0 +1,77 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_account}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form id="sina_form" method="post">
+        <div class="ncap-form-default">
+            <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.sina_isuse}</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                <label for="sina_isuse_show1" class="cb-enable {if condition="$list_config.sina_isuse eq 1"}selected{/if}" >{$Think.lang.ds_yes}</label>
+                                <label for="sina_isuse_show0" class="cb-disable {if condition="$list_config.sina_isuse eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="sina_isuse_show1" name="sina_isuse" value="1" type="radio" {if condition="$list_config.sina_isuse eq 1"} checked="checked"{/if}>
+                                <input id="sina_isuse_show0" name="sina_isuse" value="0" type="radio" {if condition="$list_config.sina_isuse eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.sina_wb_akey}</td>
+                        <td class="vatop rowform"><input type="text" name="sina_wb_akey" id="sina_wb_akey" value="{$list_config.sina_wb_akey}" class="w300"/></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.sina_wb_skey}</td>
+                        <td class="vatop rowform"><input type="text" name="sina_wb_skey" id="sina_wb_skey" value="{$list_config.sina_wb_skey}" class="w300"/></td>
+                        <td class="vatop tips"><a href="http://open.weibo.com/" target="_blank">{$Think.lang.ds_apply}</a></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $('#sina_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                sina_wb_akey : {
+                    required: true,
+                },
+                sina_wb_skey : {
+                    required: true,
+                },
+            },
+            messages: {
+                sina_wb_akey : {
+                    required: '{$Think.lang.sina_wb_akey_error}',
+                },
+                sina_wb_skey : {
+                    required: '{$Think.lang.sina_wb_skey_error}',
+                },
+
+            }
+        });
+    });
+</script>

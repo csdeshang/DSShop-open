@@ -1,0 +1,77 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.dis_dump}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" name="form1" action="">
+        <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.member_normal_register}</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                <label for="member_normal_register1" class="cb-enable {if condition="$list_config.member_normal_register eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="member_normal_register0" class="cb-disable {if condition="$list_config.member_normal_register eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="member_normal_register1" name="member_normal_register" value="1" type="radio" {if condition="$list_config.member_normal_register eq 1"} checked="checked"{/if} />
+                                <input id="member_normal_register0" name="member_normal_register" value="0" type="radio" {if condition="$list_config.member_normal_register eq 0"} checked="checked"{/if} />
+                            </div>
+                        </td>
+			<td class="vatop tips">{$Think.lang.member_normal_register_notice}</td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.allowed_visitors_consult}</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                <label for="guest_comment_show1" class="cb-enable {if condition="$list_config.guest_comment eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="guest_comment_show0" class="cb-disable {if condition="$list_config.guest_comment eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="guest_comment_show1" name="guest_comment" value="1" type="radio" {if condition="$list_config.guest_comment eq 1"} checked="checked"{/if} />
+                                <input id="guest_comment_show0" name="guest_comment" value="0" type="radio" {if condition="$list_config.guest_comment eq 0"} checked="checked"{/if} />
+                            </div>
+                        </td>
+			<td class="vatop tips">{$Think.lang.allowed_visitors_consult_notice}</td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.open_checkcode}</td>
+                        <td class="vatop rowform">
+                            <label class="checkbox-label">
+                                <i class="checkbox-common {if condition="$list_config.captcha_status_login eq 1"}selected{/if}">
+                                    <input type="checkbox" name="captcha_status_login" value="1" {if condition="$list_config.captcha_status_login eq 1"}checked="checked"{/if}>
+                                </i>
+                                <span>{$Think.lang.front_login}</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <i class="checkbox-common {if condition="$list_config.captcha_status_register eq 1"}selected{/if}">
+                                    <input type="checkbox" name="captcha_status_register" value="1" {if condition="$list_config.captcha_status_register eq 1"}checked="checked"{/if}>
+                                </i>
+                                <span>{$Think.lang.front_regist}</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <i class="checkbox-common {if condition="$list_config.captcha_status_goodsqa eq 1"}selected{/if}">
+                                    <input type="checkbox" name="captcha_status_goodsqa" value="1" {if condition="$list_config.captcha_status_goodsqa eq 1"}checked="checked"{/if}>
+                                </i>
+                                <span>{$Think.lang.front_goodsqa}</span>
+                            </label>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><a href="JavaScript:void(0);" class="btn" onclick="document.form1.submit()">{$Think.lang.ds_confirm_submit}</a></td>
+                    </tr>					
+                </tfoot>
+            </table>
+    </form>
+</div>

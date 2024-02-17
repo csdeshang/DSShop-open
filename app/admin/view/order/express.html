@@ -1,0 +1,43 @@
+{include file="public/header" /}
+
+<form method="POST" id='express_form'>
+    <table class="dssc-default-table" >
+        <thead>
+            <tr>
+                <th class="w20"></th>
+                <th colspan="4" class="tm">物流公司</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="express_list"}
+            <tr class="bd-line">
+                <td></td>
+                {php}$i = 1;{/php}
+                {foreach name="express_list" item="value" key="key" }
+                <td class="tl">
+                    <label>
+                        <input type="checkbox" name="cexpress[]" <?php if (in_array($key,$express_select)) echo 'checked';?> value="{$key}">{$value.express_name}
+                    </label>
+                </td>
+                {if $i%4 == 0}
+            </tr>
+            <tr class="bd-line">
+                <td></td>
+                {/if}
+                {php}$i++;{/php}
+                {/foreach}
+            </tr>
+            {else /}
+            <tr>
+                <td colspan="20" class="norecord"><div class="warning-option"><i class="iconfont">&#xe64c;</i><span>{$Think.lang.no_record}</span></div></td>
+            </tr>
+            {/notempty}
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="20" class="bottom"><input class="btn" type="submit" value="保存"></td>
+            </tr>
+        </tfoot>
+    </table>
+</form>
+

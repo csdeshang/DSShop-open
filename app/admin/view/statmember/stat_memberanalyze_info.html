@@ -1,0 +1,50 @@
+<div style="text-align:right;">
+	<input type="hidden" id="export_type_{$stat_field}" name="export_type" data-param='{"url":"analyzeinfo?type={$stat_field}&t={$Request.get.t}&exporttype=excel"}' value="excel"/>
+	<a class="btn btn-mini" href="javascript:void(0);" ds_type="export_btn" data-param='{"type":"{$stat_field}"}'><span>导出Excel</span></a>
+</div>
+<table class="ds-default-table">
+  <thead>
+    <tr class="thead">
+      <th>序号</th>
+      <th class="align-center">会员名称</th>
+      <th class="align-center">{$caption}</th>
+    </tr>
+  <tbody id="datatable">
+{notempty name="memberlist"}
+  {foreach name="memberlist" item="v"}
+    <tr class="hover member">
+      <td class="w24">{$v.number}</td>
+      <td class="align-center">{$v.statm_membername}</td>
+      <td class="w150 align-center">{$v[$stat_field]}</td>
+    </tr>
+{/foreach}
+ {else /}
+  <tr class="no_data">
+   	<td colspan="11">{$Think.lang.no_record}</td>
+   </tr>
+  {/notempty}
+  </tbody>
+</table>
+{$show_page|raw}
+<script type="text/javascript">
+$(document).ready(function(){
+    $('#list_{$stat_field}').on('click', '.pagination li a', function() {
+            $('#list_{$stat_field}').load($(this).attr('href'));
+            return false;
+        });
+    //导出图表
+    $("[ds_type='export_btn']").on('click',function(){
+        var data = $(this).attr('data-param');
+        if(data == undefined  || data.length<=0){
+            layer.alert('参数错误');
+            return false;
+        }
+        eval("data = "+data);
+        var item = $("#export_type_"+data.type);
+        var type = $(item).val();
+        if(type == 'excel'){
+            export_xls(item.attr('data-url').replace('.html',''));
+        }
+    });
+});
+</script>

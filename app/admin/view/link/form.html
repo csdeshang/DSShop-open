@@ -1,0 +1,94 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <form id="link_form" enctype="multipart/form-data" method="post">
+        <input type="hidden" name="link_id" value="{$link.link_id}" />
+        <input type="hidden" name="old_link_pic" value="{$link.link_pic}" />
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="required w120"><label class="validation" for="link_title">合作伙伴:</label></td>
+                <td class="vatop rowform"><input type="text" value="{$link.link_title}" name="link_title" id="link_title" class="txt"></td>
+                <td class="vatop tips">{$Think.lang.link_add_name}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label class="validation" for="link_url">合作连接:</label></td>
+                <td class="vatop rowform"><input type="text" value="{$link.link_url}" name="link_url" id="link_url" class="txt"></td>
+                <td class="vatop tips">{$Think.lang.link_add_href}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label for="">图片标识:</label></td>
+                <td class="vatop rowform">
+                    {notempty name="$link.link_pic"}
+                    <span class="type-file-show">
+                        <img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic('admin/link',$link.link_pic)}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box">
+                        <input name="link_pic" type="file" class="type-file-file" id="link_pic" size="30">
+                    </span>
+                </td>
+                <td class="vatop tips">
+                    {if $link.link_pic == ''}
+                   <span class='red'>{$Think.lang.link_add_tosign}</span>
+                    {/if}
+                </td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label for="link_sort">{$Think.lang.ds_sort}:</label></td>
+                <td class="vatop rowform"><input type="text" value="{$link.link_sort}" name="link_sort" id="link_sort" class="txt"></td>
+                <td class="vatop tips">{$Think.lang.link_add_sort_tip}</td>
+            </tr>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script>
+    //按钮先执行验证再提交表单
+    $(function(){
+        $('#link_form').validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules : {
+                link_title : {
+                    required : true
+                },
+                link_url  : {
+                    required : true,
+                    url      : true
+                },
+                link_sort : {
+                    number   : true
+                }
+            },
+            messages : {
+                link_title : {
+                    required : '{$Think.lang.link_add_title_null}'
+                },
+                link_url  : {
+                    required : '{$Think.lang.link_add_url_null}',
+                    url      : '{$Think.lang.link_add_url_wrong}'
+                },
+                link_sort  : {
+                    number   : '{$Think.lang.link_add_sort_int}'
+                }
+            }
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(function(){
+        var textButton="<input type='text' name='textfield' id='textfield1' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />"
+        $(textButton).insertBefore("#link_pic");
+        $("#link_pic").change(function(){
+            $("#textfield1").val($("#link_pic").val());
+        });
+    });
+</script>

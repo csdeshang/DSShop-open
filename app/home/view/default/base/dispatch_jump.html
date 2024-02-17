@@ -1,0 +1,45 @@
+{include file="default/base/mall_top" /}
+{include file="default/base/mall_header" /}
+
+<style type="text/css">
+    .system-message{ padding:120px 0;border: 1px solid #E6E6E6;margin-top:20px;}
+    .system-message p{margin-left:400px;}
+    .system-message .jump{ padding-top: 10px; }
+    .system-message .jump a{ color: #333; }
+    .system-message i{float: left;padding-right: 10px;width: 41px;height: 40px;background: url({$Think.HOME_SITE_ROOT}/images/pw-icon.gif) no-repeat;}
+    .system-message .success i{background-position: 0 -40px !important;}
+    .system-message .error i{background-position: 0 -85px !important;}
+    .system-message .success,.system-message .error{ line-height:40px; font-size:26px;}
+    .system-message .detail{ font-size: 12px; line-height: 20px; margin-top: 12px; display: none; }
+</style>
+<div class="w1200">
+    <div class="system-message">
+        <?php switch ($code) {?>
+        <?php case 1:?>
+        <p class="success"><i></i><?php echo(strip_tags($msg));?></p>
+        <?php break;?>
+        <?php case 0:?>
+        <p class="error"><i></i><?php echo(strip_tags($msg));?></p>
+        <?php break;?>
+        <?php } ?>
+        <p class="detail"></p>
+        <p class="jump">
+            {$Think.lang.page_automatic} <a id="href" href="<?php echo($url);?>">{$Think.lang.jump}</a> {$Think.lang.waiting_time}： <b id="wait"><?php echo($wait);?></b>
+        </p>
+    </div>
+</div>
+    <script type="text/javascript">
+        (function(){
+            var wait = document.getElementById('wait'),
+                href = document.getElementById('href').href;
+            var interval = setInterval(function(){
+                var time = --(wait.innerHTML);
+                if(time <= 0) {
+                    location.href = href;
+                    clearInterval(interval);
+                };
+            }, 1000);
+        })();
+    </script>
+{include file="default/base/mall_server" /}
+{include file="default/base/mall_footer" /}

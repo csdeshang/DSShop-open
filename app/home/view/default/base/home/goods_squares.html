@@ -1,0 +1,94 @@
+<!--商品列表BEGIN-->     
+<style type="text/css">
+#box{background: #FFF;width: 238px;height: 410px;margin: -390px 0 0 0;display: block;border: solid 4px #D93600;position: absolute;z-index: 999;opacity: .5}
+.shopMenu{position: fixed;z-index: 1;right: 25%;top: 0;}
+</style>
+<div class="squares" ds_type="current_display_mode">
+    <input type="hidden" id="lockcompare" value="unlock" />
+  {notempty name="goods_list"}
+  <ul class="list_pic">
+    {foreach name="goods_list" item="value"}
+    <li class="item">
+      <div class="goods-content" dstype_goods=" {$value.goods_id}">
+        <div class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$value.goods_id])}" target="_blank" title="{$value.goods_name}"><img class="lazyload" data-original="{:goods_thumb($value, 240)}" title="{$value.goods_name}" src="{$Think.HOME_SITE_ROOT}/images/loading.gif" alt="{$value.goods_name}" /></a></div>
+        {if (config('ds_config.groupbuy_allow') && $value['goods_promotion_type'] == 1)}
+        <div class="goods-promotion"><span>{$Think.lang.goods_class_index_groupbuy}</span></div>
+        {elseif (config('ds_config.promotion_allow') && $value['goods_promotion_type'] == 2)/}
+        <div class="goods-promotion"><span>{$Think.lang.goods_class_index_xianshi}</span></div>
+        {/if}
+        <div class="goods-info">
+          <div class="goods-pic-scroll-show">
+              <ul>
+                  {notempty name="$value.image"}
+                  {php}$i=1;{/php}
+                  {foreach name="$value.image" item="val" }
+                  <li {if $i==1}class="selected"{/if}><a href="javascript:void(0);"><img class="lazyload" data-original="{:goods_cthumb($val.goodsimage_url, 240)}" src="{$Think.HOME_SITE_ROOT}/images/loading.gif" /></a></li>
+                  {php}$i++;{/php}
+                  {/foreach}
+                  {else /}
+                  <li class="selected"><a href="javascript:void(0);"><img class="lazyload" data-original="{:goods_thumb($value, 240)}" src="{$Think.HOME_SITE_ROOT}/images/loading.gif" /></a></li>
+                  {/notempty}
+              </ul>
+          </div>
+            <div class="goods-price"> <em class="sale-price" title="{$Think.lang.goods_class_index_goods_price}{$Think.lang.ds_colon}{$Think.lang.currency}{$value.goods_promotion_price}">{:ds_price_format_forlist($value['goods_promotion_price'])}</em>  <span class='goods-sales'>{$Think.lang.sold}{$value.goods_salenum}{$Think.lang.piece}</span></div>
+            <div class="goods-name">
+                {if $value.is_virtual == 1}
+                <span class="virtual" title="{$Think.lang.virtual_exchange}">{$Think.lang.virtual_exchange}</span>
+                {/if}
+                {if $value.is_goodsfcode == 1}
+                <span class="fcode" title="{$Think.lang.f_code_priority_buy_goods}">{$Think.lang.f_code_priority}</span>
+                {/if}
+                {if $value.is_presell == 1}
+                <span class="presell" title="{$Think.lang.pre_sell_purchases}">{$Think.lang.presell}</span>
+                {/if}
+                {if $value.is_have_gift == 1}
+                <span class="gift" title="{$Think.lang.bundling_freebies}">{$Think.lang.ds_gift}</span>
+                {/if}
+                <a href="{:url('Goods/index',['goods_id'=>$value.goods_id])}" target="_blank" title="{$value.goods_advword}">{$value.goods_name_highlight|raw}<em>{$value.goods_advword}</em></a>
+            </div>
+          <div class="goods-sub">
+            <span class="goods-compare" ds_type="compare_{$value.goods_id}" data-param='{"gid":"{$value.goods_id}"}'><i class='iconfont'></i>{$Think.lang.comparison}</span>
+            <span onclick="collect_goods('{$value.goods_id}','count','goods_collect');"><i class='iconfont'>&#xe685;</i>{$Think.lang.ds_collect}</span>
+            <span><i class='iconfont'>&#xe730;</i>{$value.evaluation_count}</span>
+
+          </div>
+          <div class="add-cart">
+              {if $value.goods_storage == 0}
+              {if $value.is_appoint == 1}
+              <a href="javascript:void(0);" onclick="{if (session('is_login') !== '1')}login_dialog();{else/}ajax_form('arrival_notice', {$Think.lang.immediately_appointment}, '{:url('Goods/arrival_notice',['goods_id'=>$value.goods_id,'type'=>'2'])}', 350);{/if}"><i class="iconfont" title={$Think.lang.immediately_appointment}>&#xe70f;</i></a>
+              {else /}
+              <a href="javascript:void(0);" onclick="{if (session('is_login') !== '1')}login_dialog();{else/}ajax_form('arrival_notice', {$Think.lang.receiving_notification}, '{:url('Goods/arrival_notice',['goods_id'=>$value.goods_id,'type'=>'2'])}', 350);{/if}"><i class="iconfont" title={$Think.lang.receiving_notification}>&#xe70f;</i></a>
+              {/if}
+              {else /}
+              {if (session('is_login') === '1')}
+              {if $value.is_virtual == 1 || $value.is_goodsfcode == 1 || $value.is_presell == 1}
+              <a href="javascript:void(0);" dstype="buy_now" data-param="{goods_id:{$value.goods_id}}"><i class="iconfont" title="{if ($value['is_goodsfcode'] == 1)}{$Think.lang.f_code_buy}{elseif ($value['is_presell'] == 1)/}{$Think.lang.presell_purchase}{else/}{$Think.lang.ds_buy_now}{/if}">&#xe69a;</i></a>
+              {else /}
+              <a href="javascript:void(0);" dstype="add_cart" data-param="{goods_id:{$value.goods_id}}"><i class="iconfont" title='{$Think.lang.add_cart}'>&#xe69a;</i></a>
+              {/if}
+              {/if}
+              {/if}
+          </div>
+        </div>
+      </div>
+    </li>
+    {/foreach}
+    <div class="clear"></div>
+  </ul>
+  {else /}
+  <div class="no_results">{$Think.lang.ds_index_no_record}</div>
+  {/notempty}
+</div>
+<form id="buynow_form" method="post" action="{:url('Buy/buy_step1')} ">
+  <input id="goods_id" name="cart_id[]" type="hidden"/>
+</form>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<script type="text/javascript" src="{$Think.HOME_SITE_ROOT}/js/compare.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+      	//初始化对比按钮
+        initCompare();
+    });
+</script> 
+<!--商品列表END-->     
+        

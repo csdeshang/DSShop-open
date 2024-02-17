@@ -1,0 +1,172 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>邮箱短信</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示" class="arrow"></span>
+        </div>
+        <ul>
+            <li>平台可给商家提供站内信、手机短信、邮件三种通知方式。平台可以选择开启一种或多种通知方式供商家选择。</li>
+            <li>开启强制接收后，商家不能取消该方式通知的接收。</li>
+            <li>手机短信、邮件需要商家设置正确号码后才能正常接收。</li>
+        </ul>
+    </div>
+    
+    <div class="ncap-form-default homepage-focus"  dstype="sellerTplContent">
+        <h4>模板名称：{$mmtpl_info.membermt_name}</h4>
+        <ul class="tab-menu">
+            <li class="current">站内信模板</li>
+            <li>手机短信模板</li>
+            <li>邮件模板</li>
+            <li>{$Think.lang.mt_weixin_switch_tpl}</li>
+        </ul>
+        
+        <form class="tab-content" method="post" name="message_form" >
+            <input type="hidden" name="code" value="{$mmtpl_info.membermt_code}" />
+            <input type="hidden" name="type" value="message" />
+            <dl>
+                <dt>站内信开关</dt>
+                <dd>
+                    <div class="onoff">
+                        <label for="message_switch1" class="cb-enable {if condition="$mmtpl_info.membermt_message_switch eq 1"}selected{/if}">是</label>
+                        <label for="message_switch0" class="cb-disable {if condition="$mmtpl_info.membermt_message_switch eq 0"}selected{/if}">否</label>
+                        <input id="message_switch1" name="message_switch" value="1" type="radio" {if condition="$mmtpl_info.membermt_message_switch eq 1"} checked="checked"{/if}>
+                        <input id="message_switch0" name="message_switch" value="0" type="radio" {if condition="$mmtpl_info.membermt_message_switch eq 0"} checked="checked"{/if}>
+                    </div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>消息内容</dt>
+                <dd>
+                    <textarea name="message_content" rows="6" class="tarea">{$mmtpl_info.membermt_message_content}</textarea>
+                </dd>
+            </dl>
+            <dl>
+                <dt></dt>
+                <dd>
+                    <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                </dd>
+            </dl>
+        </form>
+        
+        <form class="tab-content" method="post" name="short_form"  style="display:none;">
+            <input type="hidden" name="code" value="{$mmtpl_info.membermt_code}" />
+            <input type="hidden" name="type" value="short" />
+            <dl>
+                <dt>手机短信开关</dt>
+                <dd>
+                    <div class="onoff">
+                        <label for="short_switch1" class="cb-enable {if condition="$mmtpl_info.membermt_short_switch eq 1"}selected{/if}">是</label>
+                        <label for="short_switch0" class="cb-disable {if condition="$mmtpl_info.membermt_short_switch eq 0"}selected{/if}">否</label>
+                        <input id="short_switch1" name="short_switch" value="1" type="radio" {if condition="$mmtpl_info.membermt_short_switch eq 1"} checked="checked"{/if}>
+                        <input id="short_switch0" name="short_switch" value="0" type="radio" {if condition="$mmtpl_info.membermt_short_switch eq 0"} checked="checked"{/if}>
+                    </div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>消息内容</dt>
+                <dd>
+                    <textarea name="short_content" rows="6" class="tarea">{:htmlspecialchars_decode($mmtpl_info.membermt_short_content)}</textarea>
+                </dd>
+            </dl>
+            <dl>
+                <dt></dt>
+                <dd>
+                    <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                </dd>
+            </dl>
+        </form>
+        
+        <form class="tab-content" method="post" name="mail_form"  style="display:none;">
+            <input type="hidden" name="code" value="{$mmtpl_info.membermt_code}" />
+            <input type="hidden" name="type" value="mail" />
+            <dl>
+                <dt>邮件开关</dt>
+                <dd>
+                    <div class="onoff">
+                        <label for="mail_switch1" class="cb-enable {if condition="$mmtpl_info.membermt_mail_switch eq 1"}selected{/if}">是</label>
+                        <label for="mail_switch0" class="cb-disable {if condition="$mmtpl_info.membermt_mail_switch eq 0"}selected{/if}">否</label>
+                        <input id="mail_switch1" name="mail_switch" value="1" type="radio" {if condition="$mmtpl_info.membermt_mail_switch eq 1"} checked="checked"{/if}>
+                        <input id="mail_switch0" name="mail_switch" value="0" type="radio" {if condition="$mmtpl_info.membermt_mail_switch eq 0"} checked="checked"{/if}>
+                    </div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>邮件标题</dt>
+                <dd>
+                    <textarea name="mail_subject" rows="6" class="tarea">{$mmtpl_info.membermt_mail_subject}</textarea>
+                </dd>
+            </dl>
+            <dl>
+                <dt>邮件内容</dt>
+                <dd>
+                    <textarea name="mail_content" rows="6" class="tarea">{:htmlspecialchars_decode($mmtpl_info.membermt_mail_content)}</textarea>
+                </dd>
+            </dl>
+            <dl>
+                <dt></dt>
+                <dd>
+                    <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                </dd>
+            </dl>
+        </form>
+        <form class="tab-content" method="post" name="weixin_form"  style="display:none;">
+            <input type="hidden" name="code" value="{$mmtpl_info.membermt_code}" />
+            <input type="hidden" name="type" value="weixin" />
+            <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.weixin_switch}</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                <label for="membermt_weixin_switch1" class="cb-enable {if condition="$mmtpl_info.membermt_weixin_switch eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="membermt_weixin_switch0" class="cb-disable {if condition="$mmtpl_info.membermt_weixin_switch eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="membermt_weixin_switch1" name="weixin_switch" value="1" type="radio" {if condition="$mmtpl_info.membermt_weixin_switch eq 1"} checked="checked"{/if}>
+                                <input id="membermt_weixin_switch0" name="weixin_switch" value="0" type="radio" {if condition="$mmtpl_info.membermt_weixin_switch eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                        <td class="vatop tips"></td>
+                    </tr>
+
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.weixin_code}</td>
+                        <td class="vatop rowform"><input name="weixin_code" value="{$mmtpl_info.membermt_weixin_code}" type="text" class="txt" /></td>
+			<td class="vatop tips">{$Think.lang.membermt_weixin_code_text[$mmtpl_info.membermt_code]}</td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>					
+                </tfoot>
+            </table>
+        </form>
+    </div>
+</div>
+<script>
+$(function(){
+    $('div[dstype="sellerTplContent"] > ul').find('li').click(function(){
+        $(this).addClass('current').siblings().removeClass('current');
+        var _index = $(this).index();
+        var _form = $('div[dstype="sellerTplContent"]').find('form');
+        _form.hide();
+        _form.eq(_index).show();
+    });
+});
+</script>

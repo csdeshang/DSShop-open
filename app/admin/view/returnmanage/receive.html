@@ -1,0 +1,64 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <form id="post_form" method="post" action="{:url('Returnmanage/receive',['refund_id'=>$return.refund_id])}">
+        <table class="ds-default-table">
+            <tbody>
+            <tr>
+                <td colspan="2" class="required">发货时间{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$return.delay_time|date="Y-m-d H:i:s"}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">物流信息{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td>{$express_name}{$return.invoice_no}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">收货情况{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td>
+                    <select name="return_type">
+                        <option value="">{$Think.lang.ds_please_choose}</option>
+                        <option value="4">已收到</option>
+                        {if $delay_time > 0}
+                        <option value="3">未收到</option>
+                        {/if}
+                    </select>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        $('#post_form').validate({
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules: {
+                admin_message: {
+                    required: true
+                }
+            },
+            messages: {
+                admin_message: {
+                    required: '{$Think.lang.refund_message_null}'
+                }
+            }
+        });
+    });
+</script>

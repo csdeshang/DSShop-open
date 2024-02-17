@@ -1,0 +1,56 @@
+<div class="goods-gallery" dstype="gallery-{$color_id}">
+    <a class="sample_demo" href="{:url('Goodsalbum/pic_list',['item'=>'goods_image','color_id'=>$color_id])}" style="display:none;">{$Think.lang.ds_submit}</a>
+    <div class="nav">
+        <span class="l">{$Think.lang.goods_album_users} >
+            {notempty name="class_name"}
+            {$class_name}
+            {else/}
+            {$Think.lang.goods_album_all_photo}
+            {/notempty}
+        </span>
+        <span class="r">
+            <select name="jumpMenu" style="width:100px;">
+                <option value="0" style="width:80px;">{$Think.lang.ds_please_choose}</option>
+                {foreach name="class_list" item="val" }
+                <option style="width:80px;" value="{$val.aclass_id}" {if condition="$val.aclass_id eq $Request.param.id"}selected{/if}>{$val.aclass_name}</option>
+                {/foreach}
+            </select>
+        </span>
+    </div>
+    <ul class="list">
+        {notempty name="pic_list"}
+        {foreach name="pic_list" item="v" }
+        <li onclick="insert_img('{$v.apic_cover}', '{:goods_thumb($v, 240)}', {$color_id});"><a href="JavaScript:void(0);"><img src="{:goods_thumb($v, 240)}" title='{$v.apic_name}'/></a></li>
+        {/foreach}
+        {else /}
+        {$Think.lang.no_record}
+        {/notempty}
+    </ul>
+    <div class="pagination">{$show_page|raw}</div>
+</div>
+<script>
+$(document).ready(function(){
+	$('div[dstype="gallery-{$color_id}"] .pagination>li>a').ajaxContent({
+		event:'click', //mouseover
+		loaderType:'img',
+		loadingMsg:'{$Think.HOME_SITE_ROOT}/images/loading.gif',
+		target:'div[dstype="album-{$color_id}"]'
+	});
+    $('div[dstype="gallery-{$color_id}"]').on('click', '.pagination li a#pagination_gourl', function() {
+        $('div[dstype="gallery-{$color_id}"]').load($(this).attr('href'));
+        return false;
+    });
+	$('div[dstype="gallery-{$color_id}"]').find('select[name="jumpMenu"]').unbind().change(function(){
+		var $_select_submit = $('div[dstype="gallery-{$color_id}"]').find('.sample_demo');
+		var $_href = $_select_submit.attr('href') + "&id=" + $(this).val();
+		$_select_submit.attr('href',$_href);
+		$_select_submit.unbind().ajaxContent({
+			event:'click', //mouseover
+			loaderType:'img',
+			loadingMsg:'{$Think.HOME_SITE_ROOT}/images/loading.gif',
+			target:'div[dstype="album-{$color_id}"]'
+		});
+		$_select_submit.click();
+	});
+});
+</script>

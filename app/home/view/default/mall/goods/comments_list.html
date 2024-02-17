@@ -1,0 +1,123 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/goods.css">
+<div class="w1200">
+  <div class="dss-goods-layout expanded" >
+    <div class="dss-goods-main" id="main-nav-holder">
+      <div class="dss-comment">
+        <div class="dss-goods-title-bar">
+          <h4>{$Think.lang.goods_index_evaluation}</h4>
+        </div>
+        <div class="dss-goods-info-content bd" id="dsGoodsRate">
+          <div class="top">
+            <div class="rate">
+              <p><strong>{$goods_evaluate_info.good_percent}</strong><sub>%</sub>{$Think.lang.high_praise}</p>
+              <span>{$Think.lang.total}{$goods_evaluate_info.all}{$Think.lang.people_participation_rating}</span></div>
+            <div class="percent">
+              <dl>
+                <dt>{$Think.lang.high_praise}<em>({$goods_evaluate_info.good_percent}%)</em></dt>
+                <dd><i style="width: {$goods_evaluate_info.good_percent}%"></i></dd>
+              </dl>
+              <dl>
+                <dt>{$Think.lang.medium_rating}<em>({$goods_evaluate_info.normal_percent}%)</em></dt>
+                <dd><i style="width: {$goods_evaluate_info.normal_percent}%"></i></dd>
+              </dl>
+              <dl>
+                <dt>{$Think.lang.poor_rating}<em>({$goods_evaluate_info.bad_percent}%)</em></dt>
+                <dd><i style="width: {$goods_evaluate_info.bad_percent}%"></i></dd>
+              </dl>
+            </div>
+            <div class="btns"><span>{$Think.lang.evaluation_purchased_goods}</span>
+              <p><a href="{if $goods.is_virtual}{:url('Membervrorder/index')}{else /}{:url('Memberorder/index')}{/if}" class="dss-btn dss-btn-red" target="_blank"><i class="iconfont">&#xe71b;</i>{$Think.lang.evaluation_item}</a></p>
+            </div>
+          </div>
+          <!-- 商品评价内容部分 -->
+          <div class="dss-goods-title-nav">
+            <ul id="comment_tab">
+              <li {empty name="type"}class="current"{/empty}><a href="{:url('Goods/comments_list',['goods_id'=>$goods.goods_id])}">{$Think.lang.goods_index_evaluation}({$goods_evaluate_info.all})</a></li>
+              <li {$type == '1'?'class="current"':''}><a href="{:url('Goods/comments_list',['goods_id'=>$goods.goods_id,'type'=>'1'])}">{$Think.lang.high_praise}({$goods_evaluate_info.good})</a></li>
+              <li {$type == '2'?'class="current"':''}><a href="{:url('Goods/comments_list',['goods_id'=>$goods.goods_id,'type'=>'2'])}">{$Think.lang.medium_rating}({$goods_evaluate_info.normal})</a></li>
+              <li {$type == '3'?'class="current"':''}><a href="{:url('Goods/comments_list',['goods_id'=>$goods.goods_id,'type'=>'3'])}">{$Think.lang.poor_rating}({$goods_evaluate_info.bad})</a></li>
+            </ul>
+          </div>
+          <div id="goodseval" class="dss-commend-main">
+            {notempty name="goodsevallist"}
+            {foreach name="goodsevallist" item="v"}
+            <div id="t" class="dss-commend-floor">
+              <div class="user-avatar"><a href="javascript:void(0)"><img src="{:get_member_avatar_for_id($v.geval_frommemberid)}" ></a></div>
+              <dl class="detail">
+                <dt> <span class="user-name">
+                  {if $v.geval_isanonymous == 1}
+                  {:str_cut($v.geval_frommembername,2)}***
+                  {else /}
+                  <a href="javascript:void(0)">{$v.geval_frommembername}</a>
+                {/if}
+                  </span>
+                  <time pubdate="pubdate">[{:date('Y-m-d',$v.geval_addtime)}]</time>
+                </dt>
+                <dd>{$Think.lang.user_rating}：<span class="raty" data-score="{$v.geval_scores}"></span></dd>
+                <dd class="content">{$Think.lang.evaluation_details}：<span>{$v.geval_content}</span></dd>
+                {notempty name="v.geval_explain"}
+                <dd class="explain">{$Think.lang.ds_credit_explain}：<span>{$v.geval_explain}</span></dd>
+               {/notempty}
+                {notempty name="v.geval_image"}
+                <dd>
+                {$Think.lang.print_pictures}：
+                <ul class="photos-thumb">
+                  <?php $image_array = explode(',', $v['geval_image']);?>
+                  {foreach name="image_array" item="value"}
+                  <li><a data-lightbox="lightbox-image"  href="{:sns_thumb($value)}">
+                    <img src="{:sns_thumb($value)}">
+                  </a></li>
+                  {/foreach}
+                </ul>
+                </dd>
+                {/notempty}
+            </dl>
+        </div>
+          {/foreach}
+            <div class="tr pr5 pb5">
+              <div class="pagination"> {$show_page|raw}</div>
+            </div>
+          {else /}
+            <div class="dss-norecord">{$Think.lang.no_record}</div>
+            {/notempty}
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="dss-sidebar">
+      <div class="dss-sidebar-container mb10">
+        <div class="title">
+          <h4>{$Think.lang.product_information}</h4>
+        </div>
+        <div class="content">
+          <dl class="dss-comment-goods">
+            <dt class="goods-name"> <a href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}"> {$goods.goods_name} </a> </dt>
+            <dd class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}"> <img src="{:goods_cthumb($goods.goods_image)}" alt="{$goods.goods_name}"> </a> </dd>
+            <dd class="goods-price">{$Think.lang.goods_index_goods_price|raw}{$Think.lang.ds_colon}<em class="saleP">{$Think.lang.currency}{$goods.goods_price}</em></dd>
+            <dd class="goods-raty">{$Think.lang.goods_index_evaluation}{$Think.lang.ds_colon} <span class="raty" data-score="{$goods_evaluate_info.star_average}"></span> </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.raty').raty({
+        path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+        readOnly: true,
+        score: function() {
+            return $(this).attr('data-score');
+        }
+    });
+});
+</script> 
+
+
+{/block}

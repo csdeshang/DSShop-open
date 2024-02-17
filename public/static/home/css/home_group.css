@@ -1,0 +1,294 @@
+@charset "utf-8";
+
+body { background-color: #FEFEFE;}
+/* 按钮
+-------------------------------------------*/
+a.dsg-btn-mini { font: normal 12px/20px "Microsoft Yahei"; color: #777; background-color: #F5F5F5; text-align: center; vertical-align: middle; display: inline-block; height: 20px; padding: 0 10px; margin-right: 2px; border-style: solid; border-width: 1px; border-color: #DCDCDC #DCDCDC #B3B3B3 #DCDCDC; cursor: pointer;}
+a:hover.dsg-btn-mini { text-decoration: none; color: #333; background-color: #E6E6E6;border-color: #CFCFCF #CFCFCF #B3B3B3 #CFCFCF;}
+a.dsg-btn { font: normal 14px/20px "Microsoft Yahei"; color: #777; background-color: #F5F5F5; text-align: center; display: inline-block; height: 20px; padding: 4px 16px; border: solid 1px; border-color: #DCDCDC #DCDCDC #B3B3B3 #DCDCDC; cursor: pointer;}
+a:hover.dsg-btn { text-decoration: none; color: #333; background-color: #E6E6E6; border-color: #CFCFCF #CFCFCF #B3B3B3 #CFCFCF;}
+a.dsg-btn-mini i, a.dsg-btn i { margin-right: 4px;}
+a.dsg-btn-blue, a.dsg-btn-acidblue, a.dsg-btn-green, a.dsg-btn-orange, a.dsg-btn-red, a.dsg-btn-black,
+a:hover.dsg-btn-blue, a:hover.dsg-btn-acidblue, a:hover.dsg-btn-green, a:hover.dsg-btn-orange, a:hover.dsg-btn-red, a:hover.dsg-btn-black { color: #FFF ; text-shadow: 0 -1px 0 rgba(0,0,0,0.10);}
+a.dsg-btn-blue { background-color: #006DCC; border-color: #0062B7 #0062B7 #005299 #0062B7;}
+a.dsg-btn-acidblue { background-color: #49AFCD; border-color: #429DB8 #429DB8 #37839A #429DB8;}
+a.dsg-btn-green { background-color: #5BB75B; border-color: #52A452 #52A452 #448944 #52A452;}
+a.dsg-btn-orange { background-color: #FAA732; border-color: #E1962D #E1962D #BB7D25 #E1962D;}
+a.dsg-btn-red { background-color: #DA4F49; border-color: #C44742 #C44742 #A33B37 #C44742;}
+a.dsg-btn-black { background-color: #363636; border-color: #313131 #313131 #282828 #313131;}
+a:hover.dsg-btn-blue { background-color: #0044CC; border-color: #003DB7 #003DB7 #003399 #003DB7;}
+a:hover.dsg-btn-acidblue { background-color: #2F96B4; border-color: #2A87A2 #2A87A2 #237087 #2A87A2;}
+a:hover.dsg-btn-green { background-color: #51A351; border-color: #499249 #499249 #3D7A3D #499249;}
+a:hover.dsg-btn-orange { background-color: #F89406; border-color: #DF8505 #DF8505 #BA6F04 #DF8505;}
+a:hover.dsg-btn-red { background-color: #BD362F; border-color: #AA312A #AA312A #8E2823 #AA312A;}
+a:hover.dsg-btn-black { background-color: #222222; border-color: #1F1F1F #1F1F1F #191919 #1F1F1F;}
+
+/*抢购顶部名称以及地区选择列表*/
+.dsg-header { width: 1000px; height: 0; margin: 0 auto; position: relative; z-index: 999;}
+.dsg-header .title { background-color: #FFF; position: absolute; z-index: 1; top: -156px; left: 230px;}
+.dsg-header .title h1 { font: normal 20px/28px "microsoft yahei"; color: #333; vertical-align: middle; display: inline-block; *display: inline/*IE7*/; height: 28px; *zoom: 1;}
+
+
+/*抢购顶部内容*/
+.dsg-topbar {height: 40px; margin:0 auto; border-bottom:1px solid #F0F0F0; width:1200px; }
+.dsg-topbar-wrapper { color: #FFF; width: 1200px; margin: 0 auto; position: relative; z-index: 2;}
+.dsg-topbar-wrapper .title { font-family: Arial, "microsoft yahei"; font-size: 0; line-height: 36px; color: #666; *word-spacing:-1px/*IE6、7*/; height: 36px; float: left; padding: 4px 0 0 5px; }
+.dsg-topbar-wrapper .title h2,
+.dsg-topbar-wrapper .title .city { font-size: 22px; letter-spacing: normal; word-spacing: normal; display: inline-block; *display: inline/*IE7*/; *zoom: 1;}
+.dsg-topbar-wrapper .title .city { font-size: 14px; margin-left: 8px; *zoom: 1; cursor: pointer;}
+.dsg-topbar-wrapper .title .city a h3 { color: #666; display: inline-block; *display: inline/*IE7*/; *zoom: 1;}
+.dsg-topbar-wrapper .title .city a:hover { text-decoration: none;}
+.dsg-topbar-wrapper .title .city a:hover h3 { color: #F87622;}
+.dsg-topbar-wrapper .title .city a i.arrow { font-size: 0; line-height: 0; vertical-align: middle; display: inline-block; *display: inline/*IE7*/ width: 0; height: 0; margin: 0 2px; border-style: solid dashed dashed; border-width: 5px; border-color: #666 transparent transparent; *zoom: 1;}
+.dsg-topbar-wrapper .list { background-color: #FFF; width: 300px; border: 2px solid #F87622; position: absolute; z-index: 2; top: 42px; left: 0;}
+.dsg-topbar-wrapper .list a.close { font: bold 12px/14px Verdana; color: #F87622; text-align: center; float: right; width: 14px; height: 14px; margin: 2px 2px 0 0;}
+.dsg-topbar-wrapper .list a.close:hover { text-decoration: none;}
+.dsg-topbar-wrapper .list ul { width: 280px; float: left;}
+.dsg-topbar-wrapper .list ul li { font: 14px/20px "microsoft yahei"; text-align: center; width: 60px; display: inline-block; *display: inline/*IE7*/; padding: 6px 3px; *zoom: 1;}
+.dsg-topbar-wrapper .nav-menu { font-size: 0; *word-spacing:-1px/*IE6、7*/; height: 24px; float: left; margin: 10px 0 6px 15px; overflow: hidden;}
+.dsg-topbar-wrapper .nav-menu li { font-size: 14px; line-height: 20px; letter-spacing: normal; word-spacing: normal; display: inline-block; *display: inline/*IE7*/; padding-left: 14px; margin-right: 15px; border-left: dotted 1px #F87622; *zoom: 1;}
+.dsg-topbar-wrapper .nav-menu li a { font-weight: 600; color: #666; display: block; padding: 2px 8px; border-radius: 14px;}
+.dsg-topbar-wrapper .nav-menu li a.current,
+.dsg-topbar-wrapper .nav-menu li a:hover { color: #fff; text-decoration: none; background-color: #F87622;}
+
+.dsg-container { width: 1200px; margin: 0 auto 10px auto; }
+.dsg-category { width:212px; float: left;background: #333;min-height: 300px;}
+.dsg-category h3 { font: 15px/25px "microsoft yahei";  padding:9px 5px;color:#ffeaea;background: #DD0909;text-indent: 10px}
+.dsg-category ul { font-size: 0; *word-spacing:-1px/*IE6、7*/; margin:0 auto;padding:0 5px;}
+.dsg-category li {text-align: center;font-size: 12px; line-height:30px; letter-spacing: normal; word-spacing: normal; display: inline-block; *display: inline/*IE7*/; width:50%;border: dotted #555;border-width: 0 1px 1px 0;box-sizing: border-box}
+.dsg-category li a{ display: block; padding: 5px 0 5px 0;color:#cecece }
+.dsg-category li:nth-child(2n) {border-right: none;}
+.sticky .dsg-category { position: fixed; top: 0; z-index: 999;}
+
+/*抢购进行状态导航*/
+.dsg-nav { border-bottom: solid 2px #F04C44;}
+.dsg-nav ul { font-size: 0; *word-spacing:-1px/*IE6、7*/;}
+.dsg-nav ul li { vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; *display: inline/*IE7*/; padding: 0; margin-left: 10px; overflow: hidden; box-shadow: 1px 0 1px rgba(0,0,0,0.05); *zoom: 1;}
+.dsg-nav ul li a { font: normal 14px/20px "microsoft yahei";  background-color: #fff; display: block; height: 20px; padding: 5px 12px; border: solid #eee; border-width: 1px 1px 0 1px;}
+.dsg-nav ul li a:hover { color: #DD0909;}
+.dsg-nav ul li.current a,
+.dsg-nav ul li.current a:hover { font-weight: 600; text-decoration: none; color: #FFF; background-color: #F04C44; border-color: #F04C44; cursor: default;}
+/*抢购索引*/
+.dsg-screen { background-color: #FFF; padding: 9px; margin: 10px 0; border: dashed 1px #d2d2d2; overflow: hidden;}
+.dsg-screen dl { font-size: 0; *word-spacing:-1px/*IE6、7*/; display:block; clear: both; padding: 6px; border-bottom: dotted 1px #E6E6E6;}
+.dsg-screen dl:last-child { border-bottom: 0;}
+.dsg-screen dl dt { font: normal 12px/22px Arial, "宋体"; vertical-align: top; letter-spacing: normal; word-spacing: normal; text-align: right; display: inline-block; *display: inline/*IE7*/; width: 60px; *zoom: 1;}
+.dsg-screen dl dd { vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; *display: inline/*IE7*/; margin: 0 8px; *zoom: 1;}
+.dsg-screen dl dd a { font: normal 12px/20px Arial, "宋体"; color: #666; display: block; height: 20px; padding: 1px 6px;}
+.dsg-screen dl dd a:hover, .dsg-screen dl dd.selected a { color: #DD0909; text-decoration: none; }
+.dsg-screen ul { font-size: 0; *word-spacing:-1px/*IE6、7*/; background-color: #FAFAFA; display:block; clear: both; padding: 6px; margin: 5px 0 0 60px; border: solid 1px #F0F0F0;}
+.dsg-screen li { font-size: 12px; vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; *display: inline/*IE7*/; margin: 0 8px; *zoom: 1;}
+.dsg-screen li a { color: #999;}
+.dsg-screen li.selected a { text-decoration: none; color: #DD0909; font-weight: 600;}
+.dsg-screen li a:hover { text-decoration: none; color: #DD0909;}
+
+.dsg-screen .dc { text-align: right; background: url(../images/group_bg.png) no-repeat right -50px; width: 210px; height:50px; float: right; clear: left; padding: 5px 60px 5px 10px;}
+.dsg-screen .dc h5 { font-size: 12px; font-weight: normal; line-height: 24px; color: #555;}
+.dsg-screen .dc p { font-size: 16px; padding: 5px;}
+.dsg-screen .dc p span { font-family: Verdana, Geneva, sans-serif; color: #F60; font-weight: 600; padding-right: 2px; padding-left: 2px;}
+.dsg-sortord dd a i{position: relative;width:12px;height: 12px;display: inline-block;font: 14px/1 iconfont;}
+.dsg-sortord dd a i:after{position: absolute;right:3px;top:3px;content: "\e688";color:#DDDDDD}
+.dsg-sortord dd a i:before{position: absolute;right:3px;top:3px;content: "\e689";color:#DDDDDD}
+.dsg-sortord dd.selected a.asc i:after {color:#DD0909 }
+.dsg-sortord dd.selected a.desc i:before {color:#DD0909 }
+
+	
+.dsg-content { width: 988px; float: right;}
+.group-list { width: 100%; overflow: hidden; margin-top:20px}
+.group-list ul { font-size: 0; *word-spacing:-1px/*IE6、7*/; }
+.group-list li { font-size: 12px; background-color: #FFF; vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; *display:inline/*IE7*/; width: 300px;  *zoom:1;}
+.group-list li .dsg-list-content { width: 280px; height: 296px; padding: 20px 9px; border-style: solid; border-width:1px; border-color:transparent; position: relative;margin:0 auto;}
+.group-list li .dsg-list-content { transition: border-color 0.4s ease-in-out 0s;}
+.group-list li .dsg-list-content:hover {  border: solid 1px #F30; box-shadow: 0 0 3px rgba(204,204,204,0.9);}
+.group-list li.history .dsg-list-content:hover { border-color: #555;}
+.group-list li.soon .dsg-list-content:hover { border-color: #396;}
+.dsg-list-content .pic-thumb { line-height: 0; text-align: center; vertical-align: middle; display: table-cell; *display: block; width: 290px; height: 193px; overflow: hidden;}
+.dsg-list-content .pic-thumb img { max-width: 280px; max-height: 193px; margin-top:expression(193-this.height/2); *margin-top:expression(96-this.height/2)/*IE6,7*/;}
+.dsg-list-content .title { display: block; width: 100%; height: 38px; margin: 10px auto 0 auto; overflow: hidden; }
+.dsg-list-content .title a { font: normal 15px/19px "microsoft yahei"; color: #555; text-align: left;}
+.dsg-list-content .title a:hover { text-decoration: none; color: #000;}
+.dsg-list-content .title a span { font: lighter 11px/14px "microsoft yahei"; color: #FFF; background-color: #BA7538; vertical-align: middle; display: inline-block; height: 14px; padding: 1px 3px 0 3px; margin-right: 6px; border-radius: 3px; -webkit-text-size-adjust:none;}
+.dsg-list-content .item-prices { margin-top: 15px; position: relative; z-index: 1; overflow: hidden;}
+.dsg-list-content .item-prices .price { font: 700 32px/36px "microsoft yahei", Arial; color: #F04C44; text-overflow: ellipsis; white-space: nowrap; max-width: 125px; height: 36px; float: left; overflow: hidden;}
+.dsg-list-content .item-prices .price i { font-weight: lighter; font-size: 20px; line-height: 24px; vertical-align: bottom; *vertical-align: auto; display:inline-block; *display: inline/*IE7*/; margin-right: 2px; zoom: 1;}
+.dsg-list-content .item-prices .price em { font-weight: 600; font-size: 20px; line-height: 24px; vertical-align: bottom; *vertical-align: auto; display:inline-block; *display: inline/*IE7*/;margin-left: 2px; zoom: 1;}
+.dsg-list-content .item-prices .dock { width: 70px; height: 40px; float: left; margin-left: 8px; position: relative;}
+.dsg-list-content .item-prices .limit-num { font: 600 12px/20px "microsoft yahei"; color: #C30; background:url(../images/group_bg.png) no-repeat 0 -10px; width: 50px; height: 20px; padding: 2px 0 1px 12px; position: absolute; top: 0; left: 0;}
+.dsg-list-content .item-prices .orig-price { line-height: 16px; display: block; position: absolute; bottom: 0; left: 8px;}
+.dsg-list-content .item-prices .sold-num { font: normal 14px/36px "microsoft yahei", Arial; color: #999; position:absolute; right:0;}
+.dsg-list-content .item-prices .sold-num em { font-size: 16px; font-weight: 700; color: #396; margin: 0 2px;}
+.dsg-list-content:hover .sold-num { display: none;}
+.dsg-list-content .item-prices .buy-button { font: normal 16px/20px "microsoft yahei"; color: #FFF; background-color: #FF0000; text-align: center; display: block; width: 80px; height: 20px; padding: 5px 0; position: absolute; right: 0; bottom: 5px; opacity: 0; filter: alpha(opacity=0)/*IE*/;transition: opacity 0.4s ease-in-out 0s;}
+.history .dsg-list-content .item-prices .buy-button { background-color: #555;}
+.soon .dsg-list-content .item-prices .buy-button { background-color: #396;}
+.dsg-list-content:hover .buy-button { opacity: 1; filter: alpha(opacity=100)/*IE*/;}
+.dsg-list-content:hover .buy-button:hover { text-decoration: none;}
+
+.dsg-recommend-title { padding: 5px; margin-bottom: 15px; border-bottom: solid 2px #f43434;}
+.dsg-recommend-title h3 { font-size: 28px; display: inline-block; *display: inline/*IE7*/; *zoom:1/*IE7*/;}
+.dsg-recommend-title .more { text-decoration: none; color: #999; float: right;}
+.norecommend { text-align: center; margin: 100px auto;}
+
+/*抢购详情页面左侧内容*/
+.dsg-layout-l { width: 980px; float: left; }
+.dsg-main { margin-bottom: 20px;}
+.dsg-group { background-color: #FFF;border: solid 1px #D7D7D7;}
+.dsg-group h2 { font: 18px/24px "microsoft yahei"; color: #333; height: 50px; margin-bottom: 6px; overflow: hidden;font-weight: normal;margin-top:30px}
+.dsg-group h2 span { font: 12px/16px "microsoft yahei"; color: #FFF; background-color: #BA7538; vertical-align: middle; display: inline-block; height: 16px; padding: 2px 6px; margin-right: 6px; border-radius: 3px; }
+.dsg-group h3 { font: normal 16px/24px "microsoft yahei"; color: #E45050; height: 50px;width:460px; margin-bottom: 6px; overflow: hidden;border:1px dashed #eee;padding:10px;}
+/*抢购信息*/
+.dsg-item { position: relative; z-index: 1; zoom: 1;}
+.dsg-item .pic { line-height: 0; text-align: center; vertical-align: middle; display: table-cell; *display: block; width: 580px; float: left;  overflow: hidden;}
+.dsg-item .pic img { width: 100%; margin-top:expression(193-this.height/2); *margin-top:expression(96-this.height/2)/*IE6,7*/;}
+.dsg-item .button {  display:block;height: 58px;padding-top:27px;padding-bottom: 24px}
+.dsg-item .button span { font: normal 24px/40px "microsoft yahei", Arial; color: #e45050; float: left;overflow: hidden;}
+.dsg-item .button span em { font: normal 32px/40px "microsoft yahei", Arial; margin-left: 4px;}
+.dsg-item .button span del{color:#999;font-size: 14px;margin-left: 10px;}
+.dsg-item .button a { font-size:22px ;line-height: 58px; color: #fff; background-color: #e45050; border-radius: 2px;text-align: center; width: 190px; height: 58px; float: right; padding: 0 4px; overflow: hidden; cursor: pointer;}
+.dsg-item .info { background-color: #FFF; width: 562px; overflow: hidden; float:left;padding:0 28px;}
+.dsg-item .info .prices { font-size: 0; *word-spacing:-1px/*IE6、7*/; width: 306px; margin: 10px auto 10px -1px;}
+.dsg-item .info .prices dl { font: normal 12px/20px arial; vertical-align: top; letter-spacing: normal; word-spacing: normal; text-align: center; display: inline-block; *display: inline/*IE7*/; width: 101px; border-left: dotted 1px #D7D7D7; zoom: 1;}
+.dsg-item .info .prices dl dt { color: #555; height: 20px; margin-bottom: 5px;}
+.dsg-item .info .prices dl dd { font-size: 14px; }
+.dsg-item .info .prices dl dd del { text-decoration: line-through; color: #999;}
+.dsg-item .info .prices dl dd em { font-weight: 600; color: #F87622;}
+.dsg-item .info .require h4 { font-size: 14px; font-weight: normal;float:right}
+.dsg-item .info .require h4 em { font: normal 18px/20px Tahoma; color: #e45050 ; margin: 0 4px;}
+.dsg-item .info .require p { color: #999; height: 20px; padding: 5px 0;}
+.dsg-item .info .require p em { font: normal 12px/20px Tahoma; color: #F87622; margin: 0 2px;}
+.dsg-item .info .time{font-size:14px}
+.dsg-item .info .time i { font-size: 16px; margin-right: 4px;}
+.dsg-item .info .time span { font-size: 16px; margin: 0 2px;}
+/*浮动条*/
+.sticky .floating-bar { display: block; width: 780px; height: 50px; margin-left: -500px; position: fixed; _position: relative; top: 0; left: 50%; z-index:999; box-shadow: 0 2px 2px rgba(0,0,0,0.2);}
+.floating-bar { background-color: #FFF; display: none; overflow: hidden;}
+.floating-bar .button { background-color: #F87622; display: inline-block; *display: inline/*IE7*/; width: 305px; height: 50px; *zoom:1;}
+.floating-bar .button span { font: normal 24px/30px "microsoft yahei", Arial; color: #FFF; max-width: 150px; float: left; margin: 10px 0 0 20px; overflow: hidden;}
+.floating-bar .button span em { font: 700 32px/30px "microsoft yahei", Arial; margin-left: 4px;}
+.floating-bar .button a { font: 600 20px/24px "microsoft yahei"; text-shadow: 0 1px 0 rgba(255,255,255,0.5); color: #630; background-color: #FC0; text-align: center; width: 100px; height: 24px; float: right; padding: 4px 0; margin: 8px 20px 0 0; border-radius: 5px; overflow: hidden; box-shadow: 2px 2px 0 rgba(0,0,0,0.25); cursor: pointer;}
+.floating-bar .button a:hover { text-decoration: none; color: #000; box-shadow: none;}
+.floating-bar .prices { font-size: 0; *word-spacing:-1px/*IE6、7*/; white-space: nowrap; vertical-align: top; display: inline-block; *display: inline/*IE7*/; margin: 8px 0 0 0; overflow: hidden; zoom: 1;}
+.floating-bar .prices dl { font: normal 12px/18px arial; vertical-align: top; letter-spacing: normal; word-spacing: normal; text-align: center; display: inline-block; *display: inline/*IE7*/; width: 110px; margin-left: -1px; border-left: dotted 1px #D7D7D7; zoom: 1;}
+.floating-bar .prices dl dt { color: #555; height: 18px;}
+.floating-bar .prices dl dd del { text-decoration: line-through; color: #999;}
+.floating-bar .prices dl dd a { color: #005EA6;}
+/*结束未开始等状态*/
+.close .dsg-item .pic,
+.not-start .dsg-item .pic, 
+.not-verify .dsg-item .pic { border-color: #777;}
+.close .button, 
+.not-start .button, 
+.not-verify .button { background-color: #777;}
+.close .button a, 
+.not-start .button a, 
+.not-verify .button a { color: #333; background-color: #CCC;}
+.close .info .require p, 
+.not-start .info .require p, 
+.not-verify .info .require p { visibility: hidden;}
+/*抢购介绍详情*/
+.dsg-title-bar ul { font-size: 0; *word-spacing:-1px/*IE6、7*/; background-color: #FCFCFC; border: solid 1px #D7D7D7;}
+.dsg-title-bar ul li { vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; }
+.dsg-title-bar ul li { *display: inline/*IE6,7*/;}
+.dsg-title-bar ul li a { font: normal 14px/20px "microsoft yahei"; text-decoration:none; color:#777; background-color: #F5F5F5; display: block; padding: 6px 15px 5px 15px; border-style: solid; border-color: #D7D7D7; border-width: 0 1px 0 0;}
+.dsg-title-bar ul li.tabs-selected { margin: -7px 0 -1px -1px;}
+.dsg-title-bar ul li.tabs-selected a { color: #e45050; background-color: #FFF; padding: 11px 15px 6px 15px; border-style: solid; border-color: #e45050 #DDD transparent #DDD; border-width: 2px 1px 0 1px ;}
+/*商品信息*/
+.dsg-detail-content { font-size: 12px; line-height: 20px; color: #555; padding: 0; border: solid #D7D7D7; border-width: 0 1px 1px; overflow: hidden;}
+.dsg-detail-content.hide { display: none; visibility: hidden;}
+.dsg-intro { padding: 15px; min-height: 100px;}
+.dsg-intro img { max-width: 740px;}
+/*线下抢使用说明*/
+.dsg-instructions { font-size: 14px; background-color: #FEFEED; padding: 9px; margin: 20px; border: solid 1px #E5E5E5; }
+.dsg-instructions h4 { font-weight: 600; color: #FFF; background-color: #F87622; display: inline-block; *display: inline; padding: 4px 12px; *zoom: 1;}
+.dsg-instructions ul { color: #777; margin-top: 10px;}
+.dsg-instructions li { line-height: 24px;}
+.dsg-instructions li time { color: #F60; margin: 0 4px;}
+.dsg-instructions li strong { color: #333; margin: 0 4px;}
+
+
+/*购买记录*/
+.dsg-buyer thead th { font-weight: 600; text-align: center; height: 20px; padding: 6px;}
+.dsg-buyer td { line-height: 28px; color: #555; text-align: center;}
+/*评价详情*/
+.dsg-evaluate { padding: 9px;}
+.dsg-evaluate .rate { line-height: 20px; color: #c00; vertical-align: middle; display: inline-block; *display: inline; *zoom:1; margin: 10px 40px 10px 20px;}
+.dsg-evaluate .rate strong { font: lighter 40px/40px arial; vertical-align: bottom;}
+.dsg-evaluate .rate sub { font: 16px/20px arial; vertical-align: bottom; margin-right: 6px;}
+.dsg-evaluate .rate span { color: #999; display: block; clear: both;}
+.dsg-evaluate .percent { vertical-align: middle; display: inline-block; *display: inline; *zoom:1;}
+.dsg-evaluate .percent dl { font-size: 0; *word-spacing:-1px/*IE6、7*/;}
+.dsg-evaluate .percent dt { font-size: 12px; line-height: 20px; vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; width: 80px; height: 20px;}
+.dsg-evaluate .percent dt { *display: inline/*IE6,7*/;}
+.dsg-evaluate .percent dt em { color: #999; margin-left: 4px;}
+.dsg-evaluate .percent dd { background-color: #F5F5F5; vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; width: 100px; height: 14px; margin: 3px 0;}
+.dsg-evaluate .percent dd { *display: inline/*IE6,7*/;}
+.dsg-evaluate .percent dd i { background-color: #c00; display: block; height: 14px;}
+.dsg-evaluate .btns { vertical-align: middle; display: inline-block; *display: inline; *zoom:1; height: 60px; padding-left: 30px; margin-left: 100px; border-left: dotted 1px #E6E6E6;}
+/*评价详情-列表*/
+.dsg-evaluate-main { padding: 20px 0 0 0; margin-top: 10px; border-top: solid 1px #E6E6E6;}
+.dsg-evaluate-floor { margin: 0 40px 0 60px; border-left: solid 3px #F5F5F5; position: relative; z-index: 1;}
+.dsg-evaluate-floor .user-avatar { background-color: #F2F2F2; width: 40px; height: 40px; border-radius: 20px; position: absolute; z-index: 1; top: 0; left: -20px; }
+.dsg-evaluate-floor .user-avatar a { text-align: center; vertical-align: middle; display: table-cell; *display: block; width: 40px; height:40px; border-radius: 20px; overflow: hidden;}
+.dsg-evaluate-floor .user-avatar a img { max-width: 40px; max-height: 40px; margin-top:expression(40-this.height/2); *margin-top:expression(20-this.height/2); border-radius: 20px;}
+.dsg-evaluate-floor .detail { margin: 10px 0 0 30px;}
+.dsg-evaluate-floor .detail dt { display: block; margin-bottom: 10px; overflow: hidden;}
+.dsg-evaluate-floor .detail dt .user-name { font: bold 12px/20px "Microsoft Yahei"; color: #AAA; float: left;}
+.dsg-evaluate-floor .detail dt time { color: #CCC; float: right;}
+.dsg-evaluate-floor .detail dd { color: #999; margin-bottom: 10px;}
+.dsg-evaluate-floor .detail dd span { color: #555;}
+.dsg-evaluate-floor .detail dd.explain { color: #F87622; background-color: #FFC; border: dotted 1px #FEF4B1;}
+.dsg-evaluate-floor .detail .photos-thumb { font-size: 0; *word-spacing:-1px/*IE6、7*/; vertical-align: middle; display: inline-block;}
+.dsg-evaluate-floor .detail .photos-thumb li { vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; *display: inline/*IE7*/; text-align: center; width: 44px; margin-right: 6px; *zoom: 1;}
+.dsg-evaluate-floor .detail .photos-thumb a { line-height: 0; background-color: #FFF; text-align: center; vertical-align: middle; display: table-cell; *display: block; width: 40px; height: 40px; padding: 1px; border: solid 1px #E6E6E6; overflow: hidden;}
+.dsg-evaluate-floor .detail .photos-thumb a:hover { border-color: #F87622;}
+.dsg-evaluate-floor .detail .photos-thumb a img { max-width: 40px; max-height: 40px; margin-top:expression(40-this.height/2); *margin-top:expression(20-this.height/2)/*IE6,7*/;}
+
+/*抢购 banner*/
+.dsg-slides-banner { width: 988px; height: 300px; position: relative; z-index: 1;float: right;}
+.dsg-slides-banner .bd img{width: 988px; height: 300px;}
+.dsg-slides-banner .hd{position: absolute;bottom:10px;width:100%;text-align: center;z-index: 2}
+.dsg-slides-banner .hd li{display: inline-block;width: 12px;height: 12px;border-radius: 100%;background: #000;opacity: 0.2;margin:0 5px}
+.dsg-slides-banner .hd li.on{opacity: 0.8;background:#fff;width:26px;border-radius:10px;}
+.dsg-slides-banner .ctrl{display:block;position:absolute;top:50%;margin-top:-31px;z-index:9;width:30px;height:62px;line-height:62px;color:white;text-align:center;font-size:36px;font-family:simsun;font-weight:500;background:#000;filter:alpha(opacity=50); -moz-opacity:0.5; -khtml-opacity: 0.5; opacity: 0.5; }
+.dsg-slides-banner .ctrl:hover{color:#fff;filter:alpha(opacity=80); -moz-opacity:0.8; -khtml-opacity: 0.8; opacity: 0.8;}
+.dsg-slides-banner .prev{position:absolute;left:0%;}
+.dsg-slides-banner .next{position:absolute;right:0%;}
+
+
+
+
+
+/*抢购详情页面右侧内容*/
+.dsg-layout-r { width: 210px; float: right;}
+
+/*侧边推荐抢购*/
+.dsg-module-sidebar { margin-bottom: 10px;}
+.dsg-module-sidebar .title { font: 700 14px/20px "microsoft yahei"; color: #e4504f; height: 20px; padding: 8px 10px; border: solid 1px #D7D7D7;}
+.dsg-module-sidebar .content { background-color: #FFF; border: solid #D7D7D7; border-width: 0 1px 1px;}
+.dsg-module-sidebar .content .nothing { text-align: center; padding: 50px 0; color: #CCC;}
+.dsg-group-command { width: 190px; margin: 0 auto;}
+.dsg-group-command dl { width: 100%; padding-bottom: 8px; border-top: solid 1px #D7D7D7; overflow: hidden;}
+.dsg-group-command dt.name { line-height: 18px; height: 36px; overflow: hidden; padding: 5px 0;}
+.dsg-group-command dt.name a { color: #555;}
+.dsg-group-command dt.name a:hover { color: #F87622;}
+.dsg-group-command .pic-thumb { line-height: 0; text-align: center; vertical-align: middle; display: table-cell; *display: block; width: 190px; height: 163px; overflow: hidden;}
+.dsg-group-command .pic-thumb img { max-width: 190px; max-height: 163px; margin-top:expression(163-this.height/2); *margin-top:expression(81-this.height/2)/*IE6,7*/;}
+.dsg-group-command .item { background-color: #F7F7F7; padding: 8px 0;}
+.dsg-group-command .item .price { font-weight: 600; color: #c00; vertical-align: top; display: inline-block; *display: inline/*IE7*/; width: 50px; margin-left: 8px; overflow: hidden; zoom: 1;}
+.dsg-group-command .item .buy { vertical-align: top; display: inline-block; *display: inline/*IE7*/; width: 75px; overflow: hidden; zoom: 1;}
+.dsg-group-command .item .buy em { font-weight: 600; color: #c00; margin-right: 2px;}
+.dsg-group-command .item a { line-height: 16px; color: #FFF; background-color: #e4504f; display: inline-block; *display:inline/*IE7*/; float: right; padding: 2px 4px; margin-right: 5px; border-radius: 3px; zoom: 1;}
+.dsg-group-command .item a:hover { background-color: #CA3300; text-decoration: none;}
+/*无内容*/
+.no-buyer { font: lighter 14px/24px "microsoft yahei"; color: #999; text-align: center; padding: 80px 0;}
+.no-content { font: lighter 18px/24px "microsoft yahei"; color: #999; text-align: center; padding: 180px 0;}
+/* 翻页样式 */
+.pagination { display: inline-block; margin: 0 auto;}
+.pagination ul { font-size: 0; *word-spacing:-1px/*IE6、7*/; }
+.pagination ul li { vertical-align: top; letter-spacing: normal; word-spacing: normal; display: inline-block; margin: 0 0 0 -1px;}
+.pagination ul li { *display: inline/*IE6、7*/; *zoom:1;}
+.pagination li span { font: normal 14px/20px "microsoft yahei"; color: #AAA; background-color: #FAFAFA; text-align: center; display: block; min-width: 20px; padding: 8px; border: 1px solid #E6E6E6; position: relative; z-index: 1;}
+.pagination li a span , 
+.pagination li a:visited span { color: #005AA0; text-decoration: none; background-color: #FFF; position: relative; z-index: 1;}
+.pagination li a:hover span, .pagination li a:active span{ color: #FFF; text-decoration: none; background-color: #F87622; border-color: #CA3300; position: relative; z-index: 9; cursor:pointer;}
+.pagination li span.currentpage { color: #AAA; font-weight: bold; background-color: #FAFAFA; border-color: #E6E6E6; position: relative; z-index: 2;}

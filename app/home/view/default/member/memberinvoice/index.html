@@ -1,0 +1,53 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+<table class="dsm-default-table">
+    <thead>
+        <tr>
+            <th class="w80">{$Think.lang.invoice_state}</th>
+            <th class="w150">{$Think.lang.invoice_title}</th>
+            <th class="tl">{$Think.lang.invoice_code}</th>
+            
+            <th class="w110">{$Think.lang.ds_handle}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {notempty name="invoice_list"}
+        {foreach name="invoice_list" item="invoice"}
+        <tr class="bd-line">
+            <td>{$invoice.invoice_state}</td>
+            <td>{if $invoice.invoice_state==1}{$invoice.invoice_title}{else}{$invoice.invoice_company}{/if}</td>
+           
+            <td>{if $invoice.invoice_state==1}{$invoice.invoice_code}{else}{$invoice.invoice_company_code}{/if}</td>
+            <td class="dsm-table-handle">
+
+                <span>
+                    <a href="{:url('Memberinvoice/edit',['invoice_id'=>$invoice.invoice_id])}" class="btn-blue"><i class="iconfont">&#xe731;</i><p>{$Think.lang.ds_edit}</p></a>
+                </span>    
+                <span>
+                    <a href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('Memberinvoice/drop',['invoice_id'=>$invoice.invoice_id])}','{$Think.lang.ds_ensure_del}');" class="btn-red" ><i class="iconfont">&#xe725;</i>
+                        <p>{$Think.lang.ds_delete}</p>
+                    </a>
+                </span>
+            </td>
+        </tr>
+            
+        {/foreach}
+        {else}
+        <tr>
+                <td colspan="4" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+            </tr>
+        {/notempty}
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+{/block}

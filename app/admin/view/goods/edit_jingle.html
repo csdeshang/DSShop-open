@@ -1,0 +1,39 @@
+<div class="eject_con">
+    <div id="warning" class="alert alert-error"></div>
+    <form method="post" action="{:url('Goods/edit_jingle')}" id="jingle_form">
+        <input type="hidden" name="commonid" value="{$Request.param.commonid}" />
+        <dl>
+            <dt>{$Think.lang.commercial_slogan}：</dt>
+            <dd>
+                <input type="text" class="text w300" name="g_jingle" id="g_jingle" value="" />
+                <p class="hint">{$Think.lang.all_advertisements_will_blank}</p>
+            </dd>
+        </dl>
+        <div class="bottom">
+                <input type="submit" class="btn" value="{$Think.lang.ds_submit}"/>
+        </div>
+    </form>
+</div>
+<script>
+    $(function(){
+        $('#jingle_form').validate({
+            errorLabelContainer: $('#warning'),
+            invalidHandler: function(form, validator) {
+                $('#warning').show();
+            },
+            submitHandler:function(form){
+                ds_ajaxpost('jingle_form');
+            },
+            rules : {
+                g_jingle : {
+                    maxlength: 50
+                }
+            },
+            messages : {
+                g_jingle : {
+                    maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cannot_exceed_qualifier}'
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,20 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+<div class="dsh-article-con" style="margin:0 auto 20px; width:1160px">
+  <h1>{$doc.document_title}</h1>
+  <h2>{$doc.document_time|date="Y-m-d H:i"}</h2>
+  <div class="default">
+    <p>{:htmlspecialchars_decode($doc['document_content']);}</p>
+  </div>
+</div>
+
+
+{/block}
+
+
+
+
+
+

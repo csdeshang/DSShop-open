@@ -1,0 +1,416 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>兑换礼品</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form id="pointprod_form" method="post" enctype="multipart/form-data" >
+        <table class="ds-default-table">
+            <thead>
+            <tr class="space">
+                <th colspan="3">{$Think.lang.admin_pointprod_baseinfo}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th class="required" style="line-height:normal; border-top: 1px dotted #CBE9F3;"><label for="">{$Think.lang.admin_pointprod_goods_image}:</label></th>
+                <td colspan="2" class="required"><label class="validation" for="goodsname">{$Think.lang.admin_pointprod_goods_name}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <th rowspan="6" class="picture"><div class="size-200x200"><span class="thumb size-200x200"><i></i><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.default_goods_image)}" onload="javascript:ResizeImage(this,200,200);" ds_type="goods_image" /></span></div>
+                </th>
+                <td class="vatop rowform"><input type="text" name="goodsname" id="goodsname" class="txt"/></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label class="validation" for="goodsprice">{$Think.lang.admin_pointprod_goods_price}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" name="goodsprice" id="goodsprice" class="txt"/></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label class="validation" for="goodspoints">{$Think.lang.admin_pointprod_goods_points}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" name="goodspoints" id="goodspoints" class="txt"/></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label class="validation" for="goodsserial">{$Think.lang.admin_pointprod_goods_serial}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <th style="line-height:normal;"><span class="type-file-box">
+            <input name="goods_images" type="file" class="type-file-file" id="goods_images" size="30" hidefocus="true" ds_type="change_goods_image">
+            </span> </th>
+                <td class="vatop rowform"><input type="text" name="goodsserial" id="goodsserial" class="txt"/></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <th class="required" style="line-height:normal; border-top: 1px dotted #CBE9F3;"><label for="goodstag">{$Think.lang.admin_pointprod_goods_tag}:</label></th>
+                <td colspan="2" class="required"><label class="validation" for="goodsstorage">{$Think.lang.admin_pointprod_goods_storage}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" name="goodstag" id="goodstag" class="txt"/></td>
+                <td class="vatop rowform"><input type="text" name="goodsstorage" id="goodsstorage" class="txt"/></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="space">
+                <th colspan="3">{$Think.lang.admin_pointprod_requireinfo}</th>
+            </tr>
+            <tr>
+                <td colspan="3" class="required"><label>{$Think.lang.admin_pointprod_limittip}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="radio" name="islimit" id="islimit_1" value="1" onclick="showlimit();"/>
+                    &nbsp;{$Think.lang.admin_pointprod_limit_yes}&nbsp;
+                    <input type="radio" name="islimit" id="islimit_0" value="0" checked="checked" onclick="showlimit();"/>
+                    &nbsp;{$Think.lang.admin_pointprod_limit_no}</td>
+                <td colspan="2" class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tbody id="limitnum_div">
+            <tr class="noborder">
+                <td colspan="3" class="required"><label for="limitnum">{$Think.lang.admin_pointprod_limitnum}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" name="limitnum" id="limitnum" class="txt" value="1" /></td>
+                <td colspan="2" class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr>
+                <td colspan="3" class="required"><label>{$Think.lang.admin_pointprod_limittimetip}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="radio" name="islimittime" id="islimittime_1" value="1" onclick="showlimittime();"/>
+                    &nbsp;{$Think.lang.admin_pointprod_limittime_yes}&nbsp;
+                    <input type="radio" name="islimittime" id="islimittime_0" value="0" checked="checked" onclick="showlimittime();"/>
+                    &nbsp;{$Think.lang.admin_pointprod_limittime_no}</td>
+                <td colspan="2" class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tbody name="limittime_div">
+            <tr class="noborder">
+                <td class="required"><label>{$Think.lang.start_time}: </label></td>
+                <td colspan="2" class="required"><label>{$Think.lang.end_time}: </label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" name="starttime" id="starttime" class="txt date" style="width:100px;" value="{$Think.TIMESTAMP|date='Y-m-d'}"/>{$Think.lang.ds_day}
+                    <select id="starthour" name="starthour" style="margin-left: 8px; _margin-left: 4px; width:60px;">
+                        {foreach name="hourarr" item="item"}
+                        <option value="{$item}">{$item}</option>
+                        {/foreach}
+                    </select>
+                    {$Think.lang.admin_pointprod_time_hour}</td>
+                <td class="vatop rowform"><input type="text" name="endtime" id="endtime" class="txt date" style="width:100px;" value="{$Think.TIMESTAMP|date='Y-m-d'}" />
+                    {$Think.lang.ds_day}
+                    <select id="endhour" name="endhour"  style="margin-left: 8px; _margin-left: 4px; width:60px;">
+                        {foreach name="hourarr" item="item"}
+                        <option value="{$item}">{$item}</option>
+                        {/foreach}
+                    </select>
+                    {$Think.lang.admin_pointprod_time_hour}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr>
+                <td colspan="3" class="required"><label>限制参与兑换的会员级别:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td>
+                    <select name="limitgrade">
+                        {if $member_grade}
+                        {foreach name="member_grade" item="v"}
+                        <option value="{$v.level}">V{$v.level}</option>
+                       {/foreach}
+                        {/if}
+                    </select>
+                </td>
+                <td colspan="2" class="vatop tips">当会员兑换积分商品时，需要达到该级别或者以上级别后才能参与兑换</td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr class="space">
+                <th colspan="3">{$Think.lang.admin_pointprod_stateinfo}</th>
+            </tr>
+            <tr>
+                <td colspan="3" class="required"><label>{$Think.lang.admin_pointprod_isshow}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff"><label for="showstate_1" class="cb-enable selected"><span>{$Think.lang.ds_yes}</span></label>
+                    <label for="showstate_0" class="cb-disable"><span>{$Think.lang.ds_no}</span></label>
+                    <input id="showstate_1" name="showstate" checked="checked" value="1" type="radio">
+                    <input id="showstate_0" name="showstate" value="0" type="radio"></td>
+                <td colspan="2" class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="required"><label>{$Think.lang.admin_pointprod_iscommend}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff"><label for="commendstate_1" class="cb-enable"><span>{$Think.lang.ds_yes}</span></label>
+                    <label for="commendstate_0" class="cb-disable  selected"><span>{$Think.lang.ds_no}</span></label>
+                    <input id="commendstate_1" name="commendstate" value="1" type="radio">
+                    <input id="commendstate_0" name="commendstate" checked="checked"  value="0" type="radio"></td>
+                <td colspan="2" class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tbody id="forbidreason_div">
+            <tr class="noborder">
+                <td colspan="3" class="required"><label for="forbidreason">{$Think.lang.admin_pointprod_forbidreason}: </label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><textarea  name="forbidreason" id="forbidreason" rows="6" class="tarea"></textarea></td>
+                <td colspan="2" class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr class="space">
+                <th colspan="3">{$Think.lang.admin_pointprod_seoinfo}</th>
+            </tr>
+            <tr>
+                <td colspan="3" class="required"><label for="keywords">{$Think.lang.admin_pointprod_seokey}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" name="keywords" id="keywords" class="txt"/></td>
+                <td colspan="2" class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="required"><label for="description">{$Think.lang.admin_pointprod_seodescription}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><textarea class="tarea" rows="6" id="description" name="description"></textarea></td>
+                <td colspan="2" class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr class="space">
+                <th colspan="3">{$Think.lang.admin_pointprod_otherinfo}</th>
+            </tr>
+            <tr>
+                <td colspan="3" class="required"><label for="sort">{$Think.lang.admin_pointprod_sort}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" name="sort" id="sort" class="txt" value="0" /></td>
+                <td colspan="2" class="vatop tips">{$Think.lang.admin_pointprod_sorttip}</td>
+            </tr>
+            <tr class="space">
+                <th colspan="3">{$Think.lang.admin_pointprod_descriptioninfo}</th>
+            </tr>
+            <tr>
+                <td colspan="3">
+                    {:build_editor(['name'=>'content'])}
+                    <textarea name="pgoods_body" id="content"></textarea>
+                    </td>
+            </tr>
+            <tr>
+                <td colspan="3" class="required">{$Think.lang.admin_pointprod_uploadimg}:</td>
+            </tr>
+            <tr class="noborder">
+                <td colspan="3" id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
+            </tr>
+            <tr>
+                <td colspan="3" class="required">{$Think.lang.admin_pointprod_uploadimg_complete}:</td>
+            </tr>
+            <tr class="noborder">
+                <td colspan="3"><ul id="thumbnails" class="thumblists">
+                    {notempty name="file_upload"}
+                    {foreach name="file_upload" item="v"}
+                    <li id="{$v.upload_id}" class="picture" >
+                        <input type="hidden" name="file_id[]" value="{$v.upload_id}" />
+                        <div class="size-64x64"><span class="thumb"><i></i><img src="{:ds_get_pic(ATTACH_POINTPROD,$v.file_name)}" alt="{$v.file_name}" onload="javascript:ResizeImage(this,64,64);"/></span></div>
+                        <p><span><a href="javascript:insert_editor('{:ds_get_pic(ATTACH_POINTPROD,$v.file_name)}');">{$Think.lang.admin_pointprod_uploadimg_add}</a></span><span><a href="javascript:del_file_upload('{$v.upload_id}');">{$Think.lang.ds_del}</a></span></p>
+                    </li>
+                   {/foreach}
+                   {/notempty}
+                </ul></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="3"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-file-upload/jquery.fileupload.js"></script>
+<script>
+    // 模拟上传input type='file'样式
+    $(function(){
+        var textButton="<input type='text' name='textfield' id='textfield1' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />"
+        $(textButton).insertBefore("#goods_images");
+        $("#goods_images").change(function(){
+            $("#textfield1").val($("#goods_images").val());
+        });
+    });
+    function showlimit(){
+        //var islimit = $('input[name=islimit][checked]').val();
+        var islimit = $(":radio[name=islimit]:checked").val();
+        if(islimit == '1'){
+            $("#limitnum_div").show();
+            $("#limitnum").val('');
+        }else{
+            $("#limitnum_div").hide();
+            $("#limitnum").val('1');//为了减少提交表单的验证，所以添加一个虚假值
+        }
+    }
+    function showforbidreason(){
+        var forbidstate = $(":radio[name=forbidstate]:checked").val();
+        if(forbidstate == '1'){
+            $("#forbidreason_div").show();
+        }else{
+            $("#forbidreason_div").hide();
+        }
+    }
+    function showlimittime(){
+        var islimit = $(":radio[name=islimittime]:checked").val();
+        if(islimit == '1'){
+            $("[name=limittime_div]").show();
+            $("#starttime").val('');
+            $("#endtime").val('');
+        }else{
+            $("[name=limittime_div]").hide();
+            $("#starttime").val("{$Think.TIMESTAMP|date='Y-m-d'}");
+            $("#endtime").val("{$Think.TIMESTAMP|date='Y-m-d'}");
+        }
+    }
+    $(function(){
+
+
+        showlimit();
+        showforbidreason();
+        showlimittime();
+
+        $('#starttime').datepicker({dateFormat: 'yy-mm-dd'});
+        $('#endtime').datepicker({dateFormat: 'yy-mm-dd'});
+
+        $('#pointprod_form').validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                goodsname : {
+                    required   : true
+                },
+                goodsprice    : {
+                    required  : true,
+                    number    : true,
+                    min       : 0
+                },
+                goodspoints : {
+                    required   : true,
+                    digits     : true,
+                    min		   :0
+                },
+                goodsserial : {
+                    required   : true
+                },
+                goodsstorage  : {
+                    required  : true,
+                    digits    : true
+                },
+                limitnum  : {
+                    required   : true,
+                    digits     : true,
+                    min        : 0
+                },
+                starttime  : {
+                    required  : true,
+                    date      : false
+                },
+                endtime  : {
+                    required  : true,
+                    date      : false
+                },
+                sort : {
+                    required  : true,
+                    digits    : true,
+                    min		  :0
+                }
+            },
+            messages : {
+                goodsname  : {
+                    required   : '{$Think.lang.admin_pointprod_add_goodsname_error}'
+                },
+                goodsprice : {
+                    required: '{$Think.lang.admin_pointprod_add_goodsprice_null_error}',
+                    number  : '{$Think.lang.admin_pointprod_add_goodsprice_number_error}',
+                    min     : '{$Think.lang.admin_pointprod_add_goodsprice_number_error}'
+                },
+                goodspoints : {
+                    required: '{$Think.lang.admin_pointprod_add_goodspoint_null_error}',
+                    digits     : '{$Think.lang.admin_pointprod_add_goodspoint_number_error}',
+                    min		   : '{$Think.lang.admin_pointprod_add_goodspoint_number_error}'
+                },
+                goodsserial:{
+                    required : '{$Think.lang.admin_pointprod_add_goodsserial_null_error}'
+                },
+                goodsstorage : {
+                    required: '{$Think.lang.admin_pointprod_add_storage_null_error}',
+                    digits  : '{$Think.lang.admin_pointprod_add_storage_number_error}'
+                },
+                limitnum : {
+                    required: '{$Think.lang.admin_pointprod_add_limitnum_error}',
+                    digits  : '{$Think.lang.admin_pointprod_add_limitnum_digits_error}',
+                    min		: '{$Think.lang.admin_pointprod_add_limitnum_digits_error}'
+                },
+                starttime  : {
+                    required: '{$Think.lang.admin_pointprod_add_limittime_null_error}'
+                },
+                endtime  : {
+                    required: '{$Think.lang.admin_pointprod_add_limittime_null_error}'
+                },
+                sort : {
+                    required: '{$Think.lang.admin_pointprod_add_sort_null_error}',
+                    digits  : '{$Think.lang.admin_pointprod_add_sort_number_error}',
+                    min		: '{$Think.lang.admin_pointprod_add_sort_number_error}'
+                }
+            }
+        });
+
+        // 替换图片
+        $('#fileupload').each(function(){
+            $(this).fileupload({
+                dataType: 'json',
+                url: "{:url('Pointprod/pointprod_pic_upload')}",
+                done: function (e,data) {
+                    if(data != 'error'){
+                        add_uploadedfile(data.result);
+                    }
+                }
+            });
+        });
+    });
+    function add_uploadedfile(file_data)
+    {
+        var newImg = '<li id="' + file_data.file_id + '" class="picture"><input type="hidden" name="file_id[]" value="' + file_data.file_id + '" /><div class="size-64x64"><span class="thumb"><i></i><img src="' + file_data.file_path + '" alt="' + file_data.file_name + '" width="64px" height="64px"/></span></div><p><span><a href="javascript:insert_editor(\'' + file_data.file_path + '\');">{$Think.lang.admin_pointprod_uploadimg_add}</a></span><span><a href="javascript:del_file_upload(' + file_data.file_id + ');">{$Think.lang.ds_del}</a></span></p></li>';
+        $('#thumbnails').prepend(newImg);
+    }
+    function insert_editor(file_path){
+        ue.execCommand('insertimage', {src:file_path});
+    }
+    function del_file_upload(file_id)
+    {
+        if(!window.confirm('{$Think.lang.ds_ensure_del}')){
+        return;
+    }
+        $.getJSON("{:url('Pointprod/ajaxdelupload')}",{file_id:+ file_id}, function(result){
+            if(result){
+                $('#' + file_id).remove();
+                layer.msg('{$Think.lang.ds_common_del_succ}');
+            }else{
+                layer.alert('{$Think.lang.ds_common_del_fail}');
+            }
+        });
+    }
+</script>

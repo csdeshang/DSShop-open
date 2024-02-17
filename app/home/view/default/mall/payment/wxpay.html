@@ -1,0 +1,125 @@
+{include file='default/base/mall_top'/}
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home.css">
+<style>
+    .wxpayment { border-top: 2px solid #4b5b78; padding: 12px 30px 0; border: 1px solid #eee; color: #777; }
+    .p-w-bd::after,
+    .pay-weixin::after { clear: both; content: ""; display: table; }
+    .p-w-hd { font-family: "Microsoft Yahei"; font-size: 18px; margin-bottom: 20px; }
+    .p-w-bd { margin-bottom: 30px; padding-left: 130px; }
+    .pw-box-hd img { border: 1px solid #ddd; }
+    .p-w-box { float: left; width: 300px; }
+    .payment-change .pc-wrap { display: block; height: 56px; line-height: 56px; padding: 0 20px; transition: all 0.1s ease 0s; }
+    .payment-change .pc-wrap .pc-w-arrow-left { float: left; margin-right: 15px; }
+    .payment-change .pc-wrap .pc-w-arrow-left,
+    .payment-change .pc-wrap .pc-w-arrow-right { color: #2fa1dd; float: right; font-family: "{$Think.lang.song_typeface}"; font-size: 22px; font-style: normal; text-align: center; width: 20px; }
+    .pw-box-ft { background: url("{$Think.HOME_SITE_ROOT}/images/payment/icon-red.png") no-repeat scroll 50px 8px #ff7674; height: 44px; padding: 8px 0 8px 125px; }
+    .p-w-sidebar { background: url("{$Think.HOME_SITE_ROOT}/images/payment/phone-bg.png") no-repeat scroll 50px 0 rgba(0, 0, 0, 0); float: left; height: 421px; margin-top: -20px; padding-left: 50px; width: 379px; }
+    .pw-box-ft p { color: #fff; font-size: 14px; font-weight: 700; line-height: 22px; margin: 0; }
+    .payment-change .pc-wrap .pc-w-arrow-left { float: left; margin-right: 15px; }
+    .payment-change .pc-wrap strong { color: #2ea7e7; cursor: pointer; float: left; font-size: 14px; margin-right: 30px; }
+</style>
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<div class="header-login clearfix">
+    <div class="w1200">
+        <div class="logo">
+            <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+        </div>
+    </div>
+</div>
+
+<div class="dsc-main">
+    <div class="dsc-title">
+        <h3>{$Think.lang.cart_index_payment}</h3>
+        <h5>{$Think.lang.order_details_can_viewed}<a href="{:url('Memberorder/index')}" target="_blank">{$Think.lang.my_order}</a>{$Think.lang.carry_out_check}。</h5>
+    </div>
+    <div class="dsc-receipt-info">
+        <div class="dsc-receipt-info-title">
+            <h3> {$Think.lang.order_submitted_successfully}：<strong>{:ds_price_format($api_pay_amount)}</strong>{$Think.lang.ds_yuan} </h3>
+        </div>
+    </div>
+    <table class="dsc-table-style">
+        <thead>
+        <tr>
+            <th class="w50"></th>
+            <th class="w200 tl">{$Think.lang.order_number}</th>
+            <th class="tl">{$Think.lang.amount_of}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {if count($order_list) > 1}
+        <tr>
+            <th colspan="20">{$Think.lang.different_businesses}{:count($order_list)}{$Think.lang.different_suborder_deliveries}！</th>
+        </tr>
+        {/if}
+       {foreach name="order_list" item="order_info" key="key" }
+        {if $order_info.order_type=='pd_order'}
+         <tr>
+            <td></td>
+            <td class="tl">{$order_info.pdr_sn}</td>
+            <td class="tl">{$order_info.pdr_amount}</td>
+        </tr>
+        {else /}
+        <tr>
+            <td></td>
+            <td class="tl">{$order_info.order_sn}</td>
+            <td class="tl">{$order_info.order_amount}</td>
+        </tr>
+        {/if}
+       {/foreach}
+        </tbody>
+    </table>
+    <div class="wxpayment">
+        <!-- 微信支付 -->
+        <div class="pay-weixin">
+            <div class="p-w-hd">{:sprintf($Think.lang.micro_letter_to_pay,$pay_method)}</div>
+            <div class="p-w-bd">
+                <div class="p-w-box">
+                    <div class="pw-box-hd"> <img width="298" src="{$Think.HOME_SITE_URL}/payment/qrcode?data={:urlencode($pay_url)}"> </div>
+                    <div class="pw-box-ft">
+                        <p>{:sprintf($Think.lang.wechat_scan,$pay_method)}</p>
+                        <p>{$Think.lang.qr_code_payment}</p>
+                    </div>
+                </div>
+                <div class="p-w-sidebar"></div>
+            </div>
+        </div>
+        <!-- 微信支付 end -->
+        <!-- payment-change 变更支付方式 -->
+        <div class="payment-change"> <a href="javascript:history.back(-1)" id="reChooseUrl" class="pc-wrap"> <i class="pc-w-arrow-left">&lt;</i> <strong>{$Think.lang.other_payment_methods}</strong> </a> </div>
+        <!-- payment-change 变更支付方式 end -->
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        setInterval(queryOrderState, 3000);
+    });
+
+    function queryOrderState(){
+        $.ajax({
+            type: "GET",
+            url: "{$Think.HOME_SITE_URL}/payment/query_state?{$args|raw}",
+            data: "",
+            dataType: "json",
+            timeout: 4000,
+            async:false,
+            success: function(result) {
+                if(result.state==1){
+                    //此处待修改
+                    if (result.type == 'real_order') {
+                        window.location.href = "{:url('Memberorder/index')}";
+                    }
+                    if(result.type == 'vr_order') {
+                        window.location.href = "{:url('Membervrorder/index')}";
+                    }
+                    if(result.type == 'pd_order') {
+                        window.location.href = "{:url('Predeposit/index')}";
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+
+{include file='default/base/mall_footer'/}

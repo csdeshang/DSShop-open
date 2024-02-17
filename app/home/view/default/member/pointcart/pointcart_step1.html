@@ -1,0 +1,142 @@
+{include file="default/base/mall_top" /} 
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+    <ul class="dsc-flow dsc-point-flow">
+        <li class=""><i class="iconfont">&#xe69a;</i>
+            <p>{$Think.lang.pointcart_ensure_order}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class="current"><i class="iconfont">&#xe731;</i>
+            <p>{$Think.lang.pointcart_ensure_info}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe67e;</i>
+            <p>{$Think.lang.pointcart_exchange_finish}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+    </ul>
+</div>
+<div class="dsc-line"></div>
+
+
+  <div class="dsc-main">
+    <div class="dsc-title">
+      <h3>{$Think.lang.pointcart_ensure_info}</h3>
+      <h5>{$Think.lang.information_consignee1}</h5>
+    </div>
+    <form method="post" id="porder_form" name="porder_form" action="{:url('Pointcart/step2')}">
+      <div class="dsc-receipt-info">
+        <div class="dsc-receipt-info-title">
+          <h3>{$Think.lang.pointcart_step1_receiver_address}<a href="{:url('Memberaddress/index')}" target="_blank">[{$Think.lang.ds_manage}]</a></h3>
+        </div>
+        <!-- 已经存在的收获地址start -->        
+        <div class="dsc-candidate-items">
+          {notempty name="address_list"}
+          {foreach name="address_list" item="val"}
+          <ul class="receive_add address_item">
+            <li style="margin-top:0px;">
+              <label for="address_{$val.address_id}">
+              <input id="address_{$val.address_id}" type="radio" name="address_options" value="{$val.address_id}" {if $val.address_is_default == '1'}checked{/if}/>
+              &nbsp;&nbsp;{$val.area_info}&nbsp;&nbsp;{$val.address_detail}&nbsp;&nbsp; {$val.address_realname}{$Think.lang.cart_step1_receiver_shou}&nbsp;&nbsp;
+                {if $val.address_mob_phone}{$val.address_mob_phone}{else /}{$val.address_tel_phone}{/if}
+              </label>
+            </li>
+          </ul>
+          {/foreach}
+          {else /}
+          <div style="color:#d93600; height:25px; padding-top:3px;">{$Think.lang.information_consignee2}</div>
+          {/notempty}
+        </div>
+        <!-- 已经存在的收获地址end -->
+      </div>
+
+      <!-- 留言start -->
+      <div class="dsc-receipt-info">
+        <div class="dsc-receipt-info-title">
+          <h3>{$Think.lang.pointcart_step1_chooseprod}</h3>
+        </div>
+
+        <!-- 已经选择礼品start -->
+
+        <table class="dsc-table-style">
+          <thead>
+            <tr>
+              <th class="w20"></th>
+              <th class="tl" colspan="2">{$Think.lang.pointcart_step1_goods_info}</th>
+              <th class="w120">{$Think.lang.pointcart_step1_goods_num}</th>
+              <th class="w120">{$Think.lang.pointcart_step1_goods_point}</th>
+            </tr>
+          </thead>
+          <tbody>
+          {notempty name="pointprod_arr.pointprod_list"}
+          {foreach name="pointprod_arr.pointprod_list" item="val"}
+            <tr class="shop-list ">
+              <td></td>
+              <td class="w60">
+                <a href="{:url('Pointprod/pinfo',['id'=>$val.pgoods_id])}" class="dsc-goods-thumb" target="_blank">
+                  <img src="{$val.pgoods_image_small}" alt="{$val.pgoods_name}"/>
+                </a>
+              </td>
+              <td class="tl">
+                <dl class="dsc-goods-info">
+                  <dt>
+                    <a target="_blank" href="{:url('Pointprod/pinfo',['id'=>$val.pgoods_id])}">{$val.pgoods_name}</a>
+                  </dt>
+                </dl>
+              </td>
+              <td>{$val.quantity}</td>
+              <td>{$val.onepoints}{$Think.lang.points_unit}</td>
+            </tr>
+            {/foreach}
+          {/notempty}
+            <tr>
+            <td></td>
+              <td colspan="20" class="tl">
+                <label>{$Think.lang.pointcart_step1_message}{$Think.lang.ds_colon}
+                <input type="text" class="w400 text" onclick="pcart_messageclear(this);" value="{$Think.lang.pointcart_step1_message_advice}" />
+                </label></td>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="20">
+                <div class="dsc-all-account">{$Think.lang.pointcart_cart_allpoints}{$Think.lang.ds_colon}
+                  <em>{$pointprod_arr.pgoods_pointall}</em>{$Think.lang.points_unit}</div>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+        <!-- 已经选择礼品end -->
+      </div>
+      <div class="dsc-bottom">
+        <a href="{:url('Pointcart')}" class="dsc-btn">{$Think.lang.pointcart_step1_return_list}</a>
+        <a id="submitpointorder" href="javascript:void(0);" class="dsc-btn dsc-btn-acidblue fr">{$Think.lang.pointcart_step1_submit}</a>
+       </div>
+    </form>
+  </div>
+<script type="text/javascript">
+	function pcart_messageclear(tt){
+        if (!tt.name)
+        {
+            tt.value = '';
+            tt.name = 'pcart_message';
+        }
+    }
+
+    $("#submitpointorder").click(function(){
+        var chooseaddress = parseInt($("input[name='address_options']:checked").val());
+        if(!chooseaddress || chooseaddress <= 0){
+            layer.alert('{$Think.lang.select_consignee_address}');
+        } else {
+            $('#porder_form').submit();
+        }
+    });
+</script>
+
+{include file="default/base/mall_footer" /}

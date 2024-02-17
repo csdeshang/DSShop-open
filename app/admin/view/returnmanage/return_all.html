@@ -1,0 +1,95 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>退货管理</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="get">
+        <div class="ds-search-form">
+            <dl>
+                <dt> <select name="type">
+                        <option value="order_sn" {if condition="$Request.param.type eq 'order_sn'"}selected{/if}>{$Think.lang.refund_order_ordersn}</option>
+                        <option value="refund_sn" {if condition="$Request.param.type eq 'refund_sn'"}selected{/if}>{$Think.lang.refund_order_refundsn}</option>
+                        <option value="goods_name" {if condition="$Request.param.type eq 'goods_name'"}selected{/if}>商品名称</option>
+                        <option value="buyer_name" {if condition="$Request.param.type eq 'buyer_name'"}selected{/if}>{$Think.lang.refund_order_buyer}</option>
+                    </select>
+                </dt>
+                <dd><input type="text" class="text" name="key" value="{$Request.param.key}" /></dd>
+            </dl>
+            <dl>
+                <dt>申请时间</dt>
+                <dd>
+                    <input class="txt date" type="text" value="{$Request.param.add_time_from}" id="add_time_from" name="add_time_from">
+                    ~
+                    <input class="txt date" type="text" value="{$Request.param.add_time_to}" id="add_time_to" name="add_time_to"/>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="搜索">
+                {if $filtered}
+                <a href="{:url('Returnmanage/return_all')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+                <a class="btn" href="javascript:export_xls('{:url('Returnmanage/export_step1')}')"><span>{$Think.lang.ds_export}Excel</span></a>
+            </div>
+        </div>
+    </form>
+
+    <table class="ds-default-table">
+        <thead>
+            <tr class="thead">
+                <th>{$Think.lang.refund_order_ordersn}</th>
+                <th>{$Think.lang.return_order_returnsn}</th>
+                <th>商品名称</th>
+                <th>{$Think.lang.refund_order_buyer}</th>
+                <th class="align-center">{$Think.lang.refund_buyer_add_time}</th>
+                <th class="align-center">{$Think.lang.refund_order_refund}</th>
+                <th class="align-center">{$Think.lang.return_order_return}</th>
+                <th class="align-center">平台确认</th>
+                <th class="align-center">备注信息</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        {notempty name="return_list"}
+        <tbody>
+            {foreach name="return_list" item="val" key="key" }
+            <tr class="bd-line" >
+                <td>{$val.order_sn}</td>
+                <td>{$val.refund_sn}</td>
+                <td>{$val.goods_name}</td>
+                <td>{$val.buyer_name}</td>
+                <td class="align-center">{$val.add_time|date="Y-m-d H:i:s"}</td>
+                <td class="align-center">{$val.refund_amount}</td>
+                <td class="align-center">{if $val.return_type == 2}{$val.goods_num}{else/}无{/if}</td>
+                <td class="align-center"><?php echo $val['refund_state']==3 ? '已确认':'无'; ?></td>
+                <td class="align-center">{$val.admin_message}</td>
+                <td class="align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Returnmanage/view',['refund_id'=>$val.refund_id])}','{$Think.lang.ds_view}订单-{$val.order_sn}')" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_view}</a>
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+        {else/}
+        <tbody>
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.no_record}</td>
+            </tr>
+        </tbody>
+        {/notempty}
+    </table>
+    {$show_page|raw}
+
+    <script type="text/javascript">
+        $(function () {
+            $('#add_time_from').datepicker({dateFormat: 'yy-mm-dd'});
+            $('#add_time_to').datepicker({dateFormat: 'yy-mm-dd'});
+        });
+    </script>

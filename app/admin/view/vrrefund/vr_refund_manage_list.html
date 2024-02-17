@@ -1,0 +1,97 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>虚拟订单退款</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  <form method="get" action="" name="formSearch" id="formSearch">
+      <div class="ds-search-form">
+            <dl>
+                <dt>
+                    <select name="type">
+                        <option value="order_sn" {if condition="$Request.param.type eq 'order_sn'"}selected{/if}>{$Think.lang.refund_order_ordersn}</option>
+                        <option value="refund_sn" {if condition="$Request.param.type eq 'refund_sn'"}selected{/if}>{$Think.lang.refund_order_refundsn}</option>
+                        <option value="goods_name" {if condition="$Request.param.type eq 'goods_name'"}selected{/if}>商品名称</option>
+                        <option value="buyer_name" {if condition="$Request.param.type eq 'buyer_name'"}selected{/if}>{$Think.lang.refund_order_buyer}</option>
+                    </select>
+                </dt>
+                <dd><input type="text" class="text" name="key" value="{$Request.param.key}" /></dd>
+            </dl>
+          <dl>
+              <dt>申请时间</dt>
+              <dd>
+                  <input class="txt date" type="text" value="{$Request.param.add_time_from}" id="add_time_from" name="add_time_from">
+                  ~
+                  <input class="txt date" type="text" value="{$Request.param.add_time_to}" id="add_time_to" name="add_time_to"/>
+              </dd>
+          </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Vrrefund/refund_manage')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+  </form>
+  
+  <div class="explanation" id="explanation">
+      <div class="title" id="checkZoom">
+          <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+          <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+      </div>
+      <ul>
+          <li>买家提交申请，经平台审核后，退款金额以预存款的形式返还给买家（充值卡部分只能退回到充值卡余额）。</li>
+      </ul>
+  </div>
+  
+  <table class="ds-default-table">
+      <thead>
+          <tr class="thead">
+              <th>{$Think.lang.refund_order_ordersn}</th>
+              <th>{$Think.lang.refund_order_refundsn}</th>
+              <th>商品名称</th>
+              <th>{$Think.lang.refund_order_buyer}</th>
+              <th class="align-center">{$Think.lang.refund_buyer_add_time}</th>
+              <th class="align-center">{$Think.lang.refund_order_refund}</th>
+              <th class="align-center">{$Think.lang.ds_handle}</th>
+          </tr>
+      </thead>
+      {notempty name="refund_list"}
+      <tbody>
+          {foreach name="refund_list" item="val" key="key" }
+          <tr class="bd-line" >
+              <td><a href="{:url('Vrorder/show_order',['order_id'=>$val.order_id])}">{$val.order_sn}</a></td>
+              <td>{$val.refund_sn}</td>
+              <td><a href="{:url('/home/Goods/index',['goods_id'=>$val.goods_id])}" target="_blank">{$val.goods_name}</a></td>
+              <td>{$val.buyer_name}</td>
+              <td class="align-center">{$val.add_time|date="Y-m-d H:i:s"}</td>
+              <td class="align-center">{$val.refund_amount}</td>
+              <td class="align-center">
+                  <a href="javascript:dsLayerOpen('{:url('Vrrefund/edit',['refund_id'=>$val.refund_id])}','虚拟订单-{$val.order_sn}')" class="dsui-btn-edit"><i class="iconfont"></i>审核</a></td>
+          </tr>
+          {/foreach}
+      </tbody>
+      {else/}
+      <tbody>
+          <tr class="no_data">
+              <td colspan="20">{$Think.lang.no_record}</td>
+          </tr>
+      </tbody>
+      {/notempty}
+  </table>
+  {$show_page|raw}
+</div>
+<script type="text/javascript">
+$(function(){
+    $('#add_time_from').datepicker({dateFormat: 'yy-mm-dd'});
+    $('#add_time_to').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>

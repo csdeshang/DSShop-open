@@ -1,0 +1,42 @@
+{include file="public/header" /}
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>绑定列表</h3>
+            </div>
+        </div>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+            <tr class="thead">
+                <th class="align-center"> 微信OpenId</th>
+                <th class="align-center"> 微信UnionID</th>
+                <th class="align-center"> 用户名</th>
+                <th class="align-center"> 绑定时间</th>
+                <th class="align-center"> {$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="wxmember_list"}
+            {foreach name="wxmember_list" item="val"}
+            <tr class="member">
+                <td class="align-center">{$val.member_wxopenid}</td>
+                <td class="align-center">{$val.member_wxunionid}</td>
+                <td class="align-center">{$val.member_name}</td>
+                <td class="align-center">{:date('Y_m_d H:i:s',$val.member_addtime)}</td>
+                <td class="align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Member/edit',['member_id'=>$val.member_id])}','{$val.member_name}-编辑')" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerOpen('{:url('Wechat/msend',['member_id'=>$val.member_id,'openid'=>$val.member_wxopenid])}','推送消息')" class="dsui-btn-edit"><i class="iconfont"></i>推送消息</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else}
+            <tr class="no_data">
+                <td colspan="11">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>

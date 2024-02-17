@@ -1,0 +1,304 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/point.css">
+<div class="dsp-container">
+  <div class="dsp-detail">
+    <div class="dsp-gift-picture">
+      <a href="{$prodinfo.pgoods_image_max}">
+        <img src="{$prodinfo.pgoods_image_max}">
+      </a>
+    </div>
+    
+    <div class="dsp-gift-summary">
+      <div class="name">
+        <h1>{$prodinfo.pgoods_name}</h1>
+      </div>
+      <div class="dsp-meta">
+          <h2 class="meta-title">{$Think.lang.pointprod_pointsname}</h2>
+        <dl class="clearfix">
+          <dt>{$Think.lang.original_price_space|raw}</dt>
+          <dd class="cost-price"><strong>{$Think.lang.currency}{$prodinfo.pgoods_price}</strong></dd>
+        </dl>
+        <dl class="clearfix">
+          <dt>{$Think.lang.points_required}</dt>
+          <dd class="points"> 
+            <strong>{$prodinfo.pgoods_points}{$Think.lang.points_unit}</strong>
+            {if $prodinfo.pgoods_limitmgrade}
+            <span>{$prodinfo.pgoods_limitgradename}{$Think.lang.exclusive}</span>
+            {/if}
+          </dd>
+        </dl>
+        {if $prodinfo.pgoods_islimittime == 1}
+        <dl class="clearfix">
+          <dt>{$Think.lang.pointprod_info_goods_limittime}{$Think.lang.ds_colon}</dt>
+          <dd>
+            {:date('Y-m-d H:i:s',$prodinfo.pgoods_starttime)}
+            {$Think.lang.ds_to}
+            {:date('Y-m-d H:i:s',$prodinfo.pgoods_endtime)}
+          </dd>
+        </dl>
+        {if $prodinfo.ex_state == 'going'}
+        <dl class="clearfix">
+          <dt>&nbsp;</dt>
+          <dd class="countdown">{$Think.lang.pointprod_info_goods_lasttime}&nbsp;&nbsp;
+            <i id="dhpd">{$prodinfo.timediff.diff_day}</i> {$Think.lang.ds_day}
+            <i id="dhph">{$prodinfo.timediff.diff_hour}</i> {$Think.lang.ds_hour}
+            <i id="dhpm">{$prodinfo.timediff.diff_mins}</i> {$Think.lang.ds_minute}
+            <i id="dhps">{$prodinfo.timediff.diff_secs}</i> {$Think.lang.ds_second}
+          </dd>
+        </dl>
+        {/if}
+        {/if}
+      </div>
+      <div class="dsp-key">
+        <dl>
+          <dt>{$Think.lang.pointprod_info_goods_exchangenum}</dt>
+          <dd class="dsp-figure-input">
+            <input name="exnum" type="text" class="text w30" id="exnum" value='1' size="4"/>
+            <span>{$Think.lang.pointprod_info_goods_lastnum}{$Think.lang.ds_colon}{$prodinfo.pgoods_storage}
+              <input type="hidden" id="storagenum" value="{$prodinfo.pgoods_storage}"/>
+            </span>
+          </dd>
+        </dl>
+        {if $prodinfo.pgoods_islimit == '1'}
+        <dl>
+          <dt>{$Think.lang.limited_exchange}</dt>
+          <dd>{$Think.lang.pointprod_info_goods_limitnum_tip1}{$prodinfo.pgoods_limitnum}{$Think.lang.individuals}
+            <input type="hidden" id="limitnum" value="{$prodinfo.pgoods_limitnum}"/>
+          </dd>
+        </dl>
+        {else /}
+        <input type="hidden" id="limitnum" value=""/>
+       {/if}
+        </dd>
+        </dl>
+      </div>
+      <div class="dss-btn">
+        {if $prodinfo.ex_state == 'willbe'}
+        <a class="no-buynow">{$Think.lang.pointprod_willbe}</a>
+        {elseif $prodinfo.ex_state == 'end'}
+        <a class="no-buynow">{$Think.lang.pointprod_exchange_end}</a>
+        {elseif session('is_login') != '1'}
+        <a class="buynow" href="javascript:login_dialog();" style="cursor:pointer;"><i class="ico"></i>{$Think.lang.pointprod_exchange}</a>
+        {else /}
+        <a class="buynow" onclick="return add_to_cart();" style="cursor:pointer;"><i class="ico"></i>{$Think.lang.pointprod_exchange}</a>
+       {/if}
+      </div>
+    </div>
+    <div style=" position: absolute; z-index: 1; top: -1px; right: -1px;">
+      <div class="dsp-sidebar">
+      <div class="dsp-sidebar-container">
+        <div class="title"><h3>{$Think.lang.hot_gifts}</h3><span></span></div>
+        <div class="content">
+          {notempty name="recommend_pointsprod"}
+          <ul class="recommend">
+            {foreach name="recommend_pointsprod" item="v"}
+            <li>
+              <div class="gift-pic">
+                <a target="_blank" href="{:url('Pointprod/pinfo',['id'=>$v.pgoods_id])}" title="{$v.pgoods_name}">
+                  <img src="{$v.pgoods_image}" alt="{$v.pgoods_name}" />
+                </a>
+              </div>
+              <div class="gift-name">
+                <a href="{:url('Pointprod/pinfo',['id'=>$v.pgoods_id])}" target="_blank" tile="{$v.pgoods_name}">{$v.pgoods_name}</a>
+              </div>
+            </li>
+            {/foreach}
+          </ul>
+          {else /}
+          <div class="norecord">{$Think.lang.pointprod_list_null}</div>
+          {/notempty}
+        </div>
+        <div class="track-more">
+            <a href="javascript:void(0);" class="sprite-up"><i class="iconfont">&#xe688;</i></a>
+            <a href="javascript:void(0);" class="sprite-down"><i class="iconfont">&#xe689;</i></a>
+        </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  <div class="dsp-goods-layout">
+      <div class="dsp-info">
+        <div class="title">
+          <h4>{$Think.lang.mall_provides}</h4>
+        </div>
+        <div class="content">
+          <dl>
+            <dt>{$Think.lang.pointprod_info_goods_serial}{$Think.lang.ds_colon}</dt>
+            <dd>{$prodinfo.pgoods_serial}</dd>
+          </dl>
+          <dl>
+            <dt>{$Think.lang.add_time}：</dt>
+            <dd>{:date('Y-m-d',$prodinfo.pgoods_addtime)}</dd>
+          </dl>
+          <dl>
+            <dt>{$Think.lang.browsing_time}：</dt>
+            <dd>{$prodinfo.pgoods_view}</dd>
+          </dl>
+        </div>
+        <div class="title">
+          <h4>{$Think.lang.exchange_record}</h4>
+        </div>
+        <ul class="dsp-exchangeNote">
+          {notempty name="orderprod_list"}
+         {foreach name="orderprod_list" item="v"}
+          <li>
+            <div class="user-avatar"><img src="{$v.member_avatar}" /></div>
+            <div class="user-name">{:str_cut($v.point_buyername,4)}***</div>
+            <div class="user-log">{$Think.lang.pointprod_info_goods_alreadyexchange}<strong>1</strong>{$Think.lang.piece}</div>
+          </li>
+         {/foreach}
+         {/notempty}
+        </ul>
+      </div>
+    
+    <div class="dsp-goods-main">
+      <div class="tabbar">
+        <div class="dsp-goods-title-nav">
+          <ul id="categorymenu">
+            <li class="current">
+              <a id="tabGoodsIntro" href="#content">{$Think.lang.pointprod_info_goods_description}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="dsp-goods-info-content">{:htmlspecialchars_decode($prodinfo.pgoods_body)}</div>
+    </div>
+  </div>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.SuperSlide.2.1.1.js"></script>
+<script>
+    jQuery(".dsp-sidebar-container").slide({mainCell:".content ul",prevCell:'.sprite-up',nextCell:'.sprite-down',autoPage:true,effect:"top",vis:3});
+</script>
+<script>
+ function copy_url()
+ {
+     var txt = $("#shareurl").val();
+     if(window.clipboardData)
+     {
+         // the IE-manier
+         window.clipboardData.clearData();
+         window.clipboardData.setData("Text", txt);
+         alert("{$Think.lang.pointprod_info_goods_urlcopy_succcess}");
+     }
+     else if(navigator.userAgent.indexOf("Opera") != -1)
+     {
+         window.location = txt;
+         alert("{$Think.lang.pointprod_info_goods_urlcopy_succcess}");
+     }
+     else if (window.netscape)
+     {
+         // dit is belangrijk maar staat nergens duidelijk vermeld:
+         // you have to sign the code to enable this, or see notes below
+         try {
+             netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+         } catch (e) {
+             alert("{$Think.lang.pointprod_info_goods_urlcopy_fail}!\n{$Think.lang.pointprod_info_goods_urlcopy_fail1}\'about:config\'{$Think.lang.pointprod_info_goods_urlcopy_fail2}\n{$Think.lang.pointprod_info_goods_urlcopy_fail3}\'signed.applets.codebase_principal_support\'{$Think.lang.pointprod_info_goods_urlcopy_fail4}\'true\'");
+             return false;
+         }
+         // maak een interface naar het clipboard
+         var clip = Components.classes['@mozilla.org/widget/clipboard;1'].createInstance(Components.interfaces.nsIClipboard);
+         if (!clip){return;}
+         // alert(clip);
+         // maak een transferable
+         var trans = Components.classes['@mozilla.org/widget/transferable;1'].createInstance(Components.interfaces.nsITransferable);
+         if (!trans){return;}
+         // specificeer wat voor soort data we op willen halen; text in dit geval
+         trans.addDataFlavor('text/unicode');
+         // om de data uit de transferable te halen hebben we 2 nieuwe objecten
+         // nodig om het in op te slaan
+         var str = new Object();
+         var len = new Object();
+         str = Components.classes["@mozilla.org/supports-string;1"].createInstance(Components.interfaces.nsISupportsString);
+         var copytext = txt;
+         str.data = copytext;
+         trans.setTransferData("text/unicode",str,copytext.length*2);
+         var clipid = Components.interfaces.nsIClipboard;
+         if (!clip){return false;}
+         clip.setData(trans,null,clipid.kGlobalClipboard);
+         alert("{$Think.lang.pointprod_info_goods_urlcopy_succcess}");
+     }
+ }
+ function GetRTime2() //积分礼品兑换倒计时
+ {
+     var rtimer=null;
+     var startTime = new Date();
+     var EndTime = {$prodinfo.pgoods_endtime}*1000;
+     var NowTime = new Date();
+     var nMS =EndTime - NowTime.getTime();
+     if(nMS>0)
+     {
+         var nD=Math.floor(nMS/(1000*60*60*24));
+         var nH=Math.floor(nMS/(1000*60*60)) % 24;
+         var nM=Math.floor(nMS/(1000*60)) % 60;
+         var nS=Math.floor(nMS/1000) % 60;
+         document.getElementById("dhpd").innerHTML=pendingzero(nD);
+         document.getElementById("dhph").innerHTML=pendingzero(nH);
+         document.getElementById("dhpm").innerHTML=pendingzero(nM);
+         document.getElementById("dhps").innerHTML=pendingzero(nS);
+         if(nS==0&&nH==0&&nM==0)
+         {
+             // document.getElementById("returntime").style.display='none';
+             clearTimeout(rtimer2);
+             window.location.href=window.location.href;
+             return;
+         }
+         rtimer2=setTimeout("GetRTime2()",1000);
+     }
+ }
+ GetRTime2();
+ function pendingzero(str)
+ {
+     var result=str+"";
+     if(str<10)
+     {
+         result="0"+str;
+     }
+     return result;
+ }
+ //加入购物车
+ function add_to_cart()
+ {
+     var storagenum = parseInt($("#storagenum").val());//库存数量
+     var limitnum = parseInt($("#limitnum").val());//限制兑换数量
+     var quantity = parseInt($("#exnum").val());//兑换数量
+     //验证数量是否合法
+     var checkresult = true;
+     var msg = '';
+     if(!quantity >=1 ){//如果兑换数量小于1则重新设置兑换数量为1
+         quantity = 1;
+     }
+     if(limitnum > 0 && quantity > limitnum){
+         checkresult = false;
+         msg = '{$Think.lang.pointprod_info_goods_exnummaxlimit_error}';
+     }
+     if(storagenum > 0 && quantity > storagenum){
+         checkresult = false;
+         msg = '{$Think.lang.pointprod_info_goods_exnummaxlast_error}';
+     }
+     if(checkresult == false){
+         alert(msg);
+         return false;
+     }else{
+         $.getJSON(HOMESITEURL+'/Pointcart/add.html?pgid={$prodinfo.pgoods_id}&quantity='+quantity, function(result){
+             if(result.done){
+                 window.location.href = '{:url('Pointcart/index')}';
+             } else {
+                 if(result.url){
+                     layer.confirm(result.msg, {
+                         btn: ['确定', '取消'],
+                     }, function () {
+                         window.location.href = result.url;
+                     });
+                 } else {
+                     layer.alert(result.msg);
+                 }
+             }
+         });
+     }
+ }
+</script> 
+
+{/block}

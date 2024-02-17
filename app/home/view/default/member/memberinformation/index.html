@@ -1,0 +1,186 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+<div class="dsm-user-profile">
+    <div class="user-avatar"><span><img src="{:get_member_avatar($member_info.member_avatar)}?{$Think.TIMESTAMP}"></span></div>
+    <div class="dsm-default-form fr">
+        <form method="post" id="profile_form" action="{:url('Memberinformation/index')}">
+            <input type="hidden" name="old_member_avatar" value="{$member_info.member_avatar}" />
+            <dl>
+                <dt>{$Think.lang.home_member_username}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <span class="w400">{$member_info.member_name}&nbsp;&nbsp;
+                        {if $member_info.level_name}
+                        <div class="ds-grade-mini" style="cursor:pointer;" onclick="javascript:go('{:url('Pointgrade/index')}');">{$member_info.level_name}</div>
+                        {/if}
+                    </span>
+                    <span>&nbsp;&nbsp;{$Think.lang.home_member_privacy_set}</span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.ds_email}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <span class="w400">{$member_info.member_email}&nbsp;&nbsp;
+                        {if $member_info.member_emailbind == '1'}
+                        <a href="{:url('Membersecurity/auth',['type'=>'modify_email'])}">{$Think.lang.change_mailbox}</a>
+                        {else}
+                        <a href="{:url('Membersecurity/auth',['type'=>'modify_email'])}">{$Think.lang.bind_mailbox}</a>
+                        {/if}
+                    </span>
+                    <span>
+                        <select name="privacy[email]">
+                            <option value="0" {present name="member_info.member_privacy.email"} selected="selected"{/present}>{$Think.lang.home_member_public}</option>
+                            <option value="1" {present name="member_info.member_privacy.email"}{if $member_info.member_privacy.email== '1'}selected="selected"{/if}{/present}>{$Think.lang.home_member_friend}</option>
+                            <option value="2" {present name="member_info.member_privacy.email"}{if $member_info.member_privacy.email== '2'}selected="selected"{/if}{/present}>{$Think.lang.home_member_privary}</option>
+                        </select>
+                    </span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.home_member_nickname}{$Think.lang.ds_colon}</dt>
+                <dd><span class="w400">
+                        <input name="member_nickname" type="text" class="text" maxlength="50" id="member_nickname" value="{$member_info.member_nickname}" />
+                    </span>
+                    <span>
+                        <select name="privacy[nickname]">
+                            <option value="0" {present name="member_info.member_privacy.nickname"}{if $member_info.member_privacy.nickname== '0'}selected="selected"{/if}{/present}>{$Think.lang.home_member_public}</option>
+                            <option value="1" {present name="member_info.member_privacy.nickname"}{if $member_info.member_privacy.nickname== '1'}selected="selected"{/if}{/present}>{$Think.lang.home_member_friend}</option>
+                            <option value="2" {present name="member_info.member_privacy.nickname"}{if $member_info.member_privacy.nickname== '2'}selected="selected"{/if}{/present}>{$Think.lang.home_member_privary}</option>
+                        </select>
+                    </span></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.home_member_sex}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <span class="w400">
+                        <label><input type="radio" name="member_sex" value="3" {if $member_info.member_sex== '3' || $member_info.member_sex !== '2' && $member_info.member_sex !== '1'}checked="checked"{/if}/>{$Think.lang.home_member_privary}</label>
+                        &nbsp;&nbsp;
+                        <label><input type="radio" name="member_sex" value="2" {if $member_info.member_sex== '2'}checked="checked"{/if} />{$Think.lang.home_member_female}</label>
+                        &nbsp;&nbsp;
+                        <label><input type="radio" name="member_sex" value="1" {if $member_info.member_sex== '1'}checked="checked"{/if} />{$Think.lang.home_member_male}</label>
+                    </span>
+                    <span>
+                        <select name="privacy[sex]">
+                            <option value="0" {present name="member_info.member_privacy.sex"}{if $member_info.member_privacy.sex== '0'}selected="selected"{/if}{/present}>{$Think.lang.home_member_public}</option>
+                            <option value="1" {present name="member_info.member_privacy.sex"}{if $member_info.member_privacy.sex== '1'}selected="selected"{/if}{/present}>{$Think.lang.home_member_friend}</option>
+                            <option value="2" {present name="member_info.member_privacy.sex"}{if $member_info.member_privacy.sex== '2'}selected="selected"{/if}{/present}>{$Think.lang.home_member_privary}</option>
+                        </select>
+                    </span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.home_member_birthday}{$Think.lang.ds_colon}</dt>
+                <dd><span class="w400">
+                        <input type="text" class="text" name="birthday" maxlength="10" id="birthday" value="{:date('Y-m-d',$member_info.member_birthday)}" />
+                    </span>
+                    <span>
+                        <select name="privacy[birthday]">
+                            <option value="0" {present name="member_info.member_privacy.birthday"}{if $member_info.member_privacy.birthday== '0'}selected="selected"{/if}{/present}>{$Think.lang.home_member_public}</option>
+                            <option value="1" {present name="member_info.member_privacy.birthday"}{if $member_info.member_privacy.birthday== '1'}selected="selected"{/if}{/present}>{$Think.lang.home_member_friend}</option>
+                            <option value="2" {present name="member_info.member_privacy.birthday"}{if $member_info.member_privacy.birthday== '2'}selected="selected"{/if}{/present}>{$Think.lang.home_member_privary}</option>
+                        </select>
+                    </span>
+                </dd>
+            </dl>
+
+            <dl>
+                <dt>{$Think.lang.home_member_areainfo}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <span class="w400">
+                        <input type="hidden" value="{$member_info.member_provinceid|default=''}" name="province_id" id="_area_1">
+                        <input type="hidden" value="{$member_info.member_cityid|default=''}" name="city_id" id="_area_2">
+                        <input type="hidden" value="{$member_info.member_areaid|default=''}" name="area_id" id="_area_3">
+                        <input type="hidden" name="area_info" id="region" value="{$member_info.member_areainfo|default=''}"/>
+                    </span>
+                    <span>
+                        <select name="privacy[area]">
+                            <option value="0" {present name="member_info.member_privacy.area"}{if $member_info.member_privacy.area== '0'}selected="selected"{/if}{/present}>{$Think.lang.home_member_public}</option>
+                            <option value="1" {present name="member_info.member_privacy.area"}{if $member_info.member_privacy.area== '1'}selected="selected"{/if}{/present}>{$Think.lang.home_member_friend}</option>
+                            <option value="2" {present name="member_info.member_privacy.area"}{if $member_info.member_privacy.area== '2'}selected="selected"{/if}{/present}>{$Think.lang.home_member_privary}</option>
+                        </select>
+                    </span>
+                </dd>
+            </dl>
+            <dl>
+                <dt>QQ{$Think.lang.ds_colon}</dt>
+                <dd><span class="w400">
+                        <input type="text" class="text" maxlength="30" name="member_qq" value="{$member_info.member_qq}" />
+                    </span>
+                    <span>
+                        <select name="privacy[qq]">
+                            <option value="0" {present name="member_info.member_privacy.qq"}{if $member_info.member_privacy.qq== '0'}selected="selected"{/if}{/present}>{$Think.lang.home_member_public}</option>
+                            <option value="1" {present name="member_info.member_privacy.qq"}{if $member_info.member_privacy.qq== '1'}selected="selected"{/if}{/present}>{$Think.lang.home_member_friend}</option>
+                            <option value="2" {present name="member_info.member_privacy.qq"}{if $member_info.member_privacy.qq== '2'}selected="selected"{/if}{/present}>{$Think.lang.home_member_privary}</option>
+                        </select>
+                    </span></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.home_member_wangwang}{$Think.lang.ds_colon}</dt>
+                <dd><span class="w400">
+                        <input name="member_ww" type="text" class="text" maxlength="50" id="member_ww"
+                               value="{$member_info.member_ww}" />
+                    </span>
+                    <span>
+                        <select name="privacy[ww]">
+                            <option value="0" {present name="member_info.member_privacy.ww"}{if $member_info.member_privacy.ww== '0'}selected="selected"{/if}{/present}>{$Think.lang.home_member_public}</option>
+                            <option value="1" {present name="member_info.member_privacy.ww"}{if $member_info.member_privacy.ww== '1'}selected="selected"{/if}{/present}>{$Think.lang.home_member_friend}</option>
+                            <option value="2" {present name="member_info.member_privacy.ww"}{if $member_info.member_privacy.ww== '2'}selected="selected"{/if}{/present}>{$Think.lang.home_member_privary}</option>
+                        </select>
+                    </span></dd>
+            </dl>
+            <dl class="bottom">
+                <dt></dt>
+                <dd>
+                    <input type="submit" class="submit" value="{$Think.lang.home_member_save_modify}" />
+                </dd>
+            </dl>
+        </form>
+    </div>
+</div>
+
+
+
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<script type="text/javascript">
+    //注册表单验证
+    $(function(){
+        $("#region").ds_region();
+        $('#birthday').datepicker({
+            dateFormat:'yy-mm-dd',
+            changeMonth:true,
+            monthNamesShort: ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+            changeYear:true
+        });
+        $('#profile_form').validate({
+            submitHandler:function(form){
+                if ($('select[class="valid"]').eq(0).val()>0) $('#province_id').val($('select[class="valid"]').eq(0).val());
+                if ($('select[class="valid"]').eq(1).val()>0) $('#city_id').val($('select[class="valid"]').eq(1).val());
+                ds_ajaxpost('profile_form');
+            },
+            rules : {
+               
+                member_qq : {
+                    digits  : true,
+                    minlength : 5,
+                    maxlength : 12
+                }
+            },
+            messages : {
+               
+                member_qq  : {
+                    digits    : '{$Think.lang.home_member_input_qq}',
+                    minlength : '{$Think.lang.home_member_input_qq}',
+                    maxlength : '{$Think.lang.home_member_input_qq}'
+                }
+            }
+        });
+    });
+</script>
+
+
+
+{/block}
+

@@ -1,0 +1,58 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="ncap-form-default">
+        <form method="post" id="keyword_form">
+            <dl>
+                <dt><span class="error">*</span> 关键词</dt>
+                <dd><input type="text" name="keyword" id="keyword" value="{$key.keyword|default=''}" placeholder="关键词"style="width: 300px"/></dd>
+            </dl>
+            <dl>
+                <dt><span class="error">*</span> 回复内容</dt>
+                <dd><textarea name="text" id="text"  placeholder="回复内容">{$key.text|default=''}</textarea></dd>
+            </dl>
+            <dl>
+                <dt></dt>
+                <dd><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></dd>
+            </dl>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('#keyword_form').validate({
+            errorPlacement: function (error, element) {
+            error.appendTo(element.parent().parent().find('dd:last'));
+        },
+            rules : {
+                keyword  : {
+                    required : true
+                },
+                text  : {
+                    required : true,
+                    maxlength:100
+                }
+            },
+            messages: {
+            keyword : {
+                required : '关键字不能为空'
+            },
+            text : {
+                required: '请输入回复内容',
+                maxlength:'回复内容最大值100个字'
+            }
+        }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+

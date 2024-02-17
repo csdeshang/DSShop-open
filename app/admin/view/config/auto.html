@@ -1,0 +1,76 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.auto_set}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form id="auto_set_form" method="post" enctype="multipart/form-data" name="form1">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="w150"><label for="order_auto_receive_day">{$Think.lang.order_auto_receive_day}:</label></td>
+                <td class="vatop rowform">
+                    <input id="order_auto_receive_day" name="order_auto_receive_day" value="{$list_config.order_auto_receive_day|default=''}" min="1" max="100" type="text"> 天
+                </td>
+                <td class="vatop tips">已发货订单，自动确认收货的天数,自动确认收货时间设置区间为1-100数值</td>
+            </tr>
+            <tr class="noborder">
+                <td class="w150"><label for="order_auto_cancel_day">{$Think.lang.order_auto_cancel_day}:</label></td>
+                <td class="vatop rowform">
+                    <input id="order_auto_cancel_day" name="order_auto_cancel_day" value="{$list_config.order_auto_cancel_day|default=''}" min="1" max="50" type="text"> 天
+                </td>
+                <td class="vatop tips">未付款订单，自动取消订单的天数,自动取消订单时间设置区间为1-50数值</td>
+            </tr>
+            <tr class="noborder">
+                <td class="w150"><label for="code_invalid_refund">{$Think.lang.code_invalid_refund}:</label></td>
+                <td class="vatop rowform">
+                    <input id="code_invalid_refund" name="code_invalid_refund" value="{$list_config.code_invalid_refund|default=''}" min="1" max="100" type="text"> 天
+                </td>
+                <td class="vatop tips">兑换码未使用，兑换码过期自动退款时间设置区间为1-100数值</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td></td>
+                <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    $(function() {
+        $('#auto_set_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                order_auto_receive_day: {
+                    required: true,
+                },
+            },
+            messages: {
+                order_auto_receive_day: {
+                    required: '{$Think.lang.order_auto_receive_day_required}',
+                },
+                order_auto_cancel_day: {
+                    required: '{$Think.lang.order_auto_cancel_day_required}',
+                },
+                code_invalid_refund: {
+                    required: '{$Think.lang.code_invalid_refund_required}',
+                },
+            }
+        });
+    });
+</script>

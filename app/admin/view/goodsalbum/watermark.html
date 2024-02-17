@@ -1,0 +1,301 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>空间管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    
+    
+    <form enctype="multipart/form-data" action="" id="wm_form" method="post">
+        <input type="hidden" name="swm_text_angle" value="0" />
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.watermark_pic}</td>
+                    <td class="vatop rowform">
+                        {notempty name="$Think.config.ds_config.swm_image_name"}
+                        <div class="dssc-upload-thumb watermark-pic">
+                            <p><img src="{:ds_get_pic('home/watermark',$Think.config.ds_config.swm_image_name)}" id="imgView"/></p>
+                            <a href="javascript:void(0);" id="del_image" title="{$Think.lang.watermark_del_pic}">X</a>
+                            <input type="hidden" id="is_del_image" name="is_del_image" value=""/>
+                        </div>
+                        {else /}
+                        <div class="dssc-upload-thumb watermark-pic"><p><i class="iconfont">&#xe72a;</i></p></div>
+                        {/notempty}
+                        <div class="dssc-upload-btn">
+                            <a href="javascript:void(0);">
+                                <span>
+                                    <input type="file" hidefocus="true" size="1" class="input-file" name="image" id="image" ds_type="logo"/>
+                                </span>
+                                <p><i class="iconfont">&#xe733;</i>{$Think.lang.image_upload}</p>
+                            </a>
+                        </div>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.watermark_choose_pic}</td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.swm_image_transition}</td>
+                    <td class="vatop rowform"><input id="swm_image_transition" class="text w40"  type="text" name="swm_image_transition" value="{$Think.config.ds_config.swm_image_transition}"/><em class="add-on">%</em>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.swm_image_choose_transition}</td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.watermark_pic_pos}</td>
+                    <td class="vatop rowform">
+                        <ul class="dssc-watermark-pos" id="wm_image_pos">
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="1" {if $Think.config.ds_config.swm_image_pos==1}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos1}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="2" {if $Think.config.ds_config.swm_image_pos==2}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos2}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="3" {if $Think.config.ds_config.swm_image_pos==3}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos3}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="4" {if $Think.config.ds_config.swm_image_pos==4}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos4}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="5" {if $Think.config.ds_config.swm_image_pos==5}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos5}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="6" {if $Think.config.ds_config.swm_image_pos==6}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos6}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="7" {if $Think.config.ds_config.swm_image_pos==7}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos7}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="8" {if $Think.config.ds_config.swm_image_pos==8}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos8}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_image_pos" value="9" {if $Think.config.ds_config.swm_image_pos==9}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos9}</label>
+                            </li>
+                        </ul>
+
+                    </td>
+                    <td class="vatop tips">{$Think.lang.watermark_choose_pos}</td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.watermark_pic_quality}</td>
+                    <td class="vatop rowform">
+                        <input id="swm_quality" class="text w40"  type="text" name="swm_quality" value="{$Think.config.ds_config.swm_quality}"/><em class="add-on">%</em>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.watermark_pic_quality_max}</td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.watermark_text}</td>
+                    <td class="vatop rowform"><textarea name="swm_text" class="textarea w180" >{$Think.config.ds_config.swm_text}</textarea></td>
+                    <td class="vatop tips">{$Think.lang.watermark_text_notice},{$Think.lang.letters_numbers_recommended}</td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.watermark_text_size}</td>
+                    <td class="vatop rowform"><input id="swm_text_size" class="text w40"  type="text" name="swm_text_size" value="{$Think.config.ds_config.swm_text_size}"/><em class="add-on">px</em></td>
+                    <td class="vatop tips">{$Think.lang.watermark_text_size_notice}</td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.watermark_text_color}</td>
+                    <td class="vatop rowform">
+                        <input id="swm_text_color"  class="text w100"  type="text"  name="swm_text_color" value="{$Think.config.ds_config.swm_text_color|default='#CCCCCC'}"/>
+                        <div id="colorpanel" style="display:none;width:253px;height:177px;"></div>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.watermark_text_color_notice}</td>
+                </tr>
+                
+                
+                
+                
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.watermark_text_font}</td>
+                    <td class="vatop rowform">
+                        <select name="swm_text_font" class="w80">
+                            {foreach name="file_list" item="value" key="key" }
+                            <option value="{$key}" {if $Think.config.ds_config.swm_text_font == $key}selected="selected"{/if}>{$value}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.watermark_text_font_notice},{$Think.lang.installed_chinese_font}</td>
+                </tr>
+                
+                
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.watermark_text_pos}</td>
+                    <td class="vatop rowform">
+                        <ul class="dssc-watermark-pos" id="swm_text_pos">
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="1" {if $Think.config.ds_config.swm_text_pos==1}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos1}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="2" {if $Think.config.ds_config.swm_text_pos==2}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos2}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="3" {if $Think.config.ds_config.swm_text_pos==3}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos3}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="4" {if $Think.config.ds_config.swm_text_pos==4}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos4}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="5" {if $Think.config.ds_config.swm_text_pos==5}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos5}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="6" {if $Think.config.ds_config.swm_text_pos==6}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos6}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="7" {if $Think.config.ds_config.swm_text_pos==7}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos7}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="8" {if $Think.config.ds_config.swm_text_pos==8}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos8}</label>
+                            </li>
+                            <li>
+                                <input type="radio" name="swm_text_pos" value="9" {if $Think.config.ds_config.swm_text_pos==9}checked{/if}/>
+                                       <label>{$Think.lang.watermark_text_pos9}</label>
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>	
+            </tfoot>
+        </table>
+    </form>
+<style type="text/css">
+            .evo-color div { font-size: 12px; line-height: normal;}
+            .evo-color span { font-size: 12px !important; line-height: normal !important;}
+</style>
+        <link href="{$Think.PLUGINS_SITE_ROOT}/colorpicker/evol.colorpicker.css" rel="stylesheet" type="text/css">
+        <script src="{$Think.PLUGINS_SITE_ROOT}/colorpicker/evol.colorpicker.min.js"></script>
+        <script>
+            $(function () {
+                $("div").cssRadio();
+                $('#swm_text_color').colorpicker({showOn: 'both'});
+                $('#swm_text_color').parent().css("width", '');
+                $('#swm_text_color').parent().addClass("color");
+                
+                $('#del_image').click(function () {
+                    var result = confirm('{$Think.lang.watermark_del_pic_confirm}');
+                    if (result)
+                    {
+                        $('#image').css('display', 'none');
+                        $('#del_image').css('display', 'none');
+                        $('#is_del_image').val('ok');
+                        $('#wm_form').submit();
+                    }
+                });
+                $('#wm_form').validate({
+                    errorPlacement: function(error, element){
+                        var error_td = element.parents('dd');
+                        error_td.append(error);
+                    },
+                    rules: {
+                        swm_image_transition: {
+                            required: true,
+                            min:0,
+                            max:100,
+                            number: true
+                        },
+                        swm_quality: {
+                            required: true,
+                            min:0,
+                            max:100,
+                            number: true
+                        },
+                        swm_text_size: {
+                            required: true,
+                            number: true
+                        },
+                        swm_text_color: {
+                            required: true,
+                            maxlength: 7
+                        }
+                    },
+                    messages: {
+                        swm_image_transition: {
+                            required: '{$Think.lang.watermark_transition_null}',
+                            min: '{$Think.lang.watermark_transition_min}',
+                            max: '{$Think.lang.watermark_transition_max}',
+                            number: '{$Think.lang.watermark_transition_number}',
+                        },
+                        swm_quality: {
+                            required: '{$Think.lang.watermark_pic_quality_null}',
+                            min: '{$Think.lang.watermark_pic_quality_min}',
+                            max: '{$Think.lang.watermark_pic_quality_max}',
+                            number: '{$Think.lang.watermark_pic_quality_number}',
+                        },
+                        swm_text_size: {
+                            required: '{$Think.lang.watermark_text_size_null}',
+                            number: '{$Think.lang.watermark_text_size_number}'
+                        },
+                        swm_text_color: {
+                            required: '{$Think.lang.watermark_text_color_null}',
+                            maxlength: '{$Think.lang.watermark_text_color_max}'
+                        }
+                    }
+                });
+            });
+
+            jQuery.fn.cssRadio = function () {
+                $(":input[type=radio] + label").each(function () {
+                    if ($(this).prev()[0].checked)
+                        $(this).addClass("checked");
+                }).hover(
+                        function () {
+                            $(this).addClass("over");
+                        },
+                        function () {
+                            $(this).removeClass("over");
+                        }
+                ).click(function () {
+                    var contents = $(this).parent().parent(); /*多组控制 关键*/
+                    $(":input[type=radio] + label", contents).each(function () {
+                        $(this).prev()[0].checked = false;
+                        $(this).removeClass("checked");
+                    });
+                    $(this).prev()[0].checked = true;
+                    $(this).addClass("checked");
+                }).prev().hide();
+            };
+        </script>
+
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+</div>    
+

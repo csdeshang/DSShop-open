@@ -1,0 +1,62 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>发货单打印设置</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="dssc-form-default">
+        <form method="post" action="{:url('Deliverset/print_set')}" enctype="multipart/form-data" id="my_form">
+            <dl class="setup">
+                <dt>{$Think.lang.printsetup_desc}{$Think.lang.ds_colon}</dt>
+                <dd><textarea name="seal_printexplain" cols="150" rows="3" class="textarea w400"
+                              id="seal_printexplain">{$seal_printexplain}</textarea>
+                    <p class="hint">{$Think.lang.printsetup_tip1|raw}</p>
+                </dd>
+            </dl>
+            <dl class="setup">
+                <dt>{$Think.lang.printsetup_stampimg}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input type="hidden" name="stamp_old" value="{$seal_img}"/>
+                    <p><img width="150" height="150" src="{if !empty($seal_img)}{:ds_get_pic(DIR_ADMIN,$seal_img)}{/if}" ds_type="seal_img"/></p>
+                    <p>
+                        <input name="seal_img" type="file" hidefocus="true" ds_type="change_stamp"/>
+                    </p>
+                    <p class="hint">{$Think.lang.printsetup_tip2|raw}
+                    </p>
+                </dd>
+            </dl>
+            <div class="bottom">
+                <input type="submit" class="btn" value="{$Think.lang.ds_submit}"/>
+            </div>
+        </form>
+    </div>
+
+    <script type="text/javascript">
+        $(function () {
+            $('input[ds_type="change_stamp"]').change(function () {
+                var src = getFullPath($(this)[0]);
+                $('img[ds_type="seal_img"]').attr('src', src);
+            });
+            $('#my_form').validate({
+            rules: {
+                    seal_printexplain: {
+                        required: true,
+                        rangelength: [0, 100]
+                    }
+                },
+                messages: {
+                    seal_printexplain: {
+                        required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.printsetup_desc_error}',
+                        rangelength: '{$Think.lang.printsetup_desc_error}'
+                    }
+                }
+            });
+        });
+    </script>
+</div>

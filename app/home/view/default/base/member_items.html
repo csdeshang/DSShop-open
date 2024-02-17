@@ -1,0 +1,7 @@
+{if $member_item}
+<ul class="tab pngFix">
+    {foreach name="member_item" item="item" }
+    <li {if condition="$item.name eq $curitem"}class="active"{/if}><a href="{$item.url}">{$item.text}</a></li>
+    {/foreach}
+</ul>
+{/if}

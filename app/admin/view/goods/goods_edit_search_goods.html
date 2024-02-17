@@ -1,0 +1,16 @@
+{notempty name="goods_list"}
+<ul class="goods-list">
+    {foreach name="goods_list" item="val" key="key" }
+    <li>
+        <div class="goods-thumb"><img src="{:goods_thumb($val, 240)}"/></div>
+        <dl class="goods-info">
+            <dt><a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}" target="_blank">{$val.goods_name}</a> </dt>
+            <dd>{$Think.lang.sale_price}：{$Think.lang.currency}{$val.goods_price}
+        </dl>
+        <a dstype="a_choose_goods" data-param="{gid:{$val.goods_id}, gname:'{$val.goods_name}', gimage:'{:goods_thumb($val, '60')}', gimage240:'{:goods_thumb($val, '240')}', gurl:'{:url('Goods/index',['goods_id'=>$val['goods_id']])}', gprice:'{$val.goods_price}'}" href="javascript:void(0);" class="dssc-btn-mini dssc-btn-green"><i class="iconfont">&#xe6db;</i>{$Think.lang.add_goods}</a> </li>
+    {/foreach}
+</ul>
+<div class="pagination">{$show_page|raw}</div>
+{else /}
+<div class="norecord">{$Think.lang.no_record}</div>
+{/notempty}

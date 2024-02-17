@@ -1,0 +1,59 @@
+{extend name="default/base/base_member" /}
+{block name="member_btn"}
+<a class="dsm-btn dsm-btn-orange" title="{$Think.lang.predeposit_online_recharge}" href="{:url('Predeposit/recharge_add')}"> <i class="iconfont">&#xe6f0;</i> {$Think.lang.predeposit_online_recharge} </a>
+{/block}
+{block name="member_main"}
+
+<div class="alert"><span class="mr30">{$Think.lang.predeposit_pricetype_available}{$Think.lang.ds_colon}<strong class="mr5 red" style="font-size: 18px;">{$member_info.available_predeposit}</strong>{$Think.lang.ds_yuan}</span><span>{$Think.lang.predeposit_pricetype_freeze}{$Think.lang.ds_colon}<strong class="mr5 blue" style="font-size: 18px;">{$member_info.freeze_predeposit}</strong>{$Think.lang.ds_yuan}</span></div>
+<table class="dsm-default-table">
+    <thead>
+        <tr>
+            <th class="w10"></th>
+            <th class="w150 tl">{$Think.lang.predeposit_addtime}</th>
+            <th class="w150 tl">{$Think.lang.predeposit_log_stage_income}({$Think.lang.ds_yuan})</th>
+            <th class="w150 tl">{$Think.lang.predeposit_spending}({$Think.lang.ds_yuan})</th>
+            <th class="w150 tl">{$Think.lang.predeposit_freeze}({$Think.lang.ds_yuan})</th>
+            <th class="tl">{$Think.lang.predeposit_log_desc}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {notempty name="predeposit_list"}
+        {foreach name="predeposit_list" item="v"  }
+        <tr class="bd-line">
+            <td></td>
+            <td class="goods-time tl"><?php echo @date('Y-m-d H:i:s',$v['lg_addtime']);?></td>
+            {php}$availableFloat = (float)$v['lg_av_amount'];{/php}
+            {if $availableFloat > 0}
+            <td class="tl red">+{$v.lg_av_amount}</td>
+            <td class="tl green"></td>
+            {elseif $availableFloat < 0 /}
+            <td class="tl red"></td>
+            <td class="tl green">{$v.lg_av_amount}</td>
+            {else/}
+            <td class="tl red"></td>
+            <td class="tl green"></td>
+            {/if}
+            <td class="tl blue"><?php echo floatval($v['lg_freeze_amount']) ? (floatval($v['lg_freeze_amount']) > 0 ? '+' : null ).$v['lg_freeze_amount'] : null;?></td>
+            <td class="tl">{$v.lg_desc}</td>
+        </tr>
+        {/foreach}
+        {else /}
+        <tr>
+            <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+        </tr>
+        {/notempty}
+    </tbody>
+    <tfoot>
+        {notempty name="predeposit_list"}
+        <tr>
+            <td colspan="20"><div class="pagination">{$show_page|raw}</div></td>
+        </tr>
+        {/notempty}
+    </tfoot>
+</table>
+
+
+
+
+
+{/block}

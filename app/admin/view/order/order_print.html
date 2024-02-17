@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <style type="text/css">
+        body {
+            background: #FFF none;
+        }
+        /* 发货单打印页面 */
+        .print-layout{font-size:12px;background:#FAFAFA;border:solid 1px #CCC;position:relative;width:210mm;height:297mm;padding:5mm 50mm 5mm 5mm ;margin:20px auto;box-shadow:2px 2px 2px rgba(204,204,204,0.5);}
+        .print-layout .print-btn{background:#FFF;border: solid 1px #ccc; position:absolute;z-index:3;top:10mm;right:10mm;line-height:32px;padding:5px 10px;border-radius:5px;box-shadow:2px 2px 0 rgba(153,153,153,0.2);cursor:pointer;}
+        .print-layout .print-btn:hover{ background:#555;box-shadow:none;border-color:#555;}
+        .print-layout .print-btn i{font-family: iconfont;font-style: normal;font-size: 22px;vertical-align:middle;display:inline-block;width:32px;height:32px;}
+        .print-layout .print-btn i:before{content: "\e7ca";}
+        .print-layout .print-btn a{font-family:"microsoft yahei";font-size:20px;padding:0 0 0 10px;color:#555;font-weight:600;display:inline-block;vertical-align:middle;}
+        .print-layout .print-btn:hover a, .print-layout .print-btn a:hover{color:#FFF; text-decoration:none;}
+        .print-layout .a5-size, .print-layout .a4-size{background:#FFF;border:dashed 1px #ccc;width:210mm;position:absolute;top:5mm;left:5mm;padding:1px;}
+        .print-layout .a5-size{height:148mm; z-index:2;}
+        .print-layout .a4-size{height:297mm;z-index:1;}
+        .print-layout .a5-tip, .print-layout .a4-tip{color:#333;width:36mm;position:absolute;z-index:2;right:8mm;}
+        .print-layout .a5-tip{top:50mm;}
+        .print-layout .a4-tip{top:160mm;}
+        .print-layout dl dt h1{font-family:"Arial Black", Gadget, sans-serif;font-size:72px;line-height:72px;}
+        .print-layout dl dt em{font-family:Arial;font-size:11px;line-height:20px;background:#333;color:#FFF;padding:0 8px;height:20px;border-radius:10px;-webkit-text-size-adjust:none;}
+        .print-layout .a5-tip dd, .print-layout .a4-tip dd{line-height:24px;}
+        .print-layout .print-page{width:210mm;height:297mm;position:absolute;z-index:3;top:5mm;left:5mm;margin:1px; overflow:auto;}
+        .buyer-info{margin:15px 0;}
+        .order-info thead th{font-weight:normal;background:#E7E7E7;text-align:center;border-bottom:solid 2px #000;border-top:solid 2px #000;padding:2px 0;}
+        .order-info thead tr td{}
+        .order-info tbody tr th{ background:#F7F7F7;text-align:left;padding:8px 0;text-align:center;font-weight:600; border-bottom:solid 2px #000;border-top:solid 2px #000;}
+        .order-info tbody tr td{padding:8px 0;text-align:center;}
+        .order-info tfoot tr th{border-bottom:solid 2px #000;padding:6px 0;text-align:left;font-weight:normal;}
+        .order-info tfoot tr th span{line-height:20px;white-space:nowrap;display:inline-block;width:24%;height:20px;padding:0;margin:0;border:0;overflow:hidden;text-overflow:ellipsis;}
+        .orderprint th{font-variant:normal;text-align:left}
+        .w200{
+            width:200px !important;
+        }
+        .tl{
+            text-align:left !important;
+        }
+        .w70{
+            width:70px !important;
+        }
+        .w40{
+            width:40px !important;
+        }
+    </style>
+    <script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery-2.1.4.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/common.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery.printarea.js" charset="utf-8"></script>
+    <title></title>
+</head>
+
+<body>
+{notempty name="order_list"}
+<div class="print-layout">
+    <div class="print-btn" id="printbtn" title="打印"><i></i><a href="javascript:void(0);">打印</a></div>
+    <div class="a5-size"></div>
+    <dl class="a5-tip">
+        <dt>
+        <h1>A5</h1>
+        <em>Size: 210mm x 148mm</em></dt>
+        <dd>当打印设置选择A5纸张、横向打印、无边距时每张A5打印纸可输出1页订单。</dd>
+    </dl>
+    <div class="a4-size"></div>
+    <dl class="a4-tip">
+        <dt>
+        <h1>A4</h1>
+        <em>Size: 210mm x 297mm</em></dt>
+        <dd>当打印设置选择A4纸张、竖向打印、无边距时每张A4打印纸可输出2页订单。</dd>
+    </dl>
+    <div class="print-page">
+        <div id="printarea">
+                    <style>
+.logo {display: table-cell;vertical-align: middle;text-align: center;}
+.orderprint{background:#FFF;width:190mm;margin-bottom:20px;padding:10mm 10mm 8mm 10mm;color:#000000;position:relative;}
+.orderprint .top{font-family:"microsoft yahei";line-height:60px;width:190mm;height:60px;overflow:hidden;font-size:24px;}
+.orderprint .top .logo{width:200px;height:60px;float:left;}
+.orderprint .top .logo-title{text-align:left;width:450px;height:60px;float:left;margin-left:10px;overflow:hidden;}
+.orderprint .top .full-title{width:100%;text-align:center;}
+.orderprint .explain{color:#555;line-height:20px;width:100%;}
+.orderprint .seal{ position:absolute;top:30px;right:50px;}
+.orderprint .page{line-height:18px;color:#999;position:absolute;bottom:0px;left:50%;margin-left:-30px;}
+.orderprint table{font-family:Arial, Helvetica, sans-serif; font-size:12px;line-height:18px;width:100%;border-collapse:collapse;}
+.buyer-info{margin:15px 0;}
+.order-info thead th{font-weight:normal;background:#E7E7E7;text-align:center;border-bottom:solid 2px #000;border-top:solid 2px #000;padding:2px 0;}
+.order-info thead tr td{}
+.order-info tbody tr th{ background:#F7F7F7;text-align:left;padding:8px 0;text-align:center;font-weight:600; border-bottom:solid 2px #000;border-top:solid 2px #000;}
+.order-info tbody tr td{padding:8px 0;text-align:center;}
+.order-info tfoot tr th{border-bottom:solid 2px #000;padding:6px 0;text-align:left;font-weight:normal;}
+.order-info tfoot tr th span{line-height:20px;white-space:nowrap;display:inline-block;width:24%;height:20px;padding:0;margin:0;border:0;overflow:hidden;text-overflow:ellipsis;}
+.orderprint th{font-variant:normal;text-align:left}
+.w200{width:200px !important;}
+.tl{text-align:left !important;}
+.w70{width:70px !important;}
+.w40{width:40px !important;}
+                    </style>
+            {foreach name="order_list" item="order_info" }
+            {for start="0" end="$order_info['total_page']"}
+            <div class="orderprint">
+                <div class="top">
+                    <div class="logo-title">发货单</div>
+                </div>
+                <table class="buyer-info">
+                    <tr>
+                        <td class="w200">收货人{$Think.lang.ds_colon}{$order_info['extend_order_common']['reciver_name']}</td>
+                        <td>电话{$Think.lang.ds_colon}{$order_info['extend_order_common']['reciver_info']['phone']}</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">地址{$Think.lang.ds_colon}{$order_info['extend_order_common']['reciver_info']['address']}</td>
+                    </tr>
+                    <tr>
+                        <td>订单号{$Think.lang.ds_colon}{$order_info.order_sn}</td>
+                        <td>下单时间{$Think.lang.ds_colon}{$order_info.add_time|date="Y-m-d"}</td>
+                        <td>{if isset($order_info.shippin_code)}
+                            <span>{$Think.lang.member_printorder_shippingcode}{$Think.lang.ds_colon}{$order_info.shipping_code}</span>
+                            {/if}
+                        </td>
+                    </tr>
+                </table>
+                <table class="order-info">
+                    <thead>
+                    <tr>
+                        <th class="w40">序号</th>
+                        <th class="tl">商品名称</th>
+                        <th class="w70 tl">{$Think.lang.product_price}({$Think.lang.ds_yuan})</th>
+                        <th class="w50">{$Think.lang.product_num}</th>
+                        <th class="w70 tl">小计({$Think.lang.ds_yuan})</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {for start="$i*15" end="!isset($order_info['extend_order_goods'][$i*15+15-1])?count($order_info['extend_order_goods']):15" name="k" }
+                    {assign name="v" value="$order_info['extend_order_goods'][$k]" /}
+                    <tr>
+                        <td>{$k+1}</td>
+                        <td class="tl">{$v.goods_name}</td>
+                        <td class="tl">{$Think.lang.currency}{$v.goods_price}</td>
+                        <td>{$v.goods_num}</td>
+                        <td class="tl">{$Think.lang.currency}{$v.goods_all_price}</td>
+                    </tr>
+                    {/for}
+                    <tr>
+                        <th></th>
+                        <th colspan="2" class="tl">合计</th>
+                        <th>{$order_info.goods_all_num}</th>
+                        <th class="tl">{$Think.lang.currency}{$order_info.goods_total_price}</th>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+
+                    </tr>
+                    </tfoot>
+                </table>
+                <div class="explain">
+                    {$seal_printexplain}
+                </div>
+                {notempty name="$seal_img"}
+                <div class="seal"><img src="{$seal_img}" onload="javascript:ResizeImage(this, 120, 120);"/></div>
+                {/notempty}
+                <div class="tc page">第一页{$i+1}页/共{$order_info.total_page}页</div>
+            </div>
+            {/for}
+            {/foreach}
+        </div>
+    </div>
+</div>
+{/notempty}
+</body>
+<script>
+    var HOMESITEURL = "{$Think.HOME_SITE_URL}";
+    $(function () {
+        $("#printbtn").click(function () {
+            $("#printarea").printArea();
+        });
+    });
+
+</script>
+</html>

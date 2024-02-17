@@ -1,0 +1,68 @@
+<script type="text/javascript">
+$(function(){
+    $('#consulting_demo').find('.demo').ajaxContent({
+        event:'click', //mouseover
+        target:'#consulting_demo'
+    });
+
+    $('#consulting_tab').find('a').ajaxContent({
+        event:'click',
+        target:'#consulting_demo'
+    });
+});
+</script>
+
+<div class="top" style="overflow: hidden;">
+  <div class="dss-cosult-askbtn"><a href="{:url('Goods/consulting_list',['goods_id'=>$Request.param.goods_id])}" target="_blank" class="dss-btn dss-btn-red">{$Think.lang.want_questions}</a></div>
+</div>
+<div class="dss-goods-title-nav">
+  <ul id="consulting_tab">
+    <li class="{if $Request.param.ctid == 0}current{/if}"><a href="{:url('Goods/consulting',['goods_id'=>$Request.param.goods_id])}">{$Think.lang.ds_all}</a></li>
+    {notempty name="consult_type"}
+    {foreach name="consult_type" item="val"}
+    <li class="{if $Request.param.ctid == $val.consulttype_id}current{/if}"><a href="{:url('Goods/consulting',['goods_id'=>$Request.param.goods_id,'ctid'=>$val.consulttype_id])}">{$val.consulttype_name}</a></li>
+    {/foreach}
+    {/notempty}
+  </ul>
+</div>
+<div class="dss-cosult-main">
+  {notempty name="consult_list"}
+  {foreach name="consult_list" item="v" key="k" }
+  <div class="dss-cosult-list">
+    <dl class="asker">
+      <dt>{$Think.lang.consulting_net_friend}{$Think.lang.ds_colon}</dt>
+      <dd>
+        {if $v.member_id == '0'}
+        {$Think.lang.ds_guest}
+        {elseif $v.consult_isanonymous == '1' /}
+        {:str_cut($v['member_name'],2)}***
+        {else/}
+        <a href="javascript:void(0)">{:str_cut($v['member_name'],8)}</a>
+        {/if}
+        <time datetime="{$v.consult_addtime|date="Y-m-d H:i:s"}" pubdate="pubdate" class="ml20">{$v.consult_addtime|date="Y-m-d H:i:s"}</time>
+      </dd>
+    </dl>
+    <dl class="ask-con">
+      <dt>{$Think.lang.goods_index_consult_content}{$Think.lang.ds_colon}</dt>
+      <dd>
+        <p>{:nl2br($v['consult_content'])}</p>
+      </dd>
+    </dl>
+    {notempty name="$v.consult_reply"}
+    <dl class="reply">
+      <dt>{$Think.lang.goods_index_platform_reply}</dt>
+      <dd>
+        <p>{:nl2br($v['consult_reply'])}</p>
+        <time datetime="{$v.consult_replytime|date='Y-m-d H:i:s'}" pubdate="pubdate">[{$v.consult_replytime|date="Y-m-d H:i:s"}]</time>
+      </dd>
+    </dl>
+    {/notempty}
+  </div>
+  
+  {/foreach}
+  <div class="more"><a href="{:url('Goods/consulting_list',['goods_id'=>$Request.param.goods_id])}" target="_blank" >{$Think.lang.view_all_inquiries}>></a></div>
+ {else /}
+  <div class="dss-norecord">{$Think.lang.goods_index_no_reply}</div>
+ {/notempty}
+  
+</div>

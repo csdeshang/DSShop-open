@@ -1,0 +1,39 @@
+{include file="public/header" /}
+
+<div class="page">
+  <div id="warning"></div>
+
+  <form enctype="multipart/form-data" action="{:url('Deliver/buyer_address_save',['order_id'=>$Request.param.order_id])}" method="post">
+
+
+    <table class="ds-default-table">
+      <tbody>
+      <tr class="noborder">
+        <td class="required w60"><label>{$Think.lang.member_address_receiver_name}:</label></td>
+        <td class="vatop rowform"><input type="text" id="new_reciver_name" name="new_reciver_name" value="{$address_info.reciver_name}" class="txt"></td>
+      </tr>
+      <tr class="noborder">
+        <td class="required"><label>{$Think.lang.deliver_area}:</label></td>
+        <td class="vatop rowform"><input type="text" id="new_area" name="reciver_area" value="{$address_info.reciver_info.area}" class="txt"></td>
+      </tr>
+      <tr class="noborder">
+        <td class="required"><label>{$Think.lang.member_address_address}:</label></td>
+        <td class="vatop rowform"><input type="text" id="new_street" name="reciver_street" value="{$address_info.reciver_info.street}" class="txt"></td>
+      </tr>
+      <tr class="noborder">
+        <td class="required"><label>{$Think.lang.order_mobile}:</label></td>
+        <td class="vatop rowform"><input type="text" id="new_mob_phone" name="reciver_mob_phone" value="{$address_info.reciver_info.mob_phone}" class="txt"></td>
+      </tr>
+      <tr class="noborder">
+        <td class="required"><label>{$Think.lang.deliver_landline}:</label></td>
+        <td class="vatop rowform"><input type="text" id="new_tel_phone" name="reciver_tel_phone" value="{$address_info.reciver_info.tel_phone}" class="txt"></td>
+      </tr>
+      </tbody>
+      <tfoot>
+      <tr class="tfoot">
+        <td colspan="15"><button class="btn" id="submit"><span>{$Think.lang.ds_submit}</span></button></td>
+      </tr>
+      </tfoot>
+    </table>
+  </form>
+</div>

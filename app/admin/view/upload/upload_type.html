@@ -1,0 +1,90 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>上传设置</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="post" enctype="multipart/form-data" name="form1">
+        <div class="ncap-form-default">
+            <dl>
+                <dt>{$Think.lang.upload_type}</dt>
+                <dd>
+                    <label class="radio-label">
+                        <i  class="radio-common {if $list_config.upload_type =='local'}selected{/if}">
+                            <input type="radio" value="local" name="upload_type" id="upload_type_local" {if $list_config.upload_type =='local'}checked="checked"{/if}>
+                        </i>
+                        <span>{$Think.lang.upload_type_local}</span>
+                    </label>
+                    <label class="radio-label">
+                        <i class="radio-common {if $list_config.upload_type =='alioss'}selected{/if}">
+                            <input type="radio" value="alioss" name="upload_type" id="upload_type_alioss" {if $list_config.upload_type =='alioss'} checked="checked"{/if}>
+                        </i>
+                        <span>{$Think.lang.upload_type_alioss}</span>
+                    </label>
+                </dd>
+            </dl>
+            <div class="alioss">
+                <dl>
+                    <dt>{$Think.lang.aliendpoint_type}</dt>
+                    <dd>
+                        <div class="onoff">
+                            <label for="aliendpoint_type_show1" class="cb-enable {if condition="$list_config.aliendpoint_type eq 1"}selected{/if}">是</label>
+                            <label for="aliendpoint_type_show0" class="cb-disable {if condition="$list_config.aliendpoint_type eq 0"}selected{/if}">否</label>
+                            <input id="aliendpoint_type_show1" name="aliendpoint_type" value="1" type="radio" {if condition="$list_config.aliendpoint_type eq 1"} checked="checked"{/if}>
+                            <input id="aliendpoint_type_show0" name="aliendpoint_type" value="0" type="radio" {if condition="$list_config.aliendpoint_type eq 0"} checked="checked"{/if}>
+                        </div>
+                    </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.alioss_accessid}</dt>
+                            <dd>
+                                <input id="alioss_accessid" name="alioss_accessid" value="{$list_config.alioss_accessid|default=''}" class="input-txt" type="text">
+                                <a href="http://www.csdeshang.com/home/help/article/id/203.html" target="_blank">配置文档</a>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.alioss_accesssecret}</dt>
+                            <dd>
+                                <input id="alioss_accesssecret" name="alioss_accesssecret" value="{$list_config.alioss_accesssecret|default=''}" class="input-txt" type="text">
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.alioss_bucket}</dt>
+                            <dd>
+                                <input id="alioss_bucket" name="alioss_bucket" value="{$list_config.alioss_bucket|default=''}" class="input-txt" type="text">
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.alioss_endpoint}</dt>
+                            <dd>
+                                <input id="alioss_endpoint" name="alioss_endpoint" value="{$list_config.alioss_endpoint|default=''}" class="input-txt" type="text">
+                            </dd>
+                        </dl>
+                    </div>
+                    <dl>
+                        <dt></dt>
+                        <dd><a href="JavaScript:void(0);" class="btn" onclick="document.form1.submit()">确认提交</a></dd>
+                    </dl>
+                </div>
+            </form>
+        </div>
+        <script>
+            $(function () {
+                if ($('#upload_type_local').prop('checked')) {
+                    $('.alioss').hide();
+                }
+                $('#upload_type_local').click(function () {
+                    $('.alioss').hide();
+                });
+                $('#upload_type_alioss').click(function () {
+                    $('.alioss').show();
+                })
+            });
+        </script>

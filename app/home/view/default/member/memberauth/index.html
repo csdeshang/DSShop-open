@@ -1,0 +1,238 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+<div class="dsm-default-form member_auth">
+    <form method="post" action="" id="member_form" enctype="multipart/form-data">
+
+        <dl>
+            <dt>{$Think.lang.member_truename}：</dt>
+            <dd>
+                <span class="w400">
+                    <input type="text" class="text" maxlength="20" name="member_truename" value="{$member_info.member_truename}" {if in_array($member_info.member_auth_state,array(1,3))}disabled=""{/if}>
+                </span>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.member_idcard}：</dt>
+            <dd>
+                <span class="w400">
+                    <input type="text" class="text" maxlength="20" name="member_idcard" value="{$member_info.member_idcard}" {if in_array($member_info.member_auth_state,array(1,3))}disabled=""{/if}>
+                </span>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.member_idcard_image1}：</dt>
+            <dd>
+                <div>
+                    <div class='image-wrapper'>
+                    <div class="dssc-upload-thumb">
+                        <p>
+                             <img onclick='openPhoto("img_member_idcard_image1_url")' src="{if $member_info['member_idcard_image1']!=''}{:get_member_idcard_image($member_info['member_idcard_image1'])}{else}{$Think.BASE_SITE_ROOT}/static/home/images/member_idcard_image1.png{/if}" id="img_member_idcard_image1_url" />
+                        </p>
+                        {if !in_array($member_info.member_auth_state,array(1,3))}<a href="javascript:dropImage('member_idcard_image1')" class="drop-btn iconfont">&#xe6e6;</a>{/if}
+                    </div>
+                    {if !in_array($member_info.member_auth_state,array(1,3))}
+                    <div class="dsm-upload-btn"> 
+                        <a href="javascript:void(0);">
+                            <span><input type="file" hidefocus="true" size="1" class="input-file" name="member_idcard_image1_url" id="member_idcard_image1_url" accept="image/*"/></span>
+                            <p><i class="iconfont">&#xe733;</i>{$Think.lang.image_upload}</p>
+                        </a>
+                    </div>
+                    {/if}
+                    </div>
+                </div>
+                <span class="w400">
+                    <input type="text" style="width:0;opacity: 0" name="member_idcard_image1" id="member_idcard_image1" value="{$member_info.member_idcard_image1}" {if in_array($member_info.member_auth_state,array(1,3))}disabled=""{/if}>
+                </span>
+            </dd>
+        </dl>
+        
+        <dl>
+            <dt>{$Think.lang.member_idcard_image2}：</dt>
+            <dd>
+                <div>
+                    <div class='image-wrapper'>
+                    <div class="dssc-upload-thumb">
+                        <p>
+                            <img onclick='openPhoto("img_member_idcard_image2_url")' src="{if $member_info['member_idcard_image2']!=''}{:get_member_idcard_image($member_info['member_idcard_image2'])}{else}{$Think.BASE_SITE_ROOT}/static/home/images/member_idcard_image2.png{/if}" id="img_member_idcard_image2_url" />
+                        </p>
+                        {if !in_array($member_info.member_auth_state,array(1,3))}<a href="javascript:dropImage('member_idcard_image2')" class="drop-btn iconfont">&#xe6e6;</a>{/if}
+                    </div>
+                    {if !in_array($member_info.member_auth_state,array(1,3))}
+                    <div class="dsm-upload-btn"> 
+                        <a href="javascript:void(0);">
+                            <span><input type="file" hidefocus="true" size="1" class="input-file" name="member_idcard_image2_url" id="member_idcard_image2_url" accept="image/*"/></span>
+                            <p><i class="iconfont">&#xe733;</i>{$Think.lang.image_upload}</p>
+                        </a>
+                    </div>
+                    {/if}
+                    </div>
+                </div>
+                <span class="w400">
+                    <input type="text" style="width:0;opacity: 0" name="member_idcard_image2" id="member_idcard_image2" value="{$member_info.member_idcard_image2}" {if in_array($member_info.member_auth_state,array(1,3))}disabled=""{/if}>
+                </span>
+            </dd>
+        </dl>
+        
+        
+        <dl>
+            <dt>{$Think.lang.member_idcard_image3}：</dt>
+            <dd>
+                <div>
+                    <div class='image-wrapper'>
+                    <div class="dssc-upload-thumb">
+                        <p>
+                            <img onclick='openPhoto("img_member_idcard_image3_url")' src="{if $member_info['member_idcard_image3']!=''}{:get_member_idcard_image($member_info['member_idcard_image3'])}{else}{$Think.BASE_SITE_ROOT}/static/home/images/member_idcard_image3.png{/if}" id="img_member_idcard_image3_url" />
+                        </p>
+                        {if !in_array($member_info.member_auth_state,array(1,3))}<a href="javascript:dropImage('member_idcard_image3')" class="drop-btn iconfont">&#xe6e6;</a>{/if}
+                    </div>
+                    {if !in_array($member_info.member_auth_state,array(1,3))}
+                    <div class="dsm-upload-btn"> 
+                        <a href="javascript:void(0);">
+                            <span><input type="file" hidefocus="true" size="1" class="input-file" name="member_idcard_image3_url" id="member_idcard_image3_url" accept="image/*"/></span>
+                            <p><i class="iconfont">&#xe733;</i>{$Think.lang.image_upload}</p>
+                        </a>
+                    </div>
+                    {/if}
+                    </div>
+                </div>
+                <span class="w400">
+                    <input type="text" style="width:0;opacity: 0" name="member_idcard_image3" id="member_idcard_image3" value="{$member_info.member_idcard_image3}" {if in_array($member_info.member_auth_state,array(1,3))}disabled=""{/if}>
+                </span>
+            </dd>
+        </dl>
+        {if !in_array($member_info.member_auth_state,array(1,3))}
+        <dl class="bottom">
+            <dt></dt>
+            <dd>
+                <input type="submit" class="submit" value="{$Think.lang.ds_submit}">
+            </dd>
+        </dl>
+        {/if}
+    </form>
+</div>
+<style>
+    .dsm-default-form .dssc-upload-thumb{width:250px;height: 200px;}
+    .dsm-default-form .dssc-upload-thumb p{width:100%;height: 100%;display: block}
+    .image-wrapper img{width:100%;height: 100%}
+    .drop-btn{position: absolute;top:0px;right:0px;}
+</style>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/ajaxfileupload.js"></script> 
+<script>
+function openPhoto(id){
+    var src=$('#'+id).attr('src')
+    if(!src){
+        return
+    }
+    layer.photos({
+        photos: {
+            "title": "", //相册标题
+            "id": 1, //相册id
+            "start": 0, //初始显示的图片序号，默认0
+            "data": [   //相册包含的图片，数组格式
+              {
+                "pid": 1, //图片id
+                "src": src, //原图地址
+                "thumb": src //缩略图地址
+              }
+            ]
+          }
+        ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机
+      })
+}
+    function dropImage(id){
+        var index=layer.confirm("{$Think.lang.ds_ensure_del}", {
+                btn: ['{$Think.lang.ds_ok}', '{$Think.lang.ds_cancel}'],
+                title: false,
+            }, function () {
+                layer.close(index)
+                $.getJSON('{:url('MemberAuth/image_drop')}',{file_name:id},function(res){
+                    if(res.code!=10000){
+                        layer.alert(res.message);
+                    }else{
+                        $('#'+id).val('')
+                        $('#img_'+id+'_url').attr('src',"{$Think.BASE_SITE_ROOT}/static/home/images/"+id+".png")
+                    }
+                })
+            })
+    }
+    function ajaxFileUpload(url, id)
+    {
+        var index=id.substr(0,20)
+        if($('#'+index).val()){
+            layer.alert('{$Think.lang.please_drop_image}');
+            return
+        }
+        $.ajaxFileUpload({
+                url: url,
+                secureuri: false,
+                fileElementId: id,
+                dataType: 'json',
+                data: {id: id},
+                success: function (data)
+                {
+                    if (data.code!=10000) {
+                        layer.alert(data.message);
+                    } else {
+                        $('#'+index).val(data.result.file_name)
+                        $("#img_" + id).attr('src', data.result.file_path);
+                    }
+                },
+                error: function (data, status, e)
+                {
+                    console.error(data);
+                }
+            })
+    }
+    $(document).ready(function () {
+        var url = '{:url("MemberAuth/image_upload")}';
+        $('#member_form').find('input[type="file"]').unbind().change(function () {
+            var id = $(this).attr('id');
+            ajaxFileUpload(url, id);
+        });
+        $('#member_form').validate({
+            submitHandler: function (form) {
+                ds_ajaxpost('member_form','url','{:url('MemberAuth/index')}');
+            },
+            rules: {
+                member_truename: {
+                    required: true
+                },
+                member_idcard: {
+                    required: true,
+                },
+                member_idcard_image1: {
+                    required: true,
+                },
+                member_idcard_image2: {
+                    required: true,
+                },
+                member_idcard_image3: {
+                    required: true,
+                },
+            },
+            messages: {
+                member_truename: {
+                    required: '{$Think.lang.member_truename_require}'
+                },
+                member_idcard: {
+                    required: '{$Think.lang.member_idcard_require}',
+                },
+                member_idcard_image1: {
+                    required: '{$Think.lang.member_idcard_image1_require}',
+                },
+                member_idcard_image2: {
+                    required: '{$Think.lang.member_idcard_image2_require}',
+                },
+                member_idcard_image3: {
+                    required: '{$Think.lang.member_idcard_image3_require}',
+                },
+            }
+        });
+
+    });
+</script>
+
+
+{/block}
+
+

@@ -1,0 +1,138 @@
+{include file="public/header" /}
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_consulting}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="fixed-empty"></div>
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.consulting_index_sender}</dt>
+                <dd><input class="txt" type="text" name="member_name" id="member_name" value="{present name="member_name"}{$member_name}{/present}" /></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.consulting_index_content}</dt>
+                <dd><input class="txt" type="text" name="consult_content" id="consult_content" value="{present name="consult_content"}{$consult_content}{/present}" /></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.consulting_index_type}</dt>
+                <dd>
+                    <select name="ctid">
+                        <option value="0">{$Think.lang.ds_all}</option>
+                        {notempty name="consult_type"}
+                        {foreach name="consult_type" item="val"}
+                        <option {if $Request.get.ctid == $val.consulttype_id}selected="selected"{/if} value="{$val.consulttype_id}">{$val.consulttype_name}</option>
+                        {/foreach}
+                        {/notempty}
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt></dt>
+                <dd></dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Consulting/consulting')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+    
+  <div class="explanation" id="explanation">
+      <div class="title" id="checkZoom">
+          <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+          <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+      </div>
+      <ul>
+          <li>{$Think.lang.consulting_index_help1}</li>
+      </ul>
+  </div>
+    
+    
+        <table class="ds-default-table">
+            <tbody>
+            {notempty name="consult_list"}
+            {foreach name="consult_list" item="consult"}
+            <tr class="space">
+                <th class="w24"><input type="checkbox" class="checkitem" name="consult_id[]" value="{$consult.consult_id}" /></th>
+                <th>
+                    <strong>{$Think.lang.consulting_index_object}:&nbsp;</strong>
+                    <span><a target="_blank" href="{:url('home/Goods/index',['goods_id'=>$consult.goods_id])}">{$consult.goods_name}</a></span>
+                </th>
+                <th><strong>{$Think.lang.ds_handle}:</strong>&nbsp;
+                    <a href="javascript:dsLayerConfirm('{:url('Consulting/delete',['consult_id'=>$consult.consult_id])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    |
+                    <a href="javascript:dsLayerOpen('{:url('Consulting/reply_consult',['consult_id'=>$consult.consult_id])}','回复咨询')" class="dsui-btn-edit"><i class="iconfont"></i>回复咨询</a>
+                </th>
+            </tr>
+            <tr>
+                <td colspan="12">
+                    <fieldset style="border: 1px dashed #E7E7E7;padding: 0.5em;">
+                        <legend>
+                            <span><strong>{$Think.lang.consulting_index_sender}:</strong>&nbsp;
+                                {empty name="consult.member_id"}
+                                {$Think.lang.consulting_index_guest}
+                                {else /}
+                                {$consult.member_name}
+                                {/empty}
+                            </span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span><strong>{$Think.lang.consulting_index_time}:</strong>&nbsp;{$consult.consult_addtime|date="Y-m-d H:i:s"}</span>
+                        </legend>
+                        <div class="formelement" id="hutia_{$key}">{$consult.consult_content}</div>
+                    </fieldset>
+                    <fieldset style="background: none repeat scroll 0 0 #FFFAE3;padding: 0.5em;border: 1px dashed #F1E38B;">
+                        <legend><strong>{$Think.lang.consulting_index_reply}:</strong></legend>
+                        <div class="formelement" id="hutia2_{$key}">
+                            {notempty name="consult.consult_reply"}
+                            {$consult.consult_reply}
+                            {else /}
+                            {$Think.lang.consulting_index_no_reply}
+                           {/notempty}
+                        </div>
+                    </fieldset>
+                </td>
+            </tr>
+           {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="consult_list"}
+            <tr class="tfoot">
+                <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                <td colspan="16"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                    &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+        {$show_page|raw}
+
+</div>
+
+<script type="text/javascript">
+    
+    function submit_delete(ids_str) {
+        _uri = ADMINSITEURL + "/Consulting/delete.html?consult_id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+
+</script>

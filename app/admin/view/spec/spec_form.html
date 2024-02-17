@@ -1,0 +1,137 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <form class="" id="user_form" method="post">
+        <div class="ncap-form-default">
+            <dl>
+                <dt></dt>
+                <dd>
+                            <div id="gcategory" class="default_select">
+                                <input type="hidden" name="gc_id" value="{$spec.gc_id}" class="mls_id" />
+                                <input type="hidden" name="gc_name" value="{$spec.gc_name|default=''}" class="mls_name" />
+                                {if $spec.gc_id}
+                                <span>{$spec.gc_name|default=''}</span>
+                                <input type="button" value="{$Think.lang.ds_edit}" class="edit_gcategory" />
+                                {/if}
+                                <select {if $spec.gc_id}style="display:none"{/if}>
+                                    <option value="0">请选择分类</option>
+                                    {foreach name="gc_list" item="gc"}
+                                    <option value="{$gc.gc_id}">{$gc.gc_name}</option>
+                                    {/foreach}
+                                </select>
+                            </div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.sp_name}</dt>
+                <dd>
+                            <input type="text" name="sp_name" id="sp_name" value="{$spec.sp_name|default=''}" class="w200"/>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.sp_sort}</dt>
+                <dd>
+                            <input type="text" name="sp_sort" id="sp_sort" value="{$spec.sp_sort|default='255'}" class="w200"/>
+                </dd>
+            </dl>
+        </div>
+        <table class="ds-default-table">
+            {if $Request.action=='spec_edit' && $specvalue_list}
+            <thead>
+                <tr>
+                    <th width="100">{$Think.lang.ds_del}</th>
+                    <th width="200">{$Think.lang.ds_sort}</th>
+                    <th>{$Think.lang.sp_value}</th>
+                </tr>
+            </thead>
+            <tbody id="tr_model">
+                <tr></tr>
+                {if $specvalue_list}
+                {foreach name="specvalue_list" item="val"}
+                <tr>
+                    <td>
+                        <input type="hidden" name='spec_value[{$val.spvalue_id}][form_submit]' value='' />
+                        <input type="checkbox" name="spec_del[{$val.spvalue_id}]" value="{$val.spvalue_id}" />
+                    </td>
+                    <td><input type="text" class="form-control" name="spec_value[{$val.spvalue_id}][sort]" value="{$val.spvalue_sort}"/></td>
+                    <td><input type="text" class="form-control" name="spec_value[{$val.spvalue_id}][name]" value="{$val.spvalue_name}"/></td>
+                </tr>
+                {/foreach}
+                {/if}
+            </tbody>
+            {/if}
+                <tfoot>
+
+                <tr class="tfoot">
+                    <td colspan='3'>
+                        <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+</div>
+<!--载入-->
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+
+<script>
+    $(function() {
+        gcategoryInit("gcategory");
+    });
+</script>
+<script type="text/javascript">
+    $(function(){
+        $('#user_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                sp_name :{
+                    required: true,
+                },
+                sp_sort :{
+                    required: true,
+                    digits:true,
+                    max: 255,
+                    min:0,
+                }
+                
+                 
+            },
+            messages: {
+                sp_name :{
+                   required: '必填',
+                },
+                sp_sort :{
+                    required: '必填',
+                    digits: '输入数字范围为0~255，数字越小越靠前',
+                    max: '输入小于等于255的数'
+                }
+            }
+        });
+        
+    });
+    
+    
+</script>
+<script>
+    $(function() {
+        var i = 0;
+        var tr_model = '<tr><td><a onclick="remove_tr($(this));" href="JavaScript:void(0);">删除</a></td>' +
+                '<td><input type="text" class="form-control" name="spec_value[key][sort]" value="0" /></td>' +
+                '<td><input type="text" class="form-control" name="spec_value[key][name]" value="" /></td>' +
+                '</tr>';
+        $("#add_type").click(function() {
+            $('#tr_model > tr:last').after(tr_model.replace(/key/g, 's_' + i));
+            i++;
+        });
+    });
+    function remove_tr(o) {
+        o.parents('tr:first').remove();
+    }
+</script>

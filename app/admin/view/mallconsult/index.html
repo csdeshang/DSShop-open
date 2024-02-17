@@ -1,0 +1,153 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>平台客服</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>咨询人</dt>
+                <dd><input class="txt" type="text" name="member_name" id="member_name" value="{$Request.get.member_name}" /></dd>
+            </dl>
+            <dl>
+                <dt>咨询类型</dt>
+                <dd>
+                    <select name="mctid">
+                        <option value="0">全部</option>
+                        {notempty name="type_list"}
+                        {foreach name="type_list" item="val"}
+                        <option {present name="mctid"}{if $mctid == $val.mallconsulttype_id}selected="selected"{/if} {/present}value="{$val.mallconsulttype_id}">{$val.mallconsulttype_name}</option>
+                        {/foreach}
+                        {/notempty}
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Mallconsult/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+    
+    
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="w24"></th>
+                <th class="align-center">咨询内容</th>
+                <th class="w96 align-center">咨询人</th>
+                <th class="w156 align-center">咨询时间</th>
+                <th class="w96 align-center">回复状态</th>
+                <th class="w120 align-center">{$Think.lang.ds_handle} </th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="consult_list"}
+            {foreach name="consult_list" item="val"}
+            <tr class="space">
+                <td class="w24"><input type="checkbox" class="checkitem" name="id[]" value="{$val.mallconsult_id}" /></td>
+                <td>{$val.mallconsult_content}</td>
+                <td class="align-center">{$val.member_name}</td>
+                <td class="align-center">{$val.mallconsult_addtime|date="Y-m-d H:i:s"}</td>
+                <td class="align-center">{$state[$val.mallconsult_isreply]}</td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Mallconsult/consult_reply',['id'=>$val.mallconsult_id])}','{$Think.lang.ds_handle}')" class="dsui-btn-edit"><i class="iconfont"></i>{if $val.mallconsult_isreply == 0}回复{else }编辑{/if}</a>
+                    <a href="javascript:void(0)" onclick="submit_delete({$val.mallconsult_id})" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+           {/foreach}
+           {else}
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="consult_list"}
+            <tr class="tfoot">
+                <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                <td colspan="16"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                    &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                    </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+        {$show_page|raw}
+</div>
+
+<script type="text/javascript">
+    function checkForm(){
+        flag = false;
+        $.each($("input[name='consult_id[]']"),function(i,n){
+            if($(n).prop('checked')){
+                flag = true;
+                return false;
+            }
+        });
+        if(!flag)layer.alert('{$Think.lang.consulting_del_choose}');
+        return flag;
+    }
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Mallconsult/del_consult.html?mallconsult_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+</script>
+<script>
+    (function(){
+        $('.w').each(function(i){
+            var o = document.getElementById("hutia_"+i);
+            var s = o.innerHTML;
+            var p = document.createElement("span");
+            var n = document.createElement("a");
+            p.innerHTML = s.substring(0,50);
+            n.innerHTML = s.length > 50 ? "{$Think.lang.consulting_index_unfold}" : "";
+            n.href = "###";
+            n.onclick = function(){
+                if (n.innerHTML == "{$Think.lang.consulting_index_unfold}"){
+                    n.innerHTML = "{$Think.lang.consulting_index_retract}";
+                    p.innerHTML = s;
+                }else{
+                    n.innerHTML = "{$Think.lang.consulting_index_unfold}";
+                    p.innerHTML = s.substring(0,50);
+                }
+            }
+            o.innerHTML = "";
+            o.appendChild(p);
+            o.appendChild(n);
+        });
+    })();
+    (function(){
+        $('.d').each(function(i){
+            var o = document.getElementById("hutia2_"+i);
+            var s = o.innerHTML;
+            var p = document.createElement("span");
+            var n = document.createElement("a");
+            p.innerHTML = s.substring(0,50);
+            n.innerHTML = s.length > 50 ? "{$Think.lang.consulting_index_unfold}" : "";
+            n.href = "###";
+            n.onclick = function(){
+                if (n.innerHTML == "{$Think.lang.consulting_index_unfold}"){
+                    n.innerHTML = "{$Think.lang.consulting_index_retract}";
+                    p.innerHTML = s;
+                }else{
+                    n.innerHTML = "{$Think.lang.consulting_index_unfold}";
+                    p.innerHTML = s.substring(0,50);
+                }
+            }
+            o.innerHTML = "";
+            o.appendChild(p);
+            o.appendChild(n);
+        });
+    })();
+</script>

@@ -1,0 +1,36 @@
+{include file="public/header" /}
+<div class="page">
+    <form method="post" action="{:url('Goods/edit_storage')}" id="jingle_form" onsubmit="ds_ajaxpost('jingle_form');return false;">
+        <input type="hidden" name="commonid" value="{$Request.param.commonid}" />
+        <table class="ds-default-table">
+            <thead>
+                <tr class="thead">
+                <th>{$Think.lang.ds_goods_name}</th>
+                <th class="w108">{$Think.lang.market_price}</th>
+              <th class="w108"><span class="red">*</span>{$Think.lang.goods_index_price}</th>
+              <th class="w60">{$Think.lang.goods_index_weight}</th>
+              <th class="w60"><span class="red">*</span>{$Think.lang.goods_index_stock}</th>
+              <th class="w60">{$Think.lang.warning_value}</th>
+              <th class="w120">{$Think.lang.goods_index_goods_no}</th>
+              </tr>
+            </thead>
+            <tbody>
+                {foreach name='goods_list' item='goods'}
+                <tr>
+                    <td>{$goods.goods_name}</td>
+                    <td><input class="text price valid w48"{if $goodscommon_info.goods_lock} readonly="readonly"{/if} type="text" name="spec[{$goods.goods_id}][marketprice]" value="{$goods.goods_marketprice}"><em class="add-on"><i class="iconfont">&#xe65c;</i></em></td>
+                    <td><input class="text price w48"{if $goodscommon_info.goods_lock} readonly="readonly"{/if} type="text" name="spec[{$goods.goods_id}][price]" value="{$goods.goods_price}"><em class="add-on"><i class="iconfont">&#xe65c;</i></em></td>
+                    <td><input class="text stock w48" type="text" name="spec[{$goods.goods_id}][goods_weight]" value="{$goods.goods_weight}"></td>
+                    <td><input class="text stock w48" type="text" name="spec[{$goods.goods_id}][stock]" value="{$goods.goods_storage}"></td>
+                    <td><input class="text stock w48" type="text" name="spec[{$goods.goods_id}][alarm]" value="{$goods.goods_storage_alarm}"></td>
+                    <td><input class="text sku" type="text" name="spec[{$goods.goods_id}][sku]" value="{$goods.goods_serial}"></td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        <div class="bottom">
+            <input type="submit" class="btn" value="{$Think.lang.ds_submit}"/>
+        </div>
+    </form>
+</div>
+

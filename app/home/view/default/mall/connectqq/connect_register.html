@@ -1,0 +1,176 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/member_login.css">
+<div class="ds-login-layout">
+  <div class="openid">
+    <span class="avatar">
+      <img src="{$qquser_info.figureurl_qq_1}" />
+    </span>
+    <span class="notice">{$Think.lang.home_qq_prompt_1}<a>{$qquser_info.nickname}</a>{$Think.lang.home_qq_prompt_2}</span></div>
+  <div class="left-pic">
+    <img src="{$Think.HOME_SITE_ROOT}/images/login_openid.jpg" />
+  </div>
+  <div class="ds-login">
+    <div class="arrow"></div>
+    <div class="ds-qq-mode">
+      <ul class="tabs-nav">
+        <li><a href="#register">{$Think.lang.home_qqconnect_register_title}<i></i></a></li>
+      </ul>
+      <div id="tabs_container" class="tabs-container">
+        <div id="register" class="tabs-content">
+          <form name="register_form" id="register_form" class="ds-login-form" method="post" action="{:url('Connectqq/register')}">
+              
+            <dl>
+              <dt>{$Think.lang.login_register_bind}：</dt>
+              <dd>
+                <div class="tab-wrapper">
+                  <label><input type="radio" value="0" name="type">{$Think.lang.login_register_connect_now}</label>
+                  <label><input type="radio" value="1" name="type" checked>{$Think.lang.login_register_join_us}</label>
+                </div>  
+              </dd>
+            </dl>
+            <dl>
+              <dt>{$Think.lang.login_index_username}：</dt>
+              <dd>
+                <input type="text" value="{:session('member_name')}" id="user" name="user" class="text"/>
+              </dd>
+            </dl>
+            <dl>
+              <dt>{$Think.lang.login_register_pwd}：</dt>
+              <dd>
+                <input type="password" value="" id="password" name="password" class="text"/>
+              </dd>
+            </dl>
+            <dl class="input-register">
+              <dt>{$Think.lang.login_register_pwd2}：</dt>
+              <dd>
+                <input type="password" value="" id="password2" name="password2" class="text"/>
+              </dd>
+            </dl>  
+            <dl class="input-register mt15">
+              <dt>{$Think.lang.ds_email}：</dt>
+              <dd>
+                <input type="text" id="email" name="email" class="text"/>
+              </dd>
+            </dl>
+            <div class="submit-div">
+              <input type="submit" name="submit" value="{$Think.lang.login_register_enter_now}" class="submit"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+$(function(){
+    $('.tab-wrapper input').click(function(){
+        var rules={user: {
+                minlength: 3,
+                maxlength: 15,
+                    remote: {
+                        url: HOMESITEURL + '/Login/check_member.html',
+                        type: 'get',
+                        data: {
+                            member_name: function () {
+                                return $('#user').val();
+                            }
+                        }
+                    }
+        },
+        password: {
+                minlength: 6,
+                maxlength: 20
+            }
+    }
+        if($(this).val()=='1'){
+            $('#user').rules("add",rules.user)
+            $('#password').rules("add",rules.password)
+            $('.input-register').show()
+            $('.input-register input').removeClass('ignore')
+        }else{
+            $('#user').rules("remove",'minlength maxlength remote')
+            $('#password').rules("remove",'minlength maxlength')
+            $('.input-register').hide()
+            $('.input-register input').addClass('ignore')
+        }
+    })
+    //注册表单验证
+    let vali=$('#register_form').validate({
+        errorPlacement: function(error, element){
+            var error_td = element.parent('dd');
+            error_td.append(error);
+            element.parents('dl:first').addClass('error');
+        },
+        success: function(label) {
+            label.parents('dl:first').removeClass('error').find('label').remove();
+        },
+        ignore: ".ignore",
+        rules: {
+            user: {
+                required: true,
+                minlength: 3,
+                maxlength: 15,
+                    remote: {
+                        url: HOMESITEURL + '/Login/check_member.html',
+                        type: 'get',
+                        data: {
+                            member_name: function () {
+                                return $('#user').val();
+                            }
+                        }
+                    }
+            },
+            password: {
+                required: true,
+                minlength: 6,
+                maxlength: 20
+            },
+            password2: {
+                required: true,
+                equalTo: '#password',
+            },
+            email: {
+                required: true,
+                email: true,
+                remote: {
+                    url: "{:url('Login/check_email')}",
+                    type: 'get',
+                    data: {
+                        email: function() {
+                            return $('#email').val();
+                        }
+                    }
+                }
+            }
+        },
+        messages : {
+            user: {
+                required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_input_username}',
+                minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_username_range}',
+                maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_username_range}',
+                remote: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_username_exists}'
+            },
+            password  : {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_index_input_password}',
+                minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_password_range}',
+                maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_password_range}'
+            },
+            password2  : {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_input_password_again}',
+                equalTo: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_password_not_same}'
+            },
+            email : {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_input_email}',
+                email    : '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_invalid_email}',
+                remote	 : '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_email_exists}'
+            }
+        }
+    });
+});
+</script>
+
+
+{/block}
+

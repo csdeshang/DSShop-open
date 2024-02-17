@@ -1,0 +1,75 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_friendlink}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.link_index_title}</dt>
+                <dd><input type="text" value="{$Request.param.link_title}" name="link_title" class="txt"></dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Link/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>通过合作伙伴管理你可以，编辑、查看、删除合作伙伴信息</li>
+        </ul>
+    </div>
+
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.ds_sort}</th>
+                <th>{$Think.lang.link_title}</th>
+                <th>{$Think.lang.link_pic}</th>
+                <th>{$Think.lang.link_url}</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty  name="link_list"}
+            {foreach name="link_list" item="link"}
+            <tr>
+                <td class="sort"><span class="editable"  ds_type="inline_edit" fieldname="link_sort" ajax_branch='link' fieldid="{$link.link_id}" datatype="pint" maxvalue="255" title="{$Think.lang.ds_editable}">{$link.link_sort}</span></td>
+                <td class="name"><span class="editable"  ds_type="inline_edit" fieldname="link_title" ajax_branch='link' fieldid="{$link.link_id}" required="1"  title="{$Think.lang.ds_editable}">{$link.link_title}</span></td>
+                <td>{if $link.link_pic}<a data-lightbox="lightbox-image" data-title="{$link.link_title}" href="{:ds_get_pic('admin/link',$link.link_pic)}"><img src="{:ds_get_pic('admin/link',$link.link_pic)}" onload="javascript:ResizeImage(this,31,31);"></a>{/if}</td>
+                <td>{$link.link_url}</td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Link/edit',['link_id'=>$link.link_id])}','{$Think.lang.ds_edit}-{$link.link_title}')"  class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Link/drop',['link_id'=>$link.link_id])}','{$Think.lang.ds_ensure_del}')"  class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>

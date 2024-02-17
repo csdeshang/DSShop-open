@@ -1,0 +1,80 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+
+    <form id="add_form" method="post" action="{:url('Groupbuy/price_save')}">
+        <input name="gprange_id" type="hidden" value="{$price_info.gprange_id}" />
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td colspan="2" class="required"><label for="gprange_name" class="validation">{$Think.lang.gprange_name}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" value="{$price_info.gprange_name}" name="gprange_name" id="gprange_name" class="txt"></td>
+                <td class="vatop tips">{$Think.lang.price_range_tip}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label for="gprange_start" class="validation">{$Think.lang.gprange_start}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    <input type="text" value="{$price_info.gprange_start}" name="gprange_start" id="gprange_start" class="txt">
+                </td>
+                <td class="vatop tips">{$Think.lang.price_range_price_tip}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label for="gprange_end" class="validation">{$Think.lang.gprange_end}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    <input type="text" value="{$price_info.gprange_end}" name="gprange_end" id="gprange_end" class="txt">
+                </td>
+                <td class="vatop tips">{$Think.lang.price_range_price_tip}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#add_form').validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                gprange_name : {
+                    required : true
+                },
+                gprange_start : {
+                    required : true,
+                    digits : true
+                },
+                gprange_end : {
+                    required : true,
+                    digits : true
+                }
+            },
+            messages : {
+                gprange_name : {
+                    required :  '{$Think.lang.range_name_error}'
+                },
+                gprange_start : {
+                    required : '{$Think.lang.range_start_error}',
+                    digits : '{$Think.lang.range_start_error}'
+                },
+                gprange_end : {
+                    required : '{$Think.lang.range_end_error}',
+                    digits : '{$Think.lang.range_end_error}'
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,17 @@
+<div class="model-14">
+  <div class="top-search-form" style="background-color:{$config_info.back_color|default='unset'};">
+    {if isset($config_info['if_show_logo']) && $config_info['if_show_logo']==1}
+    <img class="logo" src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_mobile_logo)}" />
+    {/if}
+    <div class="top-search-box border-circle" style="background: rgb(232, 232, 232);">
+      <span class="top-search-intro" style="color: rgb(153, 153, 153);">搜索</span>
+      <span class="top-search-icon">
+        <i class="iconfont" style="color: rgb(153, 153, 153);">&#xe654;
+        </i>
+      </span>
+    </div>
+    {if isset($config_info['if_show_more']) && $config_info['if_show_more']==1}
+    <div class="more iconfont">&#xe683;</div>
+    {/if}
+  </div>
+</div>

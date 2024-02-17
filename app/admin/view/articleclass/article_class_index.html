@@ -1,0 +1,102 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_articleclass}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="fixed-empty"></div>
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.article_class_index_tips1}</li>
+            <li>{$Think.lang.article_class_index_tips2}</li>
+        </ul>
+    </div>
+        <table class="ds-default-table">
+            <thead>
+                <tr class="thead">
+                    <th class="w48"></th>
+                    <th class="w48">{$Think.lang.ds_sort}</th>
+                    <th>{$Think.lang.ac_name}</th>
+                    <th class="w120 align-center">{$Think.lang.ds_handle}</th>
+                </tr>
+            </thead>
+            <tbody id="treet1">
+                {notempty name="class_list"}
+                {foreach name="class_list" item="v"}
+                <tr class="hover edit">
+                    <td>
+                        {if $v.ac_code == ''}
+                        <input type="checkbox" name='check_ac_id[]' value="{$v.ac_id}" class="checkitem">
+                        {else /}
+                        <input name="" type="checkbox" disabled="disabled" value="" />
+                        {/if}
+                        {if $v.have_child == '1'}
+                        <img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-expandable.gif" fieldid="{$v.ac_id}" status="open" ds_type="flex">
+                        {else /}
+                        <img fieldid="{$v.ac_id}" status="close" ds_type="flex" src="{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-item.gif">
+                        {/if}
+                    </td>
+                    <td class="sort">
+                        <span title="{$Think.lang.ds_editable}" ajax_branch='article_class_sort' datatype="number" fieldid="{$v.ac_id}" fieldname="ac_sort" ds_type="inline_edit" class="editable">{$v.ac_sort}</span>
+                    </td>
+                    <td class="name">
+                        <span title="{$Think.lang.ds_editable}" required="1" fieldid="{$v.ac_id}" ajax_branch='article_class_name' fieldname="ac_name" ds_type="inline_edit" class="editable ">{$v.ac_name}</span>
+                        <a class='btn-add-nofloat marginleft' href="javascript:dsLayerOpen('{:url('Articleclass/article_class_add',['ac_parent_id'=>$v.ac_id])}','{$Think.lang.ds_add_sub_class}')">
+                            <span>{$Think.lang.ds_add_sub_class}</span>
+                        </a>
+                    </td>
+                    <td class="align-center">
+                        <a href="javascript:dsLayerOpen('{:url('Articleclass/article_class_edit',['ac_id'=>$v.ac_id])}','{$Think.lang.ds_edit}-{$v.ac_name}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                        {if $v.ac_code == ''}
+                        <a href="javascript:dsLayerConfirm('{:url('Articleclass/article_class_del',['ac_id'=>$v.ac_id])}','{$Think.lang.article_class_index_ensure_del}');" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                        {/if}
+                    </td>
+                </tr>
+                {/foreach}
+                {else /}
+                <tr class="no_data">
+                    <td colspan="10">{$Think.lang.ds_no_record}</td>
+                </tr>
+                {/notempty}
+            </tbody>
+            <tfoot>
+                {notempty name="class_list"}
+                <tr>
+                    <td>
+                        <label for="checkall1">
+                            <input type="checkbox" class="checkall" id="checkall_2">
+                        </label>
+                    </td>
+                    <td colspan="16">
+                        <label for="checkall_2">{$Think.lang.ds_select_all}</label>
+                        &nbsp;&nbsp;
+                        <a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()">
+                            <span>{$Think.lang.ds_del}</span>
+                        </a>
+                    </td>
+                </tr>
+                {/notempty}
+            </tfoot>
+        </table>
+</div>
+<script src="{$Think.ADMIN_SITE_ROOT}/js/article_class.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>
+<script type="text/javascript">
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Articleclass/article_class_del.html?ac_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+</script>

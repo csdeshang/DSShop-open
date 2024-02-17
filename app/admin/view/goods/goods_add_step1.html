@@ -1,0 +1,121 @@
+{include file="public/header" /}
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/perfect-scrollbar.min.css">
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商品管理</h3>
+                <h5></h5>
+            </div>
+            {if isset($edit_goods_sign)}
+            {include file="public/admin_items" /}
+            {else /}
+            <ul class="add-goods-step">
+                <li class="current"><i class="iconfont">&#xe600;</i>
+                    <h6>STEP.1</h6>
+                    <h2>{$Think.lang.select_category}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li><i class="icon iconfont">&#xe731;</i>
+                    <h6>STEP.2</h6>
+                    <h2>{$Think.lang.fill_item_details}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li><i class="icon iconfont">&#xe6a2;</i>
+                    <h6>STEP.3</h6>
+                    <h2>{$Think.lang.goods_index_upload_goods_pic}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li><i class="icon iconfont">&#xe64d;</i>
+                    <h6>STEP.4</h6>
+                    <h2>{$Think.lang.goods_index_flow_chart_step3}</h2>
+                </li>
+            </ul>
+            {/if}
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  
+  
+  <div class="wrapper_search">
+  <div class="wp_sort">
+    <div id="dataLoading" class="wp_data_loading">
+      <div class="data_loading">{$Think.lang.goods_step1_loading}</div>
+    </div>
+    <div class="sort_selector">
+      <div class="sort_title">{$Think.lang.goods_step1_choose_common_category}
+        <div class="text" id="commSelect">
+            <div>{$Think.lang.ds_please_choose}</div>
+            <div class="select_list" id="commListArea">
+                <ul>
+                    {notempty name="staple_array"}
+                    {foreach name="staple_array" item="val"}
+                    <li  data-param="{stapleid:{$val.staple_id}}">
+                        <span dstype="staple_name">{$val.staple_name}</span>
+                        <a href="JavaScript:void(0);" dstype="del-comm-cate" title="{$Think.lang.ds_delete}">X</a>
+                    </li>
+                    {/foreach}
+                    {/notempty}
+                    <li id="select_list_no" {notempty name="staple_array"}style="display: none;"{/notempty}><span class="title">{$Think.lang.goods_step1_no_common_category}</span></li>
+                </ul>
+            </div>
+        </div>
+        <i class="iconfont">&#xe689;</i>
+      </div>
+    </div>
+    <div id="class_div" class="wp_sort_block">
+      <div class="sort_list">
+        <div class="wp_category_list">
+          <div id="class_div_1" class="category_list">
+              <ul>
+                  {notempty name="goods_class"}
+                  {foreach name="goods_class" item="val"}
+                  <li class="" dstype="selClass" data-param="{gcid:{$val.gc_id},deep:1,tid:{$val.type_id}}"> <a class="" href="javascript:void(0)"><i class="iconfont"></i>{$val.gc_name}</a></li>
+                  {/foreach}
+                  {/notempty}
+              </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sort_list">
+        <div class="wp_category_list blank">
+          <div id="class_div_2" class="category_list">
+            <ul>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="sort_list sort_list_last">
+        <div class="wp_category_list blank">
+          <div id="class_div_3" class="category_list">
+            <ul>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="alert">
+    <dl class="hover_tips_cont">
+      <dt id="commodityspan"><span style="color:#F00;">{$Think.lang.goods_step1_please_choose_category}</span></dt>
+      <dt id="commoditydt" style="display: none;" class="current_sort">{$Think.lang.goods_step1_current_choose_category}{$Think.lang.ds_colon}</dt>
+      <dd id="commoditydd"></dd>
+    </dl>
+  </div>
+  <div class="wp_confirm">
+      <form method="get" action="{if isset($edit_goods_sign)}{:url('Goods/edit_goods')}{else/}{:url('Goodsadd/add_step_two')}{/if}">
+          <input type="hidden" name="commonid" value="{$commonid}" />
+          <input type="hidden" name="class_id" id="class_id" value="" />
+          <input type="hidden" name="t_id" id="t_id" value="" />
+          <div class="bottom tc">
+              <input disabled="disabled" dstype="buttonNextStep" value="{$Think.lang.goods_add_next}，{$Think.lang.fill_item_information}" type="submit" class="btn"style=" width: 200px;" />
+          </div>
+      </form>
+  </div>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.mousewheel.js"></script>
+<script src="{$Think.ADMIN_SITE_ROOT}/js/goods_add_step1.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/perfect-scrollbar.min.js"></script>
+<script>
+SEARCHKEY = '{$Think.lang.goods_step1_search_input_text}';
+</script>
+</div>
+{include file="public/footer" /}

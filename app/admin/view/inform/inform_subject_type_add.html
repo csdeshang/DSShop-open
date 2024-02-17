@@ -1,0 +1,71 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>举报管理</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <form id="add_form" method="post" enctype="multipart/form-data" action="{:url('Inform/inform_subject_type_save')}" name="form1">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td colspan="2" class="required"><label class="validation">{$Think.lang.inform_type}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" id="informtype_name" name="informtype_name" class="txt"></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label class="validation">{$Think.lang.informtype_desc}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><textarea name="informtype_desc" rows="6" id="informtype_desc" class="tarea"></textarea></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="2" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+    
+</div>
+
+<script type="text/javascript">
+        //页面输入内容验证
+        $("#add_form").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                informtype_name: {
+                    required : true,
+                    maxlength : 50
+                },
+                informtype_desc: {
+                    required : true,
+                    maxlength : 100
+                }
+            },
+            messages : {
+                informtype_name: {
+                    required : '{$Think.lang.inform_type_null}',
+                    maxlength : '{$Think.lang.inform_type_null}012'
+                },
+                informtype_desc: {
+                    required : '{$Think.lang.inform_type_desc_null}',
+                    maxlength : '{$Think.lang.inform_type_desc_null}'
+                }
+            }
+        });
+ 
+    
+</script>

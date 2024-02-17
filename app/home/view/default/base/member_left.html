@@ -1,0 +1,18 @@
+<div class="left-layout">
+    <div class="dsm-sidebar">
+        {foreach name="member_menu" item="menu" }
+        <div class="dl">
+            <div class="dt">
+                 <h3 key="{$menu.name}"><i class="iconfont">{$menu.ico|raw}</i>{$menu.text}</h3>
+            </div>
+            <div class="dd">
+                <ul>
+                    {foreach name="menu.submenu" item="submenu" }
+                    <li {if condition="$submenu.name eq $cursubmenu"}class="selected"{/if}><a href="{$submenu.url}">{$submenu.text}</a></li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+        {/foreach}
+    </div>
+</div>

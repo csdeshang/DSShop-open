@@ -1,0 +1,287 @@
+
+<script>
+    var local;
+    var map;
+    var lst_name='';
+    function change_map(){
+    	var name=$("#area_info").val();
+    	
+            if(name!='' && lst_name!=name){
+                lst_name=name;
+                map.setCurrentCity(name);
+                map.centerAndZoom(name,16);
+                map.clearOverlays();
+                local.search(name);
+            }
+            
+    }
+    $(function(){
+    if ({$Think.config.ds_config.mapak_type} == '1'){
+    		map = new AMap.Map("allmap", {
+    			resizeEnable: true,
+    			zoom:15
+    		});
+    		//获取用户所在城市信息
+    			AMap.plugin("AMap.CitySearch", function () {
+    				var citySearch = new AMap.CitySearch();
+    				citySearch.getLocalCity(function (status, result) {
+    				  if (status === "complete" && result.info === "OK") {
+    					// 查询成功，result即为当前所在城市信息
+    					AMap.plugin("AMap.Geocoder", function () {
+    					  var geocoder = new AMap.Geocoder({
+    						// city 指定进行编码查询的城市，支持传入城市名、adcode 和 citycode
+    						city: result.adcode,
+    					  });
+    					  geocoder.getLocation(result.city, function(status1, result1) {
+    						  var location = result1.geocodes[0].location;
+    							var lng = location.lng;
+    							var lat = location.lat;
+    							
+    							//初始化定位
+    							var marker = new AMap.Marker({
+    								position: new AMap.LngLat(lng, lat),
+    								icon: '//api.map.baidu.com/images/marker_red_sprite.png',
+    								zoom: 15
+    							});
+    							map.add(marker);
+    							document.getElementById("longitude").value = lng;
+    							document.getElementById("latitude").value = lat;
+    							map.panTo([lng, lat]);
+    							
+    							//搜索定位
+    							AMap.plugin(['AMap.PlaceSearch','AMap.AutoComplete'], function(){
+    								var auto = new AMap.AutoComplete({input:"address"});
+    								var placeSearch = new AMap.PlaceSearch({
+    									map: map
+    								});  //构造地点查询类
+    								auto.on("select", select);//注册监听，当选中某条记录时会触发
+    								function select(e) {
+    									placeSearch.setCity(e.poi.adcode);
+    									placeSearch.search(e.poi.name);  //关键字查询查询
+    								}
+    							});
+    							
+    							//点击定位
+    							map.on('click', function(e) {
+    								document.getElementById("longitude").value = e.lnglat.getLng();
+    								document.getElementById("latitude").value = e.lnglat.getLat();
+    								if(marker){
+    									map.remove(marker);
+    								}
+    								marker = new AMap.Marker({
+    									position: new AMap.LngLat(e.lnglat.getLng(), e.lnglat.getLat()),
+    									icon: '//api.map.baidu.com/images/marker_red_sprite.png',
+    									anchor: 'bottom-center',
+    									zoom: 15
+    								});
+    								map.add(marker);
+    							});
+    						});
+    					  
+    					});
+    					
+    				  }
+    				});
+    			  });
+    		}else{
+    			map = new BMap.Map("allmap");
+    			var lng = '';
+    			var lat = '';
+    			if(!lng && !lat){
+    			var geolocation = new BMap.Geolocation();
+    			geolocation.getCurrentPosition(function (r) {
+    				if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+    					var lng = r.point.lng;
+    					var lat = r.point.lat;
+    					var point = new BMap.Point(lng, lat);
+    					map.centerAndZoom(point, 16);
+    					map.addControl(new BMap.NavigationControl());
+    					map.enableScrollWheelZoom();    
+    					var marker = new BMap.Marker(point);  // 创建标注
+    					map.addOverlay(marker);              // 将标注添加到地图中
+    					marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    					document.getElementById("longitude").value = lng;
+    					document.getElementById("latitude").value = lat;
+    	
+    				} else {
+    					layer.msg('failed' + this.getStatus());
+    				}
+    			}, {enableHighAccuracy: true})
+    			}else{
+    				var point = new BMap.Point(lng, lat);
+    					map.centerAndZoom(point, 16);
+    					map.addControl(new BMap.NavigationControl());
+    					map.enableScrollWheelZoom();    
+    					var marker = new BMap.Marker(point);  // 创建标注
+    					map.addOverlay(marker);              // 将标注添加到地图中
+    					marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    			}    
+    			var options = {
+    				onSearchComplete: function(results){
+    					// 判断状态是否正确
+    					if (local.getStatus() == BMAP_STATUS_SUCCESS){
+    						if(results.getCurrentNumPois()>0){
+    			
+    							map.clearOverlays();  //清除标注  或者可以把market 放入数组
+    							var point = new BMap.Point(results.getPoi(0).point.lng , results.getPoi(0).point.lat);
+    							var marker = new BMap.Marker(point);
+    							map.centerAndZoom(point, 16);
+    							map.addOverlay(marker);
+    							marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    							
+    							document.getElementById("longitude").value = results.getPoi(0).point.lng;
+    							document.getElementById("latitude").value = results.getPoi(0).point.lat;
+    							
+    						}
+    					}
+    				}
+    			};
+    			local = new BMap.LocalSearch(map, options);
+    			map.addEventListener("click", function(e){
+    //                    alert(e.point.lng + ", " + e.point.lat);
+    				map.clearOverlays();  //清除标注  或者可以把market 放入数组
+    				var point = new BMap.Point(e.point.lng , e.point.lat);
+    				var marker = new BMap.Marker(point);
+    				map.addOverlay(marker);
+    				marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+    				
+    				document.getElementById("longitude").value = e.point.lng;
+    				document.getElementById("latitude").value = e.point.lat;
+    			});
+    		}
+            
+        })
+</script>
+<div class="dsc-form-default">
+    <form method="POST" id="addr_form" action="{:url('Buy/add_inv')}">
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.cart_step1_receiver_name}</dt>
+            <dd>
+                <input type="text" class="text w100" name="true_name" maxlength="20" id="true_name" value=""/>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.cart_step1_area}</dt>
+            <dd>
+                <div id="region" onclick="change_map()">
+                    <select class="w110">
+                        <option value="0">{$Think.lang.please_select_address}</option>
+                    </select>
+                    <input type="hidden" value="" name="city_id" id="city_id">
+                    <input type="hidden" name="area_id" id="area_id" class="area_ids"/>
+                    <input type="hidden" name="area_info" id="area_info" class="area_names"/>
+                </div>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.member_map_address}</dt>
+            <dd>
+                <input type="text" class="text w500" name="address" id="address" maxlength="80" value="" onkeyup="local.search($(this).val());"/>
+                <p class="hint">{$Think.lang.cart_step1_true_address}</p>
+            </dd>
+        </dl>
+        <dl>
+                    <dt>{$Think.lang.location_map}：</dt>
+                    <dd>
+                        <input name="longitude" id="longitude" value="" type="hidden" />
+                <input name="latitude" id="latitude" value="" type="hidden" />
+                <div id="allmap" style="width:530px;height: 350px;margin-top: 20px"></div>
+                    </dd>
+                </dl>
+        <dl>
+            <dt> <i class="required">*</i>{$Think.lang.cart_step1_mobile_num}</dt>
+            <dd>
+                <input type="text" class="text w200" name="mob_phone" id="mob_phone" maxlength="15" value=""/>
+                &nbsp;&nbsp;({$Think.lang.ds_or})&nbsp;{$Think.lang.cart_step1_phone_num}
+                <input type="text" class="text w200" id="tel_phone" name="tel_phone" maxlength="20" value=""/>
+            </dd>
+        </dl>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        regionInit("region");
+        $('#addr_form').validate({
+            rules: {
+                true_name: {
+                    required: true
+                },
+                area_id: {
+                    required: true,
+                    min: 1,
+                    checkarea: true
+                },
+                address: {
+                    required: true
+                },
+                mob_phone: {
+                    required: checkPhone,
+                    minlength: 11,
+                    maxlength: 11,
+                    digits: true
+                },
+                tel_phone: {
+                    required: checkPhone,
+                    minlength: 6,
+                    maxlength: 20
+                }
+            },
+            messages: {
+                true_name: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_input_receiver}'
+                },
+                area_id: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_choose_area}',
+                    min: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_choose_area}',
+                    checkarea: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_choose_area}'
+                },
+                address: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_input_address}'
+                },
+                mob_phone: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_telphoneormobile}',
+                    minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_mobile_num_error}',
+                    maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_mobile_num_error}',
+                    digits: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_mobile_num_error}'
+                },
+                tel_phone: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.cart_step1_telphoneormobile}',
+                    minlength: '<i class="iconfont">&#xe64c;</i>',
+                    maxlength: '<i class="iconfont">&#xe64c;</i>'
+                }
+            },
+            groups: {
+                phone: 'mob_phone tel_phone'
+            }
+        });
+    });
+    function checkPhone() {
+        return ($('input[name="mob_phone"]').val() == '' && $('input[name="tel_phone"]').val() == '');
+    }
+    function submitAddAddr() {
+        if ($('#addr_form').valid()) {
+            $('#buy_city_id').val($('#region').find('select').eq(1).val());
+            $('#city_id').val($('#region').find('select').eq(1).val());
+            if(isNaN($('#region').find('select').eq(1).val())){
+                alert('{$Think.lang.location_area_last_level}');return;
+            }
+            var datas = $('#addr_form').serialize();
+            $.post("{:url('Buy/add_addr')}", datas, function(data) {
+                if (data.state) {
+                    var true_name = $.trim($("#true_name").val());
+                    var tel_phone = $.trim($("#tel_phone").val());
+                    var mob_phone = $.trim($("#mob_phone").val());
+                    var area_info = $.trim($("#area_info").val());
+                    var address = $.trim($("#address").val());
+                    showShippingPrice($('#city_id').val(), $('#area_id').val());
+                    hideAddrList(data.addr_id, true_name, area_info + '&nbsp;&nbsp;' + address, (mob_phone != '' ? mob_phone : tel_phone));
+                } else {
+                    alert(data.msg);
+                }
+            }, 'json');
+        } else {
+            return false;
+        }
+    }
+</script>

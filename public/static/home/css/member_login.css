@@ -1,0 +1,108 @@
+@charset "utf-8"; 
+
+
+body { background-color: #FAFAFA;}
+
+.header-wrap { width: 99%; height: 80px; border-bottom: solid 2px #F5F5F5; margin: 5px auto 0 auto;}
+.public-head-layout { height: 80px;}
+.header-wrap .wrapper { width: 1000px}
+.public-head-layout .site-logo { margin: 10px 0 0 0;}
+.public-head-layout .ds-login-now { font-size: 14px; color: #AAA; line-height: 24px; float: right; height: 24px; margin-top: 50px;}
+.public-head-layout .ds-login-now a { font-weight: 600; margin-left: 4px;color: #06C;}
+.public-head-layout .ds-regist-now { font-size: 14px; color: #AAA; line-height: 20px; float: right; height: 40px; margin-top: 30px;}
+.public-head-layout .ds-regist-now span { vertical-align: top; display: inline-block; *display: inline; *zoom: 1;}
+.public-head-layout .ds-regist-now .avatar { width: 40px; height: 40px; margin-right: 6px; border-radius: 100%;}
+.public-head-layout .ds-regist-now .avatar img { width: 40px; height: 40px; border-radius: 100%;}
+.public-head-layout .ds-regist-now a { font-weight: 600; margin-left: 4px;color: #06C;}
+.tabs-nav { font-size: 0;  word-spacing:-1em; border-bottom: solid 1px #E6E6E6;}
+.tabs-nav li { vertical-align: bottom; letter-spacing: normal; word-spacing: normal; text-align: center; display: inline-block; *display: inline; width: 50%; height: 40px; margin-bottom: -1px; *zoom: 1;}
+.tabs-nav li a { font-size: 18px; color: #999; line-height: 24px; padding-bottom: 13px; position: relative; z-index: 1;}
+.tabs-nav li a:hover { text-decoration: none; color: #000;}
+.tabs-nav li a.tabulous_active { color: #ff4040; display: block; border-bottom: 3px solid #ff4040}
+.tabs-nav li a i { font-size: 0; line-height: 0; border-color: #ff4040 transparent transparent transparent; border-style: solid dashed dashed dashed; border-width: 7px; display: none; width: 0; height: 0; margin-left: -4px; position: absolute; z-index: 1; left: 50%; bottom: -17px;}
+.tabs-nav li a.tabulous_active i { display: block;}
+.tabs-container { position: relative; z-index: 1;}
+.ds-login-form { display: block;}
+.ds-login-form dl { background-color: #FFF; width: 398px; height: 52px; margin-top: -1px; border: solid 1px #E6E6E6; position: relative; z-index: 1;}
+.ds-login-form dl.focus { border-color: #7ABD54; z-index: 3;}
+.ds-login-form dl.error { border-color: #ff4040 !important; z-index: 2;}
+.ds-login-form dl dt { font-size: 14px; line-height: 20px; color: #666; width: 82px; padding: 16px 0 16px 20px; float: left;}
+.ds-login-form dl dd { height: 28px;line-height: 28px; float: left; padding: 12px 0;}
+.ds-login-form dl dd .text { font-family: "microsoft yahei"; font-size: 14px; line-height: 28px; width: 290px; height: 28px; padding: 0; border: none 0;}
+
+.ds-login-form dl .note { color: #CCC; line-height: 16px; width: 145px; height: 32px; position: absolute; z-index: 1; top: 10px; left: 245px;}
+.ds-login-form dl.focus .note { color: #7ABD54;}
+.ds-login-form .code-div { width: 100%; height: 54px;}
+.ds-login-form .code-div dl { width: 277px; float: left;}
+.ds-login-form .code-div span { width: 120px; height: 52px; float: left; margin: -1px 0 0 -1px; border: solid 1px #E6E6E6; position: relative; z-index: 1;}
+.ds-login-form .code-div span img { width: 120px; height: 52px;}
+.ds-login-form .code-div span a { font-size: 14px; text-decoration: none; line-height: 52px; color: #FFF; filter:progid:DXImageTransform.Microsoft.gradient(enabled='true',startColorstr='#7F000000', endColorstr='#7F000000');background:rgba(0,0,0,0.5); text-align: center; display: none; width: 120px; height: 52px; position: absolute; z-index: 1; top: 0; left: 0;}
+.ds-login-form .code-div span:hover a { display: block;}
+.ds-login-form .clause-div { font-size: 14px; color: #666; line-height: 30px; width: 400px; height: 30px; margin-top: 15px; border: none 0;}
+.ds-login-form .clause-div dd { padding: 0; height: auto;}
+.ds-login-form .clause-div .checkbox { vertical-align: middle; margin-right: 8px;}
+.ds-login-form .tiptext { line-height: 20px; color: #999; margin: 15px 0;}
+.ds-login-form .tiptext a { line-height: 22px; color: #FFF; background-color: #21b384; vertical-align: middle; display: inline-block; height: 22px; padding: 0 8px; margin: 0 4px; border-radius: 2px;}
+.ds-login-form .tiptext a:hover { text-decoration: none; background-color: #1FA67A;}
+.ds-login-form .tiptext a i { font-size: 14px; margin-right: 4px;}
+.ds-login-form .submit-div { margin-top: 15px;}
+.ds-login-form .submit-div .submit { font-family: "microsoft yahei"; font-size: 16px; font-weight: 600; color: #FFF; background-color: #ff4040; width: 398px; height: 42px; border: solid 1px #D91E17; border-radius: 3px; cursor: pointer;}
+.ds-login-form label.error { color: #000; line-height: 24px; background: #FFF5D9 no-repeat 0 0; text-align: left; white-space: nowrap; height: 24px; padding: 8px 12px 8px 24px; position: absolute; z-index: 2; top: 5px; left: 300px; }
+.ds-login-form label.error i { font-size: 24px; margin-right: 12px; color: #FF875A; vertical-align: middle;}
+.ds-login-form .clause-div label.error { top: -5px; right: 50px;}
+.ds-login-form .code-div label.error { background: transparent none; min-width: auto; padding: 0; top: 15px; right: 0; left: auto;}
+.transition { -webkit-transition: all .3s ease-in-out; -moz-transition: all .3s ease-in-out; -o-transition: all .3s ease-in-out; -ms-transition: all .3s ease-in-out; transition: all .3s ease-in-out; -webkit-transition-delay: .3s; -moz-transition-delay: .3s; -o-transition-delay: .3s; -ms-transition-delay: .3s; transition-delay: .3s; }
+.make_transist { -webkit-transition: all .3s ease-in-out; -moz-transition: all .3s ease-in-out; -o-transition: all .3s ease-in-out; -ms-transition: all .3s ease-in-out; transition: all .3s ease-in-out; }
+.hidescale { -webkit-transform: scale(0.9); -moz-transform: scale(0.9); -o-transform: scale(0.9); -ms-transform: scale(0.9); transform: scale(0.9); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter: alpha(opacity=0); filter: alpha(opacity=0); opacity: 0; }
+.showscale { -webkit-transform: scale(1); -moz-transform: scale(1); -o-transform: scale(1); -ms-transform: scale(1); transform: scale(1); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; filter: alpha(opacity=100); opacity: 1; -webkit-transition-delay: .3s; -moz-transition-delay: .3s; -o-transition-delay: .3s; -ms-transition-delay: .3s; transition-delay: .3s; }
+.hideleft { -webkit-transform: translateX(-100%); -moz-transform: translateX(-100%); -o-transform: translateX(-100%); -ms-transform: translateX(-100%); transform: translateX(-100%); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter: alpha(opacity=0); opacity: 0; display: none\9; ;/*ie6,ie7,ie8*/}
+.showleft { -webkit-transform: translateX(0px); -moz-transform: translateX(0px); -o-transform: translateX(0px); -ms-transform: translateX(0px); transform: translateX(0px); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; filter: alpha(opacity=100); opacity: 1; -webkit-transition-delay: .3s; -moz-transition-delay: .3s; -o-transition-delay: .3s; -ms-transition-delay: .3s; transition-delay: .3s; display: block\9; ;/*ie6,ie7,ie8*/}
+.hidescaleup { -webkit-transform: scale(1.1); -moz-transform: scale(1.1); -o-transform: scale(1.1); -ms-transform: scale(1.1); transform: scale(1.1); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter: alpha(opacity=0); opacity: 0; }
+.showscaleup { -webkit-transform: scale(1); -moz-transform: scale(1); -o-transform: scale(1); -ms-transform: scale(1); transform: scale(1); -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; filter: alpha(opacity=100); opacity: 1; -webkit-transition-delay: .3s; -moz-transition-delay: .3s; -o-transition-delay: .3s; -ms-transition-delay: .3s; transition-delay: .3s; }
+.hideflip { -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)"; filter: alpha(opacity=0); display: none\9; ;/*ie6,ie7,ie8*/ opacity: 0; -webkit-transform: rotatey(-90deg) scale(1.1); -moz-transform: rotatey(-90deg) scale(1.1); -o-transform: rotatey(-90deg) scale(1.1); -ms-transform: rotatey(-90deg) scale(1.1); transform: rotatey(-90deg) scale(1.1); -webkit-transform-origin: 50% 50%; -moz-transform-origin: 50% 50%; -o-transform-origin: 50% 50%; -ms-transform-origin: 50% 50%; transform-origin: 50% 50%; }
+.showflip { -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=100)"; filter: alpha(opacity=100); display: block\9; ;/*ie6,ie7,ie8*/ opacity: 1; -webkit-transition-delay: .3s; -moz-transition-delay: .3s; -o-transition-delay: .3s; -ms-transition-delay: .3s; transition-delay: .3s; -webkit-transform: rotatey(0deg) scale(1); -moz-transform: rotatey(0deg) scale(1); -o-transform: rotatey(0deg) scale(1); -ms-transform: rotatey(0deg) scale(1); transform: rotatey(0deg) scale(1); -webkit-transform-origin: 50% 50%; -moz-transform-origin: 50% 50%; -o-transform-origin: 50% 50%; -ms-transform-origin: 50% 50%; transform-origin: 50% 50%; }
+.tabulousclear { display: block; clear: both; }
+/* 注册表单样式 */
+.ds-login-layout { width: 1000px; margin: 80px auto; position: relative; z-index: 1;}
+.ds-login-layout .openid { font-size: 14px; color: #AAA; line-height: 20px; height: 40px; position: absolute; z-index: 1; top: -70px; right: 0;}
+.ds-login-layout .openid span { vertical-align: top; display: inline-block; *display: inline; *zoom: 1;}
+.ds-login-layout .openid .notice{width:430px}
+.ds-login-layout .openid .avatar { width: 40px; height: 40px; margin-right: 6px; border-radius: 100%;}
+.ds-login-layout .openid .avatar img { width: 40px; height: 40px; border-radius: 100%;}
+.ds-login-layout .openid a { font-weight: 600; margin: 0 4px;}
+.ds-login { background-color: #FFF; width: 440px; padding: 19px 19px 29px 19px; border: solid 1px #E6E6E6; border-radius: 5px; float:right; position: relative; z-index: 1;}
+.ds-login .arrow { background: url(../images/login_pic_top.png) no-repeat; width: 17px; height: 9px; position: absolute; z-index: 1; top: -9px; left: 160px;}
+.ds-login .tabs-container { margin-top: 30px; padding: 0 40px 20px 40px;}
+.ds-login .tabs-content { width: 352px; }
+.ds-login .ds-login-form dl { width: 348px;}
+.ds-login .ds-login-form dl dd .text { width: 240px;}
+.ds-login .ds-login-form .code-div dl { width: 228px;}
+.ds-login .ds-login-form .handle-div { line-height: 20px; margin-top: 15px; overflow: hidden;}
+.ds-login .ds-login-form .handle-div .auto { color: #999; float: left;}
+.ds-login .ds-login-form .handle-div .auto .checkbox { vertical-align: middle; display: inline-block; margin-right: 4px;}
+.ds-login .ds-login-form .handle-div .auto em { line-height: 20px; color: #ff3238; vertical-align: top; display: inline-block; margin-left: 6px;}
+.ds-login .ds-login-form .handle-div .forget { float: right;}
+.ds-login .ds-login-form .submit-div .submit { width: 348px;}
+.ds-login-layout .left-pic { width: 450px; height: 350px; float:left; margin: 30px 0; position: relative; z-index:1;}
+.ds-login-layout .left-pic img { max-width: 450px; max-height: 350px; position: absolute; z-index:1; top:0; left:0 }
+.ds-login-layout .left-pic span { position:absolute; z-index: 2; top:220px; left:100px; line-height:32px; font-size: 24px; font-family:"microsoft yahei"; width: 250px; text-align: center; }
+.ds-login-layout .left-pic p a { color: #FFF; position:absolute; z-index: 2; top:270px; left: 165px; line-height:28px; font-size: 12px; width: 120px; text-align: center; }
+.ds-login-left { line-height: 22px; color: #626A73; display: inline; width: 450px; float: left; margin: 10px 0;}
+.ds-login-left h3 { font-size:18px; font-family: "microsoft yahei"; font-weight:700; color: #555; line-height: 30px; margin-top: 2px; margin-bottom: 6px;}
+.ds-login-left ol { width: 420px; margin-top: 20px;  border-bottom: dashed 1px #E7E7E7;}
+.ds-login-left ol li { font-family: "microsoft yahei"; font-size: 14px; line-height: 48px; display: block; vertical-align: middle; width: 200px; height: 48px; float: left; padding: 0 0 12px 0; margin: 0 0 5px 10px; overflow: hidden;}
+.ds-login-left ol li i { display: inline-block; background: url(../images/login.png) no-repeat scroll; vertical-align: middle; width: 48px; height: 48px; margin-right:10px;}
+.ds-login-left ol li.ico01 i { background-position: -256px 0;}
+.ds-login-left ol li.ico02 i { background-position: -304px 0; }
+.ds-login-left ol li.ico03 i { background-position: -352px 0; }
+.ds-login-left ol li.ico04 i { background-position: -256px -48px; }
+.ds-login-left ol li.ico05 i { background-position: -304px -48px; }
+.ds-login-left ol li.ico06 i { background-position: -352px -48px; }
+ @media projection, screen {.ui-tabs-hide { display: none; }}
+@media print {.ui-tabs-nav { display: none; }}
+.ui-tabs-nav:after { display: block; clear: both; content: " "; }
+.ui-tabs-disabled { opacity: .4; filter: alpha(opacity=40); }
+.ui-tabs-loading em { background: url(../images/loading.gif) no-repeat 0 50%; padding: 0 0 0 20px; }
+* html .ui-tabs-nav { display: inline-block; }
+*:first-child+html .ui-tabs-nav { display: inline-block; }
+#faq { display:none;}

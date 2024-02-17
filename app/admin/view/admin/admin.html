@@ -1,0 +1,56 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_admin}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+            <tr class="space">
+                <th colspan="15" class="nobg">{$Think.lang.ds_list}</th>
+            </tr>
+            <tr class="thead">
+                <th>{$Think.lang.admin_index_username}</th>
+                <th class="align-center">{$Think.lang.admin_index_last_login}</th>
+                <th class="align-center">{$Think.lang.admin_index_login_times}</th>
+                <th class="align-center">{$Think.lang.gadmin_name}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="admin_list"}
+            {foreach name="admin_list" item="v"}
+            <tr class="hover">
+                <td>{$v.admin_name}</td>
+                <td class="align-center">{$v.admin_login_time|date='Y-m-d H:i:s'}</td>
+                <td class="align-center">{$v.admin_login_num}</td>
+                <td class="align-center">{$v.gname}</td>
+                <td class="w150 align-center">
+                    {notempty name="$v.admin_is_super"}
+                    {$Think.lang.admin_index_sys_admin_no}
+                    {else /}
+                    <a href="javascript:dsLayerConfirm('{:url('Admin/admin_del',['admin_id'=>$v.admin_id])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.admin_index_del_admin}</a>
+                    <a href="javascript:dsLayerOpen('{:url('Admin/admin_edit',['admin_id'=>$v.admin_id])}','{$Think.lang.ds_edit}-{$v.admin_name}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    {/notempty}
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>

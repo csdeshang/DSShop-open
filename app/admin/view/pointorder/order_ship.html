@@ -1,0 +1,93 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>兑换礼品【</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    {notempty name="order_info"}
+    <form id="ship_form" method="post" name="ship_form" action="{:url('Pointorder/order_ship',['id'=>$Request.get.id])}">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td colspan="2"><label>{$Think.lang.admin_pointorder_membername}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$order_info.point_buyername}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><label> {$Think.lang.admin_pointorder_ordersn}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$order_info.point_ordersn}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><label class="validation" for="shippingcode"> {$Think.lang.admin_pointorder_shipping_code}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" id="shippingcode" name="shippingcode" class="txt" value="{$order_info.point_shippingcode}"></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><label class="validation">配送公司:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform" colspan="2">
+                    <select name="express_code">
+                        <option value="">不使用配送公司</option>
+                        {foreach name="express_list" item="v"}
+                        <option value="{$v.express_code}" {$order_info.point_shipping_ecode == $v.express_code ? 'selected' :''}>{$v.express_name}</option>
+                        {/foreach}
+                    </select>
+                </td>
+            </tr>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="2" >
+                    <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+    {else/}
+    <div class='msgdiv'> {$errormsg} <br>
+        <br>
+        <a class="forward" href="{:url('Pointorder/pointorder_list')}">{$Think.lang.ds_backlist}</a> </div>
+    {/notempty}
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#ship_form').validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                shippingcode  : {
+                    required : true
+                },
+                shippingdesc  : {
+                    required : true
+                }
+            },
+            messages : {
+                shippingcode  : {
+                    required : '{$Think.lang.admin_pointorder_ship_code_nullerror}'
+                },
+                shippingdesc  : {
+                    required : '请填写发货描述'
+                }
+            }
+        });
+    });
+</script>

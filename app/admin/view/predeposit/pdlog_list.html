@@ -1,0 +1,99 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>预存款</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>未支付的提现单可以点击查看选项更改提现单的支付状态</li>
+            <li>点击删除可以删除未支付的提现单</li>
+        </ul>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.admin_predeposit_membername}</dt>
+                <dd><input type="text" name="mname" class="txt" value='{$Request.param.mname}'></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.admin_predeposit_maketime}</dt>
+                <dd><input type="text" id="stime" name="stime" class="txt date" value="{$Request.param.stime}" >
+                    ~
+                    <input type="text" id="etime" name="etime" class="txt date" value="{$Request.param.etime}" >
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.admin_predeposit_adminname}</dt>
+                <dd><input type="text" name="aname" class="txt" value='{$Request.param.aname}'></dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Pdlog_list')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+                <a class="btn btn-mini" href="javascript:export_xls('{:url('Predeposit/export_mx_step1')}')"><span>{$Think.lang.ds_export}Excel</span></a>
+            </div>
+            
+        </div>
+
+    </form>
+
+    <table class="ds-default-table">
+        <thead>
+            <tr class="thead">
+                <th>{$Think.lang.admin_predeposit_membername}</th>
+                <th class="align-center">{$Think.lang.admin_predeposit_changetime}</th>
+                <th>{$Think.lang.admin_predeposit_pricetype_available}({$Think.lang.ds_yuan})</th>
+                <th>{$Think.lang.admin_predeposit_pricetype_freeze}({$Think.lang.ds_yuan})</th>
+                <th>{$Think.lang.admin_predeposit_log_desc}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="list_log"}
+            {foreach name="list_log" item="v" key="k" }
+            <tr class="hover">
+                <td>{$v.lg_member_name}</td>
+                <td class="nowarp align-center">{notempty name="$v.lg_addtime"}{$v.lg_addtime|date='Y-m-d H:i:s'}{/notempty}</td>
+                <td><?php echo floatval($v['lg_av_amount']) ? (floatval($v['lg_av_amount']) > 0 ? '+' : null ).$v['lg_av_amount'] : null;?></td>
+                <td><?php echo floatval($v['lg_freeze_amount']) ? (floatval($v['lg_freeze_amount']) > 0 ? '+' : null ).$v['lg_freeze_amount'] : null;?></td>
+                <td>{$v.lg_desc}
+                    {notempty name="$v.lg_admin_name"}
+                    ( {$Think.lang.admin_predeposit_adminname} {$v.lg_admin_name}  )
+                    {/notempty}
+                </td>
+            </tr>
+           {/foreach}
+           {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+
+</div>
+
+<script language="javascript">
+    $(function() {
+        $('#stime').datepicker({dateFormat: 'yy-mm-dd'});
+        $('#etime').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+</script>

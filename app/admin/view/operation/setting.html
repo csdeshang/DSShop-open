@@ -1,0 +1,198 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>基本设置</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="post" name="settingForm" id="settingForm">
+        <table class="ds-default-table">
+            <tbody>
+            <!-- 促销开启 -->
+            <tr class="noborder">
+                <td colspan="2" class="required"><label>{$Think.lang.promotion_allow}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff">
+                    <label for="promotion_allow_1" class="cb-enable {eq name='list_setting.promotion_allow' value='1'}selected{/eq}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="promotion_allow_0" class="cb-disable {eq name='list_setting.promotion_allow' value='0'}selected{/eq}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+                    <input type="radio" id="promotion_allow_1" name="promotion_allow" value="1" {if $list_setting.promotion_allow== '1'}checked=checked{/if}>
+                    <input type="radio" id="promotion_allow_0" name="promotion_allow" value="0" {if $list_setting.promotion_allow== '0'}checked=checked{/if}>
+                </td>
+                <td class="vatop tips">{$Think.lang.promotion_notice}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">{$Think.lang.groupbuy_allow}:</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff">
+                    <label for="groupbuy_allow_1" class="cb-enable {eq name='list_setting.groupbuy_allow' value='1'}selected{/eq}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="groupbuy_allow_0" class="cb-disable {eq name='list_setting.groupbuy_allow' value='0'}selected{/eq}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+                    <input id="groupbuy_allow_1" name="groupbuy_allow" {if $list_setting.groupbuy_allow== '1'} checked=checked{/if} value="1" type="radio">
+                    <input id="groupbuy_allow_0" name="groupbuy_allow" {if $list_setting.groupbuy_allow== '0'} checked=checked{/if} value="0" type="radio">
+                </td>
+                <td class="vatop tips">{$Think.lang.groupbuy_isuse_notice}</td>
+            </tr>
+
+            <tr class="noborder">
+                <td colspan="2" class="required"><label>{$Think.lang.ds_member_points}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff">
+                    <label for="points_isuse_1" class="cb-enable {eq name='list_setting.points_isuse' value='1'}selected{/eq}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="points_isuse_0" class="cb-disable {eq name='list_setting.points_isuse' value='0'}selected{/eq}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+                    <input type="radio" id="points_isuse_1" name="points_isuse" value="1" {if $list_setting.points_isuse=='1'}checked=checked{/if}>
+                    <input type="radio" id="points_isuse_0" name="points_isuse" value="0" {if $list_setting.points_isuse=='0'} checked=checked {/if}>
+                </td>
+                <td class="vatop tips">{$Think.lang.points_isuse_notice}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">{$Think.lang.open_pointshop_isuse}:</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff">
+                    <label for="pointshop_isuse_1" class="cb-enable {eq name='list_setting.pointshop_isuse' value='1'}selected{/eq}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="pointshop_isuse_0" class="cb-disable {eq name='list_setting.pointshop_isuse' value='0'}selected{/eq}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+                    <input id="pointshop_isuse_1" name="pointshop_isuse" {if $list_setting.pointshop_isuse== '1'} checked=checked {/if} value="1" type="radio">
+                    <input id="pointshop_isuse_0" name="pointshop_isuse" {if $list_setting.pointshop_isuse== '0'} checked=checked {/if} value="0" type="radio">
+                </td>
+                <td class="vatop tips">{$Think.lang.open_pointshop_isuse_notice}</td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">{$Think.lang.open_pointprod_isuse}:</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff">
+                    <label for="pointprod_isuse_1" class="cb-enable {eq name='list_setting.pointprod_isuse' value='1'}selected{/eq}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="pointprod_isuse_0" class="cb-disable {eq name='list_setting.pointprod_isuse' value='0'}selected{/eq}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+                    <input id="pointprod_isuse_1" name="pointprod_isuse" {if $list_setting.pointprod_isuse== '1'} checked=checked {/if} value="1" type="radio">
+                    <input id="pointprod_isuse_0" name="pointprod_isuse" {if $list_setting.pointprod_isuse== '0' } checked=checked {/if}} value="0" type="radio">
+                </td>
+                <td class="vatop tips">{$Think.lang.open_pointprod_isuse_notice}</td>
+            </tr>
+
+            <tr>
+                <td colspan="2" class="required">{$Think.lang.voucher_allow}:</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff">
+                    <label for="voucher_allow_1" class="cb-enable {if $list_setting.voucher_allow == '1'}selected{/if}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="voucher_allow_0" class="cb-disable {if $list_setting.voucher_allow == '0'}selected{/if}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+                    <input id="voucher_allow_1" name="voucher_allow" {if $list_setting.voucher_allow == '1'} checked=checked {/if} value="1" type="radio">
+                    <input id="voucher_allow_0" name="voucher_allow" {if $list_setting.voucher_allow == '0'} checked=checked {/if} value="0" type="radio">
+                </td>
+                <td class="vatop tips">{$Think.lang.voucher_allow_notice|raw}</td>
+            </tr>
+            
+            <tr>
+                <td colspan="2" class="required">{$Think.lang.mgdiscount_allow}:</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform onoff">
+                    <label for="mgdiscount_allow_1" class="cb-enable {if $list_setting.mgdiscount_allow == '1'}selected{/if}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="mgdiscount_allow_0" class="cb-disable {if $list_setting.mgdiscount_allow == '0'}selected{/if}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+                    <input id="mgdiscount_allow_1" name="mgdiscount_allow" {if $list_setting.mgdiscount_allow == '1'} checked=checked {/if} value="1" type="radio">
+                    <input id="mgdiscount_allow_0" name="mgdiscount_allow" {if $list_setting.mgdiscount_allow == '0'} checked=checked {/if} value="0" type="radio">
+                </td>
+                <td class="vatop tips">{$Think.lang.mgdiscount_allow_notice}</td>
+            </tr>
+            </tbody>
+        </table>
+
+        
+        <table class="ds-default-table">
+            
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="2"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#settingForm").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules : {
+                points_reg:{
+                    number:true,
+                    min:0
+                },
+                points_login :{
+                    number:true,
+                    min:0
+                },
+                points_comments :{
+                    number:true,
+                    min:0
+                },
+                points_signin :{
+                    number:true,
+                    min:0
+                },
+                points_invite :{
+                    number:true,
+                    min:0
+                },
+                points_rebate :{
+                    number:true,
+                    min:0
+                },
+                points_orderrate :{
+                    number:true,
+                    min:0
+                },
+                points_ordermax :{
+                    number:true,
+                    min:0
+                }
+            },
+            messages : {
+                points_reg:{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_login :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_comments :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_signin :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_invite :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_rebate :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_orderrate :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_ordermax :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                }
+            }
+        });
+    });
+</script>

@@ -1,0 +1,115 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<div class="dsm-flow-layout">
+  <div class="dsm-flow-container">
+    <div class="title">
+      <h3>{$Think.lang.member_show_express_detail}</h3>
+    </div>
+    <div class="alert alert-block alert-info">
+    
+     <ul><li><strong>{$Think.lang.member_show_receive_info}{$Think.lang.ds_colon}</strong>{$order_info['extend_order_common']['reciver_name']}&nbsp;&nbsp;&nbsp;&nbsp;{$order_info['extend_order_common']['reciver_info']['phone']}&nbsp;&nbsp;&nbsp;&nbsp;{$order_info['extend_order_common']['reciver_info']['address']}</li>
+      <li><strong>{$Think.lang.member_show_expre_my_fdback}{$Think.lang.ds_colon}</strong>{$order_info['extend_order_common']['order_message']}</li>
+      <li><strong>{$Think.lang.member_show_deliver_info}{$Think.lang.ds_colon}</strong>{$daddress_info.seller_name}&nbsp;&nbsp;&nbsp;&nbsp;{$daddress_info.daddress_telphone}&nbsp;&nbsp;&nbsp;&nbsp;{$daddress_info.area_info}&nbsp;&nbsp;{$daddress_info.daddress_detail}&nbsp;&nbsp;&nbsp;&nbsp;{$daddress_info.daddress_company}</li></ul>
+    </div>
+    <div class="tabmenu">
+      <ul class="tab pngFix">
+        <li class="active"><a>{$Think.lang.member_show_express_ship_dstatus}</a></li>
+      </ul>
+    </div>
+    <ul class="express-log" id="express_list">
+      {if $order_info['extend_order_common']['shipping_time']}
+      <li class="loading">{$Think.lang.ds_common_loading}</li>
+      {/if}
+    </ul>
+    <div class="alert">{$Think.lang.member_show_express_ship_tips}</div>
+  </div>
+  <div class="dsm-flow-item">
+    <div class="title">{$Think.lang.member_show_order_info}</div>
+    <div class="item-goods">
+     {notempty name="$order_info.extend_order_goods"}
+      {foreach name="$order_info.extend_order_goods" item="val" }
+      <dl>
+        <dt>
+          <div class="dsm-goods-thumb-mini"><a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}" target="_blank"><img src="{:goods_thumb($val,240)}"/></a></div>
+        </dt>
+        <dd><a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}" target="_blank">{$val.goods_name}</a> <span class="rmb-price">￥{$val.goods_price}&nbsp;*&nbsp;{$val.goods_num}
+        {if $val.goods_type != 1}
+        <font color="#AAA">（{:get_order_goodstype($val['goods_type'])}）</font>
+        {/if}
+        </span></dd>
+      </dl>
+      {/foreach}
+      {/notempty}
+    </div>
+    <div class="item-order">
+      <dl>
+        <dt>{$Think.lang.member_show_order_tp_fee}：</dt>
+        <dd>{$order_info.shipping_fee}</dd>
+      </dl>
+      <dl>
+        <dt>{$Think.lang.total_order}：</dt>
+        <dd><strong>{$Think.lang.currency}{$order_info.order_amount}</strong></dd>
+      </dl>
+      <dl>
+        <dt>{$Think.lang.member_change_order_no}{$Think.lang.ds_colon}</dt>
+        <dd><a href="javascript:void(0);">{$order_info.order_sn}</a><a href="javascript:void(0);" class="a">{$Think.lang.ds_more}<i class="iconfont">&#xe689;</i>
+          <div class="more"> <span class="arrow"></span>
+            <ul>
+              <li>{$Think.lang.ds_payment_method}：<span>{$order_info.payment_name}
+                <?php if($order_info['payment_code'] != 'offline' && !in_array($order_info['order_state'],array(ORDER_STATE_CANCEL,ORDER_STATE_NEW))) { ?>
+                ({$Think.lang.order_number}{$Think.lang.ds_colon}{$order_info.pay_sn})
+                <?php } ?>
+                </span> </li>
+              <li>{$Think.lang.order_time}{$Think.lang.ds_colon}<span>{$order_info.add_time|date="Y-m-d H:i:s"}</span></li>
+              {if intval($order_info['payment_time'])}
+              <li>{$Think.lang.member_show_order_pay_time}{$Think.lang.ds_colon}<span>{$order_info.payment_time|date="Y-m-d H:i:s"}</span></li>
+              {/if}
+              {if $order_info['extend_order_common']['shipping_time']}
+              <li>{$Think.lang.member_show_order_send_time}{$Think.lang.ds_colon}<span>{$order_info.extend_order_common.shipping_time|date="Y-m-d H:i:s"}</span></li>
+              {/if}
+              {if intval($order_info['finnshed_time'])}
+              <li>{$Think.lang.member_show_order_finish_time}{$Think.lang.ds_colon}<span>{$order_info.finnshed_time|date="Y-m-d H:i:s"}</span></li>
+              {/if}
+            </ul>
+          </div>
+          </a></dd>
+      </dl>
+      <dl>
+        <dt>{$Think.lang.member_show_express_ship_code}{$Think.lang.ds_colon}</dt>
+        <dd>{$order_info.shipping_code}<a href="{$express_url}" class="a" target="_blank">{$express_name}</a></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+<script>
+    jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+</script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery.poshytip.min.js" charset="utf-8"></script>
+<script>
+$(function(){
+	//Ajax提示
+	$('.tip').poshytip({
+		className: 'tip-yellowsimple',
+		showTimeout: 1,
+		alignTo: 'target',
+		alignX: 'center',
+		alignY: 'bottom',
+		offsetX: 5,
+		offsetY: 0,
+		allowTipHover: false
+	});
+      var_send = '{$order_info.extend_order_common.shipping_time|date="Y-m-d H:i:s"}&nbsp;&nbsp;已发货<br/>';
+	$.getJSON(HOMESITEURL+'/Memberorder/get_express.html?express_code={$express_code}&shipping_code={$order_info.shipping_code}&phone={$order_info.extend_order_common.reciver_info.phone}',function(data){
+		if(data){
+			data = var_send+data.join('<br/>');
+			$('#express_list').html(data).next().css('display','');
+		}else{
+			$('#express_list').html(var_send);
+		}
+	});
+});
+</script>
+{/block}

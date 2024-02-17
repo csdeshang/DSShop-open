@@ -1,0 +1,111 @@
+{include file="default/base/mall_top" /} 
+<style>
+    .w1200{width:1000px;}
+</style>
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+    <ul class="dsc-flow">
+        <li class=""><i class="iconfont">&#xe69a;</i>
+            <p>{$Think.lang.ds_my_shopping_cart}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class="current"><i class="iconfont">&#xe731;</i>
+            <p>{$Think.lang.cart_index_ensure_info}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe64f;</i>
+            <p>{$Think.lang.cart_index_payment}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe67e;</i>
+            <p>{$Think.lang.cart_index_buy_finish}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+    </ul>
+</div>
+<div class="dsc-line"></div>
+
+
+
+<div class="dsc-main">
+  <div class="dsc-title">
+    <h3>{$Think.lang.cart_index_payment}</h3>
+    <h5>{$Think.lang.recharge_record_through}<a href="{:url('Predeposit/index')}" target="_blank">{$Think.lang.my_recharge_list} </a>{$Think.lang.view_order_details}</h5>
+  </div>
+  <form action="{:url('Payment/pd_order')}" method="POST" id="buy_form">
+    <input type="hidden" name="pdr_sn" value="{$pdr_info.pdr_sn}">
+    <input type="hidden" id="payment_code" name="payment_code" value="">
+    <div class="dsc-receipt-info">
+    <div>{$Think.lang.prepaid_phone_number} : {$pdr_info.pdr_sn}</div>
+      <div class="dsc-receipt-info-title">
+        <h3>{$Think.lang.immediate_online_payment}
+          {$Think.lang.recharge_amount}：<strong>￥{$pdr_info.pdr_amount}</strong> </h3>
+      </div>
+    </div>
+    <div class="dsc-receipt-info">
+        {notempty name="payment_list"}
+      <div class="dsc-receipt-info-title">
+        <h3>{$Think.lang.payment_option}</h3>
+      </div>
+      <ul class="dsc-payment-list">
+          {foreach name="payment_list" item="val"}
+        {if $val.payment_code=='allinpay'}
+          {php}$sub_payment_list=array('W01','A01','Q01','U01');{/php}
+          <input type="hidden" id="{$val.payment_code}_sub_payment_code" name="paytype" value="">
+          {else}
+          {php}$sub_payment_list=array('');{/php}
+          {/if}
+        {foreach name="sub_payment_list" item="sub"}  
+        <li payment_code="{$val.payment_code}" sub_payment_code="{$sub}">
+          <label for="pay_{$val.payment_code}">
+          <i></i>
+          <div class="logo" for="pay_{$val.payment_code}"> <img src="{$Think.HOME_SITE_ROOT}/images/payment/{$val.payment_code}{notempty name='sub'}_{$sub}{/notempty}_logo.gif" /> </div>
+          <div class="predeposit" ds_type="predeposit" style="display:none">
+              {if $val.payment_code == 'predeposit'}
+               {if $available_predeposit}
+                <p>{$Think.lang.current_prepaid_balance}<br/>￥{$available_predeposit}<br/>{$Think.lang.insufficient_pay_order}<br/><a href="{:url('Predeposit/index')}">{$Think.lang.recharge_immediately}</a></p>
+               {else /}
+                <input type="password" class="text w120" name="password" maxlength="40" id="password" value="">
+                <p>{$Think.lang.enter_login_password}</p>
+               {/if}
+           {/if}
+          </div>
+          </label>
+        </li>
+		{/foreach}
+       {/foreach}
+      </ul>
+     {/notempty}
+    </div>
+    <div class="dsc-bottom tc mb50">
+        <a href="javascript:void(0);" id="next_button" class="dsc-btn dsc-btn-green"><i class="iconfont">&#xe6f0;</i>{$Think.lang.confirm_submit_payment}</a>
+    </div>
+  </form>
+</div>
+<script type="text/javascript">
+$(function(){
+    $('.dsc-payment-list > li').on('click',function(){
+    	$('.dsc-payment-list > li').removeClass('using');
+        $(this).addClass('using');
+        $('#payment_code').val($(this).attr('payment_code'));
+        if($(this).attr('sub_payment_code')!=''){
+            $('#'+$(this).attr('payment_code')+'_sub_payment_code').val($(this).attr('sub_payment_code'));
+        }
+    });
+    $('#next_button').on('click',function(){
+        if ($('#payment_code').val() != '') {
+            $('#buy_form').submit();
+        }
+    });
+});
+</script>
+
+{include file="default/base/mall_footer" /}

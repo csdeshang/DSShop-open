@@ -1,0 +1,179 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+<div class="dsm-flow-layout" id="dsmInformFlow">
+    <div class="dsm-flow-container">
+        <div class="title">
+            <h3>{$Think.lang.inform_page_title}</h3>
+        </div>
+        <div class="dsm-flow-step">
+            <dl class="step-first current">
+                <dt>{$Think.lang.fill_report_content}</dt>
+                <dd class="bg"></dd>
+            </dl>
+            <dl class="">
+                <dt>{$Think.lang.platform_audit_processing}</dt>
+                <dd class="bg"> </dd>
+            </dl>
+            <dl class="">
+                <dt>{$Think.lang.report_completion}</dt>
+                <dd class="bg"> </dd>
+            </dl>
+        </div>
+        <div class="dsm-default-form">
+            <div id="warning"></div>
+            <form id="add_form" enctype="multipart/form-data" method="post" action="{:url('Memberinform/inform_save')}">
+                <input name="inform_goods_id" type="hidden" value={$goods_info.goods_id} />
+                <dl>
+                    <dt>{$Think.lang.inform_goods_name}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <div class="dsm-inform-item">
+                            <div class="dsm-goods-thumb-mini"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank"><img src="{:goods_thumb($goods_info, 240)}" /></a></div>
+                            <a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank"> {$goods_info.goods_name} </a></div>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.inform_type}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <ul>
+                            {foreach name="type_list" item="type"}
+                            <li>
+                                <input type='radio' name="inform_subject_type"
+                                       value ="{$type.informtype_id},{$type.informtype_name}">
+                                {$type.informtype_name}
+                                </input>
+                                （{$type.informtype_desc}） </li>
+                            {/foreach}
+                        </ul>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.inform_subject}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <select id="inform_subject" name="inform_subject">
+                        </select>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.inform_content}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <textarea id="inform_content" name="inform_content" class="textarea w400" ></textarea>
+                    </dd>
+                </dl>
+                <dl class="noborder">
+                    <dt>{$Think.lang.inform_pic}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <p class="mb5">
+                            <input id="inform_pic1" name="inform_pic1" type="file"  />
+                        </p>
+                        <p class="mb5">
+                            <input id="inform_pic2" name="inform_pic2" type="file"  />
+                        </p>
+                        <p class="mb5">
+                            <input id="inform_pic3" name="inform_pic3" type="file"  />
+                        </p>
+                        <p class="hint">{$Think.lang.inform_pic_error}</p>
+                    </dd>
+                </dl>
+                <div class="bottom">
+                    <input id="btn_inform_submit" type="submit" class="submit" value="{$Think.lang.ds_ok}" />
+                    <p class="hint">{$Think.lang.reporting_description}</p>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="dsm-flow-item">
+        <div class="title">{$Think.lang.notice_violation_report}</div>
+        <div class="content">
+            <div class="alert">
+                <ul>
+                    <li> {$Think.lang.reporting_guidelines_1}</li>
+                    <li> {$Think.lang.reporting_guidelines_2}</li>
+                    <li> {$Think.lang.reporting_guidelines_3}</li>
+                    <li> {$Think.lang.reporting_guidelines_4}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="{$Think.HOME_SITE_ROOT}/js/selectbox.js" ></script>
+<script type="text/javascript">
+    $(function(){
+        $("#btn_inform_submit").prop('disabled',true);
+        //默认选中第一个radio
+        $(":radio").first().attr("checked",true);
+        bindInformSubject($(":radio").first().val());
+        $(":radio").click(function(){
+            bindInformSubject($(this).val());
+        });
+        //页面输入内容验证
+        $("#add_form").validate({
+            errorPlacement: function(error, element){
+                $(element).next('.field_notice').hide();
+                $(element).after(error);
+            },
+            submitHandler:function(form){
+                $('#add_form').submit();
+            },
+            rules : {
+                inform_content : {
+                    required : true,
+                    maxlength : 100
+                },
+                inform_subject: {
+                    required : true
+                }
+            },
+            messages : {
+                inform_content : {
+                    required : '{$Think.lang.inform_content_null}',
+                    maxlength : '{$Think.lang.inform_content_null}'
+                },
+                inform_subject: {
+                    required : '{$Think.lang.inform_subject_select}'
+                }
+            }
+        });
+
+    });
+    function bindInformSubject(key) {
+        type_id = key.split(",")[0];
+        $("#inform_subject").empty();
+        $.ajax({
+            type:'POST',
+            url:"{:url('Memberinform/get_subject_by_typeid')}",
+            cache:false,
+            data:'type_id='+type_id,
+            dataType:'json',
+            success:function(type_list){
+                $("#btn_inform_submit").prop('disabled',false);
+                if(type_list.length >= 1) {
+                    $("#inform_subject").addOption('','{$Think.lang.ds_please_choose}');
+                    for(var i = 0; i < type_list.length; i++)
+                    {
+                        $("#inform_subject").addOption(type_list[i].informsubject_id+","+type_list[i].informsubject_content,type_list[i].informsubject_content);
+                    }
+                    $("#inform_subject").selectOptions('');
+                }
+                else {
+                    $("#btn_inform_submit").prop('disabled',true);
+                    layer.msg("{$Think.lang.inform_subject_null}");
+                }
+
+            }
+        });
+    }
+</script>
+
+
+
+
+
+{/block}
+
+
+

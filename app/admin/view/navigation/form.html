@@ -1,0 +1,99 @@
+{include file="public/header" /}
+
+
+<div class="page">
+        <form id="navigation_form" method="post">
+            <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder">
+                        <td class="required w120"><label class="validation" for="nav_title">{$Think.lang.nav_title}</label></td>
+                        <td><input type="text" name="nav_title" id="nav_title" value="{$nav.nav_title|default=''}" class="w200"/></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td>{$Think.lang.nav_url}</td>
+                        <td><input type="text" name="nav_url" id="nav_url" value="{$nav.nav_url|default=''}" class="w200"/></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required w120">{$Think.lang.nav_location}</td>
+                        <td>
+                            <label class="radio-label">
+                                <i  class="radio-common {if $nav.nav_location == 'header'}selected{/if}">
+                                    <input type="radio" value="header" name="nav_location" {if $nav.nav_location == 'header'}checked="checked""{/if}>
+                                </i>
+                                <span>{$Think.lang.nav_top}</span>
+                            </label>
+                            <label class="radio-label">
+                                <i  class="radio-common {if $nav.nav_location == 'middle'}selected{/if}">
+                                    <input type="radio" value="middle" name="nav_location" {if $nav.nav_location == 'middle'}checked="checked""{/if}>
+                                </i>
+                                <span>{$Think.lang.nav_midd}</span>
+                            </label>
+                            <label class="radio-label">
+                                <i  class="radio-common {if $nav.nav_location == 'footer'}selected{/if}">
+                                    <input type="radio" value="footer" name="nav_location" {if $nav.nav_location == 'footer'}checked="checked""{/if}>
+                                </i>
+                                <span>{$Think.lang.nav_foo}</span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required w120">{$Think.lang.nav_new_open}</td>
+                        <td>
+                            <div class="onoff">
+                                <label for="sms_login_show1" class="cb-enable {if condition="$nav.nav_new_open eq 1"}selected{/if}">是</label>
+                                <label for="sms_login_show0" class="cb-disable {if condition="$nav.nav_new_open eq 0"}selected{/if}">否</label>
+                                <input id="sms_login_show1" name="nav_new_open" value="1" type="radio" {if condition="$nav.nav_new_open eq 1"} checked="checked"{/if}>
+                                <input id="sms_login_show0" name="nav_new_open" value="0" type="radio" {if condition="$nav.nav_new_open eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required w120">{$Think.lang.nav_sort}</td>
+                        <td><input type="text" name="nav_sort" id="nav_sort" value="{$nav.nav_sort|default='0'}" class="w200"/></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+
+
+<script type="text/javascript">
+    $(function(){
+        $('#navigation_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                nav_title :{
+                    required: true
+                },
+                nav_url :{
+                    url : true
+                },
+                nav_sort :{
+                    number:true,
+                    range:[0,255]
+                }
+            },
+            messages: {
+                nav_title :{
+                   required: '必填'
+                },
+                nav_url : {
+                    url :'请输入有效的链接'
+                },
+                nav_sort:{
+                    number: '请输入数字',
+                    range: '请输入0-255之间的数'
+                }
+            }
+        });
+        
+    });
+    
+ </script>

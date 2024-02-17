@@ -1,0 +1,123 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.web_set}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" name="form1" action="">
+        <div class="ncap-form-default">
+            <dl>
+                <dt>{$Think.lang.site_logo}</dt>
+                <dd>
+                    {notempty name="$list_config.site_logo"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_config.site_logo)}?{$Think.TIMESTAMP}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box"><input type='text' name='textfield' id='textfield1' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                        <input name="site_logo" type="file" class="type-file-file" id="site_logo" size="30" hidefocus="true" ds_type="change_site_logo">
+                    </span>
+                    <p class="notic">{$Think.lang.site_logo_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.member_logo}</dt>
+                <dd>
+                    {notempty name="$list_config.member_logo"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_config.member_logo)}?{$Think.TIMESTAMP}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box"><input type='text' name='textfield' id='textfield2' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                        <input name="member_logo" type="file" class="type-file-file" id="member_logo" size="30" hidefocus="true" ds_type="change_member_logo">
+                    </span>
+                    <p class="notic">{$Think.lang.member_logo_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.site_mobile_logo}</dt>
+                <dd>
+                    {notempty name="$list_config.site_mobile_logo"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_config.site_mobile_logo)}?{$Think.TIMESTAMP}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box"><input type='text' name='textfield' id='textfield4' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                        <input name="site_mobile_logo" type="file" class="type-file-file" id="site_mobile_logo" size="30" hidefocus="true" ds_type="change_site_mobile_logo">
+                    </span>
+                    <p class="notic">{$Think.lang.site_mobile_logo_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.site_logowx}</dt>
+                <dd>
+                    {notempty name="$list_config.site_logowx"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_config.site_logowx)}?{$Think.TIMESTAMP}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box"><input type='text' name='textfield' id='textfield5' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                        <input name="site_logowx" type="file" class="type-file-file" id="site_logowx" size="30" hidefocus="true" ds_type="change_site_logowx">
+                    </span>
+                    <p class="notic">{$Think.lang.site_logowx_notice}</p>
+                </dd>
+            </dl>
+            
+            <dl id="business_licence" class="noborder">
+                    <dt class="required"><label for="file_business_licence">{$Think.lang.config_business_licence}:</label></dt>
+                    <dd class="vatop rowform">
+                        {notempty name="$list_config.business_licence"}
+                        <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                            <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_config.business_licence)}?{$Think.TIMESTAMP}"></div>
+                        </span>
+                        {/notempty}
+                        <span class="type-file-box">
+                            <input type='text' name='textfield' id='textfield6' class='type-file-text' />
+                            <input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                            <input name="business_licence" id="file_business_licence" type="file" class="type-file-file" id="site_logo" size="30" hidefocus="true">
+                        </span>
+                        <p class="notic"></p>
+                    </dd>
+                  
+                </dl>
+            <dl>
+                <dt></dt>
+                <dd><a href="JavaScript:void(0);" class="btn" onclick="document.form1.submit()">{$Think.lang.ds_confirm_submit}</a></dd>
+            </dl>
+        </div>
+    </form>
+    
+</div>
+
+<script>
+    $(function(){
+        $("#site_logo").change(function () {
+            $("#textfield1").val($("#site_logo").val());
+        });
+        $("#member_logo").change(function () {
+            $("#textfield2").val($("#member_logo").val());
+        });
+        $("#site_mobile_logo").change(function () {
+            $("#textfield4").val($("#site_mobile_logo").val());
+        });
+        $("#site_logowx").change(function () {
+            $("#textfield5").val($("#site_logowx").val());
+        });
+        $("#file_business_licence").change(function () {
+            $("#textfield6").val($("#file_business_licence").val());
+        });
+    })
+</script>
+
+

@@ -1,0 +1,22 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <table class="ds-default-table">
+        <tbody>
+            <tr class="noborder"> 
+                <td class="required w120">{$Think.lang.ds_link}</td>
+                <td class="vatop rowform">
+                    {$bonus_url}
+                </td>
+            </tr>
+            <tr class="noborder"> 
+                <td class="required w120">{$Think.lang.ds_qrcode}</td>
+                <td class="vatop rowform">
+                    <img src="{$Think.HOME_SITE_URL}/qrcode?url={$bonus_url}" width="180" height="180" >
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

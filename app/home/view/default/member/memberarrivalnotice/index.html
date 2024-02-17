@@ -1,0 +1,59 @@
+{extend name="default/base/base_member" /}
+
+{block name="member_main"}
+
+
+<table class="dsm-default-table">
+            <thead>
+            <tr>
+                <th class="">Email</th>
+                <th class="">{$Think.lang.arrivalnotice_goods_name}</th>
+                <th class="">{$Think.lang.arrivalnotice_mobile}</th>
+                <th class="">{$Think.lang.arrivalnotice_state}</th>
+                <th class="">{$Think.lang.arrivalnotice_addtime}</th>
+                <th class="">{$Think.lang.arrivalnotice_time}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+           
+            </thead>
+            <tbody>
+            {notempty name="arrivalnotice_list"}
+            {foreach name="arrivalnotice_list" item="v"}
+            <tr class="bd-line">
+                <td class="name">{$v.arrivalnotice_email}</td>
+                <td class="name"><a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" target="_blank" title="{$v.goods_name}">{$v.goods_name}</a></td>
+                <td class="name">{:encrypt_show($v.arrivalnotice_mobile,4,4)}</td>
+                <td class="name">{$v.arrivalnotice_state==2?'已通知':'未通知'}</td>
+                <td class="name">{$v.arrivalnotice_addtime|date="Y-m-d H:i:s"}</td>
+                <td class="name">{if $v.arrivalnotice_time neq '0'}{$v.arrivalnotice_time|date="Y-m-d H:i:s"}{/if}</td>
+                <td class="align-center">
+                    <a href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('MemberArrivalnotice/del',['arrivalnotice_id'=>$v.arrivalnotice_id])}','{$Think.lang.ds_ensure_del}');" class="btn-red" ><i class="iconfont">&#xe725;</i>
+                        <p>{$Think.lang.ds_delete}</p>
+                    </a>
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr>
+                <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="arrivalnotice_list"}
+            <tr>
+                <td colspan="20"><div class="pagination">{$show_page|raw}</div></td>
+            </tr>
+           {/notempty}
+            </tfoot>
+        </table>
+
+
+
+
+
+
+
+
+
+{/block}

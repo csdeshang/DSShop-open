@@ -1,0 +1,41 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+<table class="dsm-default-table">
+    <thead>
+    <tr>
+        <th class="w10"></th>
+        <th class="w120">{$Think.lang.memberfeedback_content}</th>
+        <th class="w120">{$Think.lang.memberfeedback_time}</th>
+    </tr>
+    </thead>
+    {notempty name="feedback_list"}
+    <tbody>
+    {foreach name="feedback_list" item="val"}
+    <tr class="bd-line">
+        <td></td>
+        <td>{$val.fb_content}</td>
+        <td>{$val.fb_time|date="Y-m-d H:i:s"}</td>
+    </tr>
+    {/foreach}
+    {else /}
+    <tr>
+        <td colspan="20" class="norecord">
+            <div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div>
+        </td>
+    </tr>
+    {/notempty}
+    </tbody>
+    <tfoot>
+    {notempty name="feedback_list"}
+    <tr>
+        <td colspan="20">
+            <div class="pagination">{$show_page|raw}</div>
+        </td>
+    </tr>
+    {/notempty}
+    </tfoot>
+</table>
+
+
+{/block}

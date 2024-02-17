@@ -1,0 +1,52 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_promotion_mgdiscount}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <!-- 列表 -->
+    <form id="list_form" method="post">
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="align-left"><span>{$Think.lang.goods_name}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.level_discount}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.ds_handle}</span></th>
+            </tr>
+            </thead>
+            <tbody id="treet1">
+            {notempty name="goods_list"}
+            {foreach name="goods_list" item="goods"}
+            <tr class="hover">
+                <td class="align-left">{$goods.goods_name}</td>
+                <td class="align-center">
+                    {foreach name="$goods.goods_mgdiscount_arr" item="goods_mgdiscount"}
+                    {$goods_mgdiscount.level_name}/{$goods_mgdiscount.level_discount}{$Think.lang.ds_xianshi_flag}<br/>
+                    {/foreach}
+                </td>
+                <td class="nowrap align-center">
+                    <a href="{:url('Promotionmgdiscount/mgdiscount_goods_edit',['goods_commonid'=>$goods.goods_commonid])}" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Promotionmgdiscount/mgdiscount_del',['goods_commonid'=>$goods.goods_commonid])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+           {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="16">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+        </table>
+        {$show_page|raw}
+    </form>
+</div>
+    
+    

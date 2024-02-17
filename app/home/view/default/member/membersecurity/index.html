@@ -1,0 +1,75 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+<div class="dsm-security-user">
+            <h3>{$Think.lang.your_account_information}</h3>
+            <div class="user-avatar"><span><img src="{:get_member_avatar(session('avatar'))}"></span></div>
+            <div class="user-intro">
+                <dl>
+                    <dt>{$Think.lang.login_account}：</dt>
+                    <dd>{$member_info.member_name}</dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.bind_mailbox}：</dt>
+                    <dd>{if $member_info.member_email}{$member_info.member_email}{else}<a href="{:url('Membersecurity/auth',['type'=>'modify_email'])}">{$Think.lang.not_set}</a>{/if}</dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.mobile_phone_number}：</dt>
+                    <dd>{if $member_info.member_mobile}{:encrypt_show($member_info.member_mobile,4,4)}{else}<a href="{:url('Membersecurity/auth',['type'=>'modify_mobile'])}">{$Think.lang.not_set}</a>{/if}</dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.last_login}：</dt>
+                    <dd>{$member_info.member_old_logintime|date="Y-m-d"}&#12288;|&#12288;{$Think.lang.ip_address}{$member_info.member_old_login_ip}&nbsp;<span>{$Think.lang.prompt_message1}<a href="{:url('Membersecurity/auth',['type'=>'modify_pwd'])}">“{$Think.lang.change_password}”</a>）。</span></dd>
+                </dl>
+            </div>
+        </div>
+        <div class="dsm-security-container">
+            <div class="title">{$Think.lang.your_security_service}</div>
+            {if $member_info['security_level'] <= 1}
+            <div class="current low">{$Think.lang.current_security_level}：<strong>{$Think.lang.low}</strong><span>{$Think.lang.prompt_message2}</span></div>
+            {elseif $member_info['security_level'] == 2 /}
+            <div class="current normal">{$Think.lang.current_security_level}：<strong>{$Think.lang.medium}</strong><span>{$Think.lang.prompt_message2}</span></div>
+            {else/}
+            <div class="current high">{$Think.lang.current_security_level}：<strong>{$Think.lang.high}</strong><span>{$Think.lang.prompt_message3}</span></div>
+            {/if}
+
+            <dl id="password" class="yes">
+                <dt><span class="icon"><i></i></span><span class="item">
+                    <h4>{$Think.lang.login_password}</h4>
+                    <h6>{$Think.lang.set}</h6>
+                </span></dt>
+                <dd><span class="explain">{$Think.lang.prompt_message4}</span><span class="handle"><a href="{:url('Membersecurity/auth',['type'=>'modify_pwd'])}" class="dsm-btn  dsm-btn-orange">{$Think.lang.change_password}</a></span></dd>
+            </dl>
+            <dl id="email" class="{if $member_info['member_emailbind'] == 1}yes{else/}no{/if}">
+                <dt><span class="icon"><i></i></span><span class="item">
+                    <h4>{$Think.lang.mailbox_binding}</h4>
+                    <h6>{if $member_info['member_emailbind'] == 1}{$Think.lang.bound}{else/}{$Think.lang.unbound}{/if}</h6>
+                </span></dt>
+                <dd><span class="explain">{$Think.lang.verify_prompt_message1}</span><span class="handle"><a href="{:url('Membersecurity/auth',['type'=>'modify_email'])}" class="dsm-btn dsm-btn-acidblue bd">{$Think.lang.mailbox_binding}</a><a href="{:url('Membersecurity/auth',['type'=>'modify_email'])}" class="dsm-btn dsm-btn-orange jc">{$Think.lang.change_email}</a></span></dd>
+            </dl>
+            <dl id="mobile" class="{if $member_info['member_mobilebind'] == 1}yes{else/}no{/if}">
+                <dt><span class="icon"><i></i></span><span class="item">
+                    <h4>{$Think.lang.mobile_phone_binding}</h4>
+                    <h6>{if $member_info['member_mobilebind'] == 1}{$Think.lang.bound}{else/}{$Think.lang.unbound}{/if}</h6>
+                </span></dt>
+                <dd><span class="explain">{$Think.lang.verify_prompt_message1}</span><span class="handle"><a href="{:url('Membersecurity/auth',['type'=>'modify_mobile'])}" class="dsm-btn dsm-btn-acidblue bd">{$Think.lang.mobile_phone_binding}</a><a href="{:url('Membersecurity/auth',['type'=>'modify_mobile'])}" class="dsm-btn dsm-btn-orange jc">{$Think.lang.change_phone}</a></span></dd>
+            </dl>
+            <dl id="paypwd" class="{if $member_info['member_paypwd'] != ''}yes{else/}no{/if}">
+                <dt><span class="icon"><i></i></span><span class="item">
+                    <h4>{$Think.lang.payment_password}</h4>
+                    <h6>{if $member_info['member_paypwd'] == ''}{$Think.lang.not_set}{else/}{$Think.lang.set}{/if}</h6>
+                </span></dt>
+                <dd><span class="explain">{$Think.lang.verify_prompt_message3}</span><span class="handle"><a href="{:url('Membersecurity/auth',['type'=>'modify_paypwd'])}" class="dsm-btn dsm-btn-acidblue bd">{$Think.lang.set_password}</a><a href="{:url('Membersecurity/auth',['type'=>'modify_paypwd'])}" class="dsm-btn dsm-btn-orange jc">{$Think.lang.change_password}</a></span></dd>
+            </dl>
+        </div>
+
+
+
+
+
+
+
+{/block}

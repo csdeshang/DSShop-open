@@ -1,0 +1,25 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_activity.css">
+<div class="dsh-activity-banner"></div>
+<div class="dsh-activity-index w1200 mt20 mb20">
+    <ul class="activity-list">
+        {foreach name="activity_list" item="activity"}
+        <li>
+            <div class="p_img">
+                <a href="{:url('Activity/detail',['activity_id'=>$activity.activity_id])}">
+                    <img src="{:ds_get_pic(ATTACH_ACTIVITY,$activity.activity_banner)}"/>
+                </a>
+            </div>
+            <div class="p_info">
+                <span class="p_name">{$activity.activity_title}</span>
+                <span class="p_time"><i class="iconfont">&#xe736;</i>{$activity.activity_startdate|date='Y-m-d'} {$Think.lang.ds_to} {$activity.activity_enddate|date='Y-m-d'}</span>
+            </div>
+        </li>
+        {/foreach}
+    </ul>
+    {$show_page|raw}
+</div>
+
+
+{/block}

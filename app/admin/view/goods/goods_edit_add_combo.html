@@ -1,0 +1,135 @@
+{include file="public/header" /}
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商品管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  
+  <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="提示相关设置操作时应注意的要点">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="收起提示" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.repeat_choose_commodity}</li>
+            <li>{$Think.lang.special_goods_not_allowed}</li>
+        </ul>
+    </div>
+  
+  
+  <form method="post" id="goods_combo" action="{:url('Goods/save_combo',['commonid'=>$Request.param.commonid])}">
+  <input type="hidden" name="ref_url" value="{$Request.param.ref_url}" />
+  {notempty name="goods_array"}
+  {foreach name="goods_array" item="value" }
+  <div class="dssc-form-goods-combo" data-gid="{$value.goods_id}">
+    <div class="default-goods">
+      <div class="goods-pic"><span><img src="{:goods_thumb($value, 240)}"/></span><em>SKU：{$value.goods_id}</em></div>
+      <div class="goods-name">{$value.goods_name}</div>
+      <a class="dssc-btn" dstype="select_goods" href="javascript:void(0);"><i class="iconfont">&#xe67e;</i>{$Think.lang.select_recommended_combination}</a></div>
+    <div class="combo-goods" dstype="choose_goods_list">
+      <ul>
+        <?php if (!empty($combo_array[$value['goods_id']])) {?>
+        <?php foreach ($combo_array[$value['goods_id']] as $combo) {?>
+        <li>
+          <input type="hidden" value="{$combo.goods_id}" name="combo[{$value.goods_id}][]">
+          <div class="pic-thumb"> <a target="_blank" href="{:url('Goods/index',['goods_id'=>$combo.goods_id])}"> <img src="{:goods_cthumb($combo['goods_image'], '240')}"> </a> </div>
+          <dl>
+            <dt><a target="_blank" href="{:url('Goods/index',['goods_id'=>$combo.goods_id])}">{$combo.goods_name}</a></dt>
+            <dd>￥{$combo.goods_price}</dd>
+          </dl>
+          <a class="dssc-btn-mini dssc-btn-red" dstype="del_choosed" href="javascript:void(0);"><i class="iconfont">&#xe754;</i>{$Think.lang.ds_recommendclose}</a></li>
+        <?php }?>
+        <?php }?>
+      </ul>
+    </div>
+    <div class="div-goods-select" style="display: none;">
+      <table class="search-form">
+        <thead>
+          <tr>
+            <td></td>
+            <th>{$Think.lang.ds_goods_name}</th>
+            <td class="w160"><input class="text" type="text" name="search_combo"></td>
+            <td class="tc w70"><a class="dssc-btn" href="javascript:void(0);" dstype="search_combo"><i class="iconfont">&#xe718;</i>{$Think.lang.ds_search}</a></td>
+            <td class="w10"></td>
+          </tr>
+        </thead>
+      </table>
+      <div class="search-result" dstype="combo_goods_list"></div>
+      <a class="close" href="javascript:void(0);" dstype="btn_hide_goods_select">X</a> </div>
+  </div>
+  {/foreach}
+  {/notempty}
+  <div class="bottom tc hr32">
+      <input type="submit" class="btn" value="{$Think.lang.ds_submit}" />
+  </div>
+</form>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#goods_combo').validate({
+            submitHandler:function(form){
+                ds_ajaxpost('goods_combo','url','{$Request.param.ref_url}');
+            }
+        });
+    });
+$(function(){
+    // 选择赠品按钮
+    $('a[dstype="select_goods"]').click(function(){
+        $(this).parents('.dssc-form-goods-combo:first').find('.div-goods-select').show()
+        .find('input[name="search_combo"]').val('').end()
+        .find('a[dstype="search_combo"]').click();
+    });
+
+    // 关闭按钮
+    $('a[dstype="btn_hide_goods_select"]').click(function(){
+        $(this).parent().hide();
+    });
+
+    // 所搜商品
+    $('a[dstype="search_combo"]').click(function(){
+        _url = "{:url('Goods/search_goods')}";
+        _name = $(this).parents('tr').find('input[name="search_combo"]').val();
+        $(this).parents('table:first').next().load(_url, {name: _name});
+    });
+    
+    $('.search-result').on('click', '.pagination li a', function() {
+            $('.search-result').load($(this).attr('href'));
+            return false;
+        });
+
+    // 分页
+    $('div[dstype="combo_goods_list"]').on('click', 'a[class="demo"]', function(){
+        $(this).parents('div[dstype="combo_goods_list"]').load($(this).attr('href'));
+        return false;
+    });
+
+    // 删除
+    $('div[dstype="choose_goods_list"]').on('click', 'a[dstype="del_choosed"]', function(){
+        $(this).parents('li:first').remove();
+    });
+
+    // 选择商品
+    $('div[dstype="combo_goods_list"]').on('click', 'a[dstype="a_choose_goods"]', function(){
+        _owner_gid = $(this).parents('.dssc-form-goods-combo:first').attr('data-gid');
+        eval('var data_str = ' + $(this).attr('data-param'));
+        _li = $('<li></li>')
+            .append('<input type="hidden" value="' + data_str.gid + '" name="combo[' + _owner_gid + '][]">')
+            .append('<div class="pic-thumb"> <a target="_blank" href="' + data_str.gurl + '"> <img src="' + data_str.gimage240 + '"> </a> </div>')
+            .append('<dl><dt><a target="_blank" href="' + data_str.gurl + '">' + data_str.gname + '</a></dt><dd>￥' + data_str.gprice + '</dd></dl>')
+            .append('<a class="dssc-btn-mini dssc-btn-red" dstype="del_choosed" href="javascript:void(0);"><i class="iconfont">&#xe754;</i>{$Think.lang.ds_recommendclose}</a>');
+        $(this).parents('.dssc-form-goods-combo:first').find('[dstype="choose_goods_list"] > ul').append(_li);
+    });
+});
+</script> 
+  
+  
+  
+</div>
+
+
+

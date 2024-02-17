@@ -1,0 +1,1210 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/goods.css">
+<!--放大镜BEGIN-->
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/jquery.jqzoom.css">
+<!--放大镜END-->
+<div class="w1200">
+    <div class="dss-detail clearfix">
+        <div class="intro_l">
+            <div class="preview" id="photoBody">
+                <!-- 商品大图介绍 start [[-->
+                <div class="product-img jqzoom">
+                    <img id="zoomimg" src="{$goods_image.0.2}" jqimg="{$goods_image.0.2}" alt="">
+                </div>
+                <!-- 商品大图介绍 end ]]-->
+                <!-- 商品小图介绍 start [[-->
+                <div class="product-small-img fn-clear"> <a href="javascript:;" class="next-left next-btn fl iconfont">&#xe686;</a>
+                    <div class="pic-hide-box fl">
+                        <ul class="small-pic" style="left:0;">
+                            {foreach name="goods_image" item="value" key="key" }
+                            <li class="small-pic-li {if $key==0}active{/if}">
+                                <a href="javascript:;">
+                                    <img src="{$value.0}" data-img="{$value.2}" data-big="{$value.2}">
+                                    <i></i>
+                                </a>
+                            </li>
+                            {/foreach}
+                        </ul>
+                    </div>
+                    <a href="javascript:;" class="next-right next-btn fl iconfont">&#xe687;</a>
+                </div>
+                <!-- 商品小图介绍 end ]]-->
+            </div>
+            <!-- E 商品图片及收藏分享 -->
+            <div class="dss-handle">
+                <!-- S 收藏 -->
+                <a href="javascript:collect_goods('{$goods.goods_id}','count','goods_collect');" class="favorite"><i class="iconfont">&#xe6a9;</i>{$Think.lang.goods_index_favorite_goods}</a>
+                <!-- S 对比 -->
+                <input type="hidden" id="lockcompare" value="unlock" />
+                <a href="javascript:void(0);" class="compare" ds_type="compare_{$goods.goods_id}" data-param='{"gid":"{$goods.goods_id}"}'><i class="iconfont">&#xe74a;</i>{$Think.lang.add_contrast}</a><!-- S 举报 -->
+                {if $inform_switch}
+                <a href="{if session('is_login')}{:url('Memberinform/inform_submit',['goods_id'=>$goods.goods_id])}{else/}javascript:login_dialog();{/if}" title="{$Think.lang.goods_index_goods_inform}" class="inform"><i class="iconfont">&#xe6b3;</i>{$Think.lang.goods_index_goods_inform|raw}</a>
+                {/if}
+                <a href="{:url('TaobaoExport/export_csv',['goods_id'=>$goods.goods_id])}"><i class='iconfont'>&#xe74e;</i>{$Think.lang.goods_index_export_data}</a>
+                <a href="{:url('TaobaoExport/export_image',['goods_id'=>$goods.goods_id])}"><i class='iconfont'>&#xe72a;</i>{$Think.lang.goods_index_export_image}</a>
+                <!-- End -->
+            </div>
+        </div>
+        <div class="dss-goods-summary">
+            <div class="name">
+                <h1>{$goods.goods_name}</h1>
+                <strong>{$goods.goods_advword}</strong>
+            </div>
+            <div class="dss-meta">
+                {notempty name="$goods.goods_marketprice"}
+                <dl>
+                    <dt>{$Think.lang.goods_index_goods_cost_price|raw}</dt>
+                    <dd class="marketprice"><del>{$Think.lang.currency}{$goods.goods_marketprice}</del></dd>
+                </dl>
+                {/notempty}
+                <dl>
+                    <dt>{$Think.lang.goods_index_goods_price|raw}</dt>
+                    <dd class="price">
+                        <span class="currency">{$Think.lang.currency}</span>
+                        {notempty name="$goods.promotion_price"}
+                        <strong>{:ds_price_format($goods['promotion_price'])}</strong>
+                        {else/}
+                        <strong>{:ds_price_format($goods['goods_price'])}</strong>
+                        {/notempty}
+                    </dd>
+                </dl>
+            </div>
+      <?php if($goods['goods_state'] == 1){?>
+      <!-- S 促销 -->
+      <?php if (isset($goods['promotion_type']) || $goods['is_have_gift'] == 'gift'  || !empty($mansong_info)) {?>
+      <div class="dss-sale">
+        <?php if (isset($goods['promotion_type']) || !empty($mansong_info)) {?>
+        <dl>
+          <dt>{$Think.lang.promotion_all_corners|raw}</dt>
+          <dd class="promotion-info">
+            {notempty name="$goods.promotion_type"}
+            <span class="sale-name">{$goods.title|default=$Think.lang.ds_xianshi}</span>
+            <!-- S 秒杀 -->
+            {if $goods.promotion_type == 'xianshi'}
+            <span class="sale-rule w400">{$Think.lang.vertical_drop}<em>{$Think.lang.currency}{:ds_price_format($goods['down_price'])}</em>
+            {if $goods.lower_limit}
+            {:sprintf(lang('lowest_thing'),$goods['lower_limit'])}
+            {if $goods.explain}
+            ，{$goods.explain}
+            {/if}
+            {/if}
+            </span>
+            <div class="clearfix"></div>
+            {/if}
+            <!-- E 秒杀  -->
+            
+            <!-- S 抢购-->
+            {if $goods.promotion_type == 'groupbuy'}
+            {if $goods.upper_limit}
+            <em>{:sprintf(lang('supreme_thing'),$goods['upper_limit'])}</em>
+            {/if}
+            {if $goods.remark}
+            <span>，{$goods.remark}</span><br>
+            {/if}
+            {/if}
+            {/notempty}
+            <!-- E 抢购 -->
+            
+            <!--S 满就送 -->
+            {if $mansong_info}
+            <div class="dss-mansong"> <span class="sale-name">{$Think.lang.ds_mansong}</span> <span class="sale-rule">
+              <?php $rule = $mansong_info['rules'][0];?>{$Think.lang.ds_man}
+              <em>{$Think.lang.currency}{:ds_price_format($rule['mansongrule_price'])}</em>
+              {notempty name="$rule.mansongrule_discount"}，{$Think.lang.ds_reduce}<em>{$Think.lang.currency}{:ds_price_format($rule['mansongrule_discount'])}</em>{/notempty}
+              {if $rule.goods_id && isset($rule['goods_storage']) && $rule['goods_storage']}，{$Think.lang.ds_gift}{/if}
+              </span><div class="clearfix"></div> <span class="sale-rule-more" dstype="show-rule"><a href="javascript:void(0);">{$Think.lang.total}<strong>{:count($mansong_info['rules'])}</strong>{$Think.lang.expand_view}<i class="iconfont">&#xe689;</i></a></span>
+              <div class="sale-rule-content" style="display: none;" dstype="rule-content">
+                <div class="title"><span class="sale-name">{$Think.lang.ds_mansong}</span>{$Think.lang.total}<strong>{:count($mansong_info['rules'])}</strong>{$Think.lang.promotional_campaign_rules}<a href="javascript:;" dstype="hide-rule">{$Think.lang.ds_close}</a></div>
+                <div class="content">
+                  <div class="mjs-tit">{$mansong_info.mansong_name}
+                    <time>( {$Think.lang.ds_promotion_time}:{$mansong_info.mansong_starttime|date="Y-m-d"} - {$mansong_info.mansong_endtime|date="Y-m-d"} )</time>
+                  </div>
+                  <ul class="mjs-info">
+                    {foreach name="$mansong_info.rules" item="rule" }
+                    <li> <span class="sale-rule">{$Think.lang.ds_man}<em>{$Think.lang.currency}{:ds_price_format($rule['mansongrule_price'])}</em>
+                      {notempty name="$rule.mansongrule_discount"}， {$Think.lang.ds_reduce}<em>{$Think.lang.currency}{:ds_price_format($rule['mansongrule_discount'])}</em>{/notempty}
+                      {if $rule.goods_id && isset($rule['goods_storage']) && $rule['goods_storage']}
+                      ， {$Think.lang.ds_gift} <a href="{$rule.goods_url}" title="{$rule.mansong_goods_name}" target="_blank" class="gift"> <img src="{:goods_cthumb($rule['goods_image'], 240)}" alt="{$rule.mansong_goods_name}"> </a>&nbsp;。
+                      {/if}
+                      </span> </li>
+                    {/foreach}
+                  </ul>
+                  <div class="mjs-remark">{$mansong_info.mansong_remark}</div>
+                </div>
+              </div>
+            </div>
+            {/if}
+            <!--E 满就送 -->
+
+          </dd>
+        </dl>
+        <?php }?>
+                {if $goods['inviter_money']>0}
+                <dl>
+                    <dt>{$Think.lang.distribution_commission}</dt>
+                    <dd>{$Think.lang.currency}{:ds_price_format($goods['inviter_money'])}</dd>
+                </dl>
+                {/if}
+                <dl>
+                    <dt>{$Think.lang.goods_index_evaluation}</dt>
+                    <dd><a href="#dsGoodsRate">{$Think.lang.total}{$goods.evaluation_count}{$Think.lang.article_evaluation}</a></dd>
+                </dl>
+        <!-- S 赠品 -->
+        {if $goods.is_have_gift}
+        <hr/>
+        <dl>
+          <dt>{$Think.lang.gift_all_corners|raw}</dt>
+          <dd class="goods-gift" id="dssGoodsgift"> <span>{$Think.lang.end_gift}</span>
+            {notempty name="gift_array"}
+            <ul>
+              {foreach name="gift_array" item="val" }
+              <li>
+                <div class="goods-gift-thumb"><span><img src="{:goods_cthumb($val['gift_goodsimage'], '240')}"></span></div>
+                <a href="{:url('Goods/index',['goods_id'=>$val.gift_goodsid])}" class="goods-gift-name" target="_blank" title="{$val.gift_goodsname}"></a><em>x{$val.gift_amount}</em> </li>
+              {/foreach}
+            </ul>
+            {/notempty}
+          </dd>
+        </dl>
+        {/if}
+        <!-- E 赠品 -->
+
+      </div>
+      <?php }?>
+      <!-- E 促销 -->
+      
+      <!--会员等级折扣 BEGIN-->
+      {notempty name="$goods.goods_mgdiscount_arr"}
+      <div class="dss-sale">
+          <dl>
+              <dt>{$Think.lang.member_discount}</dt>
+              <dd class="mgdiscount-info">
+                  {foreach name="$goods.goods_mgdiscount_arr" item="val" }
+                  <span><em>{$val.level_name}</em>{$val.level_discount}{$Think.lang.ds_xianshi_flag}</span>
+                  {/foreach}
+                  
+              </dd>
+          </dl>
+      </div>
+      {/notempty}
+      <!--会员等级折扣 END-->
+      
+      <div class="dss-logistics"><!-- S 物流与运费新布局展示  -->
+        <?php if($goods['goods_state'] == 1 && $goods['is_virtual'] == 0){ ?>
+        <dl id="dss-freight" class="dss-freight">
+          <dt>{$Think.lang.delivery_space|raw}</dt>
+          <dd class="dss-freight_box">
+            <div id="dss-freight-selector" class="dss-freight-select">
+              <div class="text">
+                <div>{$Think.lang.please_select_area}</div>
+                <b class="iconfont">&#xe689;</b> </div>
+              <div class="content">
+                <div id="dss-stock" class="dss-stock" data-widget="tabs">
+                  <div class="mt">
+                    <ul class="tab">
+                      <li data-index="0" data-widget="tab-item" class="curr"><a href="#none" class="hover"><em>{$Think.lang.ds_please_choose}</em><i class="iconfont">&#xe689;</i></a></li>
+                    </ul>
+                  </div>
+                  <div id="stock_province_item" data-widget="tab-content" data-area="0">
+                    <ul class="area-list">
+                    </ul>
+                  </div>
+                  <div id="stock_city_item" data-widget="tab-content" data-area="1" style="display: none;">
+                    <ul class="area-list">
+                    </ul>
+                  </div>
+                  <div id="stock_area_item" data-widget="tab-content" data-area="2" style="display: none;">
+                    <ul class="area-list">
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <a href="javascript:;" class="close" onclick="$('#dss-freight-selector').removeClass('hover')">{$Think.lang.ds_close}</a> </div>
+            <div id="dss-freight-prompt"> <strong>{if $goods.goods_storage>0}{$Think.lang.goods_stock}{else/}{$Think.lang.goods_out_stock}{/if}</strong>
+                {if !$goods.transport_id}
+                {if $goods.goods_freight>0}{$Think.lang.freight}{:ds_price_format($goods['goods_freight'])} {$Think.lang.ds_yuan}{else/}（{$Think.lang.ds_common_shipping_free}）{/if}
+                {/if}
+            </div>
+          </dd>
+        </dl>
+        <!-- S 物流与运费新布局展示  -->
+        <?php } ?>
+      </div>
+      <div class="dss-key">
+
+        <!-- S 商品规格值-->
+        {notempty name="$goods.spec_name"}
+        {foreach name="$goods.spec_name" item="val" key="key" }
+        <?php if (isset($goods['spec_value'][$key]) and is_array($goods['spec_value'][$key]) and !empty($goods['spec_value'][$key])) {?>
+        <dl dstype="ds-spec">
+          <dt>{$val}:</dt>
+          <dd>
+            <ul nctyle="ul_sign">
+              <?php foreach($goods['spec_value'][$key] as $k => $v) {?>
+              {if  $key == 1 }
+              <!-- 图片类型规格-->
+              <li class="sp-img"><a href="javascript:void(0);" class="<?php if (isset($goods['goods_spec'][$k])) {echo 'hovered';}?>" data-param="{valid:{$k}}" title="{$v}"><img src="<?php echo $spec_image[$k];?>"/>{$v}<i></i></a></li>
+              {else /}
+              <!-- 文字类型规格-->
+              <li class="sp-txt"><a href="javascript:void(0)" class="<?php if (isset($goods['goods_spec'][$k])) { echo 'hovered';} ?>" data-param="{valid:{$k}}">{$v}<i></i></a></li>
+              {/if}
+              <?php }?>
+            </ul>
+          </dd>
+        </dl>
+        <?php }?>
+        {/foreach}
+        {/notempty}
+        <!-- E 商品规格值-->
+        {if $goods.is_virtual == 1}
+        <dl>
+          <dt>{$Think.lang.pick_up_method}</dt>
+          <dd>
+            <ul>
+              <li class="sp-txt"><a href="javascript:void(0)" class="hovered">{$Think.lang.e_coupons}<i></i></a></li>
+            </ul>
+          </dd>
+        </dl>
+        <!-- 虚拟商品有效期 -->
+        <dl>
+          <dt>{$Think.lang.valid_space|raw}</dt>
+          <dd>{$Think.lang.available_immediately} {$goods.virtual_indate|date="Y-m-d H:i:s"}</dd>
+        </dl>
+        {elseif $goods.is_presell==1 /}
+        <!-- 预售商品发货时间 -->
+        <dl>
+          <dt>{$Think.lang.pre_sale_space}</dt>
+          <dd>
+            <ul>
+              <li class="sp-txt"><a href="javascript:void(0)" class="hovered">{$goods.presell_deliverdate|date="Y-m-d"}&nbsp;{$Think.lang.daily_delivery}<i></i></a></li>
+            </ul>
+          </dd>
+        </dl>
+        {/if}
+        {if $goods.is_goodsfcode}
+        <!-- 预售商品发货时间 -->
+        <dl>
+          <dt>{$Think.lang.type_purchase}</dt>
+          <dd>
+            <ul>
+              <li class="sp-txt"><a href="javascript:void(0)" class="hovered">{$Think.lang.f_code_priority_purchase}<i></i></a></li>
+            </ul>
+          </dd>
+        </dl>
+        {/if}
+      </div>
+      <!-- S 购买数量及库存 -->
+      <div class="dss-buy">
+        <?php if ($goods['goods_state'] != 0 && $goods['goods_storage'] >= 0) {?>
+        <div class="dss-figure-input">
+           <a href="javascript:void(0)" class="decrease iconfont" {if $goods.is_goodsfcode != 1}dstype="decrease"{/if}>&#xe6dc;</a>
+          <input type="text" name="" id="quantity" value="1" size="3" maxlength="6" class="input-text" {if $goods.is_goodsfcode == 1}readonly{/if}>
+          <a href="javascript:void(0)" class="increase iconfont" {if $goods.is_goodsfcode != 1}dstype="increase"{/if}>&#xe6db;</a>
+        </div>
+        <div class="dss-point" style="display: none;"><i></i>
+          <!-- S 库存 -->
+          <span>{$Think.lang.selected_item_stock}<strong dstype="goods_stock">{$goods.goods_storage}</strong>{$Think.lang.piece}</span>
+          <!-- E 库存 -->
+          <?php if ($goods['is_virtual'] == 1 && $goods['virtual_limit'] > 0) { ?>
+          <!-- 虚拟商品限购数 -->
+          <span class="look">，{$Think.lang.per_person_limit_purchase}<strong>
+          <!-- 虚拟抢购 设置了虚拟抢购限购数 该数小于原商品限购数 -->
+          <?php echo (isset($goods['promotion_type']) && $goods['promotion_type'] == 'groupbuy' && $goods['upper_limit'] > 0 && $goods['upper_limit'] < $goods['virtual_limit']) ? $goods['upper_limit'] : $goods['virtual_limit'];?> </strong>{$Think.lang.item_shop}。</span>
+          <?php } else if (isset($goods['promotion_type']) && $goods['promotion_type'] == 'groupbuy' && $goods['upper_limit'] > 0){ ?>
+          <!-- 抢购限购 -->
+          <span class="look">，{$Think.lang.per_person_limit_purchase}<strong> {$goods.upper_limit} </strong>{$Think.lang.item_shop}。</span>
+          <?php }?>
+          {if $goods.is_goodsfcode == 1}
+          <span class="look">，{$Think.lang.f_code_priority_purchase}。</span>
+          {/if}
+        </div>
+        <?php } ?>
+
+        <!-- S 提示已选规格及库存不足无法购买 -->
+        {if $goods['goods_state'] == 0 || $goods['goods_storage'] <= 0}
+        <div dstype="goods_prompt" class="dss-point"><i></i> <span>{$Think.lang.selected_item}<strong>{$Think.lang.understock}</strong>；{$Think.lang.select_other_goods}<a href="javascript:void(0);" dstype="arrival_notice" class="arrival" title="{$Think.lang.arrival_notice}">{$Think.lang.arrival_notice}</a>{$Think.lang.prompt}。</span> </div>
+        {/if}
+        <!-- E 提示已选规格及库存不足无法购买 -->
+        <div class="dss-btn">
+          <!-- 限制购买-->
+          {if $IsHaveBuy=="0"}
+          <!-- 加入购物车-->
+          {if $goods.cart == true}
+          <a href="javascript:void(0);" dstype="addcart_submit" class="addcart {if $goods['goods_state'] == 0 || $goods['goods_storage'] <= 0}no-addcart{/if}" title="{$Think.lang.goods_index_add_to_cart}"><i class="iconfont">&#xe69a;</i>{$Think.lang.goods_index_add_to_cart}</a>
+          {/if}
+          <!-- 立即购买-->
+          <a href="javascript:void(0);" dstype="buynow_submit" class="buynow <?php if ($goods['goods_state'] == 0 || $goods['goods_storage'] <= 0 || ($goods['is_virtual'] == 1 && $goods['virtual_indate'] < TIMESTAMP)) {?>no-buynow<?php }?>" title="{$goods.buynow_text}">{$goods.buynow_text}</a>
+          {/if}
+          {if $IsHaveBuy=="1"}
+          <a href="javascript:void(0);" class="buynow no-buynow" title="{$Think.lang.have_participated_rush}">{$Think.lang.have_participated_rush}</a>
+          {/if}
+
+          <!-- end-->
+
+          <!-- S 加入购物车弹出提示框 -->
+          <div class="dss-cart-popup">
+            <dl>
+              <dt>{$Think.lang.goods_index_cart_success}<a title="{$Think.lang.ds_close}" onClick="$('.dss-cart-popup').css({'display':'none'});">X</a></dt>
+              <dd> {$Think.lang.goods_index_cart_have}<strong id="bold_num"></strong>  {$Think.lang.ds_planting_goods}{$Think.lang.goods_index_total_price}:<em id="bold_mly" class="saleP"></em></dd>
+              <dd class="btns">
+                  <a href="javascript:void(0);" class="dss-btn-mini dss-btn-orange" onclick="location.href='{:url('Cart/index')}'">{$Think.lang.ds_check_cart}</a>
+                  <a href="javascript:void(0);" class="dss-btn-mini" value="" onclick="$('.dss-cart-popup').css({'display':'none'});">{$Think.lang.goods_index_continue_shopping}</a>
+              </dd>
+            </dl>
+          </div>
+          <!-- E 加入购物车弹出提示框 -->
+        </div>
+        <!-- E 购买按钮 -->
+        <div class="qrcode_btn iconfont">&#xe72d;
+              <div class="dss-goods-code">
+                    <div class="qrcode">
+                        <img src="{$Think.HOME_SITE_URL}/qrcode?url={:urlencode($Think.config.ds_config.h5_site_url)}%2fhome%2fgoodsdetail%3fgoods_id%3d{$goods.goods_id}"/>
+                    </div>
+                    <p>{$Think.lang.mobile_end_purchase}</p>
+                    <b class="iconfont">&#xe687;</b>
+                </div>
+          </div>
+      </div>
+      <?php }else{?>
+      <div class="dss-buy">
+        <div class="dss-saleout">
+          <dl>
+            <dt><i class="iconfont">&#xe73b;</i>{$Think.lang.goods_index_is_no_show}</dt>
+            <dd>{$Think.lang.goods_index_is_no_show_message_one}</dd>
+            <dd>{$Think.lang.goods_index_is_no_show_message_two_1}&nbsp;<a href="" class="dsbtn-mini">{$Think.lang.goods_index_is_no_show_message_two_2}</a>&nbsp;{$Think.lang.goods_index_is_no_show_message_two_3} </dd>
+          </dl>
+        </div>
+      </div>
+      <?php }?>
+      <!-- E 购买数量及库存 -->
+    </div>
+        
+        
+        <div class="intro_r">
+            <div class="mt">
+                <h2>看了又看</h2>
+                <span></span>
+            </div>
+            <div class="mc">
+                <ul>
+                    {foreach name="goods_commend" item="goods_commend_child" }
+                    <li>
+                        <div class="p_img">
+                            <a href="{:url('Goods/index',['goods_id'=>$goods_commend_child.goods_id])}" target="_blank" title="{$goods_commend_child.goods_advword}">
+                                <img src="{:goods_thumb($goods_commend_child, 240)}" alt="{$goods_commend_child.goods_name}"/>
+                            </a>
+                            <div class="p_name">{$goods_commend_child.goods_name}</div>
+                        </div>
+                        <div class="p_price">
+                            {$Think.lang.currency}{$goods_commend_child.goods_price}
+                        </div> 
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+            <div class="mb">
+                <a class="next" href="javascript:void(0)"><i class="iconfont">&#xe688;</i></a>
+                <a class="prev" href="javascript:void(0)"><i class="iconfont">&#xe689;</i></a>
+            </div>
+        </div>
+        
+        
+    </div>
+<!-- S 优惠套装 -->
+<div class="dss-promotion" id="ds-bundling" style="display:none;"></div>
+<!-- E 优惠套装 -->
+
+<div id="content" class="dss-goods-layout expanded" >
+  <div class="dss-goods-main" id="main-nav-holder">
+    <div class="tabbar pngFix" id="main-nav">
+      <div class="dss-goods-title-nav">
+        <ul id="categorymenu">
+          <li class="current"><a id="tabGoodsIntro" href="#content">{$Think.lang.goods_index_goods_info}</a></li>
+          <li><a id="tabGoodsRate" href="#content">{$Think.lang.goods_index_evaluation}<em>({$goods_evaluate_info.all})</em></a></li>
+          <li><a id="tabGoodsTraded" href="#content">{$Think.lang.goods_index_sold_record}<em>({$goods.goods_salenum})</em></a></li>
+          <li><a id="tabGuestbook" href="#content">{$Think.lang.goods_index_goods_consult}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="dss-intro">
+      <div class="content bd" id="dsGoodsIntro">
+        <?php if(is_array($goods['goods_attr']) || isset($goods['brand_name'])){?>
+        <ul class="ds-goods-sort">
+          <?php if ($goods['goods_serial']) {?>
+          <li>{$Think.lang.merchant_item_number}：{$goods.goods_serial}</li>
+          <?php }?>
+          <?php if(!empty($goods['brand_name'])){echo '<li>'.lang('ds_brand').lang('ds_colon').$goods['brand_name'].'</li>'; } ?>
+          <?php if(is_array($goods['goods_attr']) && !empty($goods['goods_attr'])){ ?>
+          <?php foreach ($goods['goods_attr'] as $val){ $val= array_values($val);if($val[1]){echo '<li>'.$val[0].lang('ds_colon').$val[1].'</li>'; }} ?>
+          <?php }?>
+        </ul>
+        <?php }?>
+        <div class="dss-goods-info-content">
+          <div class="default">{:htmlspecialchars_decode($goods.goods_body)}</div>
+        </div>
+      </div>
+    </div>
+    <div class="dss-comment">
+      <div class="dss-goods-title-bar hd" style="display: none">
+        <h4><a href="javascript:void(0);">{$Think.lang.goods_index_evaluation}</a></h4>
+      </div>
+      <div class="dss-goods-info-content bd" id="dsGoodsRate" style="display: none">
+        <div class="dss-top">
+          <div class="rate">
+            <p><strong>{$goods_evaluate_info.good_percent}</strong><sub>%</sub>{$Think.lang.high_praise}</p>
+            <span>{$Think.lang.total}{$goods_evaluate_info.all}{$Think.lang.people_participation_rating}</span></div>
+          <div class="percent">
+            <dl>
+              <dt>{$Think.lang.high_praise}<em>({$goods_evaluate_info.good_percent}%)</em></dt>
+              <dd><i style="width: {$goods_evaluate_info.good_percent}%"></i></dd>
+            </dl>
+            <dl>
+              <dt>{$Think.lang.medium_rating}<em>({$goods_evaluate_info.normal_percent}%)</em></dt>
+              <dd><i style="width: {$goods_evaluate_info.normal_percent}%"></i></dd>
+            </dl>
+            <dl>
+              <dt>{$Think.lang.poor_rating}<em>({$goods_evaluate_info.bad_percent}%)</em></dt>
+              <dd><i style="width: {$goods_evaluate_info.bad_percent}%"></i></dd>
+            </dl>
+          </div>
+          <div class="btns"><span>{$Think.lang.evaluation_purchased_goods}</span>
+            <p><a href="{if $goods.is_virtual}{:url('Membervrorder/index')}{else/}{:url('Memberorder/index')}{/if}" class="dss-btn dss-btn-red" target="_blank"><i class="iconfont">&#xe71b;</i>{$Think.lang.evaluation_item}</a></p>
+          </div>
+        </div>
+        <div class="dss-goods-title-nav">
+          <ul id="comment_tab">
+            <li data-type="all" class="current"><a href="javascript:void(0);">{$Think.lang.goods_index_evaluation}({$goods_evaluate_info.all})</a></li>
+            <li data-type="1"><a href="javascript:void(0);">{$Think.lang.high_praise}({$goods_evaluate_info.good})</a></li>
+            <li data-type="2"><a href="javascript:void(0);">{$Think.lang.medium_rating}({$goods_evaluate_info.normal})</a></li>
+            <li data-type="3"><a href="javascript:void(0);">{$Think.lang.poor_rating}({$goods_evaluate_info.bad})</a></li>
+          </ul>
+        </div>
+        <!-- 商品评价内容部分 -->
+        <div id="goodseval" class="dss-commend-main"></div>
+      </div>
+    </div>
+    <div class="dsg-salelog">
+      <div class="dss-goods-title-bar hd" style="display: none">
+        <h4><a href="javascript:void(0);">{$Think.lang.goods_index_sold_record}</a></h4>
+      </div>
+      <div class="dss-goods-info-content bd" id="dsGoodsTraded" style="display: none">
+       
+        <!-- 成交记录内容部分 -->
+        <div id="salelog_demo" class="dss-loading"> </div>
+      </div>
+    </div>
+    <div class="dss-consult">
+      <div class="dss-goods-title-bar hd" style="display: none">
+        <h4><a href="javascript:void(0);">{$Think.lang.goods_index_goods_consult}</a></h4>
+      </div>
+      <div class="dss-goods-info-content bd" id="dsGuestbook" style="display: none">
+        <!-- 咨询留言内容部分 -->
+        <div id="consulting_demo" class="dss-loading"> </div>
+      </div>
+    </div>
+    {notempty name="goods_commend"}
+    <div class="dss-recommend">
+      <div class="title">
+        <h4>{$Think.lang.goods_index_goods_commend}</h4>
+      </div>
+      <div class="content">
+        <ul>
+          {foreach name="goods_commend" item="goods_commend_child" }
+          {neq name='goods.goods_id' value="$goods_commend_child.goods_id"}
+          <li>
+            <dl>
+              <dt class="goods-name"><a href="{:url('Goods/index',['goods_id'=>$goods_commend_child.goods_id])}" target="_blank" title="{$goods_commend_child.goods_advword}">{$goods_commend_child.goods_name}<em>{$goods_commend_child.goods_advword}</em></a></dt>
+              <dd class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$goods_commend_child.goods_id])}" target="_blank" title="{$goods_commend_child.goods_advword}"><img class="lazyload" data-original="{:goods_thumb($goods_commend_child, 240)}" alt="{$goods_commend_child.goods_name}"/></a></dd>
+              <dd class="goods-price">{$Think.lang.currency}{$goods_commend_child.goods_price}</dd>
+            </dl>
+          </li>
+          {/neq}
+          {/foreach}
+          
+        </ul>
+        <div class="clear"></div>
+      </div>
+    </div>
+    {/notempty}
+  </div>
+  <div class="dss-sidebar">
+
+
+
+
+
+    <div class="common_module">
+            <div class="common_title">
+                <h2>{$Think.lang.ds_hot_goods_rankings}</h2>
+            </div>
+            <div class="common_content">
+                <ul>
+                    {foreach name="hot_sales" item="val"}
+                    <li>
+                        <div class="p_img">
+                            <a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}"><img src="{:goods_thumb($val, 240)}" width="85" height="85"></a>
+                        </div>
+                        <div class="p_num {if $key < 3 }active{/if}">{php}echo $key+1;{/php}</div>
+                        <div class="p_info">
+                            <div class="p_name">
+                                <a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}">{$val.goods_name}</a>
+                            </div>
+                            <div class="p_price">{$Think.lang.currency}<em>{$val.goods_promotion_price}</em></div>
+                            <div class="p_sales">{$Think.lang.ds_sell_out}<strong>{$val.goods_salenum}</strong>{$Think.lang.ds_bi}</div>
+                        </div>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+        <div class="common_module">
+            <div class="common_title">
+                <h2>{$Think.lang.ds_hot_collect_rankings}</h2>
+            </div>
+            <div class="common_content">
+                <ul>
+                    {foreach name="hot_collect" key="key" item="val"  }
+                    <li>
+                        <div class="p_img">
+                            <a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}"><img src="{:goods_thumb($val, 240)}" width="85" height="85"></a>
+                        </div>
+                        <div class="p_num {if $key < 3 }active{/if}">{php}echo $key+1;{/php}</div>
+                        <div class="p_info">
+                            <div class="p_name">
+                                <a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}">{$val.goods_name}</a>
+                            </div>
+                            <div class="p_price">{$Think.lang.currency}<em>{$val.goods_promotion_price}</em></div>
+                            <div class="p_sales">{$Think.lang.ds_collection_popularity}{$Think.lang.ds_colon}<strong>{$val.goods_collect}</strong></div>
+                        </div>
+                    </li>
+                    {/foreach}
+                </ul>
+            </div>
+        </div>
+
+
+
+
+
+    {if isset($viewed_goods)}
+    <!-- 最近浏览 -->
+    <div class="dss-sidebar-container dss-top-bar">
+      <div class="title">
+        <h4>{$Think.lang.recent_browsing}</h4>
+      </div>
+      <div class="content">
+        <div id="hot_sales_list" class="dss-top-panel">
+          <ol>
+            {foreach name="viewed_goods" item="g"  }
+            <li>
+              <dl>
+                <dt><a href="{:url('Goods/index',['goods_id'=>$g.goods_id])}">{$g.goods_name}</a></dt>
+                <dd class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$g.goods_id])}"><span class="thumb size40"><i></i><img src="{:goods_thumb($g, 240)}"  onload="javascript:ResizeImage(this,40,40);"></span></a>
+                  <p><span class="thumb size100"><i></i><img src="{:goods_thumb($g, 240)}" onload="javascript:ResizeImage(this,100,100);" title="{$g.goods_name}"><big></big><small></small></span></p>
+                </dd>
+                <dd class="price pngFix">{:ds_price_format($g['goods_promotion_price'])}</dd>
+              </dl>
+            </li>
+            {/foreach}
+          </ol>
+        </div>
+        <a href="{:url('Membergoodsbrowse/listinfo')}" class="dsh-sidebar-all-viewed">{$Think.lang.ds_full_history}</a> </div>
+    </div>
+    {/if}
+  </div>
+</div>
+
+<form id="buynow_form" method="post" action="{:url('Buy/buy_step1')} ">
+  <input id="cart_id" name="cart_id[]" type="hidden"/>
+</form>
+
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.SuperSlide.2.1.1.js"></script>
+<script>
+    jQuery(".intro_r").slide({titCell:".mb ul",mainCell:".mc ul",autoPage:true,effect:"top",vis:2,trigger:"click"});
+</script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery.lazyload.min.js"></script>
+<script src="{$Think.HOME_SITE_ROOT}/js/jquery.jqzoom.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js"></script>
+<script>
+    $("img.lazyload").lazyload({
+        effect: "fadeIn",
+        placeholder:"{$Think.HOME_SITE_ROOT}/images/loading.gif"
+    });
+      $(function () {
+          /*商品缩略图放大镜*/
+          $(".jqzoom").jqueryzoom({
+              xzoom: 450,
+              yzoom: 450,
+              offset: 1,
+              position: "right",
+              preload: 1,
+              lens: 1
+          });
+          //初始化对比按钮
+          initCompare()
+      });
+    //收藏分享处下拉操作
+    jQuery.divselect = function(divselectid,inputselectid) {
+      var inputselect = $(inputselectid);
+      $(divselectid).mouseover(function(){
+          var ul = $(divselectid+" ul");
+          ul.slideDown("fast");
+          if(ul.css("display")=="none"){
+              ul.slideDown("fast");
+          }
+      });
+      $(divselectid).on('mouseleave',function(){
+          $(divselectid+" ul").hide();
+      });
+    };
+$(function(){
+
+
+    {if condition="$goods.goods_state eq '1' && $goods.goods_storage gt 0"}
+    // 加入购物车
+    $('a[dstype="addcart_submit"]').click(function(){
+    {if condition="session('is_login') neq '1'"}
+        login_dialog()
+        {else/}
+    	if (typeof(allow_buy) != 'undefined' && allow_buy === false) return ;
+        addcart({$goods.goods_id}, checkQuantity(),'addcart_callback');
+        {/if}
+    });
+        <?php if (!($goods['is_virtual'] == 1 && $goods['virtual_indate'] < TIMESTAMP)) {?>
+        // 立即购买
+        $('a[dstype="buynow_submit"]').click(function(){
+        	if (typeof(allow_buy) != 'undefined' && allow_buy === false) return ;
+            buynow({$goods.goods_id},checkQuantity());
+        });
+        <?php }?>
+    {/if}
+
+
+    // 到货通知
+    {if condition="$goods.goods_storage eq '0' || $goods.goods_state eq '0'"}
+    $('a[dstype="arrival_notice"]').click(function(){
+            {if condition="session('is_login') neq '1'"}
+        login_dialog();
+        {else/}
+        ajax_form('arrival_notice', '{$Think.lang.arrival_notice}',"{:url('Goods/arrival_notice',['goods_id'=>$goods.goods_id])}", 350);
+        {/if}
+    });
+    {/if}
+    {if ($goods['goods_state'] == 0 || $goods['goods_storage'] <= 0) && $goods['is_appoint'] == 1}
+    $('a[dstype="appoint_submit"]').click(function(){
+        {if session('is_login') !== '1'}
+        login_dialog();
+        {else/}
+        ajax_form('arrival_notice', '{$Think.lang.make_appointment_immediately}', "{:url('Goods/arrival_notice',['goods_id'=>$goods.goods_id,'type'=>'2'])}", 350);
+        {/if}
+    });
+    {/if}
+
+
+    // 规格选择
+    $('dl[dstype="ds-spec"]').find('a').each(function(){
+        $(this).click(function(){
+            if ($(this).hasClass('hovered') || $(this).hasClass('disable')) {
+                return false;
+            }
+            $(this).parents('ul:first').find('a').removeClass('hovered');
+            $(this).addClass('hovered');
+            checkSpec();
+        });
+    });
+
+});
+
+var spec_param = {$spec_list|raw};
+function checkStock(){
+    var spec = new Array();
+    $('ul[nctyle="ul_sign"]').find('.hovered').each(function(){
+        var data_str = ''; eval('data_str =' + $(this).attr('data-param'));
+        spec.push(data_str.valid);
+    });
+   
+    var spec2=new Array()
+    var spec3=new Array()
+    for(var i in spec){
+        spec2[i]=new Array()
+
+        for(var j in spec){
+            if(i!=j){
+                spec2[i].push(spec[j])
+            }
+        }
+        $('*[data-param="{valid:'+spec[i]+'}"]').parents('ul[nctyle="ul_sign"]').find('a:not(.hovered)').each(function(){
+            var data_str = ''; eval('data_str =' + $(this).attr('data-param'));
+            var spec4=spec2[i].concat([data_str.valid])
+            spec3.push(spec4.sort(function(a,b){
+                return a-b;
+            }).join('|'))
+        })
+    }
+
+
+    $.each(spec_param, function(i, n){
+        var i=spec3.indexOf(n.sign)
+        if (i>-1 && n.stock<=0) {
+            var spec4=spec3[i].split('|')
+            console.log(spec4)
+            for(var j in spec4){
+                $('*[data-param="{valid:'+spec4[j]+'}"]:not(.hovered)').addClass('disable')
+            }
+        }
+    });
+}
+checkStock()
+function checkSpec() {
+    var spec = new Array();
+    $('ul[nctyle="ul_sign"]').find('.hovered').each(function(){
+        var data_str = ''; eval('data_str =' + $(this).attr('data-param'));
+        spec.push(data_str.valid);
+    });
+    spec1 = spec.sort(function(a,b){
+        return a-b;
+    });
+    var spec_sign = spec1.join('|');
+    $.each(spec_param, function(i, n){
+        if (n.sign == spec_sign) {
+            window.location.href = n.url;
+        }
+    });
+}
+
+// 验证购买数量
+function checkQuantity(){
+    var quantity = parseInt($("#quantity").val());
+    if (quantity < 1) {
+        alert("{$Think.lang.goods_index_pleaseaddnum}");
+        $("#quantity").val('1');
+        return false;
+    }
+    max = parseInt($('[dstype="goods_stock"]').text());
+    {if $goods['is_virtual'] == 1 && $goods['virtual_limit'] > 0}
+    max = {$goods.virtual_limit};
+    if(quantity > max){
+        alert('{$Think.lang.maximum_purchase}'+max+'{$Think.lang.piece}');
+        return false;
+    }
+    {/if}
+    {notempty name="$goods.upper_limit"}       
+    max = {$goods.upper_limit};
+    if(quantity > max){
+        alert('{$Think.lang.maximum_purchase}'+max+'{$Think.lang.piece}');
+        return false;
+    }
+    {/notempty}
+    if(quantity > max){
+        alert("{$Think.lang.goods_index_add_too_much}");
+        return false;
+    }
+    return quantity;
+}
+// 立即购买js
+function buynow(goods_id,quantity){
+    
+    {if session('is_login') !== '1'}
+	login_dialog();
+    {else/}
+    if (!quantity) {
+        return;
+    }
+    $("#cart_id").val(goods_id+'|'+quantity);
+    $("#buynow_form").submit();
+    {/if}
+}
+
+$(function(){
+    //选择地区查看运费
+    $('#transport_pannel>a').click(function(){
+    	var id = $(this).attr('dstype');
+    	if (id=='undefined') return false;
+    	var _self = this,tpl_id = '{$goods.transport_id}';
+	    var url = HOMESITEURL+'/Goods/calc.html?rand='+Math.random();
+	    $('#transport_price').css('display','none');
+	    $('#loading_price').css('display','');
+	    $.getJSON(url, {'id':id,'tid':tpl_id}, function(data){
+	    	if (data == null) return false;
+	        if(data != 'undefined') {$('#nc_kd').html('{$Think.lang.freight}$Think.lang.ds_colon}<em>' + data + '</em>{$Think.lang.ds_yuan}');}else{'{$Think.lang.goods_index_trans_for_platform}';}
+	        $('#transport_price').css('display','');
+	    	$('#loading_price').css('display','none');
+	        $('#ncrecive').html($(_self).html());
+	    });
+    });
+    $("#ds-bundling").load("{:url('Goods/get_bundling',['goods_id'=>$goods.goods_id])}", function(){
+        if($(this).html() != '') {
+            $(this).show();
+        }
+    });
+    $("#salelog_demo").load("{:url('Goods/salelog',['goods_id'=>$goods.goods_id,'vr'=>$goods.is_virtual])}", function(){
+    });
+	$("#consulting_demo").load("{:url('Goods/consulting',['goods_id'=>$goods.goods_id])}", function(){
+	});
+
+/** goods.php **/
+	// 商品详情默认情况下显示全部
+	$('#tabGoodsIntro').click(function(){
+		$('.bd').css('display','none');
+		$('#dsGoodsIntro').css('display','');
+		$('.hd').css('display','none');
+	});
+	// 点击评价隐藏其他以及其标题栏
+	$('#tabGoodsRate').click(function(){
+		$('.bd').css('display','none');
+		$('#dsGoodsRate').css('display','');
+		$('.hd').css('display','none');
+	});
+	// 点击成交隐藏其他以及其标题
+	$('#tabGoodsTraded').click(function(){
+		$('.bd').css('display','none');
+		$('#dsGoodsTraded').css('display','');
+		$('.hd').css('display','none');
+	});
+	// 点击咨询隐藏其他以及其标题
+	$('#tabGuestbook').click(function(){
+		$('.bd').css('display','none');
+		$('#dsGuestbook').css('display','');
+		$('.hd').css('display','none');
+	});
+	//商品排行Tab切换
+	$(".dss-top-tab > li > a").mouseover(function(e) {
+		if (e.target == this) {
+			var tabs = $(this).parent().parent().children("li");
+			var panels = $(this).parent().parent().parent().children(".dss-top-panel");
+			var index = $.inArray(this, $(this).parent().parent().find("a"));
+			if (panels.eq(index)[0]) {
+				tabs.removeClass("current ").eq(index).addClass("current ");
+				panels.addClass("hide").eq(index).removeClass("hide");
+			}
+		}
+	});
+
+//触及显示缩略图
+	$('.goods-pic > .thumb').hover(
+		function(){
+			$(this).next().css('display','block');
+		},
+		function(){
+			$(this).next().css('display','none');
+		}
+	);
+
+	/* 商品购买数量增减js */
+	// 增加
+	$('a[dstype="increase"]').click(function(){
+            num = parseInt($('#quantity').val());
+            {if $goods['is_virtual'] == 1 && $goods['virtual_limit'] > 0}
+	    max = {$goods.virtual_limit};
+	    if(num >= max){
+	        alert('{$Think.lang.maximum_purchase}'+max+'{$Think.lang.piece}');
+	        return false;
+	    }
+            {/if}
+            {notempty name="$goods.upper_limit"}       
+	    max = {$goods.upper_limit};
+	    if(num >= max){
+	        alert('{$Think.lang.maximum_purchase}'+max+'{$Think.lang.piece}');
+	        return false;
+	    }
+	    {/notempty}
+		max = parseInt($('[dstype="goods_stock"]').text());
+		if(num < max){
+			$('#quantity').val(num+1);
+		}
+	});
+	//减少
+	$('a[dstype="decrease"]').click(function(){
+		num = parseInt($('#quantity').val());
+		if(num > 1){
+			$('#quantity').val(num-1);
+		}
+	});
+    $('#categorymenu').on('click', 'li', function() {
+        $('#categorymenu li').removeClass('current');
+        $(this).addClass('current');
+    });
+
+    //评价列表
+    $('#comment_tab').on('click', 'li', function() {
+        $('#comment_tab li').removeClass('current');
+        $(this).addClass('current');
+        load_goodseval($(this).attr('data-type'));
+    });
+    load_goodseval('all');
+    function load_goodseval(type) {
+        var url = "{:url('Goods/comments',['goods_id'=>$goods.goods_id])}";
+        url += '&type=' + type;
+        $("#goodseval").load(url, function(){
+        });
+    }
+
+    //记录浏览历史
+	$.get("{:url('Goods/addbrowse',['gid'=>$goods.goods_id])}");
+
+
+    // 满即送、加价购显示隐藏
+    $('[dstype="show-rule"]').click(function(){
+        $(this).parent().find('[dstype="rule-content"]').show();
+    });
+    $('[dstype="hide-rule"]').click(function(){
+        $(this).parents('[dstype="rule-content"]:first').hide()
+    });
+
+    $('.dss-buy').bind({
+        mouseover:function(){$(".dss-point").show();},
+        mouseout:function(){$(".dss-point").hide();}
+    });
+
+});
+
+/* 加入购物车后的效果函数 */
+function addcart_callback(data){
+if(data.state=='true'){
+	$('#bold_num').html(data.num);
+    $('#bold_mly').html(price_format(data.amount));
+    $('.dss-cart-popup').fadeIn('fast');
+}else{
+  layer.msg(data.message)
+}
+}
+
+<?php if($goods['goods_state'] == 1 && $goods['is_virtual'] == 0){ ?>
+var $cur_area_list,$cur_tab,next_tab_id = 0,cur_select_area = [],calc_area_id = '',calced_area = [],cur_select_area_ids = [];
+$(document).ready(function(){
+	$("#dss-freight-selector").hover(function() {
+		//如果店铺没有设置默认显示区域，马上异步请求
+		if (typeof ds_a === "undefined") {
+	 		$.getJSON(HOMESITEURL + "/Goods/json_area?callback=?", function(data) {
+	 			ds_a = data;
+	 			$cur_tab = $('#dss-stock').find('li[data-index="0"]');
+	 			_loadArea(0);
+	 		});
+		}
+		$(this).addClass("hover");
+		$(this).on('mouseleave',function(){
+			$(this).removeClass("hover");
+		});
+	});
+
+	$('ul[class="area-list"]').on('click','a',function(){
+		$('#dss-freight-selector').unbind('mouseleave');
+		var tab_id = parseInt($(this).parents('div[data-widget="tab-content"]:first').attr('data-area'));
+		if (tab_id == 0) {cur_select_area = [];cur_select_area_ids = []};
+		if (tab_id == 1 && cur_select_area.length > 1) {
+			cur_select_area.pop();
+			cur_select_area_ids.pop();
+			if (cur_select_area.length > 1) {
+				cur_select_area.pop();
+				cur_select_area_ids.pop();
+			}
+		}
+		next_tab_id = tab_id + 1;
+		var area_id = $(this).attr('data-value');
+		$cur_tab = $('#dss-stock').find('li[data-index="'+tab_id+'"]');
+		$cur_tab.find('em').html($(this).html());
+		$cur_tab.find('i').html('');
+		if (tab_id < 2) {
+			calc_area_id = area_id;
+			cur_select_area.push($(this).html());
+			cur_select_area_ids.push(area_id);
+			$cur_tab.find('a').removeClass('hover');
+			$cur_tab.nextAll().remove();
+			if (typeof ds_a === "undefined") {
+    	 		$.getJSON(HOMESITEURL + "/Goods/json_area?callback=?", function(data) {
+    	 			ds_a = data;
+    	 			_loadArea(area_id);
+    	 		});
+			} else {
+				_loadArea(area_id);
+			}
+		} else {
+			//点击第三级，不需要显示子分类
+			if (cur_select_area.length == 3) {
+				cur_select_area.pop();
+				cur_select_area_ids.pop();
+			}
+			cur_select_area.push($(this).html());
+			cur_select_area_ids.push(area_id);
+			$('#dss-freight-selector > div[class="text"] > div').html(cur_select_area.join(''));
+			$('#dss-freight-selector').removeClass("hover");
+			_calc();
+		}
+		$('#dss-stock').find('li[data-widget="tab-item"]').on('click','a',function(){
+			var tab_id = parseInt($(this).parent().attr('data-index'));
+			if (tab_id < 2) {
+				$(this).parent().nextAll().remove();
+				$(this).addClass('hover');
+				$('#dss-stock').find('div[data-widget="tab-content"]').each(function(){
+					if ($(this).attr("data-area") == tab_id) {
+						$(this).show();
+					} else {
+						$(this).hide();
+					}
+				});
+			}
+		});
+	});
+	function _loadArea(area_id){
+		if (ds_a[area_id] && ds_a[area_id].length > 0) {
+			$('#dss-stock').find('div[data-widget="tab-content"]').each(function(){
+				if ($(this).attr("data-area") == next_tab_id) {
+					$(this).show();
+					$cur_area_list = $(this).find('ul');
+					$cur_area_list.html('');
+				} else {
+					$(this).hide();
+				}
+			});
+			var areas = [];
+			areas = ds_a[area_id];
+			for (i = 0; i < areas.length; i++) {
+				if (areas[i][1].length > 8) {
+					$cur_area_list.append("<li class='longer-area'><a data-value='" + areas[i][0] + "' href='#none'>" + areas[i][1] + "</a></li>");
+				} else {
+				    $cur_area_list.append("<li><a data-value='" + areas[i][0] + "' href='#none'>" + areas[i][1] + "</a></li>");
+				}
+			}
+			if (area_id > 0){
+				$cur_tab.after('<li data-index="' + (next_tab_id) + '" data-widget="tab-item"><a class="hover" href="#none" ><em>{$Think.lang.ds_please_choose}</em><i class="iconfont">&#xe689;</i></a></li>');
+			}
+		} else {
+			//点击第一二级时，已经到了最后一级
+			$cur_tab.find('a').addClass('hover');
+			$('#dss-freight-selector > div[class="text"] > div').html(cur_select_area);
+			$('#dss-freight-selector').removeClass("hover");
+			_calc();
+		}
+	}
+	//计算运费，是否配送
+	function _calc() {
+		$.cookie('dregion', cur_select_area_ids.join(' ')+'|'+cur_select_area.join(' '), { expires: 30 });
+		<?php if (! $goods['transport_id']) { ?>
+		return;
+		<?php } ?>
+		var _args = '';
+		_args += "&tid=<?php echo $goods['transport_id']?>";
+		if (_args != '') {
+			_args += '&area_id=' + calc_area_id ;
+			if (typeof calced_area[calc_area_id] == 'undefined') {
+				//需要请求配送区域设置
+				$.getJSON(HOMESITEURL + "/Goods/calc.html?" + _args + "&callback=?", function(data){
+					allow_buy = data.total ? true : false;
+					calced_area[calc_area_id] = data.total;
+					if (data.total === false) {
+						$('#dss-freight-prompt > strong').html('{$Think.lang.goods_out_stock}').next().remove();
+						$('a[dstype="buynow_submit"]').addClass('no-buynow');
+						$('a[dstype="addcart_submit"]').addClass('no-buynow');
+						$('#free-time').hide();
+					} else {
+						$('#dss-freight-prompt > strong').html('{$Think.lang.goods_stock} ').next().remove();
+						$('#dss-freight-prompt > strong').after('<span>' + data.total + '</span>');
+						$('a[dstype="buynow_submit"]').removeClass('no-buynow');
+						$('a[dstype="addcart_submit"]').removeClass('no-buynow');
+						$('#free-time').show();
+					}
+				});
+			} else {
+				if (calced_area[calc_area_id] === false) {
+					$('#dss-freight-prompt > strong').html('{$Think.lang.goods_out_stock}').next().remove();
+					$('a[dstype="buynow_submit"]').addClass('no-buynow');
+					$('a[dstype="addcart_submit"]').addClass('no-buynow');
+					$('#free-time').hide();
+				} else {
+					$('#dss-freight-prompt > strong').html('{$Think.lang.goods_stock}').next().remove();
+					$('#dss-freight-prompt > strong').after('<span>' + calced_area[calc_area_id] + '</span>');
+					$('a[dstype="buynow_submit"]').removeClass('no-buynow');
+					$('a[dstype="addcart_submit"]').removeClass('no-buynow');
+					$('#free-time').show();
+				}
+			}
+		}
+	}
+});
+<?php }?>
+
+
+
+                                //缩略图切换
+                                $('.small-pic-li').each(function(i, o) {
+                                    var lilength = $('.small-pic-li').length;
+                                    $(o).hover(function() {
+                                        $(o).siblings().removeClass('active');
+                                        $(o).addClass('active');
+                                        $('#zoomimg').attr('src', $(o).find('img').attr('data-img'));
+                                        $('#zoomimg').attr('jqimg', $(o).find('img').attr('data-big'));
+                                        $('.next-btn').removeClass('disabled');
+                                        if (i == 0) {
+                                            $('.next-left').addClass('disabled');
+                                        }
+                                        if (i + 1 == lilength) {
+                                            $('.next-right').addClass('disabled');
+                                        }
+                                    });
+                                })
+
+                                //前一张缩略图
+                                $('.next-left').click(function() {
+                                    var newselect = $('.small-pic>.active').prev();
+                                    if(!newselect.length){
+                                        return;
+                                    }
+                                    $('.small-pic>.active').removeClass('active');
+                                    $(newselect).addClass('active');
+                                    $('#zoomimg').attr('src', $(newselect).find('img').attr('data-img'));
+                                    $('#zoomimg').attr('jqimg', $(newselect).find('img').attr('data-big'));
+                                    var index = $('.small-pic>li').index(newselect);
+                                    if (index == 0) {
+                                        $('.next-left').addClass('disabled');
+                                    }
+                                    $('.next-right').removeClass('disabled');
+                                })
+
+                                //后前一张缩略图
+                                $('.next-right').click(function() {
+                                    var newselect = $('.small-pic>.active').next();
+                                    if(!newselect.length){
+                                        return;
+                                    }
+                                    $('.small-pic>.active').removeClass('active');
+                                    $(newselect).addClass('active');
+                                    $('#zoomimg').attr('src', $(newselect).find('img').attr('data-img'));
+                                    $('#zoomimg').attr('jqimg', $(newselect).find('img').attr('data-big'));
+                                    var index = $('.small-pic>li').index(newselect);
+                                    if (index + 1 == $('.small-pic>li').length) {
+                                        $('.next-right').addClass('disabled');
+                                    }
+                                    $('.next-left').removeClass('disabled');
+                                })
+
+                                /**
+                                 * 加减数量
+                                 * n 点击一次要改变多少
+                                 * maxnum 允许的最大数量(库存)
+                                 * number ，input的id
+                                 */
+                                function altergoodsnum(n) {
+                                    var num = parseInt($('#quantity').val());
+                                    var maxnum = parseInt($('#quantity').attr('max'));
+                                    num += n;
+                                    num <= 0 ? num = 1 : num;
+                                    if (num >= maxnum) {
+                                        $(this).addClass('no-mins');
+                                        num = maxnum;
+                                    }
+                                    $('#store_count').text(maxnum - num); //更新库存数量
+                                    $('#quantity').val(num)
+                                }
+
+</script>
+
+
+
+
+
+
+{/block}

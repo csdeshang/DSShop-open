@@ -1,0 +1,232 @@
+{include file="public/header" /}
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_entityshop_manage}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <script type="text/javascript" src="{$Think.HTTP_TYPE}api.map.baidu.com/api?v=2.0&ak={$baidu_ak}"></script>
+    <script>
+        var local;
+        var map;
+        var lst_name = '';
+        function change_map() {
+            if ($("#area_ select:eq(0)").length > 0 && $("#area_ select:eq(0) option:selected").val() != '') {
+                var name = $("#area_ select:eq(0) option:selected").text();
+            }
+            if ($("#area_ select:eq(1)").length > 0 && $("#area_ select:eq(1) option:selected").val() != '') {
+                var name = $("#area_ select:eq(1) option:selected").text();
+            }
+            if ($("#area_ select:eq(2)").length > 0 && $("#area_ select:eq(2) option:selected").val() != '') {
+                var name = $("#area_ select:eq(2) option:selected").text();
+            }
+            if (name != '' && lst_name != name) {
+                lst_name = name;
+                map.setCurrentCity(name);
+                map.centerAndZoom(name, 16);
+                map.clearOverlays();
+                local.search(name);
+            }
+
+        }
+        $(function () {
+            $('#area_info').ds_region();
+            map = new BMap.Map("allmap");
+            var lng = '{$entityshop.entityshop_longitude}';
+            var lat = '{$entityshop.entityshop_latitude}';
+            if (!lng && !lat) {
+                var geolocation = new BMap.Geolocation();
+                geolocation.getCurrentPosition(function (r) {
+                    if (this.getStatus() == BMAP_STATUS_SUCCESS) {
+                        var lng = r.point.lng;
+                        var lat = r.point.lat;
+                        var point = new BMap.Point(lng, lat);
+                        map.centerAndZoom(point, 16);
+                        map.addControl(new BMap.NavigationControl());
+                        map.enableScrollWheelZoom();
+                        var marker = new BMap.Marker(point);  // 创建标注
+                        map.addOverlay(marker);              // 将标注添加到地图中
+                        marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                        document.getElementById("longitude").value = lng;
+                        document.getElementById("latitude").value = lat;
+
+                    } else {
+                        layer.msg('failed' + this.getStatus());
+                    }
+                }, {enableHighAccuracy: true})
+            } else {
+                var point = new BMap.Point(lng, lat);
+                map.centerAndZoom(point, 16);
+                map.addControl(new BMap.NavigationControl());
+                map.enableScrollWheelZoom();
+                var marker = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker);              // 将标注添加到地图中
+                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            }
+
+
+            var options = {
+                onSearchComplete: function (results) {
+                    // 判断状态是否正确
+                    if (local.getStatus() == BMAP_STATUS_SUCCESS) {
+                        if (results.getCurrentNumPois() > 0) {
+
+                            map.clearOverlays();  //清除标注  或者可以把market 放入数组
+                            var point = new BMap.Point(results.getPoi(0).point.lng, results.getPoi(0).point.lat);
+                            var marker = new BMap.Marker(point);
+                            map.centerAndZoom(point, 16);
+                            map.addOverlay(marker);
+                            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+                            document.getElementById("longitude").value = results.getPoi(0).point.lng;
+                            document.getElementById("latitude").value = results.getPoi(0).point.lat;
+
+                        }
+                    }
+                }
+            };
+            local = new BMap.LocalSearch(map, options);
+            map.addEventListener("click", function (e) {
+                map.clearOverlays();  //清除标注  或者可以把market 放入数组
+                var point = new BMap.Point(e.point.lng, e.point.lat);
+                var marker = new BMap.Marker(point);
+                map.addOverlay(marker);
+                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+
+                document.getElementById("longitude").value = e.point.lng;
+                document.getElementById("latitude").value = e.point.lat;
+            });
+        })
+    </script>
+    <div class="page">
+        <form method="post" id="entityshop_form" enctype="multipart/form-data" >
+            <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityshop_name}</td>
+                        <td class="vatop rowform"><input id="entityshop_name" name="entityshop_name" value="{$entityshop.entityshop_name|default=''}" class="input-txt" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityshop_linkname}</td>
+                        <td class="vatop rowform"><input id="entityshop_linkname" name="entityshop_linkname" value="{$entityshop.entityshop_linkname|default=''}" class="input-txt" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityshop_phone}</td>
+                        <td class="vatop rowform"><input id="entityshop_phone" name="entityshop_phone" value="{$entityshop.entityshop_phone|default=''}" class="input-txt" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required"><label for="">{$Think.lang.entityshop_pic}</label></td>
+                        <td class="vatop rowform">
+                            {notempty name="$entityshop.entityshop_pic"}
+                            <span class="type-file-show">
+                                <img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                                <div class="type-file-preview"><img src="{:ds_get_pic('home/entityshop',$entityshop.entityshop_pic)}"></div>
+                            </span>
+                            {/notempty}
+                            <span class="type-file-box">
+                                <input name="entityshop_pic" type="file" class="type-file-file" id="entityshop_pic" size="30">
+                            </span>
+                        </td>
+                        <td class="vatop tips">
+                        </td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityshop_hours}</td>
+                        <td class="vatop rowform"><input id="entityshop_hours" name="entityshop_hours" value="{$entityshop.entityshop_hours|default=''}" class="input-txt" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.region_id}</td>
+                        <td id="area_" onclick="change_map()">
+                            <input type="hidden" value="{$entityshop.area_info|default=''}" name="area_info" id="area_info">
+                            <input type="hidden" value="" name="province_id" id="_area_1">
+                            <input type="hidden" value="" name="city_id" id="_area_2">
+                            <input type="hidden" value="{$entityshop.region_id|default=''}" name="region_id" id="_area_3">
+                            <span></span>
+                        </td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityshop_address}</td>
+                        <td class="vatop rowform"><input id="entityshop_address" name="entityshop_address" value="{$entityshop.entityshop_address|default=''}" class="input-txt" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required w120">{$Think.lang.entityshop_position}</td>
+                        <td class="vatop rowform">
+                            <input name="entityshop_longitude" id="longitude" value="{$entityshop.entityshop_longitude}" type="text" />
+                            <input name="entityshop_latitude" id="latitude" value="{$entityshop.entityshop_latitude}" type="text" />
+                        </td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required w120"></td>
+                        <td class="vatop rowform"><div id="allmap" style="width:530px;height: 350px;margin-top: 20px"></div></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityshop_intro}</td>
+                        <td class="vatop rowform"><textarea name="entityshop_intro">{$entityshop.entityshop_intro|default=''}</textarea></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityshop_sort}</td>
+                        <td class="vatop rowform"><input id="entityshop_sort" name="entityshop_sort" value="{$entityshop.entityshop_sort|default=''}" class="input-txt" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required"><label for="adv_startdate">{$Think.lang.entityshop_state}:</label></td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                <label for="entityshop_state1" class="cb-enable {if condition="$entityshop.entityshop_state eq 1"}selected{/if}">{$Think.lang.ds_open}</label>
+                                           <label for="entityshop_state2" class="cb-disable {if condition="$entityshop.entityshop_state eq 2"}selected{/if}">{$Think.lang.ds_close}</label>
+                                                       <input id="entityshop_state1" name="entityshop_state" value="1" type="radio" {if condition="$entityshop.entityshop_state eq 1"} checked="checked"{/if}>
+                                                              <input id="entityshop_state2" name="entityshop_state" value="2" type="radio" {if condition="$entityshop.entityshop_state eq 2"} checked="checked"{/if}>
+                                           </div>
+                                </td>
+                                <td class="vatop tips"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="tfoot">
+                                <td colspan="15"><input type="submit" value="{$Think.lang.ds_confirm_submit}" class="btn" /></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+            <script>
+                $(function () {
+                    var textButton = "<input type='text' name='textfield' id='textfield1' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />"
+                    $(textButton).insertBefore("#entityshop_pic");
+                    $("#entityshop_pic").change(function () {
+                        $("#textfield1").val($("#entityshop_pic").val());
+                    });
+                    $('#entityshop_form').validate({
+                        errorPlacement: function (error, element) {
+                            error.appendTo(element.parent().parent().find('td:last'));
+                        },
+                        rules: {
+                            entityshop_name: {
+                                required: true
+                            }
+                        },
+                        messages: {
+                            entityshop_name: {
+                                required: '{$Think.lang.entityshop_name_error}'
+                            }
+                        }
+                    });
+                });
+            </script>
+
+
+        </div>

@@ -1,0 +1,267 @@
+{include file="public/header" /}
+<style>
+    tr.disable{-webkit-opacity: 0.3;  
+    /* Netscape and Older than Firefox 0.9 */  
+    -moz-opacity: 0.3;  
+    /* Safari 1.x (pre WebKit!) 老式khtml内核的Safari浏览器*/  
+    -khtml-opacity: 0.3;  
+    /* IE9 + etc...modern browsers */  
+    opacity: .3;  
+    /* IE 4-9 */  
+    filter:alpha(opacity=30);  
+    /*This works in IE 8 & 9 too*/  
+    -ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=30)";  
+    /*IE4-IE9*/  
+    filter:progid:DXImageTransform.Microsoft.Alpha(Opacity=30);}
+</style>
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>类型管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form class="" id="type_form" method="post">
+        <div class="ncap-form-default">
+            <dl>
+                <dt></dt>
+                <dd>
+                    <div id="gcategory" class="default_select">
+                        <input type="hidden" name="class_id" value="{$type.class_id}" class="mls_id" />
+                        <input type="hidden" name="class_name" value="{$type.class_name|default=''}" class="mls_name" />
+                        {if $type.class_id}
+                        <span>{$type.class_name|default=''}</span>
+                        <input type="button" value="{$Think.lang.ds_edit}" class="edit_gcategory" />
+                        {/if}
+                        <select {if $type.class_id}style="display:none"{/if}>
+                            <option value="0">请选择分类</option>
+                            {foreach name="gc_list" item="gc"}
+                            <option value="{$gc.gc_id}">{$gc.gc_name}</option>
+                            {/foreach}
+                        </select>
+                    </div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.type_name}</dt>
+                <dd>
+                    <input type="text" name="type_name" id="type_name" value="{$type.type_name|default=''}" />
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+
+            <dl>
+                <dt>{$Think.lang.type_sort}</dt>
+                <dd>
+                    <input type="text" name="type_sort" id="type_sort" value="{$type.type_sort|default='255'}" />
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl data-brand="title">
+                <dt>选择相关品牌</dt>
+                <dd>
+                </dd>
+            </dl>
+            {notempty name="brand_list"}
+            {foreach name="brand_list" item="brand_gc"}
+            <dl data-brand="content">
+                <dt>{$brand_gc.name}</dt>
+                <dd>
+                    {foreach name="brand_gc.brand" item="brand"}
+                    <input type="checkbox" id="brand_{$brand.brand_id}" value="{$brand.brand_id}" name="brand_id[]" {if $brand.checked}checked="checked"{/if} />
+                    <label for="brand_{$brand.brand_id}">{$brand.brand_name}</label>
+                    {/foreach}
+                </dd>
+            </dl>
+            {/foreach}
+            {/notempty}
+            <dl data-spec="title">
+                <dt>选择相关规格</dt>
+                <dd>
+                </dd>
+            </dl>
+            {notempty name="spec_list"}
+            {foreach name="spec_list" item="spec_gc"}
+            <dl data-spec="content">
+                <dt>{$spec_gc.name}</dt>
+                <dd>
+                    {foreach name="spec_gc.spec" item="spec"}
+                    <input type="checkbox" id="spec_{$spec.sp_id}" value="{$spec.sp_id}" name="spec_id[]" {notempty name="$spec.checked"}checked="checked"{/notempty}/>
+                    <label for="spec_{$spec.sp_id}">{$spec.sp_name}</label>
+                    {/foreach}
+                </dd>
+            </dl>
+            {/foreach}
+            {/notempty}
+        </div>
+
+
+
+        <table class="ds-default-table">
+            <thead>
+                <tr>
+                    <th width="100">排序</th>
+                    <th width="200">属性名称</th>
+                    <th>属性可选值</th>
+                    <th width="100">显示</th>
+                    <th width="100">{$Think.lang.ds_handle}</th>
+                </tr>
+            </thead>
+            <tbody id="tr_model">
+                <tr></tr>
+                {notempty name="attr_list"}
+                {foreach name="attr_list" item="attr"}
+                <tr data-attr="old">
+                
+                <td><input type="text" class="form-control" name="at_value[{$attr.attr_id}][sort]" value="{$attr.attr_sort}"/></td>
+                <td><input type="text" class="form-control" name="at_value[{$attr.attr_id}][name]" value="{$attr.attr_name}"/></td>
+                <td>{$attr.attr_value}</td>
+                <td><input type="checkbox" name="at_value[{$attr.attr_id}][show]" {if $attr.attr_show} checked="checked" {/if} /></td>
+                <td>
+                    <input type="hidden" value="" name="at_value[{$attr.attr_id}][form_submit]" />
+                    <input type="hidden" value="{$attr.attr_id}" name="at_value[{$attr.attr_id}][attr_id]" />
+                    <input type="checkbox" data-attr="del" name="a_del[{$attr.attr_id}]" value="{$attr.attr_id}" style="display:none" />
+                    <a href="javascript:dsLayerOpen('{:url('Type/attr_edit',['attr_id'=>$attr.attr_id])}','{$Think.lang.ds_edit}-{$attr.attr_name}')">{$Think.lang.ds_edit}</a>
+                    <a onclick="remove_tr($(this));" href="JavaScript:void(0);">移除</a>
+                </td>
+                </tr>
+                {/foreach}
+                {else /}
+                <tr data-attr="new">
+                    <td><input type="text" class="form-control" name="at_value[key][sort]" value="0"/></td>
+                    <td><input type="text" class="form-control" name="at_value[key][name]" value=""/></td>
+                    <td><textarea rows="5" cols="80" class="form-control" name="at_value[key][value]"></textarea></td>
+                    <td><input type="checkbox" name="at_value[key][show]" checked="checked" /></td>
+                    <td>
+                        <a onclick="remove_tr($(this));" href="JavaScript:void(0);">移除</a>
+                    </td>
+                </tr>
+                {/notempty}
+                
+            </tbody>
+            <tbody>
+                <tr>
+                    <td>
+                        <a id="add_type" class="btn-add-nofloat marginleft" href="JavaScript:void(0);"> <span>添加一个属性</span> </a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+    </form>
+</div>
+<!--载入-->
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<script>
+                            $(function () {
+                                gcategoryInit("gcategory");
+                                $(function () {
+                                    gcategoryInit("gcategory");
+                                    var i = 0;
+                                    var tr_model = '<tr data-attr="new">' +
+                                            '<td><input type="text" class="form-control" name="at_value[key][sort]" value="0" /></td>' +
+                                            '<td><input type="text" class="form-control" name="at_value[key][name]" value="" /></td>' +
+                                            '<td><textarea rows="5" cols="80" class="form-control" name="at_value[key][value]"></textarea></td>' +
+                                            '<td><input type="checkbox" name="at_value[key][show]" checked="checked" /></td>' +
+                                            '<td><a onclick="remove_tr($(this));" href="JavaScript:void(0);">移除</a></td>' +
+                                            '</tr>';
+                                    $("#add_type").click(function () {
+                                        $('#tr_model > tr:last').after(tr_model.replace(/key/g, i));
+                                        i++;
+                                    });
+                                });
+                      
+                                $('#gcategory').click(function(){
+                                    $.getJSON("{:url('Type/ajaxGetSpecAndBrand')}"+"?type_id={$type.type_id|default=0}&class_id="+$('[name=class_id]').val(),function(data){
+                                        $('[data-spec=content]').remove();
+                                        var s_list=data.s_list;
+                                        var html='';
+                                        for(var i in s_list){
+                                            var html_spec='';
+                                            var spec=s_list[i].spec;
+                                            for(var j in spec){
+                                                html_spec+='<input type="checkbox" id="spec_'+spec[j].sp_id+'" value="'+spec[j].sp_id+'" name="spec_id[]" '+((spec[j].checked=='1')?'checked="checked"':"")+' />'+
+                                                    '<label for="spec_'+spec[j].sp_id+'">'+spec[j].sp_name+'</label>';
+                                            }
+                                            html+='<dl data-spec="content">'+
+                                                '<dt>'+s_list[i].name+'</dt>'+
+                                                '<dd>'+
+                                                    html_spec+
+                                                '</dd>'+
+                                            '</dl>';
+                                        }
+                                        $('[data-spec=title]').after(html);
+                                        
+                                        
+                                        $('[data-brand=content]').remove();
+                                        var b_list=data.b_list;
+                                        var html='';
+                                        for(var i in b_list){
+                                            var html_brand='';
+                                            var brand=b_list[i].brand;
+                                            for(var j in brand){
+                                                html_brand+='<input type="checkbox" id="brand_'+brand[j].brand_id+'" value="'+brand[j].brand_id+'" name="brand_id[]" '+((brand[j].checked=='1')?'checked="checked"':"")+' />'+
+                                                    '<label for="brand_'+brand[j].brand_id+'">'+brand[j].brand_name+'</label>';
+                                            }
+                                            html+='<dl data-brand="content">'+
+                                                '<dt>'+b_list[i].name+'</dt>'+
+                                                '<dd>'+
+                                                    html_brand+
+                                                '</dd>'+
+                                            '</dl>';
+                                        }
+                                        $('[data-brand=title]').after(html);
+                                    })    
+                                });
+                                $('#type_form').submit(function(){
+                                    $('tr[data-attr=old].disable').find('[data-attr=del]').prop('checked',true);
+                                    $('tr[data-attr=new].disable').find('input').prop('disabled',true);
+                                });
+                            });
+                            function remove_tr(o) {
+                                if(o.parents('tr:first').hasClass('disable')){
+                                    o.parents('tr:first').removeClass('disable');
+                                    o.text('移除');
+                                }else{
+                                    o.parents('tr:first').addClass('disable');
+                                    o.text('还原');
+                                }
+                                
+                            };
+                            
+                    $(document).ready(function() {
+                        $("#type_form").validate({
+                            errorPlacement: function(error, element) {
+                                error.appendTo(element.nextAll('span.err'));
+                            },
+                            rules: {
+                                type_name : {
+                                    required : true
+                                },
+                                type_sort : {
+                                    required : true,
+                                    number : true,
+                                    range : [0,255]
+                                },
+                            },
+                            messages: {
+                                type_name : {
+                                    required : '请输入类型名称',
+                                },
+                                type_sort : {
+                                    required : '{$Think.lang.type_edit_type_attr_sort_no_null}',
+                                    number : '{$Think.lang.type_edit_type_attr_sort_no_digits}',
+                                    range : '{$Think.lang.class_sort_explain}'
+                                },
+                            }
+                        });
+                    });
+
+</script>

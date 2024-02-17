@@ -1,0 +1,87 @@
+<style>
+#glist tr.item{ cursor:pointer }
+#glist tr.selected{ border:#329ED1 1px solid; }
+#glist .ginfo .img{ border:1px #D9D9D9 solid; margin-right:10px; }
+#glist .ginfo .infoitem{ width:120px; height:30px; }
+</style>
+<div style="border:1px #D9D9D9 solid; padding:10px; width:98%;">
+    <div style="text-align:right;">
+    	<input class="txt" type="text" value="{present name='search_arr.gname'}{$search_arr.gname}{/present}" id="gname" name="gname">
+    	<a href="{:url('Statmarketing/grouplist',['t'=>$searchtime])}" id="glistsearchbtn" class="btn tooltip">{$Think.lang.ds_query}</a>
+    </div>
+    <table class="ds-default-table">
+        <tbody id="glist">
+        {notempty name="grouplist"}
+        {foreach name="grouplist" item="v"}
+          <tr ds_type="gitem" class="hover item {$key == 1 ?'selected':''}">
+            <td>{$v.groupbuy_name}</td>
+            <td>抢购时间：{:date('Y-m-d',$v.groupbuy_starttime)}~{:date('Y-m-d',$v.groupbuy_endtime)}</td>
+            <td>{$v.groupbuy_state_text}</td>
+          </tr>
+          <tr ds_type="ginfo" class="hover ginfo" style="{$key == 1?'display:none':''}">
+            <td colspan="3">
+            	<div class="size-106x106 left img">
+                  <span class="thumb size-106x106"><i></i>
+                    <a target="_blank" href="{:url('home/Showgroup/groupbuy_detail',['group_id'=>$v.groupbuy_id])}">
+                    <img src="{:groupbuy_thumb($v.groupbuy_image)}" style=" max-width: 106px; max-height: 106px;"/>
+                    </a>
+                  </span>
+                </div>
+            	<div class="left">
+                	<h3>{$v.goods_name}</h3>
+                	<div class="close_float">
+                		<span class="infoitem left">原价：<em class="red_common">{$v.goods_price}{$Think.lang.ds_yuan}</em></span>
+                		<span class="infoitem left">折扣：<em class="red_common">{$v.groupbuy_rebate}折</em></span>
+                		<span class="infoitem left">抢购价：<em class="red_common">{$v.groupbuy_price}{$Think.lang.ds_yuan}</em></span>
+                	</div>
+                	<div class="close_float">
+                		<span class="infoitem left">浏览次数：<em class="red_common">{$v.groupbuy_views}</em></span>
+                		<span class="infoitem left">下单量：<em class="red_common">{$v.ordernum}</em></span>
+                		<span class="infoitem left">购买量：<em class="red_common">{$v.goodsnum}</em></span>
+                		<span class="infoitem left" style="width:200px;">总金额：<em class="red_common">{$v.goodsamount}{$Think.lang.ds_yuan}</em></span>
+                		<span class="infoitem left" style="width:300px;">下单转化率：<em class="red_common">{$v.orderrate}%</em></span>
+                	</div>
+            	</div>
+            </td>
+          </tr>
+        {/foreach}
+       {else /}
+        <tr class="no_data">
+          <td colspan="15">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js" type="text/javascript"></script>
+<script>
+$(function () {
+    //show info
+    $("[ds_type='gitem']").click(function(){
+        $("[ds_type='gitem']").removeClass('selected');
+        if($(this).next('tr').css('display') == 'none'){
+            $("[ds_type='ginfo']").hide();
+            $(this).addClass('selected');
+            $(this).next('tr').show();
+        } else {
+            $("[ds_type='ginfo']").hide();
+        }
+    });
+
+    $('#glist').on('click', '.pagination li a', function() {
+            $('#glist').load($(this).attr('href'));
+            return false;
+        });
+    $("#glistsearchbtn").mouseover(function(){
+        var gname = $("#gname").val();
+        $(this).attr('href',ADMINSITEURL+'/Statmarketing/grouplist?t={$searchtime}&gname='+gname);
+        $("#glistsearchbtn").ajaxContent({
+            event:'click',
+            loaderType:"img",
+            loadingMsg:"{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif",
+            target:'#glist'
+        });
+    });
+});
+</script>

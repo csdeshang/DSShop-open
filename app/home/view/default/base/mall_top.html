@@ -1,0 +1,241 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>{$html_title|default=$Think.config.ds_config.site_name}</title>
+        <meta name="renderer" content="webkit|ie-comp|ie-stand" />
+        <meta name="keywords" content="{$seo_keywords|default=''}" />
+        <meta name="description" content="{$seo_description|default=''}" />
+        <link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/common.css">
+        <link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_header.css">
+        <script>
+            var BASESITEROOT = "{$Think.BASE_SITE_ROOT}";
+            var HOMESITEROOT = "{$Think.HOME_SITE_ROOT}";
+            var BASESITEURL = "{$Think.BASE_SITE_URL}";
+            var HOMESITEURL = "{$Think.HOME_SITE_URL}";
+        </script>
+        <script src="{$Think.PLUGINS_SITE_ROOT}/jquery-2.1.4.min.js"></script>
+        <script src="{$Think.PLUGINS_SITE_ROOT}/common.js"></script>
+        <script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui/jquery-ui.min.js"></script>
+        <script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui/jquery.ui.datepicker-zh-CN.js"></script>
+        <script src="{$Think.PLUGINS_SITE_ROOT}/jquery.validate.min.js"></script>
+        <script src="{$Think.PLUGINS_SITE_ROOT}/layer/layer.js"></script>
+        <script src="{$Think.PLUGINS_SITE_ROOT}/js/dialog/dialog.js" id="dialog_js" charset="utf-8"></script>
+    </head>
+    <body>
+        <div id="append_parent"></div>
+        <div id="ajaxwaitid"></div>
+        {if $adv_top}
+        <div style="background:{$adv_top.adv_bgcolor|default=''};">
+            <div class="w1200">
+                <a href="{:url('Advclick/Advclick',['adv_id'=>$adv_top['adv_id']])}" target="_blank" title="{$adv_top.adv_title}"><img src="{:ds_get_pic(ATTACH_ADV,$adv_top.adv_code)}" width="1200"/></a>
+            </div>
+        </div>
+        {/if}
+        <div class="public-top">
+            <div class="w1200">
+                <span class="top-link">
+                    {$Think.lang.welcome_to} <em>{$Think.config.ds_config.site_name}</em>
+                </span>
+                <ul class="login-regin">
+                    {if session('member_id')}
+                    <li class="line"> <a href="{:url('Member/index')}">{:session('member_name')}</a></li>
+                    <li> <a href="{:url('Login/Logout')}">{$Think.lang.exit}</a></li>
+                    {else}
+                    <li class="line"> <a href="{:url('Login/login')}">{$Think.lang.please_log}</a></li>
+                    {if $Think.config.ds_config.member_normal_register==1 || $Think.config.ds_config.sms_register==1}
+                    <li> <a href="{:url('Login/register')}">{$Think.lang.quick_login_register}</a></li>
+                    {/if}
+                    {/if}
+                </ul>
+                <span class="top-link">
+                    <strong style="margin-left:30px;">{$Think.lang.ds_attention}<a href="http://www.csdeshang.com" target="_blank">www.csdeshang.com</a> {$Think.lang.ds_continuous_update}</strong>&nbsp;
+                    {$Think.lang.ds_purchase_authorization}：<a target="_blank" href="{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin=858761000&site=qq&menu=yes"><img border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:858761000:51" alt="{$Think.lang.click_here_send_message}" title="{$Think.lang.click_here_send_message}"/></a>
+                </span>
+                <ul class="quick_list">
+                    <li class="moblie-qrcode" style="margin-right:25px;">
+                        <span class="outline"></span>
+                        <span class="blank"></span>
+                        <a href="javascript:void(0)">技术咨询(微信)</a>
+                        <div class="dropdown-menu">
+                            <img src="http://www.csdeshang.com/static/home/pc/images/weixin_qrcode_person_1.jpg" width="90" height="90" />
+                        </div>
+                    </li>
+                    <li>
+                        <span class="outline"></span>
+                        <span class="blank"></span>
+                        <a href="{:url('Member/index')}">{$Think.lang.ds_user_center}<b></b></a>
+                        <div class="dropdown-menu">
+                            <ol>
+                                <li><a href="{:url('Memberorder/index')}">{$Think.lang.ds_buying_goods}</a></li>
+                                <li><a href="{:url('Memberfavorites/fglist')}">{$Think.lang.ds_care_about}</a></li>
+                            </ol>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="outline"></span>
+                        <span class="blank"></span>
+                        <a href="javascript:void(0)">快捷导航<b></b></a>
+                        <div class="dropdown-menu">
+                            <ol>
+                                {foreach $navs.header as $nav}
+                                <li>
+                                    <a href="{$nav.nav_url}" {if $nav.nav_new_open == 1}target="_blank"{/if}>{$nav.nav_title}</a>
+                                </li>
+                                {/foreach}
+                            </ol>
+                        </div>
+                    </li>
+                    <li class="moblie-qrcode">
+                        <span class="outline"></span>
+                        <span class="blank"></span>
+                        <a href="javascript:void(0)">{$Think.lang.wechat_end}</a>
+                        <div class="dropdown-menu">
+                            <img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logowx)}" width="90" height="90" />
+                        </div>
+                    </li>
+                    <!--
+                    <li class="app-qrcode">
+                        <span class="outline"></span>
+                        <span class="blank"></span>
+                        <a href="javascript:void(0)">APP</a>
+                        <div class="dropdown-menu">
+                            <img width="90" height="90" src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logowx)}" />
+                            <h3>扫描二维码</h3>
+                            <p>下载手机客户端</p>
+                        </div>
+                    </li>
+                    -->
+                </ul>
+            </div>
+        </div>
+        
+        
+        
+        <!--左侧导航栏-->
+<div class="ds-appbar">
+    <div class="ds-appbar-tabs" id="appBarTabs">
+        {if session('is_login')}
+        <div class="user" dstype="a-barUserInfo">
+            <div class="avatar"><img src="{:get_member_avatar(session('avatar'))}?{$Think.TIMESTAMP}"/></div>
+            <p>{$Think.lang.sns_me}</p>
+        </div>
+        <div class="user-info" dstype="barUserInfo" style="display:none;"><i class="arrow"></i>
+            <div class="avatar"><img src="{:get_member_avatar(session('avatar'))}?{$Think.TIMESTAMP}"/></div>
+            <dl>
+                <dt>Hi, {:session('member_name')}</dt>
+                <dd>{$Think.lang.ds_current_level}：<strong dstype="barMemberGrade">{:session('level_name')}</strong></dd>
+                <dd>{$Think.lang.ds_current_experience}：<strong dstype="barMemberExp">{:session('member_exppoints')}</strong></dd>
+            </dl>
+        </div>
+       {else /}
+        <div class="user TA_delay" dstype="a-barLoginBox">
+            <div class="avatar TA"><img src="{:get_member_avatar(session('avatar'))}?{$Think.TIMESTAMP}"/></div>
+            <p class="TA">{$Think.lang.login_notlogged}</p>
+        </div>
+        {/if}
+        <ul class="tools">
+            <li><a href="javascript:void(0);" onclick="toglle_bar('rtoolbar_cart')" id="rtoolbar_cart" class="cart TA_delay"><span class="iconfont">&#xe69a;</span><span class="tit">{$Think.lang.ds_cart}</span><i id="rtoobar_cart_count" class="new_msg" style="display:none;"></i></a></li>
+            <li><a href="javascript:void(0);" onclick="toglle_bar('compare')" id="compare" class="compare TA_delay"><span class="iconfont">&#xe74a;</span><span class="tit">{$Think.lang.ds_comparison}</span></a></li>
+            <li>
+                <a href="javascript:void(0);" id="qrcode" class="qrcode TA_delay">
+                    <span class="iconfont">&#xe72d;</span>
+                    <span class="tit-box">
+                        {$Think.lang.ds_mobile_shopping_better}<br>
+                        <img src="{$Think.HOME_SITE_URL}/qrcode?url={$Think.config.ds_config.h5_site_url}" width="110" height="110" />
+                        <em class="tips_arrow"></em>
+                    </span>
+                </a>
+            </li>
+            <li><a href="javascript:void(0);" onclick="$('html,body').animate({scrollTop: '0px'}, 500)" id="gotop" class="gotop TA_delay" style="position: fixed;bottom: 0"><span class="iconfont">&#xe724;</span><span class="tit">{$Think.lang.ds_top}</span></a></li>
+            {if $Think.config.ds_config.customer_service_open}
+            <li>
+                <a href="javascript:void(0);" id="customer" class="customer TA_delay">
+                    <span class="iconfont">&#xe750;</span>
+                    <span class="customer-box">
+                        {if $Think.config.ds_config.customer_service_ww_1}<img onclick="window.open('http://www.taobao.com/webww/ww.php?ver=3&touid={$Think.config.ds_config.customer_service_ww_1}&siteid=cntaobao&status=1&charset=utf-8','_blank')" border="0" src="http://amos.alicdn.com/online.aw?v=2&uid={$Think.config.ds_config.customer_service_ww_1}&site=cntaobao&s=1&charset=utf-8" alt="点这里给我发消息"/>{/if}
+                        {if $Think.config.ds_config.customer_service_ww_2}<img onclick="window.open('http://www.taobao.com/webww/ww.php?ver=3&touid={$Think.config.ds_config.customer_service_ww_2}&siteid=cntaobao&status=1&charset=utf-8','_blank')" border="0" src="http://amos.alicdn.com/online.aw?v=2&uid={$Think.config.ds_config.customer_service_ww_2}&site=cntaobao&s=1&charset=utf-8" alt="点这里给我发消息"/>{/if}
+                        {if $Think.config.ds_config.customer_service_ww_3}<img onclick="window.open('http://www.taobao.com/webww/ww.php?ver=3&touid={$Think.config.ds_config.customer_service_ww_3}&siteid=cntaobao&status=1&charset=utf-8','_blank')" border="0" src="http://amos.alicdn.com/online.aw?v=2&uid={$Think.config.ds_config.customer_service_ww_3}&site=cntaobao&s=1&charset=utf-8" alt="点这里给我发消息"/>{/if}
+                        {if $Think.config.ds_config.customer_service_qq_1}<img onclick="window.open('{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$Think.config.ds_config.customer_service_qq_1}&site=qq&menu=yes','_blank')" border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$Think.config.ds_config.customer_service_qq_1}:51" alt="{$Think.lang.click_here_send_message}" title="{$Think.lang.click_here_send_message}"/>{/if}
+                        {if $Think.config.ds_config.customer_service_qq_2}<img onclick="window.open('{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$Think.config.ds_config.customer_service_qq_2}&site=qq&menu=yes','_blank')" border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$Think.config.ds_config.customer_service_qq_2}:51" alt="{$Think.lang.click_here_send_message}" title="{$Think.lang.click_here_send_message}"/>{/if}
+                        {if $Think.config.ds_config.customer_service_qq_3}<img onclick="window.open('{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$Think.config.ds_config.customer_service_qq_3}&site=qq&menu=yes','_blank')" border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$Think.config.ds_config.customer_service_qq_3}:51" alt="{$Think.lang.click_here_send_message}" title="{$Think.lang.click_here_send_message}"/>{/if}
+                        <em class="tips_arrow"></em>
+                    </span>
+                </a>
+            </li>
+            {/if}
+        </ul>
+        <div class="content-box" id="content-compare">
+            <div class="top">
+                <h3>{$Think.lang.ds_comparison}</h3>
+                <a href="javascript:void(0);" class="close iconfont" title="{$Think.lang.ds_hidden}">&#xe73d;</a></div>
+            <div id="comparelist"></div>
+        </div>
+        <div class="content-box" id="content-cart">
+            <div class="top">
+                <h3>{$Think.lang.ds_my_shopping_cart}</h3>
+                <a href="javascript:void(0);" class="close iconfont" title="{$Think.lang.ds_hidden}">&#xe73d;</a></div>
+            <div id="rtoolbar_cartlist"></div>
+        </div>
+    </div>
+</div>
+        
+<script type="text/javascript">
+
+    //动画显示边条内容区域
+    $(function() {
+        $(".close").click(function(){
+            close_bar();
+        });
+        // 右侧bar用户信息
+        $('div[dstype="a-barUserInfo"]').click(function(){
+            $('div[dstype="barUserInfo"]').toggle();
+        });
+        // 右侧bar登录
+        $('div[dstype="a-barLoginBox"]').click(function(){
+            login_dialog();
+        });
+
+        {if $cart_goods_num > 0}
+            $('#rtoobar_cart_count').html({$cart_goods_num}).show();
+        {/if}
+    });
+    function toglle_bar(item){
+           var member_id = "{:session('member_id')}";
+              if(member_id == ''){
+                   login_dialog();
+                  return;
+              }
+        //判断侧边栏是否已拉出
+        if(parseInt($('.ds-appbar').css('width')) == 36){
+            $('.ds-appbar').css('width','306px');
+        }
+        //判断选中项是否已显示
+        if(!$("#"+item).hasClass('active')){
+            $('.tools li > a').removeClass('active');
+            $("#"+item).addClass('active');
+            $('.content-box').removeClass('active');
+            
+            switch(item){
+                case 'rtoolbar_cart':
+                    $("#rtoolbar_cartlist").load("{:url('Cart/ajax_load',['type'=>'html'])}");
+                    $("#content-cart").addClass('active');
+                    break;
+                case 'compare':   
+                    loadCompare(false);
+                    $("#content-compare").addClass('active');
+                    break;
+            }
+        }else{
+            //关闭
+            close_bar();
+            $(".chat-list").css("display",'none');
+        }
+        
+    }
+    function close_bar(){
+        $('.tools li > a').removeClass('active');
+        $('.content-box').removeClass('active');
+        $('.ds-appbar').css('width','36px');
+    }
+</script> 

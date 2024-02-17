@@ -1,0 +1,116 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <form id="user_form" method="post">
+        <div class="ds-default-table">
+            <table>
+                <tbody>
+                    <tr class="noborder">
+                        <td class="required w120">会员名称</td>
+                        <td class="vatop rowform">
+                            <input type="hidden" name="member_id" id="member_id" value="{$member_info.member_id|default='0'}"/>
+                            <input id="member_name" name="member_name" value="{$member_info.member_name|default=''}" class="input-txt" type="text" onchange="javascript:checkmember();">
+                            <span class="err"></span>
+                            <p class="notic"></p>
+                        </td>    
+                    </tr>
+                    <tr class="noborder" id="tr_memberinfo">
+                        <td colspan="2" class="required" id="td_memberinfo">
+                            {notempty name="member_info"}
+                            {$member_info.member_name}, 当前预存款数为{$member_info.available_predeposit}, 当前预存款冻结金额数为{$member_info.freeze_predeposit}
+                            {/notempty}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="required w120">增减类型</td>
+                        <td class="vatop rowform">
+                            <select id="operatetype" name="operatetype">
+                                <option value="1">增加</option>
+                                <option value="2">减少</option>
+                                <option value="3">冻结</option>
+                                <option value="4">解冻</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="required w120">金额</td>
+                        <td class="vatop rowform"><input type="text" class="form-control" name="amount" id="amount" value="" /></td>
+                    </tr>
+                    <tr>
+                        <td class="required w120">描述信息</td>
+                        <td class="vatop rowform"><textarea name="lg_desc" ></textarea></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script>
+                        function checkmember() {
+                            var membername = $.trim($("#member_name").val());
+                            if (membername == '') {
+                                $("#member_id").val('0');
+                                layer.alert('请输入会员名');
+                                return false;
+                            }
+                            var url = ADMINSITEURL + '/Predeposit/checkmember.html';
+                            $.post(url, {'name': membername}, function(data) {
+                                if (data.id)
+                                {
+                                    $("#tr_memberinfo").show();
+                                    var msg = " " + data.name + ", 当前预存款数为" + data.available_predeposit + ", 当前预存款冻结金额数为" + data.freeze_predeposit;
+                                    $("#member_name").val(data.name);
+                                    $("#member_id").val(data.id);
+                                    $("#td_memberinfo").text(msg);
+                                }
+                                else
+                                {
+                                    $("#member_name").val('');
+                                    $("#member_id").val('0');
+                                    layer.alert("会员信息错误");
+                                }
+                            }, 'json');
+                        }
+</script>
+<script type="text/javascript">
+    $(function(){
+        $('#user_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                amount :{
+                    required: true,
+                    number:true,
+                    min:0,
+                },
+                member_id:{
+                    required: true,
+                }
+                
+                 
+            },
+            messages: {
+                amount :{
+                   required: '金额不能为空',
+                   number: '请输入数字',
+                   min: '请输入大于0的数'
+                },    
+            }
+        });
+        
+    });
+    
+    
+</script>
+</body>

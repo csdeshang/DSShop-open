@@ -1,0 +1,436 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>抢购管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    
+    <div class="dssc-form-default">
+    <form id="add_form" action="" method="post" enctype="multipart/form-data">
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.group_name}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input class="w400 text" name="groupbuy_name" type="text" id="groupbuy_name" value="" maxlength="30"  />
+                <span></span>
+                <p class="hint">{$Think.lang.group_name_tip}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.snap_up_subtitles}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input class="w400 text" name="remark" type="text" id="remark" value="" maxlength="30"  />
+                <span></span>
+                <p class="hint">{$Think.lang.snap_up_subtitle_word_limit}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.start_time}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input id="start_time" name="start_time" type="text" class="text w130" /><em class="add-on"><i class="iconfont">&#xe8d6;</i></em><span></span>
+                <p class="hint">{$Think.lang.start_time_cannot_less_than}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.end_time}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input id="end_time" name="end_time" type="text" class="text w130"/><em class="add-on"><i class="iconfont">&#xe8d6;</i></em><span></span>
+                <p class="hint">
+                </p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.groupbuy_goods}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <div dstype="groupbuy_goods_info" class="selected-group-goods " style="display:none;">
+                    <div class="goods-thumb"><img id="groupbuy_goods_image" src=""/></div>
+                    <div class="goods-name">
+                        <a dstype="groupbuy_goods_href" id="groupbuy_goods_name" href="" target="_blank"></a>
+                    </div>
+                    <div class="goods-price">{$Think.lang.shop_price}：￥<span dstype="groupbuy_goods_price"></span></div>
+                </div>
+                <a href="javascript:void(0);" id="btn_show_search_goods" class="dssc-btn dssc-btn-acidblue">{$Think.lang.groupbuy_index_choose_goods}</a>
+                <input id="groupbuy_goods_id" name="groupbuy_goods_id" type="hidden" value=""/>
+                <span></span>
+                <div id="div_search_goods" class="div-goods-select mt10" style="display: none;">
+                    <table class="search-form">
+                        <tr>
+                            <th class="w150">
+                                <strong>{$Think.lang.search_items}</strong>
+                            </th>
+                            <td class="w160">
+                                <input id="search_goods_name" type="text w150" class="text" name="goods_name" value=""/>
+                            </td>
+                            <td class="w70 tc">
+                                <a href="javascript:void(0);" id="btn_search_goods" class="dssc-btn"/><i class="iconfont">&#xe718;</i>{$Think.lang.ds_search}</a></td>
+                            <td class="w10"></td>
+                            <td>
+                                <p class="hint">{$Think.lang.special_goods_not_allowed}</p>
+                            </td>
+                        </tr>
+                    </table>
+                    <div id="div_goods_search_result" class="search-result" style="width:739px;"></div>
+                    <a id="btn_hide_search_goods" class="close" href="javascript:void(0);">X</a>
+                </div>
+                <p class="hint">{$Think.lang.groupbuy_goods_explain}</br><span class="red">{$Think.lang.implement_uniform_purchase_prices}</span></p>
+            </dd>
+        </dl>
+        <dl dstype="groupbuy_goods_info" style="display:none;">
+            <dt>{$Think.lang.groupbuy_index_price}{$Think.lang.ds_colon}</dt>
+            <dd> {$Think.lang.currency}<span dstype="groupbuy_goods_price"></span><input id="input_groupbuy_goods_price" type="hidden"></dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.groupbuy_price}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input class="w70 text" id="groupbuy_price" name="groupbuy_price" type="text" value=""/><em class="add-on"><i class="iconfont">&#xe65c;</i></em> <span></span>
+                <p class="hint">{$Think.lang.groupbuy_price_tip|raw}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.snap_up_photos}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <div class="dssc-upload-thumb groupbuy-pic">
+                    <p><i class="iconfont">&#xe72a;</i>
+                        <img dstype="img_groupbuy_image" style="display:none;" src=""/></p>
+                </div>
+                <input dstype="groupbuy_image" name="groupbuy_image" type="hidden" value="">
+                <div class="dssc-upload-btn">
+                    <a href="javascript:void(0);">
+                        <span>
+                            <input type="file" hidefocus="true" size="1" class="input-file" name="groupbuy_image" dstype="btn_upload_image"/>
+                        </span>
+                        <p><i class="iconfont">&#xe733;</i>{$Think.lang.image_upload}</p>
+                    </a>
+                </div>
+                <span></span>
+                <p class="hint">{$Think.lang.group_pic_explain|raw}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.snap_recommended_images}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <div class="dssc-upload-thumb groupbuy-commend-pic">
+                    <p><i class="iconfont">&#xe72a;</i>
+                        <img dstype="img_groupbuy_image" style="display:none;" src=""/></p>
+                </div>
+                <input dstype="groupbuy_image" name="groupbuy_image1" type="hidden" value="">
+                <span></span>
+                <div class="dssc-upload-btn">
+                    <a href="javascript:void(0);">
+                        <span>
+                            <input type="file" hidefocus="true" size="1" class="input-file" name="groupbuy_image" dstype="btn_upload_image"/>
+                        </span>
+                        <p><i class="iconfont">&#xe733;</i>{$Think.lang.image_upload}</p>
+                    </a>
+                </div>
+                <p class="hint">{$Think.lang.group_pic_explain2|raw}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.groupbuy_class}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <select id="gclass_id" name="gclass_id" class="w80">
+                    <option value="0">{$Think.lang.text_no_limit}</option>
+                </select>
+                <select id="s_gclass_id" name="s_gclass_id" class="w80">
+                    <option value="0">{$Think.lang.text_no_limit}</option>
+                </select>
+                <span></span>
+                <p class="hint">{$Think.lang.groupbuy_class_tip}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.virtual_quantity}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input class="w70 text" id="virtual_quantity" name="virtual_quantity" type="text" value="0"/>
+                <span></span>
+                <p class="hint">{$Think.lang.virtual_quantity_explain}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.sale_quantity}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input class="w70 text" id="upper_limit" name="upper_limit" type="text" value="0"/>
+                <span></span>
+                <p class="hint">{$Think.lang.sale_quantity_explain}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.group_intro}{$Think.lang.ds_colon}</dt>
+            <dd>
+                {:build_editor(['name'=>'content','content'=>''])}
+                <textarea name="groupbuy_intro" id="content"></textarea>
+                <p class="hr8"><a class="des_demo dssc-btn" href="{:url('Goodsalbum/pic_list',['item'=>'groupbuy'])}"><i class="iconfont">&#xe72a;</i>{$Think.lang.goods_album_insert_users_photo}</a></p>
+                <p id="des_demo" style="display:none;"></p>
+            </dd>
+        </dl>
+        <div class="bottom">
+                <input type="submit" class="btn" value="{$Think.lang.ds_submit}">
+        </div>
+    </form>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/i18n/jquery-ui-timepicker-zh-CN.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-file-upload/jquery.fileupload.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#start_time').datetimepicker({dateFormat: 'yy-mm-dd'});
+        $('#end_time').datetimepicker({dateFormat: 'yy-mm-dd'});
+
+        $('#btn_show_search_goods').on('click', function() {
+            $('#div_search_goods').show();
+        });
+
+        $('#btn_hide_search_goods').on('click', function() {
+            $('#div_search_goods').hide();
+        });
+
+        //搜索商品
+        $('#btn_search_goods').on('click', function() {
+            var url = "{:url('Groupbuy/search_goods')}";
+             var  datas  =  $.param({goods_name: $('#search_goods_name').val()});
+            $('#div_goods_search_result').load(url,datas);
+        });
+
+        $('#div_goods_search_result').on('click', '.pagination li a', function() {
+            $('#div_goods_search_result').load($(this).attr('href'));
+            return false;
+        });
+
+        //选择商品
+        $('#div_goods_search_result').on('click', '[dstype="btn_add_groupbuy_goods"]', function() {
+            var goods_commonid = $(this).attr('data-goods-commonid');
+            $.get("{:url('Groupbuy/groupbuy_goods_info')}", {goods_commonid: goods_commonid}, function(data) {
+                if(data.result) {
+                    $('#groupbuy_goods_id').val(data.goods_id);
+                    $('#groupbuy_goods_image').attr('src', data.goods_image);
+                    $('#groupbuy_goods_name').text(data.goods_name);
+                    $('[dstype="groupbuy_goods_price"]').text(data.goods_price);
+                    $('#input_groupbuy_goods_price').val(data.goods_price);
+                    $('[dstype="groupbuy_goods_href"]').attr('href', data.goods_href);
+                    $('[dstype="groupbuy_goods_info"]').show();
+                    $('#div_search_goods').hide();
+                } else {
+                    layer.msg(data.message);
+                }
+            }, 'json');
+        });
+
+        //图片上传
+        $('[dstype="btn_upload_image"]').fileupload({
+            dataType: 'json',
+            url: "{:url('Groupbuy/image_upload')}",
+            add: function(e, data) {
+                $parent = $(this).parents('dd');
+                $input = $parent.find('[dstype="groupbuy_image"]');
+                $img = $parent.find('[dstype="img_groupbuy_image"]');
+                data.formData = {old_groupbuy_image:$input.val()};
+                $img.attr('src', "{$Think.HOME_SITE_ROOT}/images/loading.gif");
+                data.submit();
+            },
+            done: function (e,data) {
+                var result = data.result;
+                $parent = $(this).parents('dd');
+                $input = $parent.find('[dstype="groupbuy_image"]');
+                $img = $parent.find('[dstype="img_groupbuy_image"]');
+                if(result.result) {
+                    $img.prev('i').hide();
+                    $img.attr('src', result.file_url);
+                    $img.show();
+                    $input.val(result.file_name);
+                } else {
+                    layer.msg(data.message);
+                }
+            }
+        });
+
+        jQuery.validator.methods.greaterThanDate = function(value, element, param) {
+            var date1 = new Date(Date.parse(param.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 < date2;
+        };
+
+        jQuery.validator.methods.lessThanDate = function(value, element, param) {
+            var date1 = new Date(Date.parse(param.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 > date2;
+        };
+
+        jQuery.validator.methods.greaterThanStartDate = function(value, element) {
+            var start_date = $("#start_time").val();
+            var date1 = new Date(Date.parse(start_date.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 < date2;
+        };
+
+        jQuery.validator.methods.lessThanGoodsPrice= function(value, element) {
+            var goods_price = $("#input_groupbuy_goods_price").val();
+            return Number(value) < Number(goods_price);
+        };
+
+        jQuery.validator.methods.checkGroupbuyGoods = function(value, element) {
+            var start_time = $("#start_time").val();
+            var result = true;
+            $.ajax({
+                type:"GET",
+                url:"{:url('Groupbuy/check_groupbuy_goods')}",
+                async:false,
+                data:{start_time: start_time, goods_id: value},
+                dataType: 'json',
+                success: function(data){
+                    if(!data.result) {
+                        result = false;
+                    }
+                }
+            });
+            return result;
+        };
+
+        //页面输入内容验证
+        $("#add_form").validate({
+            errorPlacement: function(error, element){
+                var error_td = element.parent('dd').children('span');
+                error_td.append(error);
+            },
+            onfocusout: false,
+            submitHandler:function(form){
+                ds_ajaxpost('add_form', 'url', "{:url('Groupbuy/index')}");
+            },
+            rules : {
+                groupbuy_name: {
+                    required : true
+                },
+                start_time : {
+                    required : true
+                },
+                end_time : {
+                    required : true,
+        greaterThanStartDate : true
+    },
+        groupbuy_goods_id: {
+            required : true,
+                checkGroupbuyGoods: true
+        },
+        groupbuy_price: {
+            required : true,
+                number : true,
+                lessThanGoodsPrice: false,
+                min : 0.01,
+                max : 1000000
+        },
+        virtual_quantity: {
+            required : true,
+                digits : true
+        },
+        upper_limit: {
+            required : true,
+                digits : true
+        },
+        groupbuy_image1: {
+            required : true
+        }
+    },
+        messages : {
+            groupbuy_name: {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.group_name_error}'
+            },
+            start_time : {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.start_time_cannot_empty}'
+            },
+            end_time : {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.end_snap_time_cannot_empty}',
+                greaterThanStartDate : '<i class="iconfont">&#xe64c;</i>{$Think.lang.must_greater_start_time}'
+            },
+            groupbuy_goods_id: {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.group_goods_error}',
+                    checkGroupbuyGoods: '{$Think.lang.product_participated_simultaneous_events}'
+            },
+            groupbuy_price: {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.groupbuy_price_error}',
+                    number : '<i class="iconfont">&#xe64c;</i>{$Think.lang.groupbuy_price_error}',
+                    lessThanGoodsPrice: '<i class="iconfont">&#xe64c;</i>{$Think.lang.price_must_less_price_goods}',
+                    min : '<i class="iconfont">&#xe64c;</i>{$Think.lang.groupbuy_price_error}',
+                    max : '<i class="iconfont">&#xe64c;</i>{$Think.lang.groupbuy_price_error}'
+            },
+            virtual_quantity: {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.virtual_quantity_error}',
+                    digits : '<i class="iconfont">&#xe64c;</i>{$Think.lang.virtual_quantity_error}'
+            },
+            upper_limit: {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.sale_quantity_error}',
+                    digits : '<i class="iconfont">&#xe64c;</i>{$Think.lang.sale_quantity_error}'
+            },
+            groupbuy_image1: {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.snap_images_cannot_empty}'
+            }
+        }
+    });
+
+        $('#li_1').click(function(){
+            $('#li_1').attr('class','active');
+            $('#li_2').attr('class','');
+            $('#demo').hide();
+        });
+
+        $('#goods_demo').click(function(){
+            $('#li_1').attr('class','');
+            $('#li_2').attr('class','active');
+            $('#demo').show();
+        });
+
+        $('.des_demo').click(function(){
+            if($('#des_demo').css('display') == 'none'){
+                $('#des_demo').show();
+            }else{
+                $('#des_demo').hide();
+            }
+        });
+
+        $('.des_demo').ajaxContent({
+            event:'click', //mouseover
+            loaderType:"img",
+            loadingMsg:"{$Think.HOME_SITE_ROOT}/images/loading.gif",
+            target:'#des_demo'
+        });
+    });
+
+    function insert_editor(file_path){
+        ue.execCommand('insertimage', {src:file_path});
+    }
+
+    (function(data) {
+        var s = '<option value="0">{$Think.lang.text_no_limit}</option>';
+        if (typeof data.children != 'undefined') {
+            if (data.children[0]) {
+                $.each(data.children[0], function(k, v) {
+                    s += '<option value="'+v+'">'+data['name'][v]+'</option>';
+                });
+            }
+        }
+        $('#gclass_id').html(s).change(function() {
+            var ss = '<option value="0">{$Think.lang.text_no_limit}</option>';
+            var v = this.value;
+            if (parseInt(v) && data.children[v]) {
+                $.each(data.children[v], function(kk, vv) {
+                    ss += '<option value="'+vv+'">'+data['name'][vv]+'</option>';
+                });
+            }
+            $('#s_gclass_id').html(ss);
+        });
+    })($.parseJSON('{:json_encode($groupbuy_classes)}'));
+</script>
+    
+    
+    
+</div>
+

@@ -1,0 +1,475 @@
+{include file="public/header" /}
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.SuperSlide.2.1.1.js"></script>
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/editable_page.css">
+<link href="{$Think.PLUGINS_SITE_ROOT}/colorpicker/evol.colorpicker.css" rel="stylesheet" type="text/css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/colorpicker/evol.colorpicker.min.js"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery.lazyload.min.js"></script>
+<script type="text/javascript" charset="utf-8" src="{$Think.PLUGINS_SITE_ROOT}/ueditor/ueditor.config.js"></script> 
+<script type="text/javascript" charset="utf-8" src="{$Think.PLUGINS_SITE_ROOT}/ueditor/ueditor.all.min.js"> </script>
+<script type="text/javascript" charset="utf-8" src="{$Think.PLUGINS_SITE_ROOT}/ueditor/lang/zh-cn/zh-cn.js"></script>
+<div class="model-wrapper active">
+    <div class="model-title"><span class="title">{$Think.lang.model_list}</span><span class="desc">{$Think.lang.model_list_tips}</span></div>
+    <div class="model-list">
+        <div id="model_list">
+            <div class="editable-page-model">
+                <form>
+                    <div class="model-item-list">
+                        
+                    <label class="model-item-wrapper" data-show="1">
+                        <div class="model-item">
+                            <div class="model-image ui-draggable ui-draggable-handle" data-id="11"><img src="{$Think.HOME_SITE_ROOT}/images/editable_page/editable-page-model-11.jpg"></div>
+                            <div class="model-name">分类切换商品列表</div>
+                        </div>
+                    </label>
+                        
+                    <label class="model-item-wrapper" data-show="1">
+                        <div class="model-item">
+                            <div class="model-image ui-draggable ui-draggable-handle" data-id="10"><img src="{$Think.HOME_SITE_ROOT}/images/editable_page/editable-page-model-10.jpg"></div>
+                            <div class="model-name">两列分类商品列表</div>
+                        </div>
+                    </label>
+                        
+                    <label class="model-item-wrapper" data-show="1">
+                        <div class="model-item">
+                            <div class="model-image ui-draggable ui-draggable-handle" data-id="9"><img src="{$Think.HOME_SITE_ROOT}/images/editable_page/editable-page-model-9.jpg"></div>
+                            <div class="model-name">分类商品列表</div>
+                        </div>
+                    </label>
+                        
+                    <label class="model-item-wrapper" data-show="1">
+                        <div class="model-item">
+                            <div class="model-image ui-draggable ui-draggable-handle" data-id="8"><img src="{$Think.HOME_SITE_ROOT}/images/editable_page/editable-page-model-8.jpg"></div>
+                            <div class="model-name">商品分类和轮播图</div>
+                        </div>
+                    </label>
+                        
+                    <label class="model-item-wrapper" data-show="0">
+                        <div class="model-item">
+                            <div class="model-image ui-draggable ui-draggable-handle" data-id="2"><img src="{$Think.HOME_SITE_ROOT}/images/editable_page/editable-page-model-2.jpg"></div>
+                            <div class="model-name">富文本</div>
+                        </div>
+                    </label>
+                        
+                    <label class="model-item-wrapper" data-show="0">
+                        <div class="model-item">
+                            <div class="model-image ui-draggable ui-draggable-handle" data-id="1"><img src="{$Think.HOME_SITE_ROOT}/images/editable_page/editable-page-model-1.jpg"></div>
+                            <div class="model-name">轮播图</div>
+                        </div>
+                    </label>
+                        </div>
+                    <div class="clear"></div>
+                </form>
+                </div>
+        </div>
+    </div>
+</div>
+<div class="pc-page">
+    <div class="pc-page-content" id="page_content">
+        {if isset($config_list)}
+        {foreach name='config_list' item='item' key='key'}
+        <div onclick="setConfig({$key+1})" data-type="html" data-id="{$key+1}"><div class="model-del iconfont" onclick="delConfig({$key+1})">&#xe6e6;</div>{$item.html|raw}</div>
+        {/foreach}
+        {/if}
+        <div class="pc-page-empty" {if !empty($config_list)}style="display:none"{/if}>请点击组件添加到此区域</div>
+    </div>
+</div>
+<div class="page-wrapper" style="display: block;position: relative;">
+    <div>
+        <div data-type="load">
+            {if isset($config_list)}
+            {foreach name='config_list' item='item' key="key"}
+            <div data-type="config" data-id="{$key+1}" style="display:none">{$item.config|raw}</div>
+            {/foreach}
+            {/if}
+        </div>
+    </div>
+    <div class="footer-btn">
+        <input class="btn" type="button" value="{$Think.lang.ds_common_button_save}" onclick="saveForm()" />
+        <a href="{:url('home/special/index',['special_id'=>input('param.editable_page_id')])}" target="_blank"><input class="btn btn-red" type="button" value="预览"/></a>
+    </div>
+</div>
+
+<script>
+    
+    var ue={}
+    EDITABLE_PAGE_URL='{$Think.ADMIN_SITE_URL}/editable_page'
+    window.UEDITOR_HOME_URL='{$Think.PLUGINS_SITE_ROOT}/ueditor/'
+    var goods_class={}
+
+    function loadGoodsClass(level,id,obj){
+    id=parseInt(id)
+    if(goods_class['i_'+id]){
+        addGoodsClass(level,id,obj)
+    }else if(level==4){
+        $('#'+obj).find('*[data-input]').val(id)
+    }else if(level==1 || id>0){
+        $.getJSON(EDITABLE_PAGE_URL+'/goods_class?parent_id='+id,function(data){
+        if(data.code!=10000){
+            layer.msg(data.message)
+        }else if(data.result.length){
+            goods_class['i_'+id]=data.result
+            addGoodsClass(level,id,obj)
+        }
+    })
+    }
+}
+function getGoodsClass(id,obj){
+    $.getJSON(EDITABLE_PAGE_URL+'/goods_class?id='+id,function(data){
+        if(data.code!=10000){
+            layer.msg(data.message)
+        }else{
+            if(data.result.id.length){
+                var temp=''
+                for(var i in data.result.id){
+                    if(i==0){
+                        goods_class['i_0']=data.result.list[i]
+                    }else{
+                        goods_class['i_'+data.result.id[i-1]]=data.result.list[i]
+                    }
+                    i=parseInt(i)
+                    temp+='<select data-level="'+(i+1)+'" onchange="loadGoodsClass('+(i+2)+',$(this).val(),\''+obj+'\')">'
+                    temp+='<option value="0">{$Think.lang.ds_please_choose}</option>'
+                    for(var j in data.result.list[i]){
+                        temp+='<option value="'+data.result.list[i][j]['gc_id']+'" '+(data.result.list[i][j]['gc_id']==data.result.id[i]?'selected=""':'')+'>'+data.result.list[i][j]['gc_name']+'</option>'
+                    }
+                    temp+='</select>'
+                }
+                $('#'+obj+' [data-select]').append(temp)
+                if($('#'+obj+' tbody').length){
+                    var temp=''
+                    var json
+                    var v=$('#'+obj+' *[data-type="template"]').attr('data-value')
+                    if(v){
+                        json=JSON.parse(v)
+                    }
+                    for(var i in data.result.list[data.result.list.length-1]){
+                        temp+='<tr><td class="tl"><label class="checkbox-label"><i class="checkbox-common"><input type="checkbox" onchange="checkboxChange($(this))" /></i><span>'+data.result.list[data.result.list.length-1][i].gc_name+'</span></label></td><td><input type="text" size="1" name="'+$('#'+obj+' *[data-type="template"]').attr('data-name')+'['+data.result.list[data.result.list.length-1][i].gc_id+'][sort]" value="'+((json && json[data.result.list[data.result.list.length-1][i].gc_id])?json[data.result.list[data.result.list.length-1][i].gc_id].sort:"255")+'" '+((json && json[data.result.list[data.result.list.length-1][i].gc_id])?"disabled=''":"")+' /></td></tr>'
+                    }
+                    $('#'+obj+' tbody').html(temp)
+                }
+            }
+        }
+    })
+}
+function checkboxChange(obj){
+    if(obj.is(':checked')){
+        obj.parents('tr').find('input[type="text"]').removeAttr('disabled');
+        obj.parent().addClass('selected');
+    }else{
+        obj.parents('tr').find('input[type="text"]').attr('disabled','');
+        obj.parent().removeClass('selected');
+    }
+}
+function addGoodsClass(level,id,obj){
+    if(level==1 || id>0){
+        $('#'+obj).find('*[data-input]').val(id)
+        if(goods_class['i_'+id]){
+            var temp='<option value="0">{$Think.lang.ds_please_choose}</option>'
+            for(var i in goods_class['i_'+id]){
+                    temp+='<option value="'+goods_class['i_'+id][i]['gc_id']+'">'+goods_class['i_'+id][i]['gc_name']+'</option>'
+                }
+            if($('#'+obj).find('select[data-level='+level+']').length){
+                $('#'+obj).find('select[data-level='+level+']').html(temp)
+                $('#'+obj).find('select[data-level]:gt('+($('#'+obj).find('select[data-level='+level+']').index()-1)+')').remove()
+            }else{
+                $('#'+obj+' [data-select]').append('<select data-level="'+level+'" onchange="loadGoodsClass('+(level+1)+',$(this).val(),\''+obj+'\')">'+temp+'</select>')
+            }
+        }
+    }else{
+        if(level>2){
+            $('#'+obj).find('*[data-input]').val($('#'+obj).find('select[data-level='+(level-2)+']').val())
+        }else{
+            $('#'+obj).find('*[data-input]').val(0)
+        }
+        $('#'+obj).find('select[data-level]:gt('+($('#'+obj).find('select[data-level='+(level-1)+']').index()-1)+')').remove()
+    }
+    if($('#'+obj+' tbody').length){
+        var temp=''
+        $('#'+obj+' select:last-child').find('option').each(function(){
+            if($(this).val()>0){
+                temp+='<tr><td class="tl"><label class="checkbox-label"><i class="checkbox-common"><input type="checkbox" onchange="checkboxChange($(this))" /></i><span>'+$(this).text()+'</span></label></td><td><input type="text" size="1" name="'+$('#'+obj+' *[data-type="template"]').attr('data-name')+'['+$(this).val()+'][sort]" value="255" disabled="" /></td></tr>'
+            }
+        })
+        $('#'+obj+' tbody').html(temp)
+    }
+}
+    var id={if isset($config_list)}{:count($config_list)}{else}0{/if};
+    $(function(){
+        $('#page_content a').removeAttr('href')
+        //懒加载
+        $("img.lazyload").lazyload({
+            effect: "fadeIn",
+            skip_invisible : false,
+            threshold : 200,
+        });
+    {if isset($config_list)}
+    {foreach name='config_list' item='item' key='key'}
+    if(typeof(window['loadHtml{$item.val.editable_page_model_id}'])!='undefined'){
+        window['loadHtml{$item.val.editable_page_model_id}']($('*[data-type="html"][data-id={$key+1}]'))
+    }
+    if(typeof(window['loadConfig{$item.val.editable_page_model_id}'])!='undefined'){
+        window['loadConfig{$item.val.editable_page_model_id}']($('*[data-type="config"][data-id={$key+1}]'))
+    }
+    {/foreach}
+    {/if}
+    $('#page_content').sortable();
+    $('#page_content').disableSelection();
+        $('.model-wrapper').draggable({ handle: ".model-title" })
+     
+
+        $('.model-item-wrapper').click(function(){
+        var config=$(this).find('.model-image').attr('data-id')
+            $.getJSON(EDITABLE_PAGE_URL+'/config_load?model_id='+config,function(data){
+                if(data.code!=10000) {
+                    layer.msg(data.message);
+                }else{
+                    id++
+                    $('.pc-page-empty').hide()
+                    var obj=$('.active[data-type="html"]')
+                    $('*[data-type="html"]').removeClass('active');
+                    var temp='<div onclick="setConfig('+id+')" class="active" data-type="html" data-id="'+id+'"><div class="model-del iconfont" onclick="delConfig('+id+')">&#xe6e6;</div>'+data.result.html+'</div>'
+                    if(obj.length){
+                        obj.after(temp)
+                    }else{
+                        $('#page_content').append(temp)
+                    }
+                    $('html,body').animate({scrollTop:$('*[data-type="html"][data-id='+id+']').offset().top}, 500);
+                    $('*[data-type="load"]').prepend('<div data-type="config" data-id="'+id+'">'+data.result.config+'</div>')
+            
+                    
+                    if(typeof(window['loadHtml'+config])!='undefined'){
+                        window['loadHtml'+config]($('*[data-type="html"][data-id='+id+']'))
+                    }
+                    
+                    if(typeof(window['loadConfig'+config])!='undefined'){
+                        window['loadConfig'+config]($('*[data-type="config"][data-id='+id+']'))
+                    }
+                    $('#page_content a').removeAttr('href')
+                    //懒加载
+                    $("img.lazyload").lazyload({
+                        effect: "fadeIn",
+                        skip_invisible : false,
+                        threshold : 200,
+                    });
+                    setConfig(id)
+                }
+            })
+        
+        
+    })
+    })
+   
+    // 图片上传ajax
+function uploadFile(obj,callback) {
+    if(!event.target.files[0]){
+        return false;
+    }
+    var formData = new FormData();
+    formData.append('config_id',0);
+    formData.append('name','file');
+    formData.append('file', event.target.files[0]);
+
+    $.ajax({
+        type: "POST",
+        url : EDITABLE_PAGE_URL+'/image_upload',
+        dataType : 'json',
+        data : formData,
+        contentType: false,
+        processData: false,
+        success : function (data, status) {
+                    if (data.code!=10000) {
+                        layer.msg(data.message);
+                    } else {
+                        obj.parents('.uploader-wrapper').find('input[type="hidden"]').val(data.result.file_path);
+                        obj.parents('.uploader-wrapper').find('.uploader-content').hide();
+                        obj.parents('.uploader-wrapper').find('.uploader-image').attr('src', data.result.file_path);
+                        obj.parents('.uploader-wrapper').find('.uploader-image-wrapper').show();
+                       
+                        if(callback){
+                            callback(data.result.file_path,obj)
+                        }
+                    }
+                }
+    });
+    return false;
+
+}
+function delFile(obj){
+    obj.parents('.uploader-wrapper').find('input[type="hidden"]').val('');
+    obj.parents('.uploader-wrapper').find('.uploader-content').show();
+    obj.parents('.uploader-wrapper').find('.uploader-image').attr('src', '');
+    obj.parents('.uploader-wrapper').find('.uploader-image-wrapper').hide();
+   
+}
+function setRadio(obj,callback){
+    obj.parents('.ds-icon-radio').find('li').removeClass('ds-icon-active')
+    obj.addClass('ds-icon-active')
+    obj.parents('.ds-icon-radio').find('input[type="hidden"]').val(obj.attr('data-val'))
+    
+    if(callback){
+        callback()
+    }
+}
+function setConfig(id){
+    $('*[data-type="html"].active').removeClass('active')
+    $('*[data-type="html"][data-id='+id+']').addClass('active')
+
+    $('*[data-type="load"]').parent().show()
+    $('*[data-type="config"]').hide()
+    $('*[data-type="config"][data-id='+id+']').show()
+    layer.open({
+    type: 1,
+    area: '500px',
+    maxHeight:600,
+    title:$('*[data-type="config"][data-id='+id+'] .attr-title').text(),
+    content: $('*[data-type="config"][data-id='+id+']'),
+    btn:['保存'],
+    btn1:function(index){
+        changeForm($('*[data-type="config"][data-id='+id+']').find('form'),function(){
+            layer.close(index)
+            $('*[data-type="load"]').parent().hide()
+        })
+    },
+    btnAlign: 'c',
+    cancel:function(){
+        $('*[data-type="load"]').parent().hide()
+    }
+    });
+}
+function delConfig(id){
+    $('*[data-type="html"][data-id='+id+']').remove()
+    $('*[data-type="config"][data-id='+id+']').remove()
+    if(!$('*[data-type="html"]').length){
+        $('.pc-page-empty').show()
+    }
+    event.stopPropagation()
+}
+var index={}
+var html={}
+function addModel(obj,id){
+        index['i_'+id]++
+        obj.before('<div class="model-item">'+html['i_'+id].replace(/\[i_\d+\]/g,'[i_'+index['i_'+id]+']')+'<div class="model-del iconfont" onclick="delModel($(this))">&#xe696;</div>'+'</div>')
+        if(typeof(window['loadConfig'+id])!='undefined'){
+            window['loadConfig'+id](obj.parents('*[data-type="config"]'))
+        }
+    }
+function delModel(obj){
+    obj.parents('.model-item').remove()
+}
+function saveForm(){
+    var data=[]
+    
+    $('*[data-type="html"]').each(function(){
+        data.push(formartForm($('*[data-type="config"][data-id='+$(this).attr('data-id')+']').find('form').serializeArray()))
+    })
+    $.ajax({
+            type: "POST",
+            url : EDITABLE_PAGE_URL+'/config_edit?page_id={$Request.param.editable_page_id}',
+            dataType : 'json',
+            data : {config_list:data},
+            success : function (data, status) {
+                layer.msg(data.message)
+                }
+        })
+}
+function formartForm(temp){
+    var formData={}
+    var m_s=[]
+    var m_i=[]
+    var r={}
+    for(var i in temp){
+        var m=temp[i]['name'].match(/(\[([^\[\]]+)\])+?/g)
+        if(m){
+            var w={}
+            for(var j=m.length-1;j>=0;j--){
+                var o=m[j].match(/\[(.+)\]/)
+                var t=(j==m.length-1)?temp[i]['value']:w
+                w={}
+                if(o[1].match(/^i_\d+$/)){
+                    if(m_s[j]!=o[1]){
+                        if(!m_s[j] || parseInt(o[1].substr(2))<parseInt(m_s[j].substr(2))){
+                            m_i[j]=0
+                        }else{
+                            m_i[j]++
+                        }
+                        m_s[j]=o[1]
+                    }
+                    w[m_i[j]]=t
+                }else if(o[1].match(/^\d+$/)){
+                    w[o[1].toString()]=t
+                }else{
+                    w[o[1]]=t
+                }
+            }
+            var n=temp[i]['name'].match(/^([^\[\]]+)/)
+            r={}
+            r[n[1]]=w
+
+            formData=setAttr(formData,r)
+
+        }else{
+            formData[temp[i]['name']]=temp[i]['value']
+        }
+    }
+                
+    function setAttr(obj,val){
+                for(var j in val){
+                    if(obj[j]){
+                        obj[j]=setAttr(obj[j],val[j])
+                        return obj
+                    }else{
+                        return Object.assign(obj,val)
+                    }
+                }
+            }
+    return formData
+}
+function changeForm(obj,callback){
+    var id=obj.find('input[name="model_id"]').val()
+    var temp=obj.serializeArray()
+    var formData=formartForm(temp)
+        $.ajax({
+            type: "POST",
+            url : EDITABLE_PAGE_URL+'/config_load?model_id='+id,
+            dataType : 'json',
+            data : {config_info:formData},
+            success : function (data, status) {
+                    if (data.code!=10000) {
+                        layer.msg(data.message);
+                    } else {
+                        $('*[data-type="html"][data-id='+obj.parents('*[data-type="config"]').attr('data-id')+']').html('<div class="model-del iconfont" onclick="delConfig('+obj.parents('*[data-type="config"]').attr('data-id')+')">&#xe6e6;</div>'+data.result.html)
+                        if(typeof(window['loadHtml'+id])!='undefined'){
+                            window['loadHtml'+id]($('*[data-type="html"][data-id='+obj.parents('*[data-type="config"]').attr('data-id')+']'))
+                        }
+                        $('#page_content a').removeAttr('href')
+                        //懒加载
+                        $("img.lazyload").lazyload({
+                            effect: "fadeIn",
+                            skip_invisible : false,
+                            threshold : 200,
+                        });
+                        if(callback){
+                            callback()
+                        }
+                    }
+                }
+        })
+   
+    
+}
+</script>
+<style>
+    .page-wrapper .footer-btn{position:fixed;z-index: 10;}
+    *[data-type="config"]{padding:20px}
+    *[data-type="config"] .attr-title{display: none;}
+    *[data-type="html"].active{border:0}
+    *[data-type="html"].active::after{content:'';position: absolute;width:1200px;top:0;bottom:0;border:1px dashed #FF6A00;left:50%;margin-left:-600px}
+    *[data-type="html"] .model-del{right:50%;top:0;margin-right:-600px;width:30px;height: 30px;line-height: 30px;z-index: 10;}
+    .model-wrapper{position: fixed;top:80px;left:-180px;z-index: 100000;width:227px;background: #fff}
+    .model-wrapper.active{left:0;}
+    .model-wrapper .model-title{cursor: move}
+
+    .pc-page .pc-page-header,.pc-page .pc-page-footer{text-align: center;background-color: #fff;opacity: .5;}
+    .pc-page .pc-page-header img,.pc-page .pc-page-footer img{width: 1200px;}
+    .pc-page .pc-page-content .pc-page-empty{font-size: 24px;font-weight:bold;text-align: center;margin: 0 auto;top:300px;position: relative;color:#999}
+</style>

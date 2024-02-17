@@ -1,0 +1,92 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.goods_class_index_class}</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.goods_class_index_help1}</li>
+            <li>{$Think.lang.goods_class_index_help2}</li>
+            <li>{$Think.lang.goods_class_index_help3|raw}</li>
+        </ul>
+    </div>
+    
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th></th>
+          <th>{$Think.lang.ds_sort}</th>
+          <th>{$Think.lang.goods_class_index_name}</th>
+          <th>{$Think.lang.type}</th>
+          <th></th>
+          <th>{$Think.lang.ds_handle}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {notempty name="class_list"}
+        {foreach name="class_list" item="v" key="k" }
+        <tr class="hover edit">
+          <td class="w48"><input type="checkbox" name="check_gc_id[]" value="{$v.gc_id}" class="checkitem">
+            {if isset($v['have_child']) && $v['have_child'] == '1'}
+            <img fieldid="{$v.gc_id}" status="open" ds_type="flex" src="{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-expandable.gif">
+            {else/}
+            <img fieldid="{$v.gc_id}" status="close" ds_type="flex" src="{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-item.gif">
+            {/if}
+          </td>
+          <td class="w48 sort"><span title="{$Think.lang.ds_editable}" ajax_branch="goods_class_sort" datatype="number" fieldid="{$v.gc_id}" fieldname="gc_sort" ds_type="inline_edit" class="editable ">{$v.gc_sort}</span></td>
+          <td class="w50pre name">
+          <span title="{$Think.lang.ds_editable}" required="1" fieldid="{$v.gc_id}" ajax_branch="goods_class_name" fieldname="gc_name" ds_type="inline_edit" class="editable ">{$v.gc_name}</span>
+          <a class="btn-add-nofloat marginleft" href="{:url('Goodsclass/goods_class_add',['gc_parent_id'=>$v.gc_id])}"><span>{$Think.lang.ds_add_sub_class}</span></a>
+          </td>
+          <td>{$v.type_name}</td>
+          <td>{if $v.gc_virtual == 1}虚拟{/if}</td>
+          <td class="w120">
+              <a href="{:url('Goodsclass/nav_edit',['gc_id'=>$v.gc_id])}">{$Think.lang.ds_set}</a> |
+              <a href="{:url('Goodsclass/goods_class_edit',['gc_id'=>$v.gc_id])}">{$Think.lang.ds_edit}</a> | 
+              <a href="javascript:void(0)" onclick="submit_delete({$v.gc_id})">{$Think.lang.ds_del}</a>
+          </td>
+        </tr>        
+        {/foreach}
+        {else /}
+        <tr class="no_data">
+          <td colspan="10">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+      </tbody>
+      {notempty name="class_list"}
+      <tfoot>
+        <tr class="tfoot">
+          <td><input type="checkbox" class="checkall" id="checkall_2"></td>
+          <td id="batchAction" colspan="15"><span class="all_checkbox">
+            <label for="checkall_2">{$Think.lang.ds_select_all}</label>
+            </span>&nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+            </td>
+        </tr>
+      </tfoot>
+      {/notempty}
+    </table>
+</div>
+
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>
+<script src="{$Think.ADMIN_SITE_ROOT}/js/jquery.goods_class.js"></script>
+<script type="text/javascript">
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Goodsclass/goods_class_del.html?gc_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+</script>

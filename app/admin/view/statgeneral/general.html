@@ -1,0 +1,141 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>概述及设置</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.stat_validorder_explain}</li>
+        </ul>
+    </div>
+
+
+    <table class="ds-default-table">
+        <thead class="thead">
+        <tr class="space">
+            <th colspan="15">{$stat_time|date="Y-m-d"}最新情报</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>
+                下单金额&nbsp;<i title="有效订单的总金额" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.orderamount}元</b>
+            </td>
+            <td>
+                下单会员数&nbsp;<i title="有效订单的下单会员总数" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.ordermembernum}</b>
+            </td>
+            <td>
+                下单量&nbsp;<i title="有效订单的总数量" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.ordernum}</b>
+            </td>
+            <td>
+                下单商品数&nbsp;<i title="有效订单包含的商品总数量" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.ordergoodsnum}</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                平均价格&nbsp;<i title="有效订单包含商品的平均单价" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.priceavg}元</b>
+            </td>
+            <td>
+                平均客单价&nbsp;<i title="有效订单的平均每单的金额" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.orderavg}</b>
+            </td>
+            <td>
+                新增会员&nbsp;<i title="期间内新注册会员总数" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.newmember}</b>
+            </td>
+            <td>
+                会员数量&nbsp;<i title="平台所有会员的数量" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.membernum}</b>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                新增商品&nbsp;<i title="期间内新增商品总数" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.newgoods}</b></td>
+            <td>
+                商品数量&nbsp;<i title="平台所有商品的数量" class="tip iconfont">&#xe71c;</i>
+                <br><b>{$statnew_arr.goodsnum}</b></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="ds-default-table">
+        <thead class="thead">
+        <tr class="space">
+            <th colspan="15">{$stat_time|date="Y-m-d"}销售走势</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td><div id="container" class="w100pre close_float" style="height:400px"></div></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+    <div class="" style="margin-left: 50px;">
+        <table class="ds-default-table">
+            <thead class="thead">
+            <tr class="space">
+                <th colspan="15">7日内商品销售TOP30&nbsp;<i title="从昨天开始7日内热销商品前30名" class="tip iconfont">&#xe71c;</i></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>序号</td>
+                <td>商品名称</td>
+                <td>销量</td>
+            </tr>
+            {foreach name="goodstop30_arr" item="v"}
+            <tr>
+                <td>{$key+1}</td>
+                <td class="alignleft"><a href="{:url('home/Goods/index',['goods_id'=>$v.goods_id])}" target="_blank">{$v.goods_name}</a></td>
+                <td>{$v.ordergoodsnum}</td>
+            </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    </div>
+    <div class="close_float"></div>
+</div>
+</div>
+<script>
+    jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+</script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.poshytip.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/highcharts/highcharts.js"></script>
+<script>
+    $(function () {
+        //Ajax提示
+        $('.tip').poshytip({
+            className: 'tip-yellowsimple',
+            showTimeout: 1,
+            alignTo: 'target',
+            alignX: 'center',
+            alignY: 'top',
+            offsetY: 5,
+            allowTipHover: false
+        });
+    });
+    var chart = new Highcharts.Chart('container', {$stattoday_json|raw});
+</script>

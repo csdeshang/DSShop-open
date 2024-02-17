@@ -1,0 +1,92 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+     <form id="add_form" method="post">        
+        <table class="ds-default-table">
+            <tbody>
+                 <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.gadmin_name}</td>
+                    <td class="vatop rowform">
+                        <input id="gname" name="gname" value="" class="input-txt" type="text">
+                        <span class="err"></span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="ds-default-table">
+            <thead>
+                <tr class="space">
+                    <th> <input id="limitAll" value="1" type="checkbox">&nbsp;&nbsp;{$Think.lang.admin_set_limt}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {foreach name="limit" item="v" key="k" }
+                <tr>
+                    <td>
+                        <label style="width:100px">{$v.nav|default=''}</label>
+                        <input id="limit{$k}" type="checkbox" onclick="selectLimit('limit{$k}')">
+                        <label for="limit{$k}"><b>{$v.name}</b>&nbsp;&nbsp;</label>
+                        {foreach name="$v.child" item="xv" key="xk" }
+                        <label><input dstype='limit' class="limit{$k}" type="checkbox" name="permission[]" value="{$xv.action}">{$xv.name}&nbsp;</label>
+                        {/foreach}
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </table>
+        <table>
+            <tfoot class="tfoot">
+            <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<script>
+                                function selectLimit(name) {
+                                    if ($('#'+name).prop('checked')) {
+                                        $('.'+name).prop('checked', true);
+                                    } else {
+                                        $('.'+name).prop('checked', false);
+                                    }
+                                }
+                                $(function() {
+                                    $('#limitAll').on('click', function() {
+                                        if ($(this).prop('checked')) {
+                                            $(this).parents('table').find('input:checkbox').prop('checked', true);
+                                        } else {
+                                            $(this).parents('table').find('input:checkbox').prop('checked', false);
+                                        }
+                                    });
+
+                                    $("#add_form").validate({
+                                        errorPlacement: function(error, element) {
+                                            error.appendTo(element.nextAll('span.err'));
+                                        },
+                                        rules: {
+                                            gname: {
+                                                required: true,
+                                                remote: {
+                                                    url: ADMINSITEURL+'/Admin/ajax.html?branch=check_gadmin_name',
+                                                    type: 'get',
+                                                    data: {
+                                                        gname: function() {
+                                                            return $('#gname').val();
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        messages: {
+                                            gname: {
+                                                required: '{$Think.lang.ds_none_input}',
+                                                remote: '{$Think.lang.admin_add_admin_not_exists}'
+                                            }
+                                        }
+                                    });
+                                });
+</script>

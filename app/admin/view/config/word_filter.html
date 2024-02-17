@@ -1,0 +1,56 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.dis_dump}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" name="form1" action="">
+        <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.word_filter_open}</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                <label for="word_filter_open1" class="cb-enable {if condition="$list_config.word_filter_open eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="word_filter_open0" class="cb-disable {if condition="$list_config.word_filter_open eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="word_filter_open1" name="word_filter_open" value="1" type="radio" {if condition="$list_config.word_filter_open eq 1"} checked="checked"{/if} />
+                                <input id="word_filter_open0" name="word_filter_open" value="0" type="radio" {if condition="$list_config.word_filter_open eq 0"} checked="checked"{/if} />
+                            </div>
+                        </td>
+			<td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="w150"><label for="word_filter_appid">{$Think.lang.word_filter_appid}:</label></td>
+                        <td class="vatop rowform">
+                            <input class="txt" id="word_filter_appid" name="word_filter_appid" value="{$list_config.word_filter_appid|default=''}" type="text">
+                        </td>
+                        <td class="vatop tips">{$Think.lang.word_filter_appid_tips|raw}</td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="w150"><label for="word_filter_secret">{$Think.lang.word_filter_secret}:</label></td>
+                        <td class="vatop rowform">
+                            <input class="txt" id="word_filter_secret" name="word_filter_secret" value="{$list_config.word_filter_secret|default=''}" type="password">
+                        </td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><a href="JavaScript:void(0);" class="btn" onclick="document.form1.submit()">{$Think.lang.ds_confirm_submit}</a></td>
+                    </tr>					
+                </tfoot>
+            </table>
+    </form>
+</div>

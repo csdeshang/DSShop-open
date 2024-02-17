@@ -1,0 +1,77 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>地址库</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>1.订单发货填写发货地址</li>
+            <li>2.发货地址列表</li>
+        </ul>
+    </div>
+
+    <table class="ds-default-table">
+        <thead>
+        <tr>
+            <th>是否默认</th>
+            <th>联系人</th>
+            <th>发货地址</th>
+            <th>电话</th>
+            <th>{$Think.lang.ds_handle}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {notempty name="address_list"}
+        {foreach name="address_list" item="v"}
+        <tr class="line">
+            <td>
+                <label for="is_default_{$v.daddress_id}">
+                    <input type="radio" id="is_default_{$v.daddress_id}" name="is_default" {if $v.daddress_isdefault eq '1'} checked {/if}
+                    value="{$v.daddress_id}">默认
+                </label>
+            </td>
+            <td><span>{$v.seller_name}</span></td>
+            <td><span>{$v.area_info} {$v.daddress_detail}</span></td>
+            <td><span>{$v.daddress_telphone}</span></td>
+            <td>
+                <a href="javascript:dsLayerOpen('{:url('deliverset/daddress_add',['address_id'=>$v.daddress_id])}','{$Think.lang.ds_edit}-{$v.daddress_detail}')"
+                   class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                <a href="javascript:dsLayerConfirm('{:url('deliverset/daddress_del',['address_id'=>$v.daddress_id])}','{$Think.lang.ds_ensure_del}')"
+                   class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+            </td>
+        </tr>
+        {/foreach}
+        {else /}
+        <tr class="no_data">
+            <td colspan="7">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+        </tbody>
+    </table>
+    {notempty name="inform_list"}
+    {$show_page|raw}
+    {/notempty}
+
+</div>
+<script>
+    $(function () {
+        $('input[name="is_default"]').on('click', function () {
+            $.get('/admin/deliverset/daddress_default_set.html?address_id=' + $(this).val(), function (result) {
+                location.reload();
+            })
+        });
+    });
+</script>

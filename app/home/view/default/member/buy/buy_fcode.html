@@ -1,0 +1,41 @@
+
+<!-- S fcode -->
+{if isset($cart_list[0]['is_goodsfcode'])&&$cart_list[0]['is_goodsfcode'] == 1}
+<div class="dsc-main">
+  <div class="dsc-title">
+    <h3>{$Think.lang.f_code_goods_purchase}</h3>
+    <h5>{$Think.lang.verify_pre_emption_rights}</h5>
+  </div>
+  <div class="dsc-receipt-info">
+    <div class="fcode-form ">
+      <input name="fcode" type="text" class="text" id="fcode" placeholder="{$Think.lang.please_enter_f_code}" autocomplete="off" maxlength="20" />
+      <input type="button" value="{$Think.lang.using_f_code}" id="fcode_submit" class="button" />
+      <input value="" type="hidden" name="fcode_callback" id="fcode_callback">
+      <input type="hidden" id="goods_commonid" name="goods_commonid" value="{php}echo $cart_list[0]['goods_commonid'];{/php}">
+    </div>
+    <div class="fcode-hint" id="fcode_showmsg"></div>
+  </div>
+</div>
+<!-- E fcode --> 
+<script>
+$(function(){
+    $('#fcode_submit').on('click',function(){
+        if ($('#fcode').val() == '') {
+            layer.alert('{$Think.lang.using_f_code}');return false;
+        }
+        $('#fcode_callback').val('');
+		$.get("{:url('Buy/check_fcode')}", {'fcode':$('#fcode').val(),'goods_commonid':$('#goods_commonid').val()}, function(data){
+            if (data == '1') {
+            	$('#fcode_callback').val('1');
+            	$('#fcode_submit').hide();
+            	$('#fcode').hide();
+            	$('#fcode_showmsg').append('<i class="icon-ok-circle"></i>'+$('#fcode').val()+'{$Think.lang.complete_the_purchase_order}');
+            } else {
+                layer.alert('{$Think.lang.f_code_error}');
+            }
+        });
+    });
+
+});
+</script>
+{/if}

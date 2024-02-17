@@ -1,0 +1,113 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_evaluate}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.ds_goods_name}</dt>
+                <dd><input class="txt" type="text" name="goods_name" id="goods_name" value="{$Request.get.goods_name}" /></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.admin_evaluate_addtime}</dt>
+                <dd>
+                    <input class="txt date" type="text" name="stime" id="stime" value="{$Request.get.stime}" />
+                    ~
+                    <input class="txt date" type="text" name="etime" id="etime" value="{$Request.get.etime}" />
+                </dd>
+            </dl>
+             <div class="btn_group">
+                 <input type="submit"class="btn" value="{$Think.lang.ds_query}"/>
+                 {if $filtered}
+                <a href="{:url('Evaluate/evalgoods_list')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.admin_evaluate_help1}</li>
+            <li>{$Think.lang.admin_evaluate_help2}</li>
+        </ul>
+    </div>
+    
+    
+    <table class="ds-default-table">
+        <thead>
+            <tr class="thead">
+                <th class="w300">{$Think.lang.ds_goods_name} </th>
+                <th>{$Think.lang.admin_evaluate_buyerdesc}</th>
+                <th class="w108 align-center">{$Think.lang.admin_evaluate_frommembername} </th>
+                <th class="w200 align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+        {notempty name="evalgoods_list"}
+        {foreach name="evalgoods_list" item="v"}
+        <tr class="hover">
+            <td><a href="{:url('home/Goods/index',['goods_id'=>$v.geval_goodsid])}" target="_blank">{$v.geval_goodsname}</a></td>
+            <td class="evaluation"><div>{$Think.lang.admin_geval_scores}：<span class="raty" data-score="{$v.geval_scores}"></span><time>[{:date('Y-m-d',$v.geval_addtime)}]</time></div>
+                <div>{$Think.lang.admin_geval_content}：{$v.geval_content}</div>
+
+                {notempty name="v.geval_image"}
+                <div>{$Think.lang.admin_geval_image}：
+                    <ul class="evaluation-pic-list">
+                        <?php $image_array = explode(',', $v['geval_image']);?>
+                        {foreach name="image_array" item="value"}
+                        <li style="width: auto"><a data-lightbox="lightbox-image"  href="{:sns_thumb($value, 1024)}"><img src="{:sns_thumb($value)}"> </a></li>
+                       {/foreach}
+                    </ul>
+                </div>
+                {/notempty}
+
+                {notempty name="v.geval_explain"}
+                <div id="explain_div_{$v.geval_id}"> <span style="color:#996600;padding:5px 0px;">[{$Think.lang.admin_evaluate_explain}]{$v.geval_explain}</span> </div>
+                {/notempty}</td>
+            <td class="align-center">{$v.geval_frommembername}</td>
+            <td class="align-center">
+                <a href="javascript:dsLayerOpen('{:url('Evaluate/explain_save',['geval_id'=>$v.geval_id])}','回复评论')"  class="dsui-btn-edit"><i class="iconfont"></i>回复评论</a>
+                <a href="javascript:dsLayerConfirm('{:url('Evaluate/evalgoods_del',['geval_id'=>$v.geval_id])}','{$Think.lang.ds_ensure_del}')"  class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+            </td>
+        </tr>
+        {/foreach}
+       {else /}
+        <tr class="no_data">
+            <td colspan="15">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+    </table>
+    {$show_page|raw}
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#stime').datepicker({dateFormat: 'yy-mm-dd'});
+        $('#etime').datepicker({dateFormat: 'yy-mm-dd'});
+
+        $('.raty').raty({
+            path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+            readOnly: true,
+            score: function() {
+                return $(this).attr('data-score');
+            }
+        });
+    });
+</script> 

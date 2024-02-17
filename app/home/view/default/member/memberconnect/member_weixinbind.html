@@ -1,0 +1,117 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+{if $Think.config.ds_config.weixin_isuse == 1}
+<div class="dsm-bind">
+    {notempty name="member_info.member_wxunionid"}
+    <div class="alert">
+        <h4>{$Think.lang.prompt_information}：</h4>
+        <ul>
+            <li>{$Think.lang.member_qqconnect_binding_tip_1}}<em>“{:session('member_name')}”</em>{$Think.lang.member_wxsconnect_tip_1}<em>“{$member_info.weixin_infoarr.nickname}”</em>{$Think.lang.member_qqconnect_binding_tip_3}</li>
+            <li>{$Think.lang.member_sconnect_modpw_tip_1}<em>“{:session('member_name')}”</em>{$Think.lang.member_sconnect_modpw_tip_2}</li>
+        </ul>
+    </div>
+    <div class="relieve">
+        <form method="post" id="editbind_form" name="editbind_form" action="{:url('Memberconnect/weixinunbind')}">
+            <input type='hidden' id="is_editpw" name="is_editpw" value='no'/>
+            <div class="ico-wx"></div>
+            <p>{$Think.lang.member_qqconnect_unbind_click}</p>
+            <div class="bottom">
+                <input class="submit" type="submit" value="{$Think.lang.member_qqconnect_unbind_submit}" />
+            </div>
+        </form>
+    </div>
+    <div class="revise dsm-default-form ">
+        <form method="post" id="editpw_form" name="editpw_form" action="{:url('Memberconnect/weixinunbind')}">
+            <input type='hidden' id="is_editpw" name="is_editpw" value='yes'/>
+            <dl>
+                <dt>{$Think.lang.member_sconnect_modpw_newpw}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input type="password"  name="new_password" id="new_password"/>
+                    <label for="new_password" generated="true" class="error"></label>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.member_sconnect_modpw_two_password}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input type="password"  name="confirm_password" id="confirm_password" />
+                    <label for="confirm_password" generated="true" class="error"></label>
+                </dd>
+            </dl>
+            <dl class="bottom">
+                <dt></dt>
+                <dd>
+                    <input class="submit" type="submit" value="{$Think.lang.member_sconnect_unbind_updatepw_submit}" />
+                </dd>
+            </dl>
+        </form>
+    </div>
+    {else /}
+    <div class="relieve pt50">
+        <p class="ico"><a href="javascript:void(0);" onclick="ajax_form('weixin_form', '{$Think.lang.member_wxsconnect_tip_2}', '{:url('Connectwx/index')}', 360);">
+                <img src="{$Think.HOME_SITE_ROOT}/images/wx_bind_small.png"></a>
+        <p class="hint">{$Think.lang.member_wxsconnect_tip_3}</p>
+    </div>
+    <div class="revise pt50">
+        <p class="qq">{$Think.lang.member_wxsconnect_tip_4}</p>
+        <p>{$Think.lang.member_wxsconnect_tip_5}</p>
+        <p class="hint">{$Think.lang.member_wxsconnect_tip_6}</p>
+    </div>
+    {/notempty}
+</div>
+{else /}
+<div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.member_wxsconnect_tip_7}</span></div>
+{/if}
+
+
+
+
+<script type="text/javascript">
+$(function(){
+    $("#unbind").hide();
+
+    $('#editpw_form').validate({
+        errorPlacement: function(error, element){
+            var error_td = element.parent('td').next('td');
+            error_td.find('.field_notice').hide();
+            error_td.append(error);
+        },
+        rules : {
+            new_password : {
+                required   : true,
+                minlength  : 6,
+                maxlength  : 20
+            },
+            confirm_password : {
+                required   : true,
+                equalTo    : '#new_password'
+            }
+        },
+        messages : {
+            new_password  : {
+                required   : "<i class='iconfont'>&#xe64c;</i>{$Think.lang.member_qqconnect_new_password_null}",
+                minlength  : "<i class='iconfont'>&#xe64c;</i>{$Think.lang.member_qqconnect_password_range}"
+            },
+            confirm_password : {
+                required   : "<i class='iconfont'>&#xe64c;</i>{$Think.lang.member_qqconnect_ensure_password_null}",
+                equalTo    : "<i class='iconfont'>&#xe64c;</i>{$Think.lang.member_qqconnect_input_two_password_again}"
+            }
+        }
+    });
+});
+function showunbind(){
+    $("#unbind").show();
+}
+function showpw(){
+    $("#is_editpw").val('yes');
+    $("#editbinddiv").hide();
+    $("#editpwul").show();
+}
+</script>
+
+
+{/block}

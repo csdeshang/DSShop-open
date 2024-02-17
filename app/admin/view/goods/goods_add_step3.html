@@ -1,0 +1,157 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商品管理</h3>
+                <h5></h5>
+            </div>
+            {if isset($edit_goods_sign)}
+            {include file="public/admin_items" /}
+            {else /}
+            <ul class="add-goods-step">
+                <li><i class="iconfont">&#xe600;</i>
+                    <h6>STEP.1</h6>
+                    <h2>{$Think.lang.select_category}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li><i class="icon iconfont">&#xe731;</i>
+                    <h6>STEP.2</h6>
+                    <h2>{$Think.lang.fill_item_details}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li class="current"><i class="icon iconfont">&#xe6a2;</i>
+                    <h6>STEP.3</h6>
+                    <h2>{$Think.lang.goods_index_upload_goods_pic}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li><i class="icon iconfont">&#xe64d;</i>
+                    <h6>STEP.4</h6>
+                    <h2>{$Think.lang.goods_index_flow_chart_step3}</h2>
+                </li>
+            </ul>
+            {/if}
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  
+  
+  
+  
+  
+  
+  
+  <form method="post" id="goods_image" action="<?php if (isset($edit_goods_sign)) { echo url('Goods/edit_save_image'); } else { echo url('Goodsadd/save_image');}?>">
+  <input type="hidden" name="commonid" value="{$commonid}">
+  {notempty name="value_array"}
+  <div class="dssc-form-goods-pic">
+    <div class="container">
+      {foreach name="value_array" item="value"}
+      <div class="dssc-goodspic-list">
+        <div class="title">
+          <h3><?php echo $spec_value[1][$value['spvalue_id']];?></h3></div>
+        <ul dstype="ul{$value.spvalue_id}">
+          <?php for ($i = 0; $i < 5; $i++) {?>
+          <li class="dssc-goodspic-upload">
+            <div class="upload-thumb"><img src="<?php echo goods_cthumb(isset($img[$value['spvalue_id']][$i]['goodsimage_url'])?$img[$value['spvalue_id']][$i]['goodsimage_url']:'', 240);?>" dstype="file_<?php echo $value['spvalue_id'] . $i;?>">
+              <input type="hidden" name="img[<?php echo $value['spvalue_id'];?>][<?php echo $i;?>][name]" value="<?php if(isset($img[$value['spvalue_id']][$i]['goodsimage_url'])){echo $img[$value['spvalue_id']][$i]['goodsimage_url'];}?>" dstype="file_<?php echo $value['spvalue_id'] . $i;?>">
+            </div>
+            <div class="show-default<?php if (isset($img[$value['spvalue_id']][$i]['goodsimage_url']) && $img[$value['spvalue_id']][$i]['goodsimage_isdefault'] == 1) {echo ' selected';}?>" dstype="file_<?php echo $value['spvalue_id'] . $i;?>">
+              <p><i class="iconfont">&#xe64d;</i>{$Think.lang.default_main_map}
+                <input type="hidden" name="img[<?php echo $value['spvalue_id'];?>][<?php echo $i;?>][default]" value="<?php if ( isset($img[$value['spvalue_id']][$i]['goodsimage_url']) && $img[$value['spvalue_id']][$i]['goodsimage_isdefault'] == 1) {echo '1';}else{echo '0';}?>">
+              </p><a href="javascript:void(0)" dstype="del" class="del" title="{$Think.lang.remove}">X</a>
+            </div>
+            <div class="show-sort">{$Think.lang.ds_sort}：
+                <input name="img[<?php echo $value['spvalue_id'];?>][<?php echo $i;?>][sort]" type="text" class="text" value="<?php if(isset($img[$value['spvalue_id']][$i]['goodsimage_url'])){echo intval($img[$value['spvalue_id']][$i]['goodsimage_sort']);}?>" size="1" maxlength="1">
+            </div>
+            <div class="dssc-upload-btn"><a href="javascript:void(0);"><span><input type="file" hidefocus="true" size="1" class="input-file" name="file_<?php echo $value['spvalue_id'] . $i;?>" id="file_<?php echo $value['spvalue_id'] . $i;?>"></span><p><i class="iconfont">&#xe733;</i>{$Think.lang.ds_common_button_upload}</p>
+              </a>
+            </div>
+          </li>
+          <?php }?>
+        </ul>
+        <div class="dssc-select-album">
+            <a class="dssc-btn" href="{:url('Goodsalbum/pic_list',['item'=>'goods_image','color_id'=>$value.spvalue_id])}" dstype="select-{$value.spvalue_id}"><i class="iconfont">&#xe72a;</i>{$Think.lang.image_space_selection}</a>
+          <a href="javascript:void(0);" dstype="close_album" class="dssc-btn ml5" style="display: none;"><i class="iconfont">&#xe67a;</i>{$Think.lang.close_album}</a>
+        </div>
+        <div dstype="album-{$value.spvalue_id}"></div>
+      </div>
+      {/foreach}
+    </div>
+    <div class="sidebar"><div class="alert alert-info alert-block" id="uploadHelp">
+    <div class="faq-img"></div>
+    <h4>{$Think.lang.upload_request}：</h4><ul>
+    <li>{$Think.lang.upload_information1}<?php echo intval(config('ds_config.image_max_filesize'))/1024;?>{$Think.lang.upload_information2}</li>
+    <li>{$Think.lang.upload_information3}</li>
+    <li>{$Think.lang.upload_information4}</li>
+    <li>{$Think.lang.upload_information5}</li>
+    <li>{$Think.lang.upload_information6}</li>
+    <li>{$Think.lang.upload_information7}</li>
+    </ul><h4>{$Think.lang.advice}</h4><ul><li>{$Think.lang.upload_advice1}</li><li>{$Think.lang.upload_advice2}</li></ul></div></div>
+  </div>
+  {/notempty}
+  <div class="bottom tc hr32"><input type="submit" class="btn" value="<?php if (isset($edit_goods_sign)) { echo lang('ds_submit'); } else { ?>{$Think.lang.goods_add_next}，{$Think.lang.confirm_product_release}<?php }?>" /></div>
+</form>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/ajaxfileupload.js" charset="utf-8"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js" type="text/javascript"></script>
+<script src="{$Think.ADMIN_SITE_ROOT}/js/goods_add_step3.js"></script>
+<script>
+var DEFAULT_GOODS_IMAGE = "{:goods_cthumb('')}";
+
+$(function(){
+    <?php if (isset($edit_goods_sign)) {?>
+        $(function(){
+            $('#goods_image').validate({
+                submitHandler:function(form){
+                    ds_ajaxpost('goods_image','default');
+                },
+                rules : {
+                },
+                messages : {
+                }
+            });
+        });
+    <?php }?>
+    /* ajax 打开图片空间 */
+    <?php foreach ($value_array as $value) {?>
+    $('a[dstype="select-{$value.spvalue_id}"]').ajaxContent({
+        event:'click', //mouseover
+        loaderType:"img",
+        loadingMsg:ADMINSITEURL+'/images/loading.gif',
+        target:'div[dstype="album-{$value.spvalue_id}"]'
+    }).click(function(){
+        $(this).hide();
+        $(this).next().show();
+    });
+    <?php }?>
+});
+</script>
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+</div>  
+
+
+
+
+
+
+
+
+

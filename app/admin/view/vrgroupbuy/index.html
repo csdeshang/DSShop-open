@@ -1,0 +1,120 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>分类管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>商家发布虚拟商品的抢购时，需要选择虚拟抢购所属分类</li>
+            <li>通过修改排序数字可以控制前台线下商城分类的显示顺序，数字越小越靠前</li>
+            <li>可以对分类名称进行修改,可以新增下级分类</li>
+            <li>可以对分类进行编辑、删除操作</li>
+            <li>点击行首的"+"号，可以展开下级分类</li>
+        </ul>
+    </div>
+    
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th></th>
+                <th>{$Think.lang.ds_sort}</th>
+                <th>分类名称</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="vrgroupbuyclass_list"}
+            {foreach name="vrgroupbuyclass_list" item="val"}
+            {eq name="val.vrgclass_parent_id" value="0"}
+            <tr class="hover edit">
+                <td class="w48">
+                    <input type="checkbox" value="{$val.vrgclass_id}" class="checkitem">
+                    <img class="class_parent" class_id="class_id{$val.vrgclass_id}" status="open" src="{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-expandable.gif">
+                </td>
+                <td class="w48 sort">
+                    <span ds_type="inline_edit" ajax_branch="class" column_id="{$val.vrgclass_id}" title="{$Think.lang.ds_editable}" class="editable tooltip" fieldid="{$val.vrgclass_id}" fieldname="vrgclass_sort" >{$val.vrgclass_sort}</span>
+                </td>
+                <td class="name">
+                    <span ds_type="inline_edit" ajax_branch="class" column_id="{$val.vrgclass_id}" title="{$Think.lang.ds_editable}" class="editable tooltip" fieldname="vrgclass_name" fieldid="{$val.vrgclass_id}">{$val.vrgclass_name}</span>
+                    <a class="btn-add-nofloat marginleft" href="javascript:dsLayerOpen('{:url('Vrgroupbuy/class_add',['vrgclass_parent_id'=>$val.vrgclass_id])}','{$Think.lang.ds_add_sub_class}')"><span>新增下级</span></a>
+                </td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Vrgroupbuy/class_edit',['vrgclass_id'=>$val.vrgclass_id])}','{$Think.lang.ds_edit}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:submit_delete({$val.vrgclass_id})" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {foreach name="vrgroupbuyclass_list" item="vall"}
+            {eq name="vall.vrgclass_parent_id" value="$val.vrgclass_id"}
+            <tr class="hover edit class_id{$val.vrgclass_id}" style="display:none;">
+                <td class="w48"><input type="checkbox" value="{$vall.vrgclass_id}" class="checkitem"></td>
+                <td class="w48 sort"><span ds_type="inline_edit" ajax_branch="class" column_id="{$vall.vrgclass_id}" title="{$Think.lang.ds_editable}" class="editable tooltip" fieldid="{$vall.vrgclass_id}" fieldname="vrgclass_sort" >{$vall.vrgclass_sort}</span></td>
+                <td class="name"><span ds_type="inline_edit" ajax_branch="class" column_id="{$vall.vrgclass_id}" title="{$Think.lang.ds_editable}" class="editable tooltip" fieldname="vrgclass_name" fieldid="{$vall.vrgclass_id}">{$vall.vrgclass_name}</span></td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Vrgroupbuy/class_edit',['vrgclass_id'=>$vall.vrgclass_id])}','{$Think.lang.ds_edit}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:submit_delete({$vall.vrgclass_id})" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/eq}
+            {/foreach}
+            {/eq}
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+            {notempty name="vrgroupbuyclass_list"}
+            <tfoot>
+                <tr class="tfoot">
+                    <td><input type="checkbox" class="checkall" id="checkall_1"></td>
+                    <td id="batchAction" colspan="15">
+                        <span class="all_checkbox"><label for="checkall_1">{$Think.lang.ds_select_all}</label></span>&nbsp;&nbsp; 
+                        <a href="javascript:void(0)" class="btn btn-small" onclick="submit_delete_batch();"><span>{$Think.lang.ds_del}</span></a>
+                    </td>
+                </tr>
+            </tfoot>
+            {/notempty}
+        </table>
+
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>
+<script type="text/javascript">
+    $(function(){
+        $(".class_parent").click(function() {
+            if ($(this).attr("status") == "open") {
+                $(this).attr("status","close");
+                $(this).attr("src","{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-collapsable.gif");
+                $("."+$(this).attr("class_id")).show();
+            } else {
+                $(this).attr("status","open");
+                $(this).attr("src","{$Think.ADMIN_SITE_ROOT}/images/treetable/tv-expandable.gif");
+                $("."+$(this).attr("class_id")).hide();
+            }
+        });
+
+        //行内ajax编辑
+        $('span[ds_type="vrgclass_sort"]').inline_edit();
+        $('span[ds_type="vrgclass_name"]').inline_edit();
+
+    });
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL + "/Vrgroupbuy/class_del.html?vrgclass_id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+
+</script>

@@ -1,0 +1,87 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.ds_state}</dt>
+                <dd>
+                    <select name="pintuangroup_state">
+                        {notempty name="pintuangroup_state_array"}
+                        <option value="">{$Think.lang.ds_please_choose}...</option>
+                        {foreach name="pintuangroup_state_array" item="val"}
+                        <option value="{$key}" {if condition="$Request.get.pintuangroup_state != '' && $Request.get.pintuangroup_state eq $key"}selected{/if}>{$val}</option>
+                        {/foreach}
+                        {/notempty}
+                    </select>
+                    <input name="pintuan_id" value="{$Request.param.pintuan_id}" type="hidden"/>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Promotionpintuan/pintuan_manage',['pintuan_id'=>$Request.param.pintuan_id])}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+        <div class="explanation" id="explanation">
+            <div class="title" id="checkZoom">
+                <h4 title="{$Think.lang.ds_explanation_tip}">拼团信息</h4>
+                <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+            </div>
+            <ul>
+                <li>拼团名称：{$pintuan_info.pintuan_name}</li>
+                <li>拼团时间：{$pintuan_info.pintuan_starttime|date="Y-m-d H:i"}-{$pintuan_info.pintuan_end_time|date="Y-m-d H:i"}</li>
+                <li>商品原价：{$pintuan_info.pintuan_goods_price}元</li>
+                <li>成团折扣：{$pintuan_info.pintuan_zhe}折</li>
+                <li>成团人数：{$pintuan_info.pintuan_limit_number}人</li>
+                <li>购买限制：{$pintuan_info.pintuan_limit_quantity}个</li>
+                <li>成团时限：{$pintuan_info.pintuan_limit_hour}小时</li>
+            </ul>
+        </div>
+    </form>
+    
+    
+    
+    <!-- 列表 -->
+    <form id="list_form" method="post">
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th width="300"><span>{$Think.lang.pintuangroup_starttime}</span></th>
+                <th width="240"><span>{$Think.lang.pintuangroup_state}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.pintuangroup_joined}/{$Think.lang.pintuangroup_limit_number}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.pintuangroup_headid}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.pintuanorder}</span></th>
+            </tr>
+            </thead>
+            <tbody id="treet1">
+            {notempty name="pintuangroup_list"}
+            {foreach name="pintuangroup_list" item="val"}
+            <tr class="hover">
+                <td>{$val.pintuangroup_starttime|date="Y-m-d H:i"}</td>
+                <td>{$val.pintuangroup_state_text}({$val.pintuangroup_limit_hour}小时/{$val.pintuangroup_limit_number}人)</td>
+                <td>{$val.pintuangroup_joined}/{$val.pintuangroup_limit_number}</td>
+                <td>{$val.member_name}</td>
+                <td>
+                    {foreach name="val.order_list" item="order"}
+                    <a href="{if $val.pintuangroup_is_virtual}{:url('Sellervrorder/show_order',['order_id'=>$order.order_id])}{else}{:url('Order/show_order',['order_id'=>$order.order_id])}{/if}" target="_blank">{$order.order_sn}</a><br/>
+                    {/foreach}
+                </td>
+            </tr>
+           {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="16">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+        </table>
+        {$show_page|raw}
+    </form>
+
+</div>
+    
+    

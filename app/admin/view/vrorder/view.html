@@ -1,0 +1,102 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <table class="ds-default-table order">
+        <tbody>
+            <tr class="space">
+                <th colspan="2">{$Think.lang.order_detail}</th>
+            </tr>
+            <tr>
+                <th>{$Think.lang.order_info}</th>
+            </tr>
+            <tr>
+                <td colspan="2"><ul>
+                        <li><strong>{$Think.lang.order_number}:</strong>{$order_info.order_sn}</li>
+                        {if $order_info.trade_no}
+                        <li><strong>第三方平台交易号:</strong>{$order_info.trade_no}</li>
+                        {/if}
+                        <li><strong>{$Think.lang.order_state}:</strong>{$order_info.state_desc|raw}</li>
+                        <li><strong>{$Think.lang.order_total_price}:</strong><span class="red_common">{$Think.lang.currency}{$order_info.order_amount}</span></li>
+                        <li><strong>使用预存款支付:</strong>{$Think.lang.currency}{$order_info.pd_amount}</li>
+                        <li><strong>使用充值卡支付:</strong>{$Think.lang.currency}{$order_info.rcb_amount}</li>
+                        <li><strong>{$Think.lang.order_time}{$Think.lang.ds_colon}</strong>{:date('Y-m-d H:i:s',$order_info.add_time)}</li>
+                        <li><strong>{$Think.lang.buyer_name}{$Think.lang.ds_colon}</strong>{$order_info.buyer_name}</li>
+                        <li><strong>接收手机{$Think.lang.ds_colon}</strong>{$order_info.buyer_phone}</li>
+                        <li><strong>{$Think.lang.payment}{$Think.lang.ds_colon}</strong>{:get_order_payment_name($order_info.payment_code)}</li>
+                        {if $order_info.payment_time}
+                        <li><strong>{$Think.lang.payment_time}{$Think.lang.ds_colon}</strong>{:date('Y-m-d H:i:s',$order_info.payment_time)}</li>
+                        {/if}
+                        {present name="order_info.shipping_time"}
+                        <li><strong>{$Think.lang.ship_time}{$Think.lang.ds_colon}</strong>{:date('Y-m-d H:i:s',$order_info.shipping_time)}</li>
+                        {/present}
+                        {if $order_info.finnshed_time}
+                        <li><strong>{$Think.lang.complate_time}{$Think.lang.ds_colon}</strong>{:date('Y-m-d H:i:s',$order_info.finnshed_time)}</li>
+                        {/if}
+                        {present name="order_info.extend_order_common.order_message"}
+                        <li><strong>{$Think.lang.buyer_message}{$Think.lang.ds_colon}</strong>{$order_info.extend_order_common.order_message}</li>
+                        {/present}
+                        <li><strong>买家留言{$Think.lang.ds_colon}</strong>{$order_info.buyer_msg}</li>
+                    </ul>
+                </td>
+            </tr>
+            <tr>
+                <th>{$Think.lang.product_info}</th>
+            </tr>
+            <tr>
+                <td><table class="ds-default-table goods ">
+                        <tbody>
+                            <tr>
+                                <th></th>
+                                <th>商品</th>
+                                <th class="align-center">{$Think.lang.product_price}</th>
+                                <th class="align-center">{$Think.lang.product_num}</th>
+                            </tr>
+                            <tr>
+                                <td class="w60 picture"><div class="size-56x56"><span class="thumb size-56x56"><i></i><a href="{:url('home/goods/index',['goods_id'=>$order_info.goods_id])}" target="_blank"><img alt="{$Think.lang.product_pic}" src="{:goods_thumb($order_info)}" style="width: 60px"/></a></span></div></td>
+                                <td class="w50pre"><p><a href="{:url('home/goods/index',['goods_id'=>$order_info.goods_id])}" target="_blank">{$order_info.goods_name}</a></p><p>{if $order_info.order_promotion_type == 1}抢购，{/if} 使用时效：即日起 至 {:date('Y-m-d',$order_info.vr_indate)}
+                                        {if $order_info.vr_invalid_refund == '0'}
+                                        ，过期不退款
+                                        {/if}</p></td>
+                                <td class="w96 align-center"><span class="red_common">{$Think.lang.currency}{$order_info.goods_price}</span></td>
+                                <td class="w96 align-center">{$order_info.goods_num}</td>
+                            </tr>
+                        </tbody>
+                    </table></td>
+            </tr>
+
+            <tr>
+                <th>{$Think.lang.product_info}</th>
+            </tr>
+            <tr>
+                <td><table class="ds-default-table goods">
+                        <tbody>
+                            <tr>
+                                <th class="w10"></th>
+                                <th>兑换码</th>
+                                <th>价格 (元)</th>
+                                <th>{$Think.lang.product_num}</th>
+                                <th>兑换码状态</th>
+                            </tr>
+                            {notempty name="order_info.extend_vr_order_code"}
+                            {foreach name="order_info.extend_vr_order_code" item="code_info"}
+                            <tr>
+                                <td></td>
+                                <td class="w50">{$code_info.vr_code}</td>
+                                <td class="bdl">{$order_info.goods_price}</td>
+                                <td class="bdl">1</td>
+                                </td>
+                                <td class="bdl">{$code_info.vr_code_desc}</td>
+                            </tr>
+                            {/foreach}
+                            {else /}
+                            <tr><td colspan="20" class="align-center">未生成电子兑换码</td></tr>
+                            {/notempty}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

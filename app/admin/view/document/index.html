@@ -1,0 +1,51 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_document}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.document_index_help1}</li>
+        </ul>
+    </div>
+    
+    <table class="ds-default-table">
+        <thead>
+        <tr class="thead">
+            <th>{$Think.lang.document_index_title}</th>
+            <th class="align-center">{$Think.lang.document_edit_time}</th>
+            <th>{$Think.lang.ds_handle}</th>
+        </tr>
+        </thead>
+        <tbody>
+        {notempty name="doc_list"}
+        {foreach name="doc_list" item="v"}
+        <tr class="hover">
+            <td >{$v.document_title}</td>
+            <td class="w25pre align-center">{$v.document_time|date="Y-m-d H:i:s"}</td>
+            <td class="w96"><a href="{:url('Document/edit',['document_id'=>$v.document_id])}" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a></td>
+        </tr>
+       {/foreach}
+        {else}
+        <tr class="no_data">
+            <td colspan="15">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+        </tbody>
+    </table>
+
+</div>

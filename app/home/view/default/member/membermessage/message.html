@@ -1,0 +1,78 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+<table class="dsm-default-table">
+            <thead>
+            <tr>
+                <th class="w30"></th>
+                <th class="w100 tl">
+                    {$Think.lang.home_message_sender}
+                   </th>
+                <th class="tl">{$Think.lang.home_message_content}</th>
+                <th class="w300">{$Think.lang.home_message_last_update}</th>
+                <th class="w110">{$Think.lang.ds_handle}</th>
+            </tr>
+            {notempty name="message_array"}
+            <tr>
+                <td colspan="20"><input type="checkbox" id="all" class="checkall"/>
+                    <label for="all">{$Think.lang.ds_select_all}</label>
+                    {if $drop_type == 'msg_list'}
+                    <a href="javascript:void(0)" class="dsm-btn-mini" uri="{:url('Membermessage/dropcommonmsg',['drop_type'=>$drop_type])}" name="message_id" confirm="{$Think.lang.home_message_delete_confirm}?" ds_type="batchbutton"><i class="iconfont">&#xe725;</i>{$Think.lang.ds_delete}</a>
+                    {/if}
+                    {if $drop_type == 'msg_system'}
+                    <a href="javascript:void(0)" class="dsm-btn-mini" uri="{:url('Membermessage/dropbatchmsg',['drop_type'=>$drop_type])}" name="message_id" confirm="{$Think.lang.home_message_delete_confirm}?" ds_type="batchbutton">{$Think.lang.ds_delete}</a>
+                    {/if}
+                    </td>
+            </tr>
+            {/notempty}
+            </thead>
+            <tbody>
+            {notempty name="message_array"}
+            {foreach name="message_array" item="v"}
+            <tr class="bd-line">
+                <td class="tc"><input type="checkbox" class="checkitem" value="{$v.message_id}"/></td>
+                <td class="tl">{$v.from_member_name}</td>
+                <td class="link2 {if $v.message_open == 0}font_bold{/if} tl">{if $v.message_type==1}{:htmlspecialchars_decode($v.message_body)}{else}{:parsesmiles($v.message_body)}{/if}</td>
+                <td>{:date('Y-m-d H:i:s',$v.message_update_time)}</td>
+                <td class="dsm-table-handle">
+                    {if $drop_type == 'msg_list'}
+                    <span><a href="{:url('Membermessage/showmsgcommon',['type'=>$drop_type,'message_id'=>$v.message_id])}{if $v.message_parent_id>0}#{$v.message_id}{/if}" class="btn-blue"><i class="iconfont">&#xe731;</i>
+          <p>{$Think.lang.ds_view}</p>
+          </a></span> <span><a href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('Membermessage/dropcommonmsg',['drop_type'=>$drop_type,'message_id'=>$v.message_id])}','{$Think.lang.home_message_delete_confirm}?');" class="btn-red"><i class="iconfont">&#xe725;</i>
+          <p>{$Think.lang.ds_delete}</p>
+          </a></span>
+                    {/if}
+                    {if $drop_type=='msg_system'}
+                    <span><a href="{:url('Membermessage/showmsgbatch',['type'=>$drop_type,'message_id'=>$v.message_id])}{if $v.message_parent_id>0}#{$v.message_id}{/if}" class="btn-acidblue"><i class="iconfont">&#xe70b;</i>
+                            <p>{$Think.lang.ds_view}</p>
+          </a></span><span><a href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('Membermessage/dropbatchmsg',['drop_type'=>$drop_type,'message_id'=>$v.message_id])}','{$Think.lang.home_message_delete_confirm}?');" class="btn-red"><i class="iconfont">&#xe725;</i>
+                            <p>{$Think.lang.ds_delete}</p>
+                        </a></span>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr>
+                <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="message_array"}
+            <tr>
+                <td colspan="20"><div class="pagination">{$show_page|raw}</div></td>
+            </tr>
+           {/notempty}
+            </tfoot>
+        </table>
+
+
+
+
+
+
+
+
+
+{/block}

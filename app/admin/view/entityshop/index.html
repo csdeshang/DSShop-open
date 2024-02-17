@@ -1,0 +1,80 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_entityshop_manage}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.entityshop_name}</dt>
+                <dd><input type="text" value="{$Request.param.entityshop_name}" name="entityshop_name" class="txt"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.entityshop_linkname}</dt>
+                <dd><input type="text" value="{$Request.param.entityshop_linkname}" name="entityshop_linkname" class="txt"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.entityshop_phone}</dt>
+                <dd><input type="text" value="{$Request.param.entityshop_phone}" name="entityshop_phone" class="txt"></dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Entityshop/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+
+
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.entityshop_name}</th>
+                <th>{$Think.lang.entityshop_linkname}</th>
+                <th>{$Think.lang.entityshop_phone}</th>
+                <th>{$Think.lang.entityshop_pic}</th>
+                <th>{$Think.lang.entityshop_hours}</th>
+                <th>{$Think.lang.entityshop_sort}</th>
+                <th>{$Think.lang.entityshop_state}</th>
+                <th>{$Think.lang.entityshop_addtime}</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty  name="entityshop_list"}
+            {foreach name="entityshop_list" item="entityshop"}
+            <tr>
+                <td class="name"><span class="editable"  ds_type="inline_edit" fieldname="entityshop_name" ajax_branch='entityshop' fieldid="{$entityshop.entityshop_id}" required="1"  title="{$Think.lang.ds_editable}">{$entityshop.entityshop_name}</span></td>
+                <td class="name"><span class="editable"  ds_type="inline_edit" fieldname="entityshop_linkname" ajax_branch='entityshop' fieldid="{$entityshop.entityshop_id}" required="1"  title="{$Think.lang.ds_editable}">{$entityshop.entityshop_linkname}</span></td>
+                <td class="name"><span class="editable"  ds_type="inline_edit" fieldname="entityshop_phone" ajax_branch='entityshop' fieldid="{$entityshop.entityshop_id}" required="1"  title="{$Think.lang.ds_editable}">{$entityshop.entityshop_phone}</span></td>
+                <td>{if $entityshop.entityshop_pic}<a data-lightbox="lightbox-image" data-title="{$entityshop.entityshop_name}" href="{$Think.BASE_SITE_ROOT}/uploads/home/entityshop/{$entityshop.entityshop_pic}"><img src="{:ds_get_pic('home/entityshop',$entityshop.entityshop_pic)}" onload="javascript:ResizeImage(this,31,31);"></a>{/if}</td>
+                <td>{$entityshop.entityshop_hours}</td>
+                <td class="sort"><span class="editable"  ds_type="inline_edit" fieldname="entityshop_sort" ajax_branch='entityshop' fieldid="{$entityshop.entityshop_id}" datatype="pint" maxvalue="255" title="{$Think.lang.ds_editable}">{$entityshop.entityshop_sort}</span></td>
+                <td>{$entityshop.entityshop_state}</td>
+                <td>{$entityshop.entityshop_addtime|date="Y-m-d"}</td>
+                <td>
+                    <a href="{:url('Entityshop/edit',['entityshop_id'=>$entityshop.entityshop_id])}"  class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Entityshop/drop',['entityshop_id'=>$entityshop.entityshop_id])}','{$Think.lang.ds_ensure_del}')"  class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>

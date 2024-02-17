@@ -1,0 +1,17 @@
+{notempty name="goods_list"}
+<ul class="goods-list" style="width:760px;">
+    {foreach name="goods_list" item="val"}
+    <li>
+        <div class="goods-thumb"><img src="{:goods_thumb($val,240)}"/></div>
+        <dl class="goods-info">
+            <dt>{$val.goods_name}</dt>
+            <dd>{$Think.lang.sale_price}：{$Think.lang.currency}{$val.goods_price}</dd>
+        </dl>
+        <a dstype="btn_add_groupbuy_goods" data-goods-commonid="{$val.goods_commonid}" href="javascript:void(0);" class="dssc-btn-mini dssc-btn-green"><i class="iconfont">&#xe64d;</i>{$Think.lang.choose_snap_merchandise}</a>
+    </li>
+    {/foreach}
+</ul>
+<div class="pagination">{$show_page|raw}</div>
+{else}
+<div>{$Think.lang.no_record}</div>
+{/notempty}

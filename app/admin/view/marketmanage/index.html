@@ -1,0 +1,67 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$marketmanage_type_list[$marketmanage_type]}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.marketmanage_name}</dt>
+                <dd><input type="text" value="{$Request.param.marketmanage_name}" name="marketmanage_name" class="txt"></dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="{$Think.lang.ds_search}">
+                <a href="{:url('Marketmanage/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+    
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.marketmanage_name}</th>
+                <th>{$Think.lang.marketmanage_jointype}</th>
+                <th>{$Think.lang.marketmanage_time}</th>
+                <th>{$Think.lang.marketmanage_totalcount}</th>
+                <th>{$Think.lang.marketmanage_totalwin}</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="marketmanage_list"}
+            {foreach name="marketmanage_list" item="marketmanage"}
+            <tr id="ds_row_{$marketmanage.marketmanage_id}">
+                <td>{$marketmanage.marketmanage_name}</td>
+                <td>{if $marketmanage.marketmanage_jointype eq '0'}{$Think.lang.ds_total}{$marketmanage.marketmanage_joincount}次{elseif $marketmanage.marketmanage_jointype eq '1' /}每天{$marketmanage.marketmanage_joincount}次{elseif $marketmanage.marketmanage_jointype eq '2' /}不限次数{else/}类型错误{/if}</td>
+                <td>{$marketmanage.marketmanage_begintime|date="Y-m-d H:i:s"}-{$marketmanage.marketmanage_endtime|date="Y-m-d H:i:s"}</td>
+                <td>{$marketmanage.marketmanage_totalcount}</td>
+                <td>{$marketmanage.marketmanage_totalwin}</td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Marketmanage/detail',['marketmanage_id'=>$marketmanage.marketmanage_id,'type'=>$marketmanage.marketmanage_type])}','{$Think.lang.ds_detail}')" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_detail}</a>
+                    <a href="javascript:dsLayerOpen('{:url('Marketmanage/edit',['marketmanage_id'=>$marketmanage.marketmanage_id,'type'=>$marketmanage.marketmanage_type])}','{$Think.lang.ds_edit}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Marketmanage/del',['marketmanage_id'=>$marketmanage.marketmanage_id,'type'=>$marketmanage.marketmanage_type])}','{$Think.lang.ds_ensure_del}')"  class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    {if $marketmanage.marketmanage_endtime > $Think.TIMESTAMP}
+                    <a href="javascript:dsLayerOpen('{:url('Marketmanage/link',['marketmanage_id'=>$marketmanage.marketmanage_id,'type'=>$marketmanage.marketmanage_type])}','{$Think.lang.ds_link}')" class="dsui-btn-link"><i class="iconfont"></i>{$Think.lang.ds_link}</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>

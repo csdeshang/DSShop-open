@@ -1,0 +1,127 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<div class="dsm-flow-layout">
+    <div class="dsm-flow-container">
+        <div class="title"><a href="{:url('Memberevaluate/index')}" class="dsm-btn-mini fr"><i
+                    class="iconfont">&#xe74e;</i>{$Think.lang.return_space|raw}</a>
+            <h3>{$Think.lang.merchandise_carry_share_order}</h3>
+        </div>
+        <div class="alert">
+            <h4>{$Think.lang.picture_upload_request}：</h4>
+            {$Think.lang.picture_format_description}
+        </div>
+        <form id="add_form" action="{:url('Memberevaluate/add_image_save')}" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="geval_id" value="{$geval_info.geval_id}">
+            <div class=" dsm-default-form">
+                <h3>{$Think.lang.evaluation_information}</h3>
+                <dl>
+                    <dt>{$Think.lang.commodity_information}：</dt>
+                    <dd>
+                        <div>
+                            <a href="{:url('Goods/index',['goods_id'=>$geval_info.geval_goodsid])}" target="_blank"><img  src="{:goods_cthumb($geval_info.geval_goodsimage)}" onload="javascript:ResizeImage(this,44,44);"/></a>
+                            <a href="{:url('Goods/index',['goods_id'=>$geval_info.geval_goodsid])}" target="_blank">{$geval_info.geval_goodsname}</a>
+                        </div>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.commodity_rating}：</dt>
+                    <dd>
+                        <div class="raty" style="display:inline-block;"
+                             data-score="{$geval_info.geval_scores}"></div>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.comment_details}：</dt>
+                    <dd>{$geval_info.geval_content}</dd>
+                </dl>
+                <h3 class="mt20">{$Think.lang.upload_share_pictures}</h3>
+                <div class="evaluation-image">
+                    <ul>
+                        {for start="0" end="5" }
+                        <li>
+                            <div class="upload-thumb">
+                                <div dstype="image_item" style="display:none;"><img src="">
+                                    <input type="hidden" dstype="input_image" name="evaluate_image[]" value="">
+                                    <a href="javascript:;" dstype="del" class="del" title="{$Think.lang.remove}">X</a>
+                                </div>
+                            </div>
+                            <div class="upload-btn">
+                                <a href="javascript:void(0);">
+                                    <span><input type="file" hidefocus="true" size="1" class="input-file" name="file"></span>
+                                    <p>{$Think.lang.image_upload}</p>
+                                </a>
+                            </div>
+                        </li>
+                        {/for}
+                    </ul>
+                </div>
+                <div class="bottom">
+                    <input id="btn_submit" class="submit" type="submit" value="{$Think.lang.confirm_submission}">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.iframe-transport.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.ui.widget.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.fileupload.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('.raty').raty({
+            path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+            readOnly: true,
+            score: function() {
+                return $(this).attr('data-score');
+            }
+        });
+        $('#add_form').validate({
+            submitHandler: function (form) {
+                ds_ajaxpost('add_form', 'url', "{:url('Memberevaluate/index')}")
+            }
+        });
+
+        //图片上传
+        $(".input-file").fileupload({
+            dataType: 'json',
+            url: "{:url('Snsalbum/swfupload')}",
+            formData: "",
+            add: function(e, data) {
+                data.formData = {category_id:1}
+                data.submit();
+            },
+            done: function (e, data) {
+                if(data.result.state) {
+                    $item = $(this).parents('li');
+                    $item.find('img').attr('src', data.result.file_url);
+                    $item.find('[dstype="input_image"]').val(data.result.file_name);
+                    var file_id = $item.find('[dstype="del"]').attr('data-file-id');
+                    album_pic_del(file_id);
+                    $item.find('[dstype="del"]').attr('data-file-id', data.result.file_id);
+                    $item.find('[dstype="image_item"]').show();
+                } else {
+                    layer.msg(data.result.message);
+                }
+            }
+        });
+
+        $('[dstype="del"]').on('click', function() {
+            album_pic_del($(this).attr('data-file-id'));
+            $item = $(this).parent();
+            $item.find('[dstype="input_image"]').val('');
+            $item.hide();
+        });
+
+        function album_pic_del(file_id) {
+            $.getJSON("{:url('Snsalbum/album_pic_del')}",{id: + file_id}, function(result){
+                layer.msg(result.message);
+            })
+
+        }
+    });
+</script>
+{/block}

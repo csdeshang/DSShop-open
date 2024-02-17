@@ -1,0 +1,58 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <form id="post_form" method="post" name="form1">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td class="vatop rowform">{$payment.payment_name}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                {notempty name="payment.payment_config"}
+                {foreach name="payment.payment_config" item="config" key="key"}
+                <tr>
+                    <td colspan="2" class="required">{$config.lable}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        {if $config.type == 'text'}
+                        <input name="cfg_value['key_{$key}']" id="{$config.name}" value="{$config.value}" class="txt" type="text">
+                        {elseif $config.type == 'password'}
+                        <input name="cfg_value['key_{$key}']" id="{$config.name}" value="{$config.value}" class="txt" type="password">
+                        {elseif $config.type == 'radio'}
+                        <div class="onoff">
+                            <label  for="{$config.name}1" class="cb-enable {if $config.value}selected{/if}" ><span>{$Think.lang.ds_yes}</span></label>
+                            <label  for="{$config.name}0" class="cb-disable {if $config.value == '0'}selected{/if}" ><span>{$Think.lang.ds_no}</span></label>
+                            <input type="radio" {if $config.value == '1'}checked="checked"{/if} value="1" name="cfg_value['key_{$key}']" id="{$config.name}1">
+                            <input type="radio" {if $config.value == '0'}checked="checked"{/if} value="0" name="cfg_value['key_{$key}']" id="{$config.name}0">
+                        </div>
+                        {elseif $config.type == 'textarea'}
+                        <textarea name="cfg_value['key_{$key}']" style="width:520px;height:100px;">{$config.value}</textarea>
+                        {/if}
+                        <input name="cfg_name['key_{$key}']" type="hidden" value="{$config.name}" />
+                    </td>
+                    <td class="vatop tips">{$config.desc|raw}</td>
+                </tr>
+                {/foreach}
+                {/notempty}
+                <tr>
+                    <td colspan="2" class="required">{$Think.lang.ds_enable}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform onoff"><label for="payment_state1" class="cb-enable {if $payment.payment_state}selected{/if}" ><span>{$Think.lang.ds_yes}</span></label>
+                        <label for="payment_state2" class="cb-disable {if $payment.payment_state == '0'}selected{/if}" ><span>{$Think.lang.ds_no}</span></label>
+                        <input type="radio" {if $payment.payment_state == '1'}checked="checked"{/if} value="1" name="payment_state" id="payment_state1">
+                         <input type="radio" {if $payment.payment_state == '0'}checked="checked"{/if} value="0" name="payment_state" id="payment_state2"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><a href="JavaScript:void(0);" class="btn" id="submitBtn"  onclick="document.form1.submit()"><span>{$Think.lang.ds_submit}</span></a> <a href="JavaScript:void(0);" class="btn" onclick="history.go(-1)"><span>{$Think.lang.ds_back}</span></a></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+    
+    

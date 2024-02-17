@@ -1,0 +1,67 @@
+{include file="public/header" /}
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商品管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+            <ul class="add-goods-step">
+                <li><i class="iconfont">&#xe600;</i>
+                    <h6>STEP.1</h6>
+                    <h2>{$Think.lang.select_category}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li><i class="icon iconfont">&#xe731;</i>
+                    <h6>STEP.2</h6>
+                    <h2>{$Think.lang.fill_item_details}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li><i class="icon iconfont">&#xe6a2;</i>
+                    <h6>STEP.3</h6>
+                    <h2>{$Think.lang.goods_index_upload_goods_pic}</h2>
+                    <i class="iconfont">&#xe687;</i> </li>
+                <li class="current"><i class="icon iconfont">&#xe64d;</i>
+                    <h6>STEP.4</h6>
+                    <h2>{$Think.lang.goods_index_flow_chart_step3}</h2>
+                </li>
+            </ul>
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  
+  
+
+
+  <div class="alert alert-block hr32">
+      <h2><i class="iconfont mr10">&#xe64d;</i>{$Think.lang.goods_step3_goods_release_success}&nbsp;&nbsp;</h2>
+      <div class="hr16"></div>
+      <div>
+          {if $allow_gift}
+          <a class="dssc-btn dssc-btn-green ml30" href="{:url('Goods/add_gift',['commonid'=>$Request.param.commonid])}"><i class="iconfont">&#xe753;</i>{$Think.lang.adding_gift_bundles_item}</a>
+          {/if}
+          {if $allow_combo}
+          <a class="dssc-btn dssc-btn-orange ml10" href="{:url('Goods/add_combo',['commonid'=>$Request.param.commonid])}"><i class="iconfont">&#xe67e;</i>{$Think.lang.adding_recommended_combinations_item}</a>
+          {/if}
+      </div>  
+      <div class="hr16"></div>
+      <strong>
+          <a class="ml30" href="{:url('Goods/index',['goods_id'=>$goods_id])}">{$Think.lang.goods_step3_viewed_product}&gt;&gt;</a>
+          <a class="ml30" href="{:url('Goods/edit_goods',['commonid'=>$Request.param.commonid])}">{$Think.lang.goods_step3_edit_product}&gt;&gt;</a>
+      </strong>  
+      <div class="hr16"></div>
+      <h4 class="ml10">{$Think.lang.goods_step3_more_actions}</h4>
+      <ul class="ml30">
+          <li>1.  {$Think.lang.goods_step3_continue}&quot; <a href="{:url('Goodsadd/index')}">{$Think.lang.goods_step3_release_new_goods}</a>&quot;</li>
+          <li>2.  {$Think.lang.ds_manage}&quot;<a href="{:url('Goods/index')}">{$Think.lang.ds_member_path_goods_list}</a>&quot;</li>
+          <li>3.  {$Think.lang.goods_step3_participation}&quot; <a href="{:url('Activity/index')}">{$Think.lang.goods_step3_special_activities}</a> &quot;</li>
+      </ul>
+  </div>
+  
+  
+  
+  
+  
+  
+  
+  
+</div>

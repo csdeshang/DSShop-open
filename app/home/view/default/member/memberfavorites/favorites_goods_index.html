@@ -1,0 +1,93 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+<table class="dsm-default-table shoplist">
+    <thead>
+    <tr>
+        <td colspan="20">
+            <input type="checkbox" id="all" class="checkall"/>
+            <label for="all">{$Think.lang.ds_select_all}</label>
+            <a href="javascript:void(0);" class="dsm-btn-mini" uri="{:url('Memberfavorites/delfavorites',['type'=>'goods'])}" name="fav_id"
+               confirm="{$Think.lang.ds_ensure_del}" ds_type="batchbutton"><i class="iconfont">&#xe725;</i>{$Think.lang.ds_delete}</a>
+            <div class="model-switch-btn">{$Think.lang.favorite_view_mode}{$Think.lang.ds_colon}
+                <a href="{:url('Memberfavorites/fglist',['show'=>'list'])}" class="current" title="{$Think.lang.favorite_view_mode_list}"><i class="iconfont">&#xe600;</i></a>
+                <a href="{:url('Memberfavorites/fglist',['show'=>'pic'])}" title="{$Think.lang.favorite_view_mode_pic}"><i class="iconfont">&#xe72a;</i></a>
+            </div>
+        </td>
+    </tr>
+    <tr ds_type="table_header">
+        <th class="w30"></th>
+        <th colspan="2">{$Think.lang.ds_goods}</th>
+        <th class="w100">{$Think.lang.ds_price}</th>
+        <th class="w150">{$Think.lang.favorite_date}</th>
+        <th class="w100">{$Think.lang.favorite_popularity}</th>
+        <th class="w110">{$Think.lang.ds_handle}</th>
+    </tr>
+    </thead>
+    {notempty name="favorites_list"}
+    <tbody>
+    {foreach name="favorites_list" item="favorites"}
+    <tr class="bd-line">
+        <td style="vertical-align: middle;"><input type="checkbox" class="checkitem" value="{$favorites.goods.goods_id}"/></td>
+        <td class="w50">
+            <div class="pic-thumb">
+                <a href="{:url('Goods/index',['goods_id'=>$favorites.goods.goods_id])}" target="_blank">
+                    <img src="{:goods_thumb($favorites.goods,240)}"/>
+                </a>
+            </div>
+        </td>
+        <td class="tl">
+            <dl class="goods-name">
+                <dt><a href="{:url('Goods/index',['goods_id'=>$favorites.goods.goods_id])}" target="_blank">{$favorites.goods.goods_name}</a></dt>
+                <dd>{$Think.lang.favorite_selled}{$Think.lang.ds_colon}<em>{$favorites.goods.goods_salenum}</em>{$Think.lang.piece}(<em>{$favorites.goods.evaluation_count}</em>{$Think.lang.favorite_number_of_consult})
+                </dd>
+            </dl>
+        </td>
+        <td><span class="goods-price">{:ds_price_format($favorites.goods.goods_price)}</span></td>
+        <td class="goods-time">{:date('Y-m-d',$favorites.fav_time)}</td>
+        <td>{$favorites.goods.goods_collect}</td>
+        <td class="dsm-table-handle">
+            <span>
+        <td class="dsm-table-handle"><span><a href="javascript:void(0)" class="btn-red" onclick="ds_ajaxget_confirm('{:url('Memberfavorites/delfavorites',['fav_id'=>$favorites.fav_id,'type'=>'goods'])}','{$Think.lang.ds_ensure_del}');"><i class="iconfont">&#xe725;</i>
+              <p>{$Think.lang.ds_delete}</p>
+              </a>
+            </span>
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+    {else /}
+    <tbody>
+    <tr>
+        <td colspan="20" class="norecord">
+            <div class="warning-option"><i></i>&nbsp;</i><span>{$Think.lang.no_record}</span></div>
+        </td>
+    </tr>
+    </tbody>
+    {/notempty}
+    {notempty name="favorites_list"}
+    <tfoot>
+    <tr>
+        <td colspan="20">
+            <div class="pagination">{$show_page|raw}</div>
+        </td>
+    </tr>
+    </tfoot>
+    {/notempty}
+</table>
+<!-- 猜你喜欢 -->
+<div id="guesslike_div" style="width:980px;"></div>
+<script>
+    //鼠标经过弹出图片信息
+    $(document).ready(function () {
+        //猜你喜欢
+        $('#guesslike_div').load("{:url('Search/get_guesslike')}", function () {
+            $(this).show();
+        });
+    });
+</script>
+
+
+{/block}
+

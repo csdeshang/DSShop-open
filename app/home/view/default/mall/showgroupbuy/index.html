@@ -1,0 +1,106 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_group.css">
+<div class="w1200">
+    <div class="dsh-breadcrumb-layout" style="display: block;">
+  <div class="dsh-breadcrumb wrapper"> <i class="iconfont">&#xe6ff;</i> <span> <a href="{:url('Index')}">{$Think.lang.ds_index}</a> </span> <span class="arrow">></span> <span>{$Think.lang.text_groupbuy}</span></div>
+</div>
+
+<div class="dsg-container clearfix">
+  <div class="dsg-category" id="dsgCategory">
+    <h3>{$Think.lang.online_grab}</h3>
+    <ul>
+        {notempty name="$groupbuy_classes.name"}
+        <?php $i = 0; $names = $groupbuy_classes['name']; foreach ((array) $groupbuy_classes['children'][0] as $v) { if (++$i > 6) break; ?>
+        <li><a href="{:url('Showgroupbuy/groupbuy_list',['class'=>$v])}">{$names[$v]}</a></li>
+        <?php } ?>
+        {/notempty}
+    </ul>
+    <h3>{$Think.lang.virtual_grab}</h3>
+    <ul>
+        {notempty name="$groupbuy_vr_classes.name"}
+        <?php $i = 0; $names = $groupbuy_vr_classes['name']; foreach ((array) $groupbuy_vr_classes['children'][0] as $v) { if (++$i > 6) break; ?>
+        <li><a href="{:url('Showgroupbuy/vr_groupbuy_list',['vr_class'=>$v])}">{$names[$v]}</a></li>
+        <?php } ?>
+        {/notempty}
+    </ul>
+  </div>
+
+    {notempty name="picArr"}
+    <div class="dsg-slides-banner">
+        <ul class="bd">
+            {foreach name="picArr" item="p" }
+            <li><a href="{$p.1}" target="_blank"><img class="lazyload" data-original="{:ds_get_pic('home/groupbuy/slider',$p.0)}" style="height: 300px"></a></li>
+            {/foreach}
+        </ul>
+        <ul class="hd">
+            {foreach $picArr as $p}
+            <li></li>
+            {/foreach}
+        </ul>
+        <a class="ctrl prev" href="javascript:void(0)">&lt;</a>
+        <a class="ctrl next" href="javascript:void(0)">&gt;</a>
+    </div>
+    {/notempty}
+</div>
+    
+<div class="group-list mt20">
+      <div class="dsg-recommend-title">
+        <h3>{$Think.lang.online_snap_up_recommendations}</h3>
+        <a href="{:url('Showgroupbuy/groupbuy_list')}" class="more">{$Think.lang.check_out_more}</a></div>
+          {notempty name="groupbuy"}
+          <ul>
+              {foreach name="groupbuy" item="groupbuy" }
+              <li class="{$current}">
+                  <div class="dsg-list-content"> <a title="{$groupbuy.groupbuy_name}" href="{$groupbuy.groupbuy_url}" class="pic-thumb" target="_blank"><img  class="lazyload" data-original="{:groupbuy_thumb($groupbuy['groupbuy_image'],'normal')}" alt=""></a>
+                      <h3 class="title"><a title="{$groupbuy.groupbuy_name}" href="{$groupbuy.groupbuy_url}" target="_blank">{$groupbuy.groupbuy_name}</a></h3>
+                      <?php list($integer_part, $decimal_part) = explode('.', $groupbuy['groupbuy_price']);?>
+                      <div class="item-prices"> <span class="price"><i>{$Think.lang.currency}</i>{$integer_part}<em>.{$decimal_part}</em></span>
+                          <div class="dock"><span class="limit-num">{$groupbuy.groupbuy_rebate}&nbsp;{$Think.lang.ds_zhe}</span> <del class="orig-price">{$Think.lang.currency}{$groupbuy.goods_price}</del></div>
+                          <span class="sold-num"><em><?php echo $groupbuy['groupbuy_buy_quantity']+$groupbuy['virtual_quantity'];?></em>{$Think.lang.piece}{$Think.lang.text_buy}</span><a href="{$groupbuy.groupbuy_url}" target="_blank" class="buy-button">{$Think.lang.groupbuy_buy}</a></div>
+                  </div>
+              </li>
+              {/foreach}
+          </ul>
+          {else /}
+          <div class="norecommend">{$Think.lang.snap_up_recommendations_wirelessly}</div>
+          {/notempty}
+    </div>
+    <div class="group-list mt30">
+      <div class="dsg-recommend-title">
+        <h3></i>{$Think.lang.virtual_panic_buying_recommendation}</h3>
+        <a href="{:url('Showgroupbuy/vr_groupbuy_list')}" class="more">{$Think.lang.check_out_more}</a></div>
+        {notempty name="vr_groupbuy"}
+        <ul>
+        {foreach name="vr_groupbuy" item="groupbuy" }
+            <li class="{$current}">
+          <div class="dsg-list-content"> <a title="{$groupbuy.groupbuy_name}" href="{$groupbuy.groupbuy_url}" class="pic-thumb" target="_blank"><img class="lazyload" data-original="{:groupbuy_thumb($groupbuy['groupbuy_image'],'normal')}" alt=""></a>
+            <h3 class="title"><a title="{$groupbuy.groupbuy_name}" href="{$groupbuy.groupbuy_url}" target="_blank">{$groupbuy.groupbuy_name}</a></h3>
+              <?php list($integer_part, $decimal_part) = explode('.', $groupbuy['groupbuy_price']);?>
+              <div class="item-prices"> <span class="price"><i>{$Think.lang.currency}</i>{$integer_part}<em>.{$decimal_part}</em></span>
+              <div class="dock"><span class="limit-num">{$groupbuy.groupbuy_rebate}&nbsp;{$Think.lang.ds_zhe}</span> <del class="orig-price">{$Think.lang.currency}{$groupbuy.goods_price}</del></div>
+              <span class="sold-num"><em><?php echo $groupbuy['groupbuy_buy_quantity'];?></em>{$Think.lang.piece}{$Think.lang.text_buy}</span><a href="{$groupbuy.groupbuy_url}" target="_blank" class="buy-button">{$Think.lang.groupbuy_buy}</a></div>
+          </div>
+        </li>
+            {/foreach}
+      </ul>
+        {else /}
+        <div class="norecommend">{$Think.lang.no_virtual_panic_buying_recommendation}</div>
+        {/notempty}
+    </div>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.SuperSlide.2.1.1.js"></script>
+<script>
+    //轮播
+    jQuery(".dsg-slides-banner").slide({mainCell: "ul", autoPlay: true, delayTime: 500,interTime: 5000});
+</script>
+
+
+
+
+
+
+{/block}

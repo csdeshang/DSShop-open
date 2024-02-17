@@ -1,0 +1,51 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+<div class="dsm-default-form">
+    <form method="post" id="rechargecard_form" action="">
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.predeposit_recharge_card_number}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input name="rc_sn" type="text" class="text w400" id="rc_sn" maxlength="50" /><span></span></dd>
+        </dl>
+        <dl class="bottom">
+            <dt>&nbsp; </dt>
+            <dd>
+                <input type="submit" class="submit" value="{$Think.lang.ds_submit}" />
+            </dd>
+        </dl>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#rechargecard_form').validate({
+            errorPlacement: function (error, element) {
+                var error_td = element.parent('dd').children('span');
+                error_td.append(error);
+            },
+            rules: {
+                rc_sn: {
+                    required: true,
+                    maxlength: 50
+                }
+            },
+            messages: {
+                rc_sn: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.predeposit_enter_card_number}',
+                    maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.predeposit_card_length_less}'
+                }
+            }
+        });
+    });
+</script>
+
+
+
+
+{/block}
+

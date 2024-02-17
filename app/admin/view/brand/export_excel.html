@@ -1,0 +1,25 @@
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <h3>{$Think.lang.download_lang}</h3>
+      <ul class="tab-base">
+        <li><a href="JavaScript:void(0);" class="current">
+          <span>{$Think.lang.ds_export}</span>
+        </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="fixed-empty"></div>
+    <table class="tb-type1">
+      <tbody>
+      <tr><td>&nbsp;</td></tr>
+        <tr>
+          <td>
+            {foreach name="list" item="v"}
+          	<a href="javascript:void(0)">{$Think.lang.ds_download}{$key}({$v})</a> |
+            {/foreach}
+          </td>
+        </tr>
+    </table>
+</div>

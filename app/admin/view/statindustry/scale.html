@@ -1,0 +1,145 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>行业分析</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get"  name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dd id="searchgc_td"></dd>
+                <input type="hidden" id="choose_gcid" name="choose_gcid" value="0"/>
+                <dd>
+                    <select name="search_type" id="search_type" class="querySelect">
+                        <option value="day" {if $Request.get.search_type == 'day'}selected{/if}>按照天统计</option>
+                        <option value="week" {if $Request.get.search_type == 'week'}selected{/if}>按照周统计</option>
+                        <option value="month" {if $Request.get.search_type == 'month'}selected{/if}>按照月统计</option>
+                    </select>
+                </dd>
+                <dd id="searchtype_day" style="display:none;"><input class="txt date" type="text" value="{$search_arr.day.search_time|date='Y-m-d'}" id="search_time" name="search_time"></dd>
+                <dd id="searchtype_week" style="display:none;">
+                    <select name="searchweek_year" class="querySelect">
+                        {foreach name="year_arr" item="v"}
+                        <option value="{$key}"{if $search_arr.week.current_year == $key} selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchweek_month" class="querySelect">
+                        {foreach name="month_arr" item="v"}
+                        <option value="{$key}" {if $search_arr.week.current_month == $key} selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchweek_week" class="querySelect">
+                        {foreach name="week_arr" item="v"}
+                        <option value="{$v.key}" {if $search_arr.week.current_week == $v.key}selected{/if}>{$v.val}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+                <dd id="searchtype_month" style="display:none;">
+                    <select name="searchmonth_year" class="querySelect">
+                            {foreach name="year_arr" item="v"}
+                            <option value="{$key}" {if $search_arr.month.current_year == $key}selected{/if}>{$v}</option>
+                            {/foreach}
+                        </select>
+                        <select name="searchmonth_month" class="querySelect">
+                            {foreach name="month_arr" item="v"}
+                            <option value="{$key}" {if $search_arr.month.current_month == $key}selected{/if}>{$v}</option>
+                            {/foreach}
+                        </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn tooltip" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Statindustry/scale')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+
+    
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>统计某行业子分类在不同时间段的下单金额、下单商品数、下单量，为分析行业销量提供依据</li>
+        </ul>
+    </div>
+
+    <div id="stat_tabs" class="w100pre close_float ui-tabs" style="min-height:400px">
+        <div class="close_float tabmenu">
+            <ul class="tab pngFix">
+                <li><a href="#orderamount_div" ds_type="showdata" data-param='{"type":"orderamount"}'>下单金额</a></li>
+                <li><a href="#goodsnum_div" ds_type="showdata" data-param='{"type":"goodsnum"}'>下单商品数</a></li>
+                <li><a href="#ordernum_div" ds_type="showdata" data-param='{"type":"ordernum"}'>下单量</a></li>
+            </ul>
+        </div>
+        <!-- 下单金额 -->
+        <div id="orderamount_div" class="close_float" style="text-align:center;"></div>
+        <!-- 下单商品数 -->
+        <div id="goodsnum_div" class="close_float" style="text-align:center;"></div>
+        <!-- 下单量 -->
+        <div id="ordernum_div" class="close_float" style="text-align:center;"></div>
+    </div>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<script>
+    //展示搜索时间框
+    function show_searchtime(){
+        s_type = $("#search_type").val();
+        $("[id^='searchtype_']").hide();
+        $("#searchtype_"+s_type).show();
+    }
+    $(function () {
+        //切换登录卡
+        $('#stat_tabs').tabs();
+
+        //统计数据类型
+        var s_type = $("#search_type").val();
+        $('#search_time').datepicker({dateFormat: 'yy-mm-dd'});
+
+        show_searchtime();
+        $("#search_type").change(function(){
+            show_searchtime();
+        });
+
+        //更新周数组
+        $("[name='searchweek_month']").change(function(){
+            var year = $("[name='searchweek_year']").val();
+            var month = $("[name='searchweek_month']").val();
+            $("[name='searchweek_week']").html('');
+            $.getJSON(ADMINSITEURL+'/Common/getweekofmonth',{y:year,m:month},function(data){
+                if(data != null){
+                    for(var i = 0; i < data.length; i++) {
+                        $("[name='searchweek_week']").append('<option value="'+data[i].key+'">'+data[i].val+'</option>');
+                    }
+                }
+            });
+        });
+
+        //商品分类
+        init_gcselect({$gc_choose_json|raw},{$gc_json|raw});
+
+        //加载统计数据
+        getStatdata('orderamount');
+        $("[ds_type='showdata']").click(function(){
+            var data_str = $(this).attr('data-param');
+            eval('data_str = '+data_str);
+            getStatdata(data_str.type);
+        });
+    });
+    //加载统计数据
+    function getStatdata(type){
+        var choose_gcid = $("#choose_gcid").val();
+        $('#'+type+'_div').load("{:url('Statindustry/scale_list')}?stattype="+type+"&t={$searchtime}&choose_gcid="+choose_gcid);
+    }
+</script>

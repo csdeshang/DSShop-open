@@ -1,0 +1,151 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/point.css">
+{include file="default/member/pointprod/pointshop_minfo" /}
+<div class="dsp-container">
+
+  <div class="dsp-main-layout">
+    <div class="dsp-category">
+      
+
+      <!-- 高级搜索start -->
+      <dl class="searchbox">
+  
+        <dd>
+          <ul>
+              <li>{$Think.lang.ds_sort}：</li>
+            <input type="hidden" id="orderby" name="orderby" value="{$Request.param.orderby ? $Request.param.orderby:'default'}"/>
+            <!-- 默认排序s -->
+            {if $Request.param.orderby=='default' ||!$Request.param.orderby}
+            <li class="selected">{$Think.lang.home_default_sort}</li>
+            {else /}
+            <li ds_type="search_orderby" data-param='{"orderval":"default"}'>{$Think.lang.home_default_sort}</li>
+           {/if}
+            <!-- 默认排序e -->
+
+            <!-- 兑换量s -->
+            {if $Request.param.orderby=='exchangenumdesc'}
+            <li class="selected" ds_type="search_orderby" data-param='{"orderval":"exchangenumasc"}'>{$Think.lang.exchange_amount}<em class=" desc"></em></li>
+            {elseif $Request.param.orderby=='exchangenumasc'}
+            <li class="selected" ds_type="search_orderby" data-param='{"orderval":"exchangenumdesc"}'>{$Think.lang.exchange_amount}<em class=" asc"></em></li>
+            {else /}
+            <li ds_type="search_orderby" data-param='{"orderval":"exchangenumdesc"}'>{$Think.lang.exchange_amount}<em class=""></em></li>
+            {/if}
+            <!-- 兑换量e -->
+
+            <!-- 积分值s -->
+             {if $Request.param.orderby=='pointsdesc'}
+            <li class="selected" ds_type="search_orderby" data-param='{"orderval":"pointsasc"}'>{$Think.lang.points}<em class=" desc"></em></li>
+            {elseif $Request.param.orderby=='pointsasc'}
+            <li class="selected" ds_type="search_orderby" data-param='{"orderval":"pointsdesc"}'>{$Think.lang.points}<em class=" asc"></em></li>
+            {else /}
+            <li ds_type="search_orderby" data-param='{"orderval":"pointsdesc"}'>{$Think.lang.points}<em class=""></em></li>
+            {/if}
+            <!-- 积分值e -->
+            <li>&nbsp;</li>
+            <!-- 面额e -->
+            <li>&nbsp;</li>
+            <!-- 所需积分s -->
+            <li>{$Think.lang.home_voucher_points}：
+              <input type="text" id="points_min" class="text w50" value="{$Request.param.points_min}"/>
+              ~
+              <input type="text" id="points_max" class="text w50" value="{$Request.param.points_max}" />
+              <a href="javascript:searchvoucher();" class="dsp-btn">{$Think.lang.ds_search}</a> </li>
+            <!-- 所需积分e -->
+            {if session('is_login')=='1'}
+            <li>
+              <label for="isable"><input type="checkbox" id="isable" {$Request.param.isable ==1?'checked="checked"':''} onclick="javascript:searchvoucher();">
+              &nbsp;{$Think.lang.watch_exchange_them} </label></li>
+            {/if}
+          </ul>
+        </dd>
+      </dl>
+      <!-- 高级搜索end --></div>
+    {notempty name="voucherlist"}
+    <ul class="dsp-voucher-list">
+      {foreach name="voucherlist" item="v"}
+      <li>
+        <div class="coupon_item">
+            <div class="coupon_lk">
+                <div class="lazyimg lazyimg_loaded coupon_img">
+                    <img class="lazyload" data-original="{$v.vouchertemplate_customimg}" onerror="this.src='{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.default_goods_image)}'">
+                </div>
+                <a href="javascript:void(0);" ds_type="exchangebtn" data-param='{"vid":"{$v.vouchertemplate_id}"}'>
+                    <div class="coupon_more">
+                        <div class="coupon_more_inner">{$Think.lang.immediately_change}</div>
+                            
+                    </div>
+                </a>
+                <div class="coupon_info">
+                    <div class="mod_price coupon_price"><i>¥</i><span>{$v.vouchertemplate_price}</span></div>
+                    <div class="coupon_limit" title="{$Think.lang.ds_mansong_flag}{$v.vouchertemplate_limit}{$Think.lang.yuan_available}">{$Think.lang.ds_mansong_flag}{$v.vouchertemplate_limit}{$Think.lang.yuan_available}</div>
+                    <div class="coupon_desc" title="{$Think.lang.required}{$v.vouchertemplate_points}{$Think.lang.points_unit}">{$Think.lang.required}<em>{$v.vouchertemplate_points}</em>{$Think.lang.points_unit}</div>
+                        
+                </div>
+            </div>
+        </div>
+      </li>
+      {/foreach}
+    </ul>
+    <div class="tc mt20 mb20">
+      <div class="pagination">{$show_page|raw}</div>
+    </div>
+   {else /}
+    <div class="no_results">{$Think.lang.home_voucher_list_null}</div>
+    {/notempty}
+  </div>
+</div>
+<script>
+$(function(){
+	//代金券兑换功能
+    $("[ds_type='exchangebtn']").on('click',function(){
+    	var data_str = $(this).attr('data-param');
+        eval( "data_str = "+data_str);
+        {if session('is_login') != '1'}
+        login_dialog();
+        {else}
+        ajax_form('vexchange', '{$Think.lang.home_voucher_exchangtitle}', "{:url('Pointvoucher/voucherexchange')}?vid="+data_str.vid, 550);
+        {/if}
+        return false;
+    });
+});
+</script>
+
+<script>
+$(function () {
+    $("[ds_type='search_orderby']").click(function(){
+        var data_str = $(this).attr('data-param');
+        eval( "data_str = "+data_str);
+        $("#orderby").val(data_str.orderval);
+        searchvoucher();
+    });
+});
+function searchvoucher(){
+    var url = "{:url('Pointvoucher/index')}"+'?';
+    var orderby = $("#orderby").val();
+    if(orderby){
+        url += ('orderby='+orderby)+'&';
+    }
+    var price = $("#price").val();
+    if(price){
+        url += ('price='+price)+'&';
+    }
+    var points_min = $("#points_min").val();
+    if(points_min){
+        url += ('points_min='+points_min)+'&';
+    }
+    var points_max = $("#points_max").val();
+    if(points_max){
+        url += ('points_max='+points_max)+'&';
+    }
+    if($("#isable").attr("checked") == 'checked'){
+        url += 'isable=1';
+    }
+    go(url);
+}
+</script>
+
+
+{/block}

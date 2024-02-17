@@ -1,0 +1,33 @@
+<div class="pt20">
+        <div class="mc-title">
+            <h3>{$Think.lang.my_footprint}</h3>
+        </div>
+        {notempty name="viewed_goods"}
+        {foreach name="viewed_goods" item="goods_info" key="goods_id" }
+        <div class="mynews-list-area my_center service_type_4 ">
+            <div class="m-image">
+                <img src="{$goods_info.goods_image}">
+            </div>
+            <div class="m-title">
+                <em class="m-info">{$goods_info.goods_name}</em>
+                <em class="m-name">{$Think.lang.view_at}</em>
+                <em class="m-time">{$goods_info.goodsbrowse_time|date='Y-m-d H:i'}</em>
+            </div>
+            <p class="m-detail">{$goods_info.goods_advword}</p>
+            <a href="{$goods_info.url}" class="button-1 mynews-list-btn" target="_blank" >{$Think.lang.view_detail}</a>
+        </div>
+        {/foreach}
+        {else /}
+        <dl class="null-tip pt20 pb20" style='margin-top: 12px;'>
+            <dt><i class="iconfont">&#xe70b;</i></dt>
+            <dd>
+                <h4>{$Think.lang.browsing_history_empty}</h4>
+                <h5>{$Think.lang.mall_look_promotion}</h5>
+            </dd>
+        </dl>
+        {/notempty}
+    </div>
+
+
+
+

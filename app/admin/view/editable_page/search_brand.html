@@ -1,0 +1,212 @@
+{include file="public/header" /}
+<form id="search_form">
+    <div class="wrapper" id="fix_brand">
+        <table class="dssc-default-table mb15">
+          <thead>
+            <tr>
+              <th class="tl" style="padding-left: 10px" colspan="2">{$Think.lang.ds_brand}</th>
+              <th class="w90">{$Think.lang.ds_sort}</th>
+              <th class="w90">{$Think.lang.ds_handle}</th></tr>
+          </thead>
+          <tbody dstype="bundling_data" class="bd-line tip">
+            <tr{notempty name="brand_id"} style="display:none;"{/notempty}>
+              <td colspan="20" class="norecord">
+                <div class="no-promotion">
+                  <i class="zh"></i>
+                  <span>{$Think.lang.ds_no_record}</span></div>
+              </td>
+            </tr>{notempty name="brand_id"} {foreach name="brand_id" item="val"}
+            <tr id="bundling_tr_{$val.brand_id}" class="off-shelf">
+              <td class="w50">
+                <div class="shelf-state">
+                  <div class="pic-thumb">
+                    <img src="{:brand_image($val.brand_pic)}" ncname="{$val.brand_pic}" dstype="bundling_data_img"></div></div>
+              </td>
+              <td class="tl">
+                <dl class="goods-name">
+                  <dt>{$val.brand_name}</dt></dl>
+              </td>
+              <td class="w90"><input data-brand="{$val.brand_id}" type="number" min="0" max="255" size="1" name="{$Request.param.name|default='brand_id'}[{$val.brand_id}][sort]" value="{if(isset($brand_id[$val['brand_id']]['sort']))}{$brand_id[$val['brand_id']]['sort']}{else}255{/if}" /></td>
+              <td class="dscs-table-handle w90">
+                <span>
+                  <a onclick="bundling_operate_delete($('#bundling_tr_{$val.brand_id}'), {$val.brand_id})" href="JavaScript:void(0);" class="btn-orange">
+                    <i class="iconfont">&#xe754;</i>
+                    <p>{$Think.lang.ds_del}</p>
+                  </a>
+                </span>
+              </td>
+            </tr>{/foreach} {/notempty}</tbody>
+        </table>
+        <div class="div-goods-select-box">
+          <div class="div-goods-select">
+            <table class="search-form">
+                <tbody>
+                <tr>
+                    <th></th>
+                    <td><input type="text" name="keyword" class="text w200" value="{$Request.get.keyword}" /><a onclick="$('#search_form').submit()" dstype="search_a" class="dssc-btn"><i class="iconfont">&#xe718;</i>{$Think.lang.ds_search}</a></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="search-result" style="width:739px;">
+                {notempty name="brand_list"}
+                <ul class="goods-list" dstype="bundling_goods_add_tbody" style=" width:760px;">
+                    {foreach name="brand_list" item="val"}
+                    <li dstype="{$val.brand_id}">
+                        <div class="goods-thumb"><img src="{:brand_image($val.brand_pic)}" dstype="{$val.brand_pic}" /></div>
+                        <dl class="goods-info">
+                            <dt><a href="#" target="_blank" title="{$val.brand_name}">{$val.brand_name}</a></dt>
+                        </dl>
+                        <div data-param="{gid:{$val.brand_id},image:'{$val.brand_pic}',src:'{:brand_image($val.brand_pic)}',gname:'{$val.brand_name}'}"><a href="JavaScript:void(0);" class="dssc-btn-mini dssc-btn-green" onclick="bundling_goods_add($(this))"><i class="iconfont">&#xe6db;</i>{$Think.lang.ds_add}</a></div>
+                    </li>
+                    {/foreach}
+                </ul>
+                {else /}
+                <div class="norecord">
+                    <div class="warning-option"><i class="iconfont">&#xe64c;</i><span>{$Think.lang.no_record}</span></div>
+                </div>
+                {/notempty}
+                {notempty name="brand_list"}
+                <div class="pagination">{$show_page|raw}</div>
+                {/notempty}
+            </div>
+          </div>
+        </div>
+    </div>
+    <div class="footer-btn">
+        <input class="btn" type="button" value="{$Think.lang.ds_common_button_save}" onclick="saveBrand()" />
+    </div>
+</form>
+
+<script>
+    function saveBrand(){
+        var html=''
+        var count=0
+        $('*[data-brand]').each(function(){
+            $(this).attr('value',$(this).val())
+            html+=$(this).parent().html()
+            count++
+        })
+        window.parent.saveBrand(html,'{$Request.param.id}',count)
+        var index=parent.layer.getFrameIndex(window.name)
+        parent.layer.close(index)
+    }
+    /* 添加商品 */
+    function bundling_goods_add(o){
+        eval('var _data = ' + o.parent().attr('data-param'));
+        // 隐藏第一个tr
+        $('tbody[dstype="bundling_data"]').children(':first').hide();
+        // 插入数据
+        $('<tr id="bundling_tr_' + _data.gid + '"></tr>')
+            .append('<td class="w50 "><div class="pic-thumb"><img dstype="bundling_data_img" ncname="' + _data.image + '" src="' + _data.src + '" onload="javascript:ResizeImage(this,60,60)"></span></div></td>')
+            .append('<td class="tl"><dl class="goods-name"><dt>' + _data.gname + '</dt></dl></td>')
+            .append('<td class="w90"><input data-brand="' + _data.gid + '" type="number" min="0" max="255" size="1" name="{$Request.param.name|default='brand_id'}[' + _data.gid + '][sort]" value="255" /></td>')
+            .append('<td class="dscs-table-handle w90"><span><a href="javascript:void(0);" onclick="bundling_operate_delete($(\'#bundling_tr_' + _data.gid + '\'), ' + _data.gid + ')" class="btn-orange"><i class="iconfont">&#xe754;</i><p>{$Think.lang.ds_del}</p></a></span></td>')
+    .fadeIn().appendTo('tbody[dstype="bundling_data"]');
+
+        $('li[dstype="' + _data.gid + '"]').children(':last').html('<a href="JavaScript:void(0);" class="dssc-btn-mini dssc-btn-orange" onclick="bundling_operate_delete($(\'#bundling_tr_' + _data.gid + '\'), ' + _data.gid + ')"><i class="iconfont">&#xe754;</i>{$Think.lang.ds_del}</a>');
+
+    }
+    /* 删除商品 */
+    function bundling_operate_delete(o, id){
+        o.remove();
+        check_bundling_data_length();
+        $('li[dstype="'+id+'"]').children(':last').html('<a href="JavaScript:void(0);" onclick="bundling_goods_add($(this))" class="dssc-btn-mini dssc-btn-green"><i class="iconfont">&#xe6db;</i>{$Think.lang.ds_add}</a>');
+    }
+    function check_bundling_data_length(){
+        if ($('tbody[dstype="bundling_data"] tr').length == 1) {
+            $('tbody[dstype="bundling_data"]').children(':first').show();
+        }
+    }
+</script> 
+
+<style>
+  .wrapper{padding:15px}
+.search-form{color:#999;width:100%;border-bottom: 1px solid #e5e5e5;background: #f5f5f5;}
+.search-form th{font-size:12px;line-height:22px;text-align:right;width:50px;padding:8px 8px 8px 0;}
+.search-form th.w250{width:250px}
+.search-form td{text-align:left;padding:20px 10px;}
+.search-form input.text{vertical-align:middle;width:148px;}
+.search-form .add-on{vertical-align:top;}
+.search-form input[type="submit"],
+.search-form input.submit,
+.search-form a.submit{font:12px/30px "microsoft yahei";width:64px;height:30px;padding:0;cursor:pointer;border-radius:2px}
+.search-form input[type="submit"]:hover{}
+.dssc-default-table{line-height:20px;width:100%;border-spacing: 0;border-collapse:collapse;border: none;clear:both;margin-top:10px;margin-bottom:10px}
+.dssc-default-table tbody tr.collapsed{display: none;}
+.dssc-default-table thead tr, .dssc-default-table tbody tr{}
+.dssc-default-table thead th{line-height:25px;color:#333;background-color:#F5F5F5;text-align:center;height:25px;padding:10px 0;font-weight:600;font-size:13px;}
+.dssc-default-table thead td, .dssc-default-table tfoot th{background-color:#FFF;height:22px;padding:5px 0;border-bottom:solid 1px #E6E6E6;}
+.dssc-default-table tfoot th{border-top:solid 1px #E6E6E6;}
+.dssc-default-table thead td label, .dssc-default-table tfoot th label{color:#555;display:inline;float:left;margin-right:10px;cursor:pointer;}
+.dssc-default-table tbody th{background-color:#FAFAFA;border:solid #E6E6E6;border-width:1px 0;padding:4px 0;}
+.dssc-default-table tbody th span{display:inline-block;vertical-align:middle;margin-right:30px;}
+.dssc-default-table tbody th span.goods-name{text-overflow:ellipsis;white-space:nowrap;width:240px;height:20px;overflow:hidden;}
+.dssc-default-table tbody td{color:#999;background-color:#FFF;text-align:center;padding:10px 0;}
+.dssc-default-table tbody td strong{color:#666;}
+.dssc-default-table tfoot td{background-color:#FFF;text-align:center;padding:10px 0;}
+.dssc-default-table td .pic-thumb{line-height:0;background-color:#FFF;text-align:center;vertical-align:middle;width:40px;height:40px;border:solid 1px #F5F5F5;overflow:hidden;margin-left:20px}
+.dssc-default-table td .pic-thumb img{max-width:40px;max-height:40px;margin-top:expression(32-this.height/2);*margin-top:expression(16-this.height/2)/*IE6,7*/;}
+.dssc-default-table td .goods-name{border:none;}
+.dssc-default-table td .goods-name dt{font-size:12px;color:#333;text-overflow:ellipsis;display:block;text-align:left;max-width:320px!important;max-height:36px;padding-bottom:4px;overflow:hidden;}
+.dssc-default-table td .goods-name dt span{line-height:16px;color:#FFF;background-color:#999;display:inline-block;*display:inline/*IE7*/;height:16px;padding:1px 4px;margin-right:2px;*zoom:1;box-shadow:inset 1px 1px 0 rgba(255,255,255,0.25);cursor:default;}
+.dssc-default-table td .goods-name dt span.type-virtual{background-color:#3598DC;}
+.dssc-default-table td .goods-name dt span.type-fcode{background-color:#9C59B8;}
+.dssc-default-table td .goods-name dt span.type-presell{background-color:#1ABC9D;}
+.dssc-default-table td .goods-name dt span.type-appoint{background-color:;}
+.dssc-default-table td .goods-name dt a{color:#005EA6;}
+.dssc-default-table td .goods-name dt a:hover{color:#DA542E;}
+.dssc-default-table td .goods-name dd{line-height:16px;display:block;height:16px;}
+.dssc-default-table td .goods-name .sale-type{background-color:#DA542E;padding:1px 4px;color:#FFFFFF}
+.dssc-default-table td .goods-name dd.serve{height:18px;padding-top:2px;}
+.dssc-default-table td .goods-name dd.serve span{color:#555;vertical-align:middle;display:inline-block;*display:inline/*IE7*/;margin-right:6px;position:relative;z-index:1;*zoom:1;cursor:default;}
+.dssc-default-table td .goods-name dd.serve i{font-size:18px;line-height:20px;}
+.dssc-default-table td .goods-name dd.serve i.commend{font-size:12px;background-color:#CCC;color:#FFF !important;line-height:16px;text-align:center;display:block;width:16px;height:16px;border-radius:2px;}
+.dssc-default-table td .goods-name dd.serve .open i{color:#3598DC;}
+.dssc-default-table td .goods-name dd.serve .open i.commend{background-color:#E84C3D;}
+.dssc-default-table td .goods-name dd.serve span .QRcode{background:#F5F5F5;display:none;width:160px;padding:5px;border:solid 1px #CCC;position:absolute;z-index:99;top:-90px;right:-170px;box-shadow:0 0 5px rgba(0,0,0,0.15);}
+.dssc-default-table td .goods-name dd.serve span .QRcode a{line-height:20px;display:block;text-align:right;}
+.dssc-default-table td .goods-name dd.serve span .QRcode p{line-height:0;background-color:#FFF;text-align:center;vertical-align:middle;display:table-cell;*display:block;width:160px;height:160px;overflow:hidden;}
+.dssc-default-table td .goods-name dd.serve span .QRcode img{max-width:160px;max-height:160px;margin-top:expression(160-this.height/2);}
+.dssc-default-table td .goods-name dd.serve span:hover .QRcode{display:block;}
+
+.div-goods-select-box{position:relative;z-index:1;zoom:1;}
+.div-goods-select{background-color:#FFF;margin-bottom:60px;border:solid 1px #E6E6E6;position:relative;z-index:1;zoom:1;}
+.div-goods-select .search-result{width:949px;margin:0 auto;overflow:hidden;}
+.div-goods-select .search-result .goods-list{font-size:0;*word-spacing:-1px/*IE6、7*/;width:950px;border:solid #E6E6E6;border-width:0 0 1px 0;margin-right:-1px;}
+.div-goods-select .search-result .goods-list li{font:12px/32px arial,"宋体";vertical-align:top;letter-spacing:normal;word-spacing:normal;display:inline-block;*display:inline/*IE7*/;width:149px;padding:10px 20px;margin:0 0 -1px 0;border-style:solid;border-color:#E6E6E6;border-width:0 1px 1px 0;overflow:hidden;zoom:1;}
+.div-goods-select .search-result .goods-thumb{line-height:0;background-color:#FFF;text-align:center;vertical-align:middle;display:table-cell;*display:block;width:140px;height:140px;padding:4px;overflow:hidden;}
+.div-goods-select .search-result .goods-thumb img{max-width:140px;max-height:140px;margin-top:expression(140-this.height/2);*margin-top:expression(70-this.height/2)/*IE6,7*/;}
+.div-goods-select .search-result .goods-info{border:none;}
+.div-goods-select .search-result .goods-info dt{text-align:left;width:auto;display:block;line-height:16px;height:32px;padding:0;overflow:hidden;}
+.div-goods-select .search-result .goods-info dd{line-height:20px;height:auto !important;padding:5px 0;}
+.div-goods-select .norecord{font-size:12px;color:#AAA;text-align:center;display:block;padding:40px 0;}
+
+  
+.dssc-btn-mini{font:normal 12px/20px arial;color:#fff;background-color:#3480c1;text-align:center;vertical-align:middle;display:inline-block;height:20px;padding:0 10px;margin-right:2px;border-style:solid;border-width:1px;border-color:#3480c1;cursor:pointer;border-radius:2px; }
+.dssc-btn-mini:hover{text-decoration:none;color:#fff;background-color:#1e629c;border-color:#1e629c;}
+.dssc-btn{font:normal 12px/20px "microsoft yahei";text-decoration:none;background-color:#3480c1;text-align:center;vertical-align:middle;display:inline-block;height:20px;padding:4px 10px;border:solid 1px;border-color:#3480c1;cursor:pointer;border-radius:2px;}
+.dssc-btn:hover{text-decoration:none;color:#fff;background-color:#1e629c;border-color:#1e629c;}
+.dssc-btn-mini i, .dssc-btn i{font-size:14px;vertical-align:middle;margin-right:4px;}
+.dssc-btn-green, .dssc-btn-orange,
+.dssc-btn-green:hover, .dssc-btn-orange:hover, .dscs-table-handle .btn-orange-current{color:#FFF;}
+.dssc-btn-green,
+.dscs-table-handle .btn-green:hover{background-color:#0ecc6a;border-color:#0ecc6a;}
+.dssc-btn-orange,
+.dscs-table-handle .btn-orange:hover,
+.dscs-table-handle .btn-orange-current{background-color:#FAA732;margin:0;border-style:solid;border-width:1px;border-color:#FAA732 !important;}
+
+.dssc-btn-green:hover{background-color:#19ba62;border-color:#19ba62;}
+.dssc-btn-orange:hover{background-color:#F89406;border-color:#F89406;}
+
+.footer-btn{
+text-align: center;
+padding: 20px;
+position:fixed;
+  z-index: 2;
+bottom:0;
+left:0;
+right:0;
+background-color: #fff;
+border-top: 1px solid #eee;
+}
+</style>

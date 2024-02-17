@@ -1,0 +1,67 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_refund}</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>系统初始化的原因不能删除</li>
+            <li>排序显示规则为排序小的在前，新增的在前</li>
+        </ul>
+    </div>
+
+
+    <table class="ds-default-table">
+        <thead>
+            <tr class="thead">
+                <th>{$Think.lang.ds_sort}</th>
+                <th>原因</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="reason_list"}
+            {foreach name="reason_list" item="val" key="key" }
+            <tr class="hover">
+                <td class="w48 sort">{$val.reason_sort}</td>
+                <td>{$val.reason_info}</td>
+                <td class="w150 align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Refund/edit_reason',['reason_id'=>$val.reason_id])}','查看订单-{$val.reason_info}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    {if $val.reason_id > 99}
+                    | <a href="javascript:submit_delete({$val.reason_id})" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="15">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>   
+        
+    </table>
+    {$show_page|raw}
+</div>
+
+<script type="text/javascript">
+    function submit_delete(ids_str) {
+        _uri = ADMINSITEURL + "/Refund/del_reason.html?reason_id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+</script>

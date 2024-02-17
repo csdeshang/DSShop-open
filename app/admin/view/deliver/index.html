@@ -1,0 +1,252 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_deliver}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.shopping_guidelines1}</li>
+            <li>{$Think.lang.shopping_guidelines2}</li>
+            <li>{$Think.lang.shopping_guidelines3}</li>
+        </ul>
+    </div>
+
+
+    <form method="get" name="formSearch" id="formSearch">
+        <input type="hidden" name="state" value="{$Request.param.state}"/>
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.order_time}</dt>
+                <dd>
+                    <input type="text" class="text w70" name="query_start_date" id="query_start_date" value="{$Request.param.query_start_date}"/>
+                    <input id="query_end_date" class="text w70" type="text" name="query_end_date" value="{$Request.param.query_end_date}"/>
+                </dd>
+                <dt>{$Think.lang.buyer_name}</dt>
+                <dd><input type="text" class="text w80" name="buyer_name" value="{$Request.param.buyer_name}"/></dd>
+                <dt>{$Think.lang.order_order_sn}</dt>
+                <dd><input type="text" class="text w150" name="order_sn" value="{$Request.param.order_sn}"/></dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn left" value="搜索">
+                <a href="{:url('Deliver/index')}" class="btn btn-default left" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+
+    <table class="ds-default-table">
+        <tbody>
+        {notempty name="order_list"}
+        {foreach name="order_list" item="order" key="order_id" }
+        <tr>
+            <td colspan="21" class="sep-row"></td>
+        </tr>
+        <tr>
+            <th class="w24"><input type="checkbox" name="order_id[]" value="{$order.order_id}" class="checkitem"></th>
+            <th colspan="20"><span class="ml5">{$Think.lang.order_order_sn}{$Think.lang.ds_colon}<strong>{$order.order_sn}</strong></span><span>{$Think.lang.order_time}{$Think.lang.ds_colon}<em
+                    class="goods-time">{$order.add_time|date="Y-m-d H:i:s"}</em></span>
+                {if !empty($order['extend_order_common']['shipping_time'])}
+                <span>{$Think.lang.ship_time}{$Think.lang.ds_colon}<em class="goods-time">{$order['extend_order_common']['shipping_time']|date="Y-m-d H:i:s"}</em></span>
+                {/if}
+                <span class="fr mr10">
+                            {if $order.shipping_code != ''}
+                            <a href="{:url('Deliver/search_deliver',['order_sn'=>$order.order_sn])}" class="dssc-btn-mini"><i
+                                    class="iconfont">&#xe69e;</i>{$Think.lang.order_show_deliver}</a>
+                            {/if}
+                    <a href="{:url('Order/order_print',['order_id'=>$order.order_id])}" class="dssc-btn-mini fr" target="_blank" title="打印发货单"><i
+                            class="iconfont">&#xe7ca;</i>打印发货单</a>
+                        </span>
+            </th>
+        </tr>
+        {php}$i = 0;{/php}
+        {foreach name="$order.goods_list" item="goods" key="k" }
+        {php}$i++;{/php}
+        <tr>
+            <td class="bdl w10"></td>
+            <td class="w50">
+                <div class="pic-thumb"><a href="{$goods.goods_url}" ><img class="img" width="80" height="80" src="{:goods_thumb($goods, 240)}"/></a></div>
+            </td>
+            <td class="tl">
+                <dl class="goods-name">
+                    <dt><a href="{$goods.goods_url}">{$goods.goods_name}</a></dt>
+                    <dd><strong>￥{$goods.goods_price}</strong>&nbsp;x&nbsp;<em>{$goods.goods_num}</em>{$Think.lang.piece}</dd>
+                </dl>
+            </td>
+
+            <!-- S 合并TD -->
+            {if ($order['goods_count'] > 1 && $k == 0) || ($order['goods_count'] == 1)}
+            <td class="bdl bdr order-info w500" rowspan="{$order.goods_count}">
+                <dl>
+                    <dt>{$Think.lang.buyer_name}{$Think.lang.ds_colon}
+                        {$order.buyer_name} <span member_id="{$order.buyer_id}"></span>
+                        {if !empty($order['extend_member']['member_qq'])}
+                        <a target="_blank"
+                           href="{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$order['extend_member']['member_qq']}&site=qq&menu=yes"><img border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$order['extend_member']['member_qq']}:52" style=" vertical-align: middle;"/></a>
+                        {/if}
+                        {if !empty($order['extend_member']['member_ww'])}
+                        <a target="_blank"
+                           href="http://amos.im.alisoft.com/msg.aw?v=2&uid={$order['extend_member']['member_ww']}&site=cntaobao&s=2&charset=utf-8"
+                           class="vm"><img border="0"
+                                           src="http://amos.im.alisoft.com/online.aw?v=2&uid={$order['extend_member']['member_ww']}&site=cntaobao&s=2&charset=utf-8"
+                                           alt="Wang Wang" style=" vertical-align: middle;"/></a>
+                        {/if}
+                    </dt>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.member_address_receiver_name}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <div class="alert alert-info m0">
+                            <p><i class="iconfont">&#xe667;</i>{$order['extend_order_common']['reciver_name']}</p>
+                            <p><span class="ml30" title="{$Think.lang.order_phone}"><i class="iconfont">&#xe697;</i>{$order['extend_order_common']['reciver_info']['phone']}</span></p>
+                            <p class="mt5" title="{$Think.lang.deliver_buyer_address}"><i class="iconfont">&#xe720;</i>{$order['extend_order_common']['reciver_info']['address']}
+                            </p>
+                            {if $order['extend_order_common']['order_message'] != ''}
+                            <p class="mt5" title="{$Think.lang.deliver_buyer_address}"><i class="iconfont">&#xe720;</i>{$order['extend_order_common']['order_message']}
+                            </p>
+                            {/if}
+                        </div>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.order_total_transport}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        {if !empty($order['shipping_fee']) && $order['shipping_fee'] != '0.00'}
+                        ￥{$order.shipping_fee}
+                        {else/}
+                        （{$Think.lang.product_shipping_mfee}）
+                        {/if}
+                        {if empty($order['lock_state'])}
+                        {if $order['order_state'] == ORDER_STATE_PAY}
+
+                        {if !isset($order.pintuanorder_state) || $order.pintuanorder_state==2}
+                        <span><a href="{:url('Deliver/send',['order_id'=>$order.order_id])}" class="dssc-btn-mini dssc-btn-green fr"><i
+                                class="iconfont">&#xe6f1;</i>{$Think.lang.order_send}</a></span>
+                        {else /}
+                        <span>{$order.pintuanorder_state_text}</span>
+                        {/if}
+
+
+                        {elseif $order['order_state'] == ORDER_STATE_SEND /}
+                        <span>
+                            <a href="{:url('Deliver/send',['order_id'=>$order.order_id])}" class="dssc-btn-mini dssc-btn-acidblue fr"><i
+                                    class="iconfont">&#xe731;</i>{$Think.lang.deliver_modify_info}</a>
+                                </span>
+                        {/if}
+                        {/if}
+                    </dd>
+                </dl>
+            </td>
+            {/if}
+            <!-- E 合并TD -->
+        </tr>
+
+        <!-- S 赠品列表 -->
+        {if !empty($order['zengpin_list']) && $i == count($order['goods_list'])}
+        <tr>
+            <td class="bdl w10"></td>
+            <td colspan="2" class="tl">
+                <div class="dssc-goods-gift">{$Think.lang.deliver_gifts}：
+                    <ul>
+                        {foreach name="$order.zengpin_list" item="zengpin_info" key="k" }
+                        <li><a title="{$Think.lang.deliver_gifts}：{$zengpin_info.goods_name} * {$zengpin_info.goods_num}"
+                               href="{$zengpin_info.goods_url}" target="_blank"><img src="{:goods_thumb($zengpin_info, 240)}"/></a></li>
+                        {/foreach}
+                    </ul>
+                </div>
+            </td>
+        </tr>
+        {/if}
+        <!-- E 赠品列表 -->
+
+        {/foreach}
+        {/foreach}
+        {else/}
+        <tr>
+            <td colspan="21" class="norecord">
+                <div class="warning-option"><i class="iconfont">&#xe64c;</i><span>{$Think.lang.no_record}</span></div>
+            </td>
+        </tr>
+        {/notempty}
+        </tbody>
+        <tfoot>
+        {notempty name="order_list"}
+        <tr class="tfoot">
+            <td><input type="checkbox" class="checkall" ></td>
+            <td colspan="16"><label>{$Think.lang.ds_select_all}</label>
+                <a href="JavaScript:void(0);" class="btn btn-small" dstype="send_batch"><span>设置发货</span></a>
+                <a href="JavaScript:void(0);" class="btn btn-small" dstype="print_batch"><span>打印发货单</span></a>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="21">
+                <div class="pagination"></div>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+    {$show_page|raw}
+</div>
+
+
+<script type="text/javascript">
+    $(function () {
+        
+    //  发货批量处理
+    $('a[dstype="send_batch"]').click(function(){
+        var ids_str = getItems();
+        if (ids_str) {
+            order_send(ids_str);
+        }
+    });
+    
+    //  打印批量处理
+    $('a[dstype="print_batch"]').click(function(){
+        var ids_str = getItems();
+        if (ids_str) {
+            order_print(ids_str);
+        }
+    });
+    
+        $('#query_start_date').datepicker({dateFormat: 'yy-mm-dd'});
+        $('#query_end_date').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+
+// 获得选中ID
+function getItems() {
+    /* 获取选中的项 */
+    var items = '';
+    $('.checkitem:checked').each(function () {
+        items += this.value + ',';
+    });
+    if (items != '') {
+        items = items.substr(0, (items.length - 1));
+    }else{
+        layer.alert('请勾选选项', {icon: 2})
+    }
+    return items;
+}
+// 发货
+function order_send(ids_str) {
+    var _uri = ADMINSITEURL+"/Deliver/batch_send?order_id=" + ids_str;
+    dsLayerOpen(_uri,'设置发货');
+}
+// 打印
+function order_print(ids_str) {
+    var _uri = ADMINSITEURL+"/Order/order_print?order_id=" + ids_str;
+    window.open(_uri);
+}
+</script>
+
+

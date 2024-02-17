@@ -1,0 +1,79 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form id="admin_form" method="post" action='' name="adminForm">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label class="validation" for="old_pw">{$Think.lang.index_modifypw_oldpw}<!-- 原密码 -->:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input id="old_pw" name="old_pw" class="infoTableInput" type="password"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label class="validation" for="new_pw">{$Think.lang.index_modifypw_newpw}<!-- 新密码 -->:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input id="new_pw" name="new_pw" class="infoTableInput" type="password"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label class="validation" for="new_pw2">{$Think.lang.index_modifypw_newpw2}<!-- 确认密码-->:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input id="new_pw2" name="new_pw2" class="infoTableInput" type="password"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="2" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $("#admin_form").validate({
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules: {
+                old_pw: {
+                    required: true
+                },
+                new_pw: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20
+                },
+                new_pw2: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20,
+                    equalTo: '#new_pw'
+                }
+            },
+            messages: {
+                old_pw: {
+                    required: '{$Think.lang.admin_add_password_null}'
+                },
+                new_pw: {
+                    required: '{$Think.lang.admin_add_password_null}',
+                    minlength: '{$Think.lang.admin_add_password_max}',
+                    maxlength: '{$Think.lang.admin_add_password_max}'
+                },
+                new_pw2: {
+                    required: '{$Think.lang.admin_add_password_null}',
+                    minlength: '{$Think.lang.admin_add_password_max}',
+                    maxlength: '{$Think.lang.admin_add_password_max}',
+                    equalTo: '{$Think.lang.admin_edit_repeat_error}'
+                }
+            }
+        });
+    });
+</script> 

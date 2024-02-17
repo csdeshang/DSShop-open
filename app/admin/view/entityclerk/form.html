@@ -1,0 +1,124 @@
+{include file="public/header" /}
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_entityclerk_manage}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="page">
+        <form method="post" id="entityclerk_form">
+            <table class="ds-default-table">
+                <tbody>
+                    {if $Request.action =='add'}
+                    <tr class="noborder">
+                        <td class="required w120">会员名称</td>
+                        <td class="vatop rowform">
+                            <input type="hidden" name="member_id" id="member_id" value=""/>
+                            <input id="member_name" name="member_name" value="" class="input-txt" type="text" onchange="javascript:checkmember();">
+                            <span class="err"></span>
+                        </td>
+                        <td class="vatop tips"  id="td_memberinfo"></td>
+                    </tr>
+                    {else/}
+                    <tr class="noborder">
+                        <td class="required w120">会员名称</td>
+                        <td class="vatop rowform">
+                           {$entityclerk.member_name}
+                        </td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    {/if}
+                    
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityshop_name}</td>
+                        <td class="vatop rowform">
+                            <select name="entityshop_id">
+                                {foreach name="entityshop_list" item="entityshop"}
+                                <option value="{$entityshop.entityshop_id}">{$entityshop.entityshop_name}</option>
+                                {/foreach}
+                            </select>
+                        </td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityclerk_name}</td>
+                        <td class="vatop rowform"><input id="entityclerk_name" name="entityclerk_name" value="{$entityclerk.entityclerk_name|default=''}" class="input-txt" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.entityclerk_phone}</td>
+                        <td class="vatop rowform"><input id="entityclerk_phone" name="entityclerk_phone" value="{$entityclerk.entityclerk_phone|default=''}" class="input-txt" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required"><label for="adv_startdate">{$Think.lang.entityclerk_state}:</label></td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                <label for="entityclerk_state1" class="cb-enable {if condition="$entityclerk.entityclerk_state eq 1"}selected{/if}">{$Think.lang.ds_open}</label>
+                                <label for="entityclerk_state2" class="cb-disable {if condition="$entityclerk.entityclerk_state eq 2"}selected{/if}">{$Think.lang.ds_close}</label>
+                                <input id="entityclerk_state1" name="entityclerk_state" value="1" type="radio" {if condition="$entityclerk.entityclerk_state eq 1"} checked="checked"{/if}>
+                                <input id="entityclerk_state2" name="entityclerk_state" value="2" type="radio" {if condition="$entityclerk.entityclerk_state eq 2"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                                <td class="vatop tips"></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr class="tfoot">
+                                <td colspan="15"><input type="submit" value="{$Think.lang.ds_confirm_submit}" class="btn" /></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </form>
+            </div>
+            <script>
+                $(function () {
+                    $('#entityclerk_form').validate({
+                        errorPlacement: function (error, element) {
+                            error.appendTo(element.parent().parent().find('td:last'));
+                        },
+                        rules: {
+                            entityclerk_name: {
+                                required: true
+                            }
+                        },
+                        messages: {
+                            entityclerk_name: {
+                                required: '{$Think.lang.entityclerk_name_error}'
+                            }
+                        }
+                    });
+                });
+            </script>
+
+            <script>
+                                    function checkmember() {
+                                        var membername = $.trim($("#member_name").val());
+                                        if (membername == '') {
+                                            $("#member_id").val('0');
+                                            layer.alert('请输入会员名');
+                                            return false;
+                                        }
+                                        var url = ADMINSITEURL + '/Entityclerk/checkmember.html';
+                                        $.post(url, {'name': membername}, function(data) {
+                                            if (data.id)
+                                            {
+                                                var msg = " " + data.name;
+                                                $("#member_name").val(data.name);
+                                                $("#member_id").val(data.id);
+                                                $("#td_memberinfo").text(msg);
+                                            }
+                                            else
+                                            {
+                                                $("#member_name").val('');
+                                                $("#member_id").val('0');
+                                                layer.alert("会员信息错误");
+                                            }
+                                        }, 'json');
+                                    }
+            </script>
+        </div>

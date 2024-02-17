@@ -1,0 +1,129 @@
+ {include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>平台充值卡</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>充值卡卡号</dt>
+                <dd><input class="txt" type="text" name="sn" id="search-sn" value="{$Request.get.sn}" /></dd>
+            </dl>
+            <dl>
+                <dt>批次标识</dt>
+                <dd><input class="txt" type="text" name="batchflag" id="search-batchflag" value="{$Request.get.batchflag}" /></dd>
+            </dl>
+            <dl>
+                <dt>领取状态</dt>
+                <dd><select name="state" id="search-state">
+                        <option value="">全部</option>
+                        <option value="0">未被领取</option>
+                        <option value="1">已被领取</option>
+                    </select>
+                    <script>$('#search-state').val('{$Request.get.state}');</script>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a class="btn btn-default" href="{:url('Rechargecard/index')}" title="{$Think.lang.ds_cancel_search}"><span>{$Think.lang.ds_cancel_search}</span></a>
+                <a class="btn" href="javascript:export_xls('{:url('Rechargecard/export_step1')}')" target="_blank">{$Think.lang.ds_export}Excel</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>平台发布充值卡，用户可在会员中心通过输入正确充值卡号的形式对其充值卡账户进行充值。</li>
+        </ul>
+    </div>
+    
+
+
+
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="w24"> </th>
+                <th class=" ">充值卡卡号</th>
+                <th class=" ">批次标识</th>
+                <th class="w60 align-center">面额(元)</th>
+                <th class="w96 align-center">发布管理员</th>
+                <th class="w150 align-center">发布时间</th>
+                <th class="w270 align-center">领取状态</th>
+                <th class="w60 align-center">{$Think.lang.ds_handle} </th>
+            </tr>
+            </thead>
+            {empty name="card_list"}
+            <tbody>
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.ds_no_record}</td>
+            </tr>
+            </tbody>
+           {else /}
+            <tbody>
+            {foreach name="card_list" item="val"}
+            <tr class="space">
+                <td class="w24">
+                    {if $val.rc_state == 0}
+                    <input type="checkbox" class="checkitem" name="ids[]" value="{$val.rc_id}" />
+                    {else /}
+                    <input type="checkbox" disabled="disabled" />
+                    {/if}
+                </td>
+                <td class="">{$val.rc_sn}</td>
+                <td class="">{$val.rc_batchflag}</td>
+                <td class="align-center">{$val.rc_denomination}</td>
+                <td class="align-center">{$val.rc_admin_name}</td>
+                <td class="align-center">{$val.rc_tscreated|date="Y-m-d H:i:s"}</td>
+                <td class="align-center">
+                    {if $val.rc_state == 1 && $val.member_id >0 && $val.rc_tsused >0}
+                    会员 {$val.member_name} 在 {$val.rc_tsused|date="Y-m-d H:i:s"}领取
+                    {else /}
+                    未被领取
+                   {/if}
+                </td>
+                <td class="align-center">
+                    {if $val.rc_state == 0}
+                    <a href="javascript:submit_delete({$val.rc_id})" class="normal dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                <td colspan="16"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                   &nbsp;&nbsp;<a href="javascript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                </td>
+            </tr>
+            </tfoot>
+            {/empty}
+        </table>
+        
+        {$show_page|raw}
+
+
+</div>
+
+
+<script type="text/javascript">
+    function submit_delete(ids_str) {
+        _uri = ADMINSITEURL + "/Rechargecard/del_card.html?rc_id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+</script>

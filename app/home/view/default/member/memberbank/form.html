@@ -1,0 +1,93 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<div class="dsm-default-form fl">
+    <form method="post" action="" id="memberbank_form">
+        <dl>
+            <dt>{$Think.lang.memberbank_type}：</dt>
+            <dd>
+                <span class="w400">
+                    <select name="memberbank_type" id="memberbank_type">
+                        <option value="bank" {if $memberbank.memberbank_type== 'bank'}selected{/if}>银行转账</option>
+                        <option value="alipay" {if $memberbank.memberbank_type== 'alipay'}selected{/if}>支付宝</option>
+                    </select>
+                </span>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.memberbank_truename}：</dt>
+            <dd>
+                <span class="w400">
+                    <input type="text" class="text" maxlength="20" name="memberbank_truename" value="{$memberbank.memberbank_truename|default=''}">
+                </span>
+                <p class="hint mt5">请填写收款人姓名，该收款人姓名=银行卡开户人姓名</p>
+            </dd>
+        </dl>
+        <dl id="dl_memberbank_name" {if $memberbank.memberbank_type== 'alipay'}style="display:none"{/if}>
+            <dt>{$Think.lang.memberbank_name}：</dt>
+            <dd>
+                <span class="w400">
+                    <input type="text" class="text" maxlength="20" name="memberbank_name" id="memberbank_name" value="{$memberbank.memberbank_name|default=''}">
+                </span>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.memberbank_no}：</dt>
+            <dd>
+                <span class="w400">
+                    <input type="text" class="text" maxlength="20" name="memberbank_no" id="memberbank_no" value="{$memberbank.memberbank_no|default=''}">
+                </span>
+            </dd>
+        </dl>
+        <dl class="bottom">
+            <dt></dt>
+            <dd>
+                <input type="submit" class="submit" value="{$Think.lang.ds_submit}">
+            </dd>
+        </dl>
+    </form>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#memberbank_form').validate({
+            submitHandler: function (form) {
+                ds_ajaxpost('memberbank_form', 'url', "{:url('Memberbank/add')}");
+            },
+            rules: {
+                memberbank_truename: {
+                    required: true
+                },
+                memberbank_no: {
+                    required: true
+                }
+            },
+            messages: {
+                memberbank_truename: {
+                    required: '{$Think.lang.please_fill_memberbank_truename}'
+                },
+                memberbank_no: {
+                    required: '{$Think.lang.please_fill_memberbank_no}'
+                }
+            }
+        });
+        $('#memberbank_type').change(function () {
+            switch ($(this).val()) {
+                case 'bank':
+                    $('#dl_memberbank_name').show();
+                    break;
+                case 'alipay':
+                    $('#dl_memberbank_name').hide();
+                    break;
+            }
+        });
+    });
+</script>
+
+
+{/block}
+
+

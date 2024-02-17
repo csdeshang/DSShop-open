@@ -1,0 +1,197 @@
+{include file="public/header" /}
+<script type="text/javascript">
+function pre_submit()
+{
+	var sels=$("#gcategory").find("select");
+	var i=0;
+	var txt="";
+	 sels.each(function(){
+		 i++;
+		 $(this).attr("name","cls_"+i);
+		 var tmp=$(this).find("option:selected").text();
+		 if(i!=3)tmp+="&gt;";
+		 txt+=tmp;
+		
+	 });
+	 $("#cate_name").val(txt);
+	 return true;
+}
+</script>
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商品管理</h3>
+                <h5></h5>
+            </div>
+<!-- S setp -->
+<ul class="add-goods-step">
+  <li style="width:32%;" class="{if $step==1}current{/if}"><i class="icon iconfont">&#xe600;</i>
+    <h6>STIP.1</h6>
+    <h2>{$Think.lang.goods_import_step1}</h2>
+    <i class="arrow iconfont">&#xe687;</i> </li>
+  <li style="width:32%;" class="{if $step==4}current{/if}"><i class="icon iconfont">&#xe6a2;</i>
+    <h6>STIP.2</h6>
+    <h2>{$Think.lang.goods_import_step2}</h2>
+</ul>
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+  <div id="fixedNavBar">
+<!--S 分类选择区域-->
+<div class="alert mt15 mb5"><strong>操作提示：</strong>
+  <ul>
+    <li>{$Think.lang.goods_import_csv_desc}</li>
+  </ul>
+</div>
+</div>
+  <div class="item-publish">
+<form method="post" action="{:url('TaobaoImport/index')}" enctype="multipart/form-data" id="goods_form" onsubmit="return pre_submit();">
+  <div class="dssc-form-goods"  {if ($step != '1')} style="display:none"{/if}>
+    <dl>
+      <dt><i class="required">*</i>CSV文件：</dt>
+      <dd>
+        <div class="handle">
+        <div class="dssc-upload-btn"> <a href="javascript:void(0);"><span>
+          <input type="file" hidefocus="true" size="15"  name="csv" id="csv">
+          </span></a></div>
+          </div>
+		  <p class="hint">{$Think.lang.goods_import_file_csv_desc}</p>
+      </dd>
+    </dl>
+    <dl>
+      <dt><i class="required">*</i>{$Think.lang.goods_index_goods_class}{$Think.lang.ds_colon}</dt>
+      <dd id="gcategory"> <span dstype="gc1">
+        {if (!empty($gc_list)) }
+        <select dstype="gc" data-param="{deep:1}">
+          <option>{$Think.lang.ds_please_choose}</option>
+          {foreach name='gc_list' item='val' }
+          <option value="{$val.gc_id}">{$val.gc_name}</option>
+          {/foreach}
+        </select>
+        {/if}
+        </span> <span dstype="gc2"></span> <span dstype="gc3"></span>
+        <p>请选择商品分类（必须选到最后一级）</p>
+        <input type="hidden" id="gc_id" name="gc_id" value="" class="mls_id" />
+        <input type="hidden" id="cate_name" name="cate_name" value="" class="mls_names"/>
+        </dd>
+    </dl>
+    
+    <!--transport info begin-->
+    
+    <dl>
+      <dt>{$Think.lang.goods_index_goods_szd}{$Think.lang.ds_colon}</dt>
+      <dd>
+        <input type="hidden" value="" name="region" id="region">
+          <input type="hidden" value="" name="province_id" id="_area_1">
+          <input type="hidden" value="" name="city_id" id="_area_2">
+      </dd>
+    </dl>
+    
+    <dl>
+      <dt>{$Think.lang.goods_import_unicode}</dt>
+      <dd>
+        <p>unicode </p>
+      </dd>
+    </dl>
+    <dl>
+      <dt>{$Think.lang.goods_import_file_type}</dt>
+      <dd>
+        <p>{$Think.lang.goods_import_file_csv}</p>
+      </dd>
+    </dl>
+    <dl>
+      <dt>&nbsp;</dt>
+      <dd>
+        <input type="submit" class="btn" value="{$Think.lang.goods_import_submit}" />
+      </dd>
+    </dl>
+  </div>
+
+
+</form>
+<!--step4-->
+<iframe {if $step=='4'}style="display:block"{else}style="display:none"{/if}  id="uploadwjc" src="{:url('TaobaoImport/import_image')}" height="800" width='100%' frameborder="0" >
+</iframe>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.iframe-transport.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.ui.widget.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.fileupload.js" charset="utf-8"></script>
+
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.mousewheel.js"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery.charCount.js"></script>
+
+
+<!--[if lt IE 8]>
+  <script src="{$Think.BASE_SITE_ROOT}/js/json2.js"></script>
+<![endif]-->
+<script src="{$Think.ADMIN_SITE_ROOT}/js/goods_add_step2.js"></script>
+<script>
+
+$(function() {
+$("#region").ds_region({show_deep:2,tip_type:1});
+
+	
+    // 查询下级分类，分类不存在显示当前分类绑定的规格
+    $('select[dstype="gc"]').change(function(){
+        $(this).parents('td:first').nextAll().html('');
+
+        getClassSpec($(this));
+    });
+});
+
+// ajax选择商品分类
+function getClassSpec($this) {
+    var id = parseInt($this.val());
+    var data_str = ''; eval('data_str =' + $this.attr('data-param'));
+    var deep = data_str.deep;
+    if (isNaN(id)) {
+        // 清理分类
+        clearClassHtml(parseInt(deep)+1);
+    }
+	document.getElementById('gc_id').value=id;
+    $.getJSON('{:url("Goodsadd/ajax_goods_class_import")}?gc_id=' + id + '&deep=' + deep, function(data){
+  
+        if (data) {
+            if (data.type == 'class') {
+                nextClass(data.data, data.deep);
+            } 
+        }
+    });
+	
+}
+
+// 下一级商品分类
+function nextClass(data, deep) {
+    $('span[dstype="gc' + deep + '"]').html('').append('<select data-param="{deep:' + deep + '}"></select>')
+        .find('select').change(function(){
+            getClassSpec($(this));
+        }).append('<option>{$Think.lang.ds_please_choose}</option>');
+    $.each(data, function(i, n){
+        if (n != null) {
+            $('span[dstype="gc' + deep + '"] > select').append('<option value="' + n.gc_id + '">' + n.gc_name + '</option>');
+		
+        }
+			  document.getElementById('gc_id').value=n.gc_id;
+    });
+    // 清理分类
+    clearClassHtml(parseInt(deep)+1);
+	
+}
+
+// 清理二级分类信息
+function clearClassHtml(deep) {
+    switch (deep) {
+        case 2:
+            $('span[dstype="gc2"]').empty();
+        case 3:
+            $('span[dstype="gc3"]').empty();
+            break;
+    }
+}
+
+</script> 
+</div> 
+</div> 
+{include file="public/footer" /}

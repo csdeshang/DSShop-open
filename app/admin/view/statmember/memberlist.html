@@ -1,0 +1,103 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>会员统计</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+   <div class="fixed-empty"></div>
+  <div style="width:100%; text-align:right;padding-top:10px;">
+  	<input type="hidden" id="export_type" data-url="{:url(request()->controller().'/'.request()->action())}/exporttype/excel" name="export_type" data-param='{"url":"{$actionurl}&exporttype=excel"}' value="excel"/>
+  	<a class="btn btn-mini" href="javascript:void(0);" id="export_btn"><span>导出Excel</span></a>
+  </div>
+  <form method="post" id="form_member">
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th>&nbsp;</th>
+          <th colspan="2">{$Think.lang.ds_member_name}</th>
+          <th class="align-center">{$Think.lang.member_addtime}</th>
+          <th class="align-center">{$Think.lang.member_loginnum}</th>
+          <th class="align-center">{$Think.lang.member_logintime}</th>
+          <th class="align-center">{$Think.lang.ds_member_points}</th>
+          <th class="align-center">{$Think.lang.ds_predeposit}</th>
+        </tr>
+      <tbody id="datatable">
+        {notempty name="member_list"}
+        {foreach name="member_list" item="v"}
+        <tr class="hover member">
+          <td class="w24"></td>
+          <td class="w48 picture">
+            <div class="size-44x44">
+              <span class="thumb size-44x44"><i></i>
+                <img src="{:get_member_avatar_for_id($v.member_id)}"  onload="javascript:ResizeImage(this,44,44);"/>
+              </span>
+            </div>
+          </td>
+          <td>
+            <p class="name">
+              <strong>{$v.member_name}</strong>({$Think.lang.member_truename}: {$v.member_truename})
+            </p>
+              <div class="im">
+                <span class="email" >
+                  {if $v.member_email !=''}
+                <a href="mailto:{$v.member_email}" class="tooltip yes" title="{$Think.lang.member_email}:{$v.member_email}">{$v.member_email}</a>
+               {else /}
+                <a href="JavaScript:void(0);" class="tooltip" title="{$Think.lang.member_index_null}">{$v.member_email}</a>
+               {/if}
+                  </span>
+                {if $v.member_ww != ''}
+                <a target="_blank" href="http://web.im.alisoft.com/msg.aw?v=2&uid={$v.member_ww}&site=cnalichn&s=11" class="tooltip" title="WangWang: {$v.member_ww}">
+                <img border="0" src="http://web.im.alisoft.com/online.aw?v=2&uid={$v.member_ww}&site=cntaobao&s=2" />
+                </a>
+               {/if}
+                {if $v.member_qq != ''}
+                <a target="_blank" href="{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$v.member_qq}&site=qq&menu=yes" class="tooltip"  title="QQ: {$v.member_qq}">
+                  <img border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$v.member_qq}:52"/>
+                </a>
+                {/if}
+              </div>
+          </td>
+          <td class="align-center">{$v.member_addtime}</td>
+          <td class="align-center">{$v.member_loginnum}</td>
+          <td class="w150 align-center">
+            <p>{$v.member_logintime}</p>
+            <p>{$v.member_login_ip}</p>
+          </td>
+          <td class="align-center">{$v.member_points}</td>
+          <td class="align-center">
+            <p>{$Think.lang.member_index_available}:&nbsp;<strong class="red">{$v.available_predeposit}</strong>&nbsp;{$Think.lang.ds_yuan}</p>
+            <p>{$Think.lang.member_index_frozen}:&nbsp;<strong class="red">{$v.freeze_predeposit}</strong>&nbsp;{$Think.lang.ds_yuan}</p>
+          </td>
+        </tr>
+        {/foreach}
+        {else /}
+        <tr class="no_data">
+          <td colspan="11">{$Think.lang.no_record}</td>
+        </tr>
+        {/notempty}
+      </tbody>
+    </table>
+      {$show_page|raw}
+  </form>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/statistics.js"></script>
+<script>
+$(function(){
+    //导出图表
+    $("#export_btn").click(function(){
+        var item = $("#export_type");
+        var type = $(item).val();
+        if(type == 'excel'){
+            export_xls(item.attr('data-url').replace('.html',''));
+        }
+    });
+});
+</script>

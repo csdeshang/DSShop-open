@@ -1,0 +1,121 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>积分管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>积分明细，展示了被操作人员（会员）、操作人员（管理员）、操作积分数（积分值，“-”表示减少，无符号表示增加）、操作时间（添加时间）等信息</li>
+        </ul>
+    </div>
+    
+    
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.admin_points_membername}</dt>
+                <dd><input type="text" name="mname" class="txt" value='{$Request.param.mname}'></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.admin_points_addtime}</dt>
+                <dd>
+                    <input type="text" id="stime" name="stime" class="txt date" value="{$Request.param.stime}" >
+                    ~
+                    <input type="text" id="etime" name="etime" class="txt date" value="{$Request.param.etime}" >
+                </dd>
+            </dl>
+            <dl>
+                <dd>
+                    <select name="stage">
+                        <option value="" {notempty name="$Request.param.stage"}selected=selected{/notempty}>{$Think.lang.admin_points_stage}</option>
+                        <option value="regist" {if condition="$Request.param.stage eq 'regist'"}selected=selected{/if}>{$Think.lang.admin_points_stage_regist}</option>
+                        <option value="login" {if condition="$Request.param.stage eq 'login'"}selected=selected{/if}>{$Think.lang.admin_points_stage_login}</option>
+                        <option value="comments" {if condition="$Request.param.stage eq 'comments'"}selected=selected{/if}>{$Think.lang.admin_points_stage_comments}</option>
+                        <option value="order" {if condition="$Request.param.stage eq 'order'"}selected=selected{/if}>{$Think.lang.admin_points_stage_order}</option>
+                        <option value="system" {if condition="$Request.param.stage eq 'system'"}selected=selected{/if}>{$Think.lang.admin_points_stage_system}</option>
+                        <option value="pointorder" {if condition="$Request.param.stage eq 'pointorder'"}selected=selected{/if}>{$Think.lang.admin_points_stage_pointorder}</option>
+                        <option value="app" {if condition="$Request.param.stage eq 'app'"}selected=selected{/if}>{$Think.lang.admin_points_stage_app}</option>
+                        <option value="signin" {if condition="$Request.param.stage eq 'signin'"}selected=selected{/if}>{$Think.lang.admin_points_stage_signin}</option>
+                        <option value="inviter" {if condition="$Request.param.stage eq 'inviter'"}selected=selected{/if}>{$Think.lang.admin_points_stage_inviter}</option>
+                        <option value="rebate" {if condition="$Request.param.stage eq 'rebate'"}selected=selected{/if}>{$Think.lang.admin_points_stage_rebate}</option>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.admin_points_adminname}</dt>
+                <dd><input type="text" name="aname" class="txt" value='{$Request.param.aname}'></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.admin_points_pointsdesc}</dt>
+                <dd><input type="text" id="description" name="description" class="txt2" value="{$Request.param.description}" ></dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Points/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                <a class="btn btn-mini" href="javascript:export_xls('{:url('Points/export_step1')}')"><span>{$Think.lang.ds_export}Excel</span></a>
+            </div>
+        </div>
+    </form>
+    
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.admin_points_membername}</th>
+                <th>{$Think.lang.admin_points_adminname}</th>
+                <th>{$Think.lang.admin_points_pointsnum}</th>
+                <th>{$Think.lang.admin_points_addtime}</th>
+                <th class="align-center">{$Think.lang.admin_points_stage}</th>
+                <th>{$Think.lang.admin_points_pointsdesc}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty  name="pointslog"}
+            {foreach name="pointslog" item="log"}
+            <tr>
+                <td>{$log.pl_membername}</td>
+                <td>{$log.pl_adminname}</td>
+                <td>{$log.pl_points}</td>
+                <td>{$log.pl_addtime|date="Y-m-d H:i:s"}</td>
+                <td class="align-center">
+                   <?php
+                   $lang='admin_points_stage_'.$log['pl_stage'];
+                   echo lang($lang);
+                   ?>
+                   </td>
+                <td>{$log.pl_desc}</td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>
+<script language="javascript">
+$(function(){
+        $('#stime').datepicker({dateFormat: 'yy-mm-dd',onSelect:function(dateText,inst){
+            var year2 = dateText.split('-') ;
+            $('#etime').datepicker( "option", "minDate", new Date(parseInt(year2[0]),parseInt(year2[1])-1,parseInt(year2[2])+1) );
+        }});
+        $('#etime').datepicker({dateFormat: 'yy-mm-dd',onSelect:function(dateText,inst){
+            var year1 = dateText.split('-') ;
+            $('#stime').datepicker( "option", "maxDate", new Date(parseInt(year1[0]),parseInt(year1[1])-1,parseInt(year1[2])-1) );
+        }});
+});
+</script>

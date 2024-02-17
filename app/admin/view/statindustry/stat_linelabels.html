@@ -1,0 +1,7 @@
+<div id="container_{$stattype}"></div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/highcharts/highcharts.js"></script>
+<script>
+$(function () {
+    $('#container_{$stattype}').highcharts({$stat_json|raw});
+});
+</script>

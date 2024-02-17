@@ -1,0 +1,59 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<div class="alert alert-success">
+    <h4>{$Think.lang.operating_hints}：</h4>
+    <ul>
+      <li>{$Think.lang.verify_email_prompt1}</li>
+      <li>{$Think.lang.verify_email_prompt2}</li>
+      <li>{$Think.lang.verify_email_prompt3}</li>
+    </ul>
+  </div>
+  <div class="dsm-default-form">
+    <form method="post" id="email_form" action="{:url('Membersecurity/send_bind_email')}">
+      <dl>
+        <dt><i class="required">*</i>{$Think.lang.bind_mailbox_address}：</dt>
+        <dd>
+          <input type="text" class="text w180"  maxlength="40" value="{$member_info.member_email}" name="email" id="email" />
+          <label for="email" generated="true" class="error"></label>
+        </dd>
+      </dl>
+      <dl class="bottom">
+        <dt>&nbsp;</dt>
+        <dd>
+            <input type="submit" class="submit" value="{$Think.lang.send_verification_mail}" />
+        </dd>
+      </dl>
+    </form>
+  </div>
+
+
+<script type="text/javascript">
+$(function(){
+    $('#email_form').validate({
+        submitHandler:function(form){
+            ds_ajaxpost('email_form', 'url', '{:url('Membersecurity/index')}')
+        },
+        rules : {
+           email : {
+                required   : true,
+                email      : true
+            }
+        },
+        messages : {
+            email : {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_fill_mailbox_correctly}',
+                email    : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_fill_mailbox_correctly}'
+            }
+        }
+    });
+});
+</script> 
+
+
+
+
+
+{/block}

@@ -1,0 +1,94 @@
+
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>绑定列表</h3>
+            </div>
+        </div>
+    </div>
+
+<div class="ncap-form-default">
+        <form method="post" id="m_form" enctype="multipart/form-data">
+            <dl>
+                <dt>消息类型</dt>
+                <dd>
+                     <input type="radio" name="type" value="text"  onclick="shownews(2)" title="文本消息" checked >文本
+                     <input type="radio" name="type" value="news" onclick="shownews(1)" title="图文消息" >图文
+                </dd>
+            </dl>
+            <div id="menu1">
+            <dl>
+                <dt><span class="error">*</span> 回复内容</dt>
+                <dd><textarea name="text" id="text"  placeholder="推送内容"></textarea></dd>
+            </dl>
+            </div>
+             <div id="menu2" style="display: none">
+           <!-- <dl>
+                <dt><label class="layui-form-label" style="color: #d15b47">文章：</label></dt>
+                <dd>
+                    <button class="btn btn-sm btn-info" onclick="" type="button"><i class="iconfont bigger-120">&#xe6db;</i>图文新增</button>
+                </dd>
+            </dl>-->
+            <dl>
+                <dt>标题</dt>
+                <dd>
+                    <input type="text" name="title" id="Title" style="width: 300px">
+                </dd>
+            </dl>
+            <dl>
+                <dt>描述</dt>
+                <dd>
+                    <input type="text" name="description" id="Description" style="width: 300px">
+                </dd>
+            </dl>
+            <dl>
+                <dt>图片</dt>
+                <dd>
+                    <input type="file" name="s_pic">
+                </dd>
+            </dl>
+            <dl>
+                <dt>跳转链接</dt>
+                <dd>
+                <input type="text" name="url" id="Url" style="width: 300px">
+                </dd>
+            </dl>
+            </div>
+
+            <dl>
+                <dt></dt>
+                <dd><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></dd>
+            </dl>
+        </form>
+
+    </div>
+</div>
+<script>
+
+    $(document).ready(function(){
+        $('#m_form').validate({
+            errorPlacement: function (error, element) {
+            },
+            rules : {
+                text  : {
+                    required : true,
+                }
+            }
+        });
+    });
+
+        function shownews(t){
+            if (t == 2) {
+                document.getElementById('menu1').style.display = "";
+                document.getElementById('menu2').style.display = "none";
+            }else{
+                document.getElementById('menu1').style.display = "none";
+                document.getElementById('menu2').style.display = "";
+            }
+        }
+</script>

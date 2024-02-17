@@ -1,0 +1,139 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_db}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.db_data_backup_help1}</li>
+            <li>{$Think.lang.db_data_backup_help2}</li>
+        </ul>
+    </div>
+
+    
+    <div class="ds-search-form">
+        <dl>
+            <dt style="font-size:14px;color: #09C;">{$Think.lang.db_database_table_list}({$Think.lang.db_total_num}{$tableNum}{$Think.lang.db_tablenum_record}，{$Think.lang.db_total_size}{$total})</dt>
+        </dl>
+        <div class="btn_group">
+            <a id="export" class="btn">{$Think.lang.ds_db}</a>
+        </div>
+    </div>
+
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" onclick="javascript:$('input[name*=tables]').prop('checked', this.checked);"></th>
+                <th>{$Think.lang.db_database_table}</th>
+                <th>{$Think.lang.db_data_length}</th>
+                <th>{$Think.lang.db_occupy_space}</th>
+                <th>{$Think.lang.db_code}</th>
+                <th>{$Think.lang.db_createtime}</th>
+                <th>{$Think.lang.db_backup_state}</th>
+                <th>{$Think.lang.db_handle}</th>
+            </tr>
+        </thead>
+        
+        <form  method="post" id="export-form" action="{:url('Database/export')}">
+            <tbody>
+                {foreach name="dbtable_list" item="db" key="k" }
+                <tr data-id="{$db.Name}">
+                    <td class="sign">
+                        <div style="width: 24px;"><input type="checkbox" name="tables[]" value="{$db.Name}"></div>
+                    </td>
+                    <td>{$db.Name}</td>
+                    <td>{$db.Rows}</td>
+                    <td>{$db.Data_length|format_bytes}</td>
+                    <td>{$db.Collation}</td>
+                    <td>{$db.Create_time}</td>
+                    <td class="info">{$Think.lang.db_unbackup}</td>
+                    <td class="handle">
+                        <div style="text-align: center; width: 170px; max-width:170px;">
+                            <a href="{:url('Database/optimize',array('tablename'=>$db['Name']))}"><i class="iconfont">&#xe6e0;</i>{$Think.lang.db_magic}</a> | 
+                            <a href="{:url('Database/repair',array('tablename'=>$db['Name']))}"><i class="iconfont">&#xe6e0;</i>{$Think.lang.db_repair}</a>
+                        </div>
+                    </td>
+                </tr>
+                {/foreach}
+            </tbody>
+        </form>
+    </table>
+</div>
+<script>
+                    (function($) {
+                        var $form = $("#export-form"), $export = $("#export"), tables;
+                        $export.click(function() {
+                            if ($("input[name^='tables']:checked").length == 0) {
+                                layer.alert('{$Think.lang.db_backup_error}');
+                                return false;
+                            }
+                            $export.addClass("disabled");
+                            $export.html("{$Think.lang.db_backup_requer}");
+                            $.post(
+                                    $form.attr("action"),
+                                    $form.serialize(),
+                                    function(data) {
+                                        if (data.status) {
+                                            tables = data.tables;
+                                            $export.html(data.info + "{$Think.lang.db_backup_strat}");
+                                            backup(data.tab);
+                                            window.onbeforeunload = function() {
+                                                return "{$Think.lang.db_backup_conduct}"
+                                            }
+                                        } else {
+                                            layer.alert(data.info);
+                                            $export.removeClass("disabled");
+                                            $export.html("{$Think.lang.db_backup}");
+                                        }
+                                    },
+                                    "json"
+                                    );
+                            return false;
+                        });
+
+                        function backup(tab, status) {
+                            status && showmsg(tab.id, "{$Think.lang.db_backup_state_strat}");
+                            $.get($form.attr("action"), tab, function(data) {
+                                if (data.status) {
+                                    showmsg(tab.id, data.info);
+                                    if (!$.isPlainObject(data.tab)) {
+                                        $export.removeClass("disabled");
+                                        $export.html("{$Think.lang.db_backup_restart}");
+                                        window.onbeforeunload = function() {
+                                            return null
+                                        }
+                                        return;
+                                    }
+                                    backup(data.tab, tab.id != data.tab.id);
+                                } else {
+                                    $export.removeClass("disabled");
+                                    $export.html("{$Think.lang.db_backup}");
+                                }
+                            }, "json");
+
+                        }
+
+                        function showmsg(id, msg) {
+                            $("input[value=" + tables[id] + "]").closest("tr").find(".info").html(msg);
+//                            $("input[value=" + tables[id] + "]").closest("tr").hide(3000);
+                        }
+                    })(jQuery);
+</script>
+</body>
+</html>

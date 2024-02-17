@@ -1,0 +1,67 @@
+<div class="dsm-flow-item">
+    <div class="title">{$Think.lang.commodity_transaction_information}</div>
+    <div class="item-goods">
+        {notempty name="goods_list"}
+       {foreach name="goods_list" item="val"}
+        <dl>
+            <dt>
+                <div class="dsm-goods-thumb-mini">
+                    <a target="_blank" href="{:url('Goods/index',['goods_id'=>$val.goods_id])}">
+                    <img src="{:goods_thumb($val)}"/>
+                    </a>
+                </div>
+            </dt>
+            <dd><a target="_blank" href="{:url('Goods/index',['goods_id'=>$val.goods_id])}">{$val.goods_name}</a>
+                {$Think.lang.currency}{$val.goods_price} * {$val.goods_num} <font color="#AAA">({$Think.lang.ds_quantity})</font>
+                <span>{:get_order_goodstype($val.goods_type)}</span>
+            </dd>
+        </dl>
+       {/foreach}
+       {/notempty}
+    </div>
+    <div class="item-order">
+        <dl>
+            <dt>{$Think.lang.freight_space|raw}：</dt>
+            <dd>{if $order.shipping_fee >0}{:ds_price_format($order.shipping_fee)}{else /}（{$Think.lang.ds_common_shipping_free}）{/if}</dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.total_order_amount}：</dt>
+            <dd><strong>{$Think.lang.currency}{:ds_price_format($order.order_amount)}
+                {if $order.refund_amount > 0}
+                ({$Think.lang.refund_add}{$Think.lang.ds_colon}{$Think.lang.currency}{$order.refund_amount})
+                {/if}
+            </strong> </dd>
+        </dl>
+        <dl class="line">
+            <dt>{$Think.lang.refund_order_ordersn}：</dt>
+            <dd><a target="_blank" href="{:url('Memberorder/show_order',['order_id'=>$order.order_id])}">{$order.order_sn}</a>
+                <a href="javascript:void(0);" class="a">{$Think.lang.ds_more}<i class="iconfont">&#xe689;</i>
+                    <div class="more"> <span class="arrow"></span>
+                        <ul>
+                            {if $order.payment_code != 'offline'}
+                            <li>{$Think.lang.payment_order}{$Think.lang.ds_colon}<span>{$order.pay_sn}</span></li>
+                           {/if}
+                            <li>{$Think.lang.ds_payment_method}{$Think.lang.ds_colon}<span>{$order.payment_name}</span></li>
+                            <li>{$Think.lang.order_time}{$Think.lang.ds_colon}<span>{:date('Y-m-d H:i:s',$order.add_time)}</span></li>
+                            {if $order.payment_time >0}
+                            <li>{$Think.lang.member_show_order_pay_time}{$Think.lang.ds_colon}<span>{:date('Y-m-d H:i:s',$order.payment_time)}</span></li>
+                            {/if}
+                            {if $order_common.shipping_time > 0}
+                            <li>{$Think.lang.member_show_order_send_time}{$Think.lang.ds_colon}<span>{:date('Y-m-d H:i:s',$order_common.shipping_time)}</span></li>
+                           {/if}
+                            {if $order.finnshed_time > 0}
+                            <li>{$Think.lang.member_show_order_finish_time}{$Think.lang.ds_colon}<span>{:date('Y-m-d H:i:s',$order.finnshed_time)}</span></li>
+                            {/if}
+                        </ul>
+                    </div>
+                </a> </dd>
+        </dl>
+        {notempty name="order.shipping_code"}
+        <dl>
+            <dt>{$Think.lang.logistics_number}：</dt>
+            <dd><a target="_blank" href="{:url('Memberorder/search_deliver',['order_id'=>$order.order_id])}">{$order.shipping_code}</a>
+                <a href="javascript:void(0);" class="a">{$express_name|default=''}</a></dd>
+        </dl>
+        {/notempty}
+    </div>
+</div>

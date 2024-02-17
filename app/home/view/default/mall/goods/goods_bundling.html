@@ -1,0 +1,190 @@
+<?php if((!empty($bundling_array) && !empty($b_goods_array)) || !empty($gcombo_list)){?>
+<div class="dss-goods-title-nav" dstype="gbc_nav">
+  <ul>
+    <?php if ((!empty($bundling_array) && !empty($b_goods_array))) {?>
+    <li class="current"><a href="javascript:void(0);">{$Think.lang.ds_bundling}</a></li>
+    <?php $current = true;}?>
+    {notempty name="gcombo_list"}
+    <li {if !isset($current)}class="current"{/if}><a href="javascript:void(0);">{$Think.lang.recommended_combination}</a></li>
+    {/notempty}
+  </ul>
+</div>
+<div class="dss-goods-info-content" dstype="gbc_content">
+  <?php if (!empty($bundling_array) && !empty($b_goods_array)) {?>
+  <!--S 组合销售 -->
+  <div class="dss-bundling-container">
+    <div class="F-center">
+      <?php $i=0;foreach($bundling_array as $val){  ?>
+      <?php if(!empty($b_goods_array[$val['id']]) && is_array($b_goods_array[$val['id']])) { $i++; ?>
+      <div class="dss-bundling-list">
+        <ul>
+          <?php ksort($b_goods_array[$val['id']]);foreach($b_goods_array[$val['id']] as $v){?>
+          <li>
+            <div class="goods-thumb"><a href="{:url('Goods/index',['goods_id'=>$v.id])}" target="block"><img src="{$v.image}" title="{$v.name}" alt="{$v.name}"/></a></div>
+            <dl>
+              <dt title="{$v.name}"><a href="{:url('Goods/index',['goods_id'=>$v.id])}" target="block">{$v.name}</a></dt>
+              <dd>{$Think.lang.original_price_space|raw}：<em class="o-price">{$Think.lang.currency}{$v.shop_price}</em></dd>
+              <dd>{$Think.lang.discount_price}：<em class="b-price">{$Think.lang.currency}{$v.price}</em></dd>
+            </dl>
+          </li>
+          <?php }?>
+        </ul>
+      </div>
+      <div class="dss-bundling-price">
+        <dl>
+          <dt>{$val.name}</dt>
+          <dd class="tcj">{$Think.lang.original_selling_price}：<span>{$Think.lang.currency}{:ds_price_format($val['cost_price'])}</span></dd>
+          <dd class="tcj">{$Think.lang.set_price}：<span>{$Think.lang.currency}{$val.price}</span></dd>
+          <dd class="js">{$Think.lang.bundling_save|raw}<span>{$Think.lang.currency}{:ds_price_format(floatval($val['cost_price'])-floatval($val['price']))}</span></dd>
+          {if $val.freight > 0}
+          <dd class="">{$Think.lang.freight}：<span>{$Think.lang.currency}{$val.freight}</span></dd>
+          {/if}
+          <dd class="mt5"><a href="javascript:void(0);"  dstype="addblcart_submit" bl_id="{$val.id}" class="dss-btn dss-btn-red"><i class="iconfont">&#xe709;</i>{$Think.lang.bundling_buy}</a></dd>
+        </dl>
+      </div>
+      <?php }?>
+      <?php }?>
+    </div>
+     {if count($bundling_array) != 1}
+    <div class="F-prev">&nbsp;</div>
+    <div class="F-next">&nbsp;</div>
+    {/if}
+  </div>
+  <!--E 组合销售 -->
+  <?php }?>
+  <?php if (!empty($gcombo_list)) {?>
+ <div class="dss-combo-container" {if isset($current)}style="display:none;"{/if}>
+    <div class="default-goods">
+      <div class="goods-thumb"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="block"><img src="{:goods_thumb($goods_info, 240)}" title="{$goods_info.goods_name}" alt="{$goods_info.goods_name}"/></a></div>
+      <dl>
+        <dt title="{$goods_info.goods_name}"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="block">{$goods_info.goods_name}</a></dt>
+        <dd class="goods-price">{$Think.lang.market_price}{$Think.lang.ds_colon}{$Think.lang.currency}{$goods_info.goods_promotion_price}</dd>
+      </dl>
+    </div>
+    <div class="combo-goods-list" dstype="combo_list">
+      <ul>
+        {php}$j=0;{/php}
+        {foreach name="gcombo_list" item="combo"  }
+        <li {if $j == 0}class="combo-goods-first"{/if}>
+          {php}$j++;{/php}
+          <div class="goods-thumb"><a href="{:url('Goods/index',['goods_id'=>$combo.goods_id])}" target="block"><img src="{:goods_thumb($combo, 240)}" title="{$combo.goods_name}" alt="{$combo.goods_name}" onload="javascript:ResizeImage(this,100,100);" /></a></div>
+          <dl>
+            <dt title="{$combo.goods_name}"><a href="{:url('Goods/index',['goods_id'=>$combo.goods_id])}" target="block">{$combo.goods_name}</a></dt>
+            <dd>
+              <input type="checkbox" class="checkbox" dstype="comb"  name="{$combo.goods_id}" data-param="{price:{$combo.goods_promotion_price},marketprice:{$combo.goods_marketprice}}" />
+              {$Think.lang.currency}{$combo.goods_promotion_price}</dd>
+          </dl>
+        </li>
+        {/foreach}
+      </ul>
+    </div>
+    <div class="combo-price">
+    <dl>
+    <dt>{$Think.lang.recommended_purchase_combination}</dt>
+    <dd>{$Think.lang.total_mall_price}：{$Think.lang.currency}<em dstype="gbcc_p">{$goods_info.goods_promotion_price}</em></dd>
+    <dd>{$Think.lang.total_market_price}：{$Think.lang.currency}<em dstype="gbcc_mp">{$goods_info.goods_marketprice}</em></dd>
+    <dd class="mt5"><a class="dss-btn dss-btn-red" dstype="addblcart_submit_comb" data-param="{$goods_info.goods_id}" href="javascript:void(0);"><i class="iconfont">&#xe709;</i>{$Think.lang.bundling_buy}</a></dd>
+    </dl>
+  </div>
+  <script>
+            $(function(){
+            	$('#dss-bundling').show();
+            	$('.dss-bundling-container').F_slider({len:<?php echo $i;?>});
+                $('a[dstype="addblcart_submit"]').click(function(){
+                    addblcart($(this).attr('bl_id'));
+                 });	
+            });
+            
+            /* add one bundling to cart */ 
+            function addblcart(bl_id)
+            {
+                {if session('is_login') != '1'}
+            	   login_dialog();
+                {else/}
+                    var url = HOMESITEURL+'/Cart/add.html';
+                    $.getJSON(url, {'bl_id':bl_id}, function(data){
+                    	if(data != null){
+                    		if (data.state)
+                            {
+                                $('#bold_num').html(data.num);
+                                $('#bold_mly').html(price_format(data.amount));
+                                $('.dss-cart-popup').fadeIn('fast');
+                                // 头部加载购物车信息
+                                load_cart_information();
+								$("#rtoolbar_cartlist").load(HOMESITEURL+'/Cart/ajax_load.html?type=html');
+                            }
+                            else
+                            {
+                                layer.alert(data.msg);
+                            }
+                    	}
+                    });
+                {/if}
+            }
+            </script>
+  <script type="text/javascript">
+  $(function(){
+      var g_p = "{$goods_info.goods_promotion_price}";
+      var mg_p = "{$goods_info.goods_marketprice}";
+      $('div[dstype="combo_list"]').find('input[type="checkbox"]').click(function(){
+          var gbcc_p = g_p;
+          var gbcc_mp = mg_p;
+          $('div[dstype="combo_list"]').find('input[type="checkbox"]:checked').each(function(){
+              eval( 'data_str =' + $(this).attr('data-param'));
+              gbcc_p = Number(gbcc_p) + Number(data_str.price);
+              gbcc_mp = Number(gbcc_mp) + Number(data_str.marketprice);
+          });
+          $('em[dstype="gbcc_p"]').html(number_format(gbcc_p,2));
+          $('em[dstype="gbcc_mp"]').html(number_format(gbcc_mp,2));
+      });
+      $('a[dstype="addblcart_submit_comb"]').click(function(){
+          addcombcart($(this).attr('data-param'));
+       });
+});
+/* add one bundling to cart */ 
+function addcombcart(goods_ids)
+{
+	var goods_ids = '';
+        {if session('is_login') != '1'}
+	   login_dialog();
+        {else/}
+    $('input[dstype="comb"]').each(function(){
+        if ($(this).prop('checked')) {
+            goods_ids = goods_ids + $(this).attr('name') + '|';
+        }
+    });
+    goods_ids += '{$goods_info.goods_id}';
+    var url = HOMESITEURL+'/Cart/add_comb.html';
+    $.getJSON(url, {'goods_ids':goods_ids}, function(data){
+    	if(data != null){
+    		if (data.state)
+            {
+                $('#bold_num').html(data.num);
+                $('#bold_mly').html(price_format(data.amount));
+                $('.dss-cart-popup').fadeIn('fast');
+                // 头部加载购物车信息
+                load_cart_information();
+				$("#rtoolbar_cartlist").load(HOMESITEURL+'/Cart/ajax_load.html?type=html');
+            }
+            else
+            {
+                layer.alert(data.msg);
+            }
+    	}
+    });
+    {/if}
+}
+            </script>
+</div>
+</div>
+<?php }?>
+<script type="text/javascript">
+$(function(){
+    $('div[dstype="gbc_nav"]').find('li').click(function(){
+        $('div[dstype="gbc_nav"]').find('li').removeClass('current');
+        $(this).addClass('current');
+        $('div[dstype="gbc_content"]').children().hide().eq($(this).index()).show();
+    });
+});
+</script>
+<?php }?>

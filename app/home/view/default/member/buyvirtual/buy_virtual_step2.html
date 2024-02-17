@@ -1,0 +1,168 @@
+{include file="default/base/mall_top" /}
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+</div>
+<div class="dsc-line"></div>
+<div class="dsc-main">
+ <div class="dsc-title">
+    <h3>{$Think.lang.cart_index_ensure_info}</h3>
+    <h5>{$Think.lang.exchange_code_send_phone}</h5>
+ </div>
+  <form action="{:url('Buyvirtual/buy_step3')}" method="POST" id="form_buy" name="form_buy">
+  <input type="hidden" name="goods_id" value="{$goods_info.goods_id}">
+  <input type="hidden" name="quantity" value="{$goods_info.quantity}">
+    <div class="dsc-receipt-info">
+      <div class="dsc-receipt-info-title">
+        <h3>{$Think.lang.electronic_exchange_code}</h3></div>
+      <div id="invoice_list" class="dsc-candidate-items">
+        <ul style="overflow: visible;">
+          <li>{$Think.lang.cart_step1_mobile_num}：
+            <div class="parentCls"><input name="buyer_phone" class="text" autocomplete = "off"  type="text" id="buyer_phone" value="{:encrypt_show($member_info.member_mobile,4,4)}" maxlength="11"></div>
+          </li>
+        </ul>
+        <p><i class="iconfont">&#xe73b;</i>{$Think.lang.exchange_code_instructions}</p>
+      </div>
+    </div><div class="dsc-receipt-info"><div class="dsc-receipt-info-title">
+      <h3>{$Think.lang.virtual_service_goods_list}</h3><a href="{:url('Buyvirtual/buy_step1',['goods_id'=>$Request.post.goods_id,'quantity'=>$Request.post.quantity])}">{$Think.lang.back_up}</a></div>
+    <table class="dsc-table-style" ds_type="table_cart">
+      <thead>
+        <tr>
+          <th colspan="3">{$Think.lang.ds_goods}</th>
+          <th class="w150">{$Think.lang.ds_unit_price}({$Think.lang.ds_yuan})</th>
+          <th class="w80">{$Think.lang.ds_quantity}</th>
+          <th class="w150">{$Think.lang.cart_index_sum}({$Think.lang.ds_yuan})</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="shop-list">
+          <td class="w10"></td>
+          <td class="w60"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank" class="dsc-goods-thumb"><img src="{:goods_thumb($goods_info)}" alt="{$goods_info.goods_name}" /></a></td>
+          <td class="tl"><dl class="dsc-goods-info">
+              <dt><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank">{$goods_info.goods_name}</a></dt>
+                <dd>
+                    {present name="goods_info.ifgroupbuy"}
+                  <span class="groupbuy">{$Think.lang.ds_groupbuy}</span>
+                  {/present}
+                </dd>
+            </dl></td>
+            <td class="w120">
+                <em id="item_price">{$goods_info.goods_price}</em>
+                <!--{if $goods_info.goods_price<$goods_info.goods_original_price}-->
+                <div><del>{$goods_info.goods_original_price}</del></div>
+                <!--{/if}-->
+            </td>
+          <td class="w120">{$goods_info.quantity}</td>
+          <td><em id="item_subtotal">{$goods_info.goods_total}</em></td>
+        </tr>
+
+        <!-- S 留言 -->
+		<tr>
+			<td class="w10"></td>
+			<td class="tl" colspan="2">{$Think.lang.buyer_message}：
+				<textarea name="buyer_msg" class="dsc-msg-textarea" maxlength="150" placeholder="{$Think.lang.trade_show}" title="{$Think.lang.trade_show}"></textarea></td>
+			<td class="tl" colspan="10"></td>
+		</tr>
+        <!-- E 留言 -->
+
+      
+
+        <!-- S voucher list -->
+        {notempty name="voucher_list"}
+        <tr>
+        <td class="tr" colspan="20"><div class="dsc-account">
+            <!--{if $goods_info.goods_discount_total>0}-->    
+            <dl>
+              <dt>{$Think.lang.amount_of_goods}：</dt>
+              <dd><em>{$goods_info.goods_original_total}</em>{$Think.lang.ds_yuan}</dd>
+            </dl>
+            
+            <dl class="mansong">
+              <dt>{$Think.lang.amount_of_discount}：</dt>
+              <dd><em>{$goods_info.goods_discount_total}</em>{$Think.lang.ds_yuan}</dd>
+            </dl>  
+            <!--{/if}-->  
+            <dl class="voucher">
+              <dt>
+                <select dstype="voucher" name="voucher">
+                  <option value="">{$Think.lang.cart_step1_select_voucher}</option>
+                    {foreach name="voucher_list" item="voucher"}
+                  <option value="{$voucher.vouchertemplate_id}|{$voucher.voucher_price}">{$voucher.desc}</option>
+                 {/foreach}
+                </select>
+              <dd>￥<em id="storeVoucher">-0.00</em></dd>
+            </dl>
+          </div></td>
+      </tr>
+        {/notempty}
+        <!-- E voucher list -->
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="20"><div class="dsc-all-account">{$Think.lang.total_price}<em id="orderTotal">{$goods_info.goods_total}</em>{$Think.lang.ds_yuan}</div></td>
+        </tr>
+      </tfoot>
+    </table>
+
+</div></form>
+  <div class="dsc-bottom"><a id="submitOrder" href="javascript:void(0)" class="dsc-btn dsc-btn-acidblue fr">{$Think.lang.cart_index_submit_order}</a></div>
+
+<script>
+
+//计算应支付金额计算
+function calcOrder() {
+    var allTotal = parseFloat($('#item_subtotal').html());
+    if ($('#storeVoucher').length > 0) {
+        allTotal += parseFloat($('#storeVoucher').html());
+    }
+    $('#orderTotal').html(number_format(allTotal,2));
+}
+
+$(document).ready(function(){
+
+    $('select[dstype="voucher"]').on('change',function(){
+        if ($(this).val() == '') {
+            $('#storeVoucher').html('-0.00');
+        } else {
+            var items = $(this).val().split('|');
+            $('#storeVoucher').html('-'+number_format(items[1],2));
+        }
+        calcOrder();
+    });
+   
+
+
+    var SUBMIT_FORM = true;
+    $('#submitOrder').on('click',function(){
+        if (!$("#form_buy").valid()) return;
+        if (!SUBMIT_FORM) return;
+
+        SUBMIT_FORM = false;
+        $('#form_buy').submit();
+    });
+
+    $("#form_buy").validate({
+        onkeyup: false,
+        rules: {
+            buyer_phone : {
+                required : true,
+                minlength : 11
+            }
+        },
+        messages: {
+            buyer_phone : {
+                required : "{$Think.lang.write_mobile_number}",
+                minlength : "{$Think.lang.write_correct_mobile_number}",
+            }
+        }
+    });
+});
+function clearMobile(obj){
+    if($(obj).val()=='{:encrypt_show($member_info.member_mobile,4,4)}'){
+        $(obj).val('')
+    }
+}
+</script>
+{include file="default/base/mall_footer" /}

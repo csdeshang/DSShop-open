@@ -1,0 +1,246 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>拼团</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    
+    <form id="add_form" method="post" class="dssc-form-default">
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.pintuan_name}{$Think.lang.ds_colon}
+                </dt>
+                <dd>
+                    <input id="pintuan_name" name="pintuan_name" type="text" maxlength="25" class="text w400" value="{present name='pintuan_info'}{$pintuan_info.pintuan_name}{/present}"/>
+                    <span></span>
+                    <p class="hint">{$Think.lang.pintuan_name_explain}</p>
+                </dd>
+            </dl>
+            {empty name="pintuan_info"}
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.pintuan_starttime}{$Think.lang.ds_colon}
+                </dt>
+                <dd>
+                    <input id="start_time" name="start_time" type="text" class="text w130"/><em class="add-on"><i class="iconfont">&#xe8d6;</i></em>
+                    <span></span>
+                    <p class="hint">
+                        <br/><span class="red">{$Think.lang.start_time_group_not_modified}</span>
+                    </p>
+                </dd>
+            </dl>
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.pintuan_end_time}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="end_time" name="end_time" type="text" class="text w130"/><em class="add-on"><i class="iconfont">&#xe8d6;</i></em><span></span>
+                    <p class="hint">
+                        <br/><span class="red">{$Think.lang.end_time_group_not_modifiable}</span>
+                    </p>
+                </dd>
+            </dl>
+            {/empty}
+            
+            {empty name="pintuan_info"}
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.pintuan_goods}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <div dstype="pintuan_goods_info" class="selected-group-goods " style="display:none;">
+                        <div class="goods-thumb"><img id="pintuan_goods_image" src=""/></div>
+                        <div class="goods-name">
+                            <a dstype="pintuan_goods_href" id="pintuan_goods_name" href="" target="_blank"></a>
+                        </div>
+                        <div class="goods-price">{$Think.lang.mall_price}：￥<span dstype="pintuan_goods_price"></span></div>
+                    </div>
+                    <a href="javascript:void(0);" id="btn_show_search_goods" class="dssc-btn dssc-btn-acidblue">{$Think.lang.select_goods}</a>
+                    <input id="pintuan_goods_id" name="pintuan_goods_id" type="hidden" value=""/>
+                    <span></span>
+                    <div id="div_search_goods" class="div-goods-select mt10" style="display: none;">
+                        <table class="search-form">
+                            <tr>
+                                <th class="w150">
+                                    <strong>{$Think.lang.search_goods_step1}</strong>
+                                </th>
+                                <td class="w160">
+                                    <input id="search_goods_name" type="text w150" class="text" name="goods_name" value=""/>
+                                </td>
+                                <td class="w70 tc">
+                                    <a href="javascript:void(0);" id="btn_search_goods" class="dssc-btn"/><i class="iconfont">&#xe718;</i>{$Think.lang.ds_search}</a></td>
+                                <td class="w10"></td>
+                                <td>
+                                    <p class="hint">{$Think.lang.group_information1}</p>
+                                </td>
+                            </tr>
+                        </table>
+                        <div id="div_goods_search_result" class="search-result" style="width:739px;"></div>
+                        <a id="btn_hide_search_goods" class="close" href="javascript:void(0);">X</a>
+                    </div>
+                    <p class="hint">{$Think.lang.pintuan_goods_explain}</br><span class="red">{$Think.lang.group_information2}</span></p>
+                </dd>
+            </dl>
+            {else/}
+            <dl>
+                <dt>{$Think.lang.pintuan_goods_name}</dt>
+                <dd>
+                    {$pintuan_info.pintuan_goods_name}
+                </dd>
+            </dl>
+            {/empty}
+            
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.group_discount}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="pintuan_zhe" name="pintuan_zhe" type="text" class="text w130"value="{$pintuan_info.pintuan_zhe|default='1'}"/>{$Think.lang.ds_xianshi_flag}<span></span>
+                    <p class="hint">{$Think.lang.group_discount_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.pintuangroup_limit_number}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="pintuan_limit_number" name="pintuan_limit_number" type="text" class="text w130" value="{$pintuan_info.pintuan_limit_number|default='2'}"/><span></span>
+                    <p class="hint">{$Think.lang.group_size_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.group_length}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="pintuan_limit_hour" name="pintuan_limit_hour" type="text" class="text w130"value="{$pintuan_info.pintuan_limit_hour|default='2'}"/>{$Think.lang.ds_hour}<span></span>
+                    <p class="hint">{$Think.lang.group_length_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt><i class="required">*</i>{$Think.lang.purchase_restriction}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input id="pintuan_limit_quantity" name="pintuan_limit_quantity" type="text" class="text w130"value="{$pintuan_info.pintuan_limit_quantity|default='1'}"/><span></span>
+                    <p class="hint">{$Think.lang.purchase_restriction_notice}</p>
+                </dd>
+            </dl>
+            <div class="bottom">
+                    <input id="submit_button" type="submit" class="btn" value="{$Think.lang.ds_submit}">
+            </div>
+        </form>
+    
+    <link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/i18n/jquery-ui-timepicker-zh-CN.js"></script>
+<script>
+    $(function () {
+        
+        $('#btn_show_search_goods').on('click', function() {
+            $('#div_search_goods').show();
+        });
+
+        $('#btn_hide_search_goods').on('click', function() {
+            $('#div_search_goods').hide();
+        });
+        //搜索商品
+        $('#btn_search_goods').on('click', function() {
+            var url = "{:url('Promotionpintuan/search_goods')}";
+             var  datas  =  $.param({goods_name: $('#search_goods_name').val()});
+            $('#div_goods_search_result').load(url,datas);
+        });
+
+        $('#div_goods_search_result').on('click', '.pagination li a', function() {
+            $('#div_goods_search_result').load($(this).attr('href'));
+            return false;
+        });
+
+        //选择商品
+        $('#div_goods_search_result').on('click', '[dstype="btn_add_pintuan_goods"]', function() {
+            var goods_commonid = $(this).attr('data-goods-commonid');
+            $.get("{:url('Promotionpintuan/pintuan_goods_info')}", {goods_commonid: goods_commonid}, function(data) {
+                if(data.result) {
+                    $('#pintuan_goods_id').val(data.goods_id);
+                    $('#pintuan_goods_image').attr('src', data.goods_image);
+                    $('#pintuan_goods_name').text(data.goods_name);
+                    $('[dstype="pintuan_goods_price"]').text(data.goods_price);
+                    $('[dstype="pintuan_goods_href"]').attr('href', data.goods_href);
+                    $('[dstype="pintuan_goods_info"]').show();
+                    $('#div_search_goods').hide();
+                } else {
+                    layer.msg(data.message);
+                }
+            }, 'json');
+        });
+        
+    {empty name = "pintuan_info"}
+    $('#start_time').datetimepicker({dateFormat: 'yy-mm-dd'});
+    $('#end_time').datetimepicker({dateFormat: 'yy-mm-dd'});
+    {/empty}
+        
+        jQuery.validator.methods.greaterThanDate = function(value, element, param) {
+            var date1 = new Date(Date.parse(param.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 < date2;
+        };
+
+        jQuery.validator.methods.lessThanDate = function(value, element, param) {
+            var date1 = new Date(Date.parse(param.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 > date2;
+        };
+
+        jQuery.validator.methods.greaterThanStartDate = function(value, element) {
+            var start_date = $("#start_time").val();
+            var date1 = new Date(Date.parse(start_date.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 < date2;
+        };
+
+        jQuery.validator.methods.lessThanGoodsPrice= function(value, element) {
+            var goods_price = $("#input_groupbuy_goods_price").val();
+            return Number(value) < Number(goods_price);
+        };
+        
+    //页面输入内容验证
+    $("#add_form").validate({
+            errorPlacement: function (error, element) {
+                var error_td = element.parent('dd').children('span');
+                error_td.append(error);
+            },
+            onfocusout: false,
+            submitHandler: function (form) {
+                ds_ajaxpost('add_form', 'url', "{:url('Promotionpintuan/index')}");
+            },
+                rules: {
+                    pintuan_name: {
+                        required: true
+                    },
+                    pintuan_zhe: {
+                        required: true,
+                        digits:true,
+                        range : [1,9]
+                    },
+                    pintuan_limit_number: {
+                        required: true,
+                        digits:true,
+                        min:2
+                    }
+                },
+                messages : {
+                    pintuan_name : {
+                        required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.pintuan_name_error}'
+                    },
+                    pintuan_zhe: {
+                        required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.discount_cannot_empty}',
+                        digits: '<i class="iconfont">&#xe64c;</i>{$Think.lang.discount_must_figures}',
+                        range: '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_fill_figure}'
+                    },
+                    pintuan_limit_number: {
+                        required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.group_must_not_empty}',
+                        digits: '<i class="iconfont">&#xe64c;</i>{$Think.lang.number_groups_must_number}',
+                        min: '<i class="iconfont">&#xe64c;</i>{$Think.lang.number_groups_cannot_less_than}'
+                    }
+                    
+            }
+    });
+    });
+</script>
+</div>    
+
+

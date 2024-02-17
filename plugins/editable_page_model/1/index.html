@@ -1,0 +1,40 @@
+<div class="editable-page-model editable-page-model-1" style="background-color:{$config_info.back_color|default=''};">
+  <div class="editable-page-content" style="width:{$config_info.image_width|default=''};height:{$config_info.image_height|default=''};padding-top:{$config_info.padding_top|default=''};padding-bottom:{$config_info.padding_bottom|default=''};">
+    <div class="content-wrapper">
+        {if isset($config_info['adv']) && !empty($config_info['adv'])}    
+    <div class="bd">
+        <ul>
+            {foreach name="config_info.adv" item="v"}
+            <li style="background-image: url({$v.image})" >
+                <a href="{$v.link}">&nbsp;</a>
+            </li>
+            {/foreach}
+        </ul>
+    </div>
+    {if count($config_info['adv'])>1}
+    <div class="hd">
+        <ul>
+            {foreach name="config_info.adv" item="v"}
+            <li class=""></li>
+            {/foreach}
+        </ul>
+    </div>
+    <a class="ctrl prev" href="javascript:void(0)">&lt;</a>
+    <a class="ctrl next" href="javascript:void(0)">&gt;</a>
+    {/if}
+    {else}
+    <div style="text-align:center"><img style="width:750px;height:376px;" src="{:goods_thumb()}" /></div>
+    {/if}
+  </div>
+  </div>  
+</div>
+
+<script>
+    if(typeof(loadHtml1)=='undefined'){
+      function loadHtml1(obj){
+        if(obj.find('.bd li').length>1){
+            obj.find('.editable-page-content').slide({mainCell: ".bd ul", autoPlay: true, delayTime: 500, interTime: 5000})
+        }
+      }
+    }
+</script>

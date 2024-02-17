@@ -1,0 +1,51 @@
+<div class="goods-gallery add-step2">
+    <a class='sample_demo' id="select_submit" href="{:url('Goodsalbum/pic_list',['item'=>'goods'])}" style="display:none;">{$Think.lang.ds_submit}</a>
+    <div class="nav"><span class="l">{$Think.lang.goods_album_users} >
+            {notempty name="class_name"}
+            {$class_name}
+            {else/}
+            {$Think.lang.goods_album_all_photo}
+            {/notempty}
+        </span>
+        <span class="r">
+            <select name="jumpMenu" id="jumpMenu" style="width:100px;">
+                <option value="0" style="width:80px;">{$Think.lang.ds_please_choose}</option>
+                {foreach name="class_list" item="val"}
+                <option style="width:80px;" value="{$val.aclass_id}" {if condition="$val.aclass_id eq $Request.param.id"}selected{/if}>{$val.aclass_name}</option>
+                {/foreach}
+            </select>
+        </span>
+    </div>
+    {notempty name="pic_list"}
+    <ul class="list">
+        {foreach name="pic_list" item="v"}
+        <li onclick="insert_img('{$v.apic_cover}', '{:goods_thumb($v, 240)}');">
+            <a href="JavaScript:void(0);"><img src="{:goods_thumb($v, 240)}" /></a>
+        </li>
+        {/foreach}
+    </ul>
+    {else /}
+    <div class="warning-option"><i class="iconfont">&#xe64c;</i><span>{$Think.lang.picture_no_album}</span></div>
+    {/notempty}
+    <div class="pagination">{$show_page|raw}</div>
+</div>
+<script>
+$(document).ready(function(){
+	$('ul.pagination>li>a').ajaxContent({
+		event:'click', //mouseover
+		loaderType:'img',
+		loadingMsg:'{$Think.HOME_SITE_ROOT}/images/loading.gif',
+		target:'#demo'
+	});
+	$('#jumpMenu').change(function(){
+		$('#select_submit').attr('href',$('#select_submit').attr('href')+"&id="+$('#jumpMenu').val());
+		$('#select_submit').ajaxContent({
+			event:'click', //mouseover
+			loaderType:'img',
+			loadingMsg:'{$Think.HOME_SITE_ROOT}/images/loading.gif',
+			target:'#demo'
+		});
+		$('#select_submit').click();
+	});
+});
+</script>

@@ -1,0 +1,240 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<div class="dsm-default-form fl" style="width: 100%;">
+    <form method="POST" id="inv_form">
+            <div class="dsc-form-default">
+                <dl>
+                    <dt>{$Think.lang.invoice_state}：</dt>
+                    <dd>
+                        <label><input type="radio" {if $invoice.invoice_state==1}checked{/if} name="invoice_state" value="1">{$Think.lang.invoice_state_text[1]}</label>
+                        &emsp;&emsp;
+                        <label><input type="radio" {if $invoice.invoice_state==2}checked{/if} name="invoice_state" value="2">{$Think.lang.invoice_state_text[2]}</label>
+                    </dd>
+                </dl>
+            </div>
+            <div id="invoice_panel" class="dsc-form-default" {if $invoice.invoice_state==2}style="display:none"{/if}>
+                <dl>
+                    <dt>{$Think.lang.invoice_title}：</dt>
+                    <dd>
+<!--                        <select name="invoice_title_select">
+                            <option value="person">{$Think.lang.individual}</option>
+                            <option value="company">{$Think.lang.unit}</option>
+                        </select>-->
+                        <input class="text w200" name="invoice_title" id="invoice_title" value="{$invoice.invoice_title}">
+                    </dd>
+                </dl>
+                <dl id="invoice_code_dl">
+                    <dt>{$Think.lang.invoice_code}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_code" id="invoice_code" value="{$invoice.invoice_code}">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.invoice_content}：</dt>
+                    <dd>
+<!--                        <select id="invoice_content" name="invoice_content">
+                            <option selected value="{$Think.lang.details}">{$Think.lang.details}</option>
+                            <option value="{$Think.lang.wine}">{$Think.lang.wine}</option>
+                            <option value="{$Think.lang.food}">{$Think.lang.food}</option>
+                            <option value="{$Think.lang.drink}">{$Think.lang.drink}</option>
+                            <option value="{$Think.lang.toys}">{$Think.lang.toys}</option>
+                            <option value="{$Think.lang.daily_necessities}">{$Think.lang.daily_necessities}</option>
+                            <option value="{$Think.lang.decoration_materials}">{$Think.lang.decoration_materials}</option>
+                            <option value="{$Think.lang.cosmetics}">{$Think.lang.cosmetics}</option>
+                            <option value="{$Think.lang.office_supplies}">{$Think.lang.office_supplies}</option>
+                            <option value="{$Think.lang.student_supplies}">{$Think.lang.student_supplies}</option>
+                            <option value="{$Think.lang.household_goods}">{$Think.lang.household_goods}</option>
+                            <option value="{$Think.lang.accessories}">{$Think.lang.accessories}</option>
+                            <option value="{$Think.lang.clothing}">{$Think.lang.clothing}</option>
+                            <option value="{$Think.lang.luggage}">{$Think.lang.luggage}</option>
+                            <option value="{$Think.lang.boutique}">{$Think.lang.boutique}</option>
+                            <option value="{$Think.lang.home_appliances}">{$Think.lang.home_appliances}</option>
+                            <option value="{$Think.lang.labor_protection_products}">{$Think.lang.labor_protection_products}</option>
+                            <option value="{$Think.lang.consumables}">{$Think.lang.consumables}</option>
+                            <option value="{$Think.lang.computer_accessories}">{$Think.lang.computer_accessories}</option>
+                        </select>-->
+                        <input type="text" class="text w200" maxlength="50" name="invoice_content" id="invoice_content" value="{$invoice.invoice_content}">
+                    </dd>
+                </dl>
+            </div>
+            <div id="vat_invoice_panel" class="dsc-form-default"  {if $invoice.invoice_state==1}style="display:none"{/if}>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.invoice_company}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_company" value="{$invoice.invoice_company}">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.invoice_company_code}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_company_code" value="{$invoice.invoice_company_code}">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.invoice_reg_addr}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_reg_addr" value="{$invoice.invoice_reg_addr}">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.invoice_reg_phone}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_reg_phone" value="{$invoice.invoice_reg_phone}">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.invoice_reg_bname}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_reg_bname" value="{$invoice.invoice_reg_bname}">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.invoice_reg_baccount}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_reg_baccount" value="{$invoice.invoice_reg_baccount}">
+                    </dd>
+                </dl>
+<!--                <dl>
+                    <dt></dt>
+                    <dd>{$Think.lang.open_information}</dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.invoice_content}：</dt>
+                    <dd>{$Think.lang.details}</dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.name_of_bearer}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_rec_name" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.ticket_collector_number}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_rec_mobphone" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.drawee_province}：</dt>
+                    <dd id="region">
+            <select>
+            </select>
+            <input type="hidden" value="" name="city_id" id="city_id">
+            <input type="hidden" name="area_id" id="area_id" class="area_ids"/>
+            <input type="hidden" name="area_info" id="area_info" class="area_names"/>
+          </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.ticket_delivery_address}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_goto_addr" value="">
+                    </dd>
+                </dl>-->
+
+            </div>
+        <dl class="bottom">
+            <dt></dt>
+            <dd>
+                <input type="submit" class="submit" value="保存">
+            </dd>
+        </dl>
+        </form>
+</div>
+
+
+<script>
+   
+    $(document).ready(function () {
+                $('input[name="invoice_state"]').on('click', function() {
+                    if ($(this).val() == 1) {
+                        $('#invoice_panel').show();
+                        $('#vat_invoice_panel').hide();
+                    } else {
+                        $('#invoice_panel').hide();
+                        $('#vat_invoice_panel').show();
+                    }
+                });
+        $('#inv_form').validate({
+            submitHandler: function (form) {
+                ds_ajaxpost('inv_form','url','{:url('Memberinvoice/index')}');
+            },
+                    rules: {
+                        invoice_company: {
+                            required: true
+                        },
+                        invoice_company_code: {
+                            required: true
+                        },
+                        invoice_reg_addr: {
+                            required: true
+                        },
+                        invoice_reg_phone: {
+                            required: true
+                        },
+                        invoice_reg_bname: {
+                            required: true
+                        },
+                        invoice_reg_baccount: {
+                            required: true
+                        },
+                        invoice_rec_name: {
+                            required: true
+                        },
+                        invoice_rec_mobphone: {
+                            required: true
+                        },
+                        area_id: {
+                            required: true,
+                            min: 1,
+                            checkarea: true
+                        },
+                        invoice_goto_addr: {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        invoice_company: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.unit_name_cannot_empty}'
+                        },
+                        invoice_company_code: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.taxpayer_identification_number_cannot_empty}'
+                        },
+                        invoice_reg_addr: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.registered_address_cannot_empty}'
+                        },
+                        invoice_reg_phone: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.registered_phone_cannot_empty}'
+                        },
+                        invoice_reg_bname: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.opening_bank_cannot_empty}'
+                        },
+                        invoice_reg_baccount: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.bank_accounts_cannot_empty}'
+                        },
+                        invoice_rec_name: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.ticket_collector_name_empty}'
+                        },
+                        invoice_rec_mobphone: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.ticket_collector_phone_empty}'
+                        },
+                        area_id: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_region}',
+                            min: '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_region}',
+                            checkarea: '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_region}'
+                        },
+                        invoice_goto_addr: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.ticket_delivery_address_empty}'
+                        }
+                    }
+                });
+   
+    });
+</script>
+
+
+{/block}
+
+

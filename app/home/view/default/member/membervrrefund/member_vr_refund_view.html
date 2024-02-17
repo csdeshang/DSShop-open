@@ -1,0 +1,83 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<div class="dsm-flow-layout">
+  <div class="dsm-flow-container">
+    <div class="title">
+      <h3>{$Think.lang.refund_service}</h3>
+    </div>
+    <div class="alert">
+      <h4>{$Think.lang.operating_hints}：</h4>
+      <ul>
+        <li>1. {$Think.lang.refund_declaration1|raw}</li>
+        <li>2. {$Think.lang.refund_declaration4}</li>
+      </ul>
+    </div>
+    <div id="saleRefund" show_id="1">
+      <div class="dsm-flow-step">
+        <dl class="step-first current">
+          <dt>{$Think.lang.buyer_request_refund}</dt>
+          <dd class="bg"></dd>
+        </dl>
+        <dl class="{$refund.add_time >0 ? 'current' :''}">
+          <dt>{$Think.lang.locked_exchange_code}</dt>
+          <dd class="bg"> </dd>
+        </dl>
+        <dl class="{$refund.admin_time >0 ? 'current':''}">
+          <dt>{$Think.lang.platform_review}</dt>
+          <dd class="bg"> </dd>
+        </dl>
+      </div>
+      <div class=" dsm-default-form">
+      <h3>{$Think.lang.my_refund_application}</h3>
+        <dl>
+          <dt>{$Think.lang.refund_order_refundsn}{$Think.lang.ds_colon}</dt>
+          <dd>{$refund.refund_sn} </dd>
+        </dl>
+        <dl>
+          <dt>{$Think.lang.refund_exchange_code}：</dt>
+          <dd>
+            {notempty name="code_array"}
+            {foreach name="code_array" item="val"}
+            {$val}<br/>
+            {/foreach}
+           {/notempty}
+          </dd>
+        </dl>
+        <dl>
+          <dt>{$Think.lang.refund_order_refund}：</dt>
+          <dd>{$Think.lang.currency}{$refund.refund_amount} </dd>
+        </dl>
+        <dl>
+          <dt>{$Think.lang.refund_instructions}：</dt>
+          <dd>{$refund.buyer_message} </dd>
+        </dl>
+        <h3>{$Think.lang.platform_audit}</h3>
+        <dl>
+          <dt>{$Think.lang.refund_state}</dt>
+          <dd>{$admin_array[$refund.admin_state]} </dd>
+        </dl>
+        {if $refund.admin_time > 0}
+        <dl>
+          <dt>{$Think.lang.remarks_platform}</dt>
+          <dd>{$refund.admin_message} </dd>
+        </dl>
+        {/if}
+        <div class="bottom"><a href="javascript:history.go(-1);"
+                               class="dsm-btn"><i class="iconfont">&#xe74e;</i>{$Think.lang.returns_list}</a></div>
+      </div>
+    </div>
+  </div>
+  {include file="default/member/membervrrefund/member_vr_refund_right"}
+</div>
+
+
+
+
+
+
+
+
+{/block}

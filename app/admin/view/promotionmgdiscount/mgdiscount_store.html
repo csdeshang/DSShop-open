@@ -1,0 +1,37 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_promotion_mgdiscount}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form id="inviter_form" method="post" enctype="multipart/form-data" name="form1" action="">
+        <table class="ds-default-table">
+                <tbody>
+                    {foreach name="mgdiscount_store_arr" item="v" key="k" }
+                    <tr class="noborder"> 
+                        <td class="required w120">{$v.level_name}</td>
+                        <td class="vatop">
+                            <input class="input-txt" name="mgdiscount_store[{$k}][level_discount]" type="text"  value="{$v.level_discount|default=''}" maxlength="30"  />{$Think.lang.ds_xianshi_flag}
+                        </td>
+			<td class="vatop tips">{$Think.lang.setting_indicates_no_discount}</td>
+                    </tr>
+                    {/foreach}
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>					
+                </tfoot>
+            </table>
+    </form>
+</div>

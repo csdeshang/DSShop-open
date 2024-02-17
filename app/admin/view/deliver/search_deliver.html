@@ -1,0 +1,125 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_deliver}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    
+    <div class="dssc-flow-layout">
+            <div class="dssc-flow-container">
+                <div class="title">
+                    <h3>{$Think.lang.member_show_express_detail}</h3>
+                </div>
+                <div class="alert alert-block alert-info">
+                    <ul>
+                        <li><strong>{$Think.lang.member_show_receive_info}{$Think.lang.ds_colon}</strong>{$order_info['extend_order_common']['reciver_name']}&nbsp;&nbsp;&nbsp;&nbsp;{$order_info['extend_order_common']['reciver_info']['phone']}&nbsp;&nbsp;&nbsp;&nbsp;{$order_info['extend_order_common']['reciver_info']['address']}</li>
+                        <li><strong>{$Think.lang.show_order_buyer_message}{$Think.lang.ds_colon}</strong>{$order_info['extend_order_common']['order_message']}</li>
+                        <li><strong>{$Think.lang.member_show_deliver_info}{$Think.lang.ds_colon}</strong>{$daddress_info.seller_name}&nbsp;&nbsp;&nbsp;&nbsp;{$daddress_info.daddress_telphone}&nbsp;&nbsp;&nbsp;&nbsp;{$daddress_info.area_info}&nbsp;&nbsp;&nbsp;&nbsp;{$daddress_info.daddress_detail}&nbsp;&nbsp;&nbsp;&nbsp;{$daddress_info.daddress_company}</li>
+                    </ul>
+                </div>
+                <div class="tabmenu">
+                    <ul class="tab">
+                        <li class="active"><a href="">{$Think.lang.member_show_express_ship_dstatus}</a></li>
+                    </ul>
+                </div>
+                <ul class="express-log" id="express_list">
+                    {if !empty($order_info['extend_order_common']['shipping_time'])}
+                    <li class="loading">{$Think.lang.ds_common_loading}</li>
+                    {/if}
+                </ul>
+            </div>
+            <div class="dssc-flow-item">
+                <div class="title">{$Think.lang.order_info}</div>
+                <div class="item-goods">
+                    {notempty name="$order_info.extend_order_goods"}
+                    {foreach name="$order_info.extend_order_goods" item="goods" }
+                    <dl>
+                        <dt>
+                        <div class="dssc-goods-thumb-mini"><a target="_blank" href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}"><img src="{:goods_thumb($goods, 240)}"/></a></div>
+                        </dt>
+                        <dd><a target="_blank" href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}">{$goods.goods_name}</a><span class="rmb-price"><i class="mr5">￥{$goods.goods_price}</i>&nbsp;*&nbsp;{$goods.goods_num}</span></dd>
+                        </dt>
+                    </dl>
+                    {/foreach}
+                    {/notempty}
+                </div>
+                <div class="item-order">
+                    <dl>
+                        <dt>{$Think.lang.order_total_transport}：</dt>
+                        <dd>{$order_info.shipping_fee}</dd>
+                    </dl>
+                    <dl>
+                        <dt>{$Think.lang.order_total_price}：</dt>
+                        <dd><strong>{$Think.lang.currency}{$order_info.order_amount}</strong></dd>
+                    </dl>
+                    <dl>
+                        <dt>{$Think.lang.order_order_sn}{$Think.lang.ds_colon}</dt>
+                        <dd><a href="javascript:void(0);">{$order_info.order_sn}</a><a href="javascript:void(0);" class="a">{$Think.lang.ds_more}<i class="iconfont">&#xe689;</i>
+                                <div class="more"> <span class="arrow"></span>
+                                    <ul>
+                                        <li>{$Think.lang.order_pay_method}：<span>{$order_info.payment_name}
+                                                <?php if($order_info['payment_code'] != 'offline' && !in_array($order_info['order_state'],array(ORDER_STATE_CANCEL,ORDER_STATE_NEW))) { ?>
+                                                ({$Think.lang.payment_order}{$Think.lang.ds_colon}{$order_info.pay_sn})
+                                                <?php } ?>
+                                            </span> </li>
+                                        <li>{$Think.lang.order_time}{$Think.lang.ds_colon}<span>{$order_info.add_time|date="Y-m-d H:i:s"}</span></li>
+                                        {if intval($order_info['payment_time'])}
+                                        <li>{$Think.lang.member_show_order_pay_time}{$Think.lang.ds_colon}<span>{$order_info.payment_time|date="Y-m-d H:i:s"}</span></li>
+                                        {/if}
+                                        {if $order_info['extend_order_common']['shipping_time']}
+                                        <li>{$Think.lang.ship_time}{$Think.lang.ds_colon}<span>{$order_info['extend_order_common']['shipping_time']|date="Y-m-d H:i:s"}</span></li>
+                                        {/if}
+                                        {if intval($order_info['finnshed_time'])}
+                                        <li>{$Think.lang.member_show_order_finish_time}{$Think.lang.ds_colon}<span>{$order_info.finnshed_time|date="Y-m-d H:i:s"}</span></li>
+                                        {/if}
+                                    </ul>
+                                </div>
+                            </a></dd>
+                    </dl>
+                    <dl>
+                        <dt>{$Think.lang.member_show_express_ship_code}{$Think.lang.ds_colon}</dt>
+                        <dd>{$order_info.shipping_code}<a href="{$express_url}" class="a" target="_blank">{$express_name}</a></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+<script>
+    jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+</script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery.poshytip.min.js" charset="utf-8"></script>
+<script>
+$(function(){
+	//Ajax提示
+	$('.tip').poshytip({
+		className: 'tip-yellowsimple',
+		showTimeout: 1,
+		alignTo: 'target',
+		alignX: 'center',
+		alignY: 'bottom',
+		offsetX: 5,
+		offsetY: 0,
+		allowTipHover: false
+	});
+      var_send = "<li>{$order_info['extend_order_common']['shipping_time']|date='Y-m-d H:i:s'}&nbsp;&nbsp;已发货</li>";
+	$.getJSON("{:url('Deliver/get_express',['express_code'=>$express_code,'shipping_code'=>$order_info['shipping_code'],'phone'=>$order_info['extend_order_common']['reciver_info']['phone']])}",function(data){
+		if(data){
+			data = var_send+data;
+			$('#express_list').html(data).next().css('display','');
+		}else{
+			$('#express_list').html(var_send);
+		}
+	});
+});
+</script>
+    
+    
+    
+</div>

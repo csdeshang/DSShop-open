@@ -1,0 +1,197 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.member_auth}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dd>
+                    <select name="search_field_name" >
+                        <option {if $search_field_name == 'member_name'}selected='selected'{/if} value="member_name">{$Think.lang.ds_member_name}</option>
+                        <option {if $search_field_name == 'member_email'}selected='selected'{/if} value="member_email">{$Think.lang.member_email}</option>
+                        <option {if $search_field_name == 'member_mobile'}selected='selected'{/if} value="member_mobile">{$Think.lang.member_mobile}</option>
+                        <option {if $search_field_name == 'member_truename'}selected='selected'{/if} value="member_truename">{$Think.lang.member_truename}</option>
+                    </select>
+                </dd>
+                <dd>
+                    <input type="text" value="{$search_field_value}" name="search_field_value" class="txt">
+                </dd>
+
+                <dd>
+                    <select name="search_state" >
+                        <option value="">{$Think.lang.member_index_state}</option>
+                        <option {if condition='$Request.param.search_state eq "check"'}selected='selected'{/if} value="check">{$Think.lang.member_auth_state[1]}</option>
+                        <option {if condition='$Request.param.search_state eq "pass"'}selected='selected'{/if} value="pass">{$Think.lang.member_auth_state[3]}</option>
+                        <option {if condition='$Request.param.search_state eq "fail"'}selected='selected'{/if} value="fail">{$Think.lang.member_auth_state[2]}</option>
+                    </select>
+                </dd>
+     
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="{$Think.lang.ds_search}">
+                {if $filtered}
+                <a href="{:url('MemberAuth/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th>&nbsp;</th>
+          <th colspan="2">{$Think.lang.ds_member_name}</th>
+          <th class="align-center">{$Think.lang.member_truename}</th>
+          <th class="align-center">{$Think.lang.member_idcard}</th>
+          <th class="align-center">{$Think.lang.member_idcard_image1}</th>
+          <th class="align-center">{$Think.lang.member_idcard_image2}</th>
+          <th class="align-center">{$Think.lang.member_idcard_image3}</th>
+          <th class="align-center">{$Think.lang.ds_status}</th>
+          <th class="align-center">{$Think.lang.ds_handle}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {notempty name="member_list"}
+        {foreach name="member_list" item="v" key="k" }
+        <tr class="hover member">
+          <td class="w24"><input type="checkbox" name='del_id[]' value="{$v.member_id}" class="checkitem"></td>
+          <td class="w48 picture">
+              <div class="size-44x44">
+              <span class="thumb"><i></i>
+                  <img src="{:get_member_avatar($v.member_avatar)}?{:microtime()}"  width="44" height="44"/>
+              </span>
+          </div>
+          </td>
+          <td><p class="name"><strong>{$v.member_name}</strong></p>
+            <p class="smallfont">{$Think.lang.member_addtime}:&nbsp;{$v.member_addtime}</p>
+
+              <div class="im"><span class="email" >
+                {if $v.member_email != ''}
+                <a href="mailto:{$v.member_email}" class=" yes" title="{$Think.lang.member_email}:{$v.member_email}">{$v.member_email}</a></span>
+                {else /}
+                <a href="JavaScript:void(0);" class="" title="{$Think.lang.member_index_null}" >{$v.member_email}</a></span>
+               {/if}
+                {if $v.member_ww != ''}
+                <a target="_blank" href="http://web.im.alisoft.com/msg.aw?v=2&uid={$v.member_ww}&site=cnalichn&s=11" class="" title="WangWang: {$v.member_ww}"><img border="0" src="http://web.im.alisoft.com/online.aw?v=2&uid={$v.member_ww}&site=cntaobao&s=2&charset=utf-8" /></a>
+                {/if}
+                {if $v.member_qq != ''}
+                <a target="_blank" href="{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$v.member_qq}&site=qq&menu=yes" class=""  title="QQ: {$v.member_qq}"><img border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$v.member_qq}:52"/></a>
+                {/if}
+               {if $v.member_mobile != ''}
+               <div style="font-size:13px; padding-left:10px">&nbsp;&nbsp;{:encrypt_show($v.member_mobile,4,4)}</div>
+               {/if}
+              </div></td>
+          <td class="align-center">{$v.member_truename}</td>
+          
+          <td class="align-center">{$v.member_idcard}</td>
+          <td class="align-center">
+              <img src="{:get_member_idcard_image($v.member_idcard_image1)}" height="100" onclick="openPhoto('{:get_member_idcard_image($v.member_idcard_image1)}')">
+          </td>
+          <td class="align-center">
+              <img src="{:get_member_idcard_image($v.member_idcard_image2)}" height="100" onclick="openPhoto('{:get_member_idcard_image($v.member_idcard_image2)}')">
+          </td>
+          <td class="align-center">
+              <img src="{:get_member_idcard_image($v.member_idcard_image3)}" height="100" onclick="openPhoto('{:get_member_idcard_image($v.member_idcard_image3)}')">
+          </td>
+          <td class="align-center">{$Think.lang.member_auth_state[$v.member_auth_state]}</td>
+          <td class="align-center">
+              {if $v.member_auth_state == 1}
+              <a href="javascript:dsLayerConfirm('{:url('MemberAuth/verify',['member_id'=>$v.member_id,'state'=>1])}','{$Think.lang.ds_ensure_operation}')" class="dsui-btn-add"><i class="iconfont"></i>{$Think.lang.ds_pass}</a>
+              <a href="javascript:submit_verify({$v.member_id},2)" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_refuse}</a>
+              {/if}
+          </td>
+        </tr>
+        {/foreach}
+        {else /}
+        <tr class="no_data">
+          <td colspan="11">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+      </tbody>
+      <tfoot class="tfoot">
+        {notempty name="member_list"}
+        <tr>
+        <td class="w24"><input type="checkbox" class="checkall" id="checkallBottom"></td>
+          <td colspan="16">
+          <label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+              &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_verify(0,1)"><span>{$Think.lang.ds_pass}</span></a>
+              &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-red btn-small" onclick="submit_verify(0,2)"><span>{$Think.lang.ds_refuse}</span></a>    
+          </td>
+        </tr>
+        {/notempty}
+      </tfoot>
+    </table>
+    {$show_page|raw}
+
+</div>
+<script type="text/javascript">
+function openPhoto(src){
+    layer.photos({
+        photos: {
+            "title": "", //相册标题
+            "id": 1, //相册id
+            "start": 0, //初始显示的图片序号，默认0
+            "data": [   //相册包含的图片，数组格式
+              {
+                "pid": 1, //图片id
+                "src": src, //原图地址
+                "thumb": src //缩略图地址
+              }
+            ]
+          }
+        ,anim: 5 //0-6的选择，指定弹出图片动画类型，默认随机
+      })
+}
+function submit_verify(member_id,state) {
+    if(member_id==0){
+        /* 获取选中的项 */
+        var items = '';
+        $('.checkitem:checked').each(function () {
+            items += this.value + ',';
+        });
+        if (items != '') {
+            items = items.substr(0, (items.length - 1));
+            member_id=items;
+        }else{
+            layer.alert('{$Think.lang.checkbox_empty}', {icon: 2})  
+            return
+        }
+    }
+    if(state==2){
+        layer.prompt({title: '{$Think.lang.refuse_reason}', formType: 2}, function(text, index){
+            layer.close(index);
+            ajax_verify(member_id,state,text);
+          })
+    }else{
+        ajax_verify(member_id,state)
+    }
+}
+function ajax_verify(member_id,state,message=''){
+        $.ajax({
+            type: 'POST',
+            url: "{:url('MemberAuth/verify')}",
+            cache: false,
+            data: {member_id:member_id,state:state,message:message},
+            dataType: 'json',
+            success: function (res) {
+                if (res.code!=10000) {
+                    layer.alert(res.message);
+                }
+                else {
+                    location.reload();
+                }
+            }
+        });
+}
+</script>

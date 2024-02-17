@@ -1,0 +1,77 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>平台客服</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>买家联系平台客服时所需要选择的类型。</li>
+            <li>提交咨询时，咨询类型必须选择，请不要全部删除。</li>
+        </ul>
+    </div>
+
+    <form method="post" name="form1">
+        <table class="ds-default-table">
+            {notempty name="type_list"}
+            <thead>
+                <tr class="thead">
+                    <th class="w24"></th>
+                    <th class="w200 sort">排序</th>
+                    <th>咨询类型名称</th>
+                    <th class="w108 align-center">{$Think.lang.ds_handle}</th>
+                </tr>
+            </thead>
+            {foreach name="type_list" item="value"}
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" class="checkitem" value="{$value.mallconsulttype_id}" name="del_id[]" /></td>
+                    <td>{$value.mallconsulttype_sort}</td>
+                    <td>{$value.mallconsulttype_name}</td>
+                    <td class="align-center">
+                        <a href="javascript:dsLayerOpen('{:url('Mallconsult/type_edit',['mallconsulttype_id'=>$value.mallconsulttype_id])}','{$Think.lang.ds_edit}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                        <a href="javascript:void(0)" onclick="submit_delete({$value.mallconsulttype_id})" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    </td>
+                </tr>
+            </tbody>
+            {/foreach}
+            {else /}
+            <tbody>
+                <tr class="no_data">
+                    <td colspan="20">{$Think.lang.ds_no_record}</td>
+                </tr>
+            </tbody>
+            {/notempty}
+            <tfoot>
+                {notempty name="type_list"}
+                <tr class="tfoot">
+                    <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                    <td colspan="16"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                        &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                    </td>
+                </tr>
+                {/notempty}
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Mallconsult/type_del.html?mallconsulttype_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+</script>

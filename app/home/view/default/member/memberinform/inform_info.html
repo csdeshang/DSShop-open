@@ -1,0 +1,98 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<div class="dsm-flow-layout">
+    <div class="dsm-flow-container">
+        <div class="title">
+            <h3>{$Think.lang.inform_page_title}</h3>
+        </div>
+        <div class="dsm-flow-step">
+            <dl class="step-first current">
+                <dt>{$Think.lang.fill_report_content}</dt>
+                <dd class="bg"></dd>
+            </dl>
+            <dl class="current">
+                <dt>{$Think.lang.platform_audit_processing}</dt>
+                <dd class="bg"> </dd>
+            </dl>
+            <dl class="{if $inform_info.inform_state == '2'}current{/if}">
+                <dt>{$Think.lang.report_completion}</dt>
+                <dd class="bg"> </dd>
+            </dl>
+        </div>
+        <div class="dsm-default-form">
+            <div id="warning"></div>
+            <dl>
+                <dt>{$Think.lang.inform_goods_name}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <div class="dsm-inform-item">
+                        <div class="dsm-goods-thumb-mini"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank"><img src="{:goods_thumb($goods_info, 240)}"/></a></div>
+                        <a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank"> {$goods_info.goods_name} </a></div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.inform_type}{$Think.lang.ds_colon}</dt>
+                <dd> {$subject_info.informsubject_content} </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.inform_subject}{$Think.lang.ds_colon}</dt>
+                <dd>{$subject_info.informsubject_type_name}</dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.inform_content}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    {$inform_info.inform_content}
+                </dd>
+            </dl>
+            {if $inform_info.inform_handle_message}
+            <dl>
+                <dt>{$Think.lang.inform_handle_message}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    {$inform_info.inform_handle_message}
+                </dd>
+            </dl>
+            {/if}
+            <dl class="noborder">
+                <dt>{$Think.lang.inform_pic}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <ul class="dsm-evidence-pic">
+                        {notempty name="inform_info.inform_pic1"}
+                        <li><a href="{:ds_get_pic(ATTACH_PATH.'/inform',$inform_info.inform_pic1)}" data-lightbox="lightbox-image"><img class="show_image" src="{:ds_get_pic(ATTACH_PATH.'/inform',$inform_info.inform_pic1)}"></a></li>
+                        {/notempty}
+                        {notempty name="inform_info.inform_pic2"}
+                        <li><a href="{:ds_get_pic(ATTACH_PATH.'/inform',$inform_info.inform_pic2)}" data-lightbox="lightbox-image"><img class="show_image" src="{:ds_get_pic(ATTACH_PATH.'/inform',$inform_info.inform_pic2)}"></a></li>
+                        {/notempty}
+                        {notempty name="inform_info.inform_pic3"}
+                        <li><a href="{:ds_get_pic(ATTACH_PATH.'/inform',$inform_info.inform_pic3)}" data-lightbox="lightbox-image"><img class="show_image" src="{:ds_get_pic(ATTACH_PATH.'/inform',$inform_info.inform_pic3)}"></a></li>
+                        {/notempty}
+                    </ul>
+                </dd>
+            </dl>
+            <div class="bottom"><a href="javascript:history.go(-1);" class="dsm-btn"><i class="iconfont">&#xe74e;</i>{$Think.lang.return_list}</a></div>
+        </div>
+    </div>
+    <div class="dsm-flow-item">
+        <div class="title">{$Think.lang.notice_violation_report}</div>
+        <div class="content">
+            <div class="alert">
+                <ul>
+                    <li> {$Think.lang.reporting_guidelines_1}</li>
+                    <li> {$Think.lang.reporting_guidelines_2}</li>
+                    <li> {$Think.lang.reporting_guidelines_3}</li>
+                    <li> {$Think.lang.reporting_guidelines_4}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+
+
+
+
+{/block}

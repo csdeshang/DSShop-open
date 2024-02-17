@@ -1,0 +1,128 @@
+<div class="model-20">
+  <div class="marketing-box marketing-box-two marketing-box-3" style="background-color:{$config_info.back_color|default='unset'};">
+    <div>
+      <div class="title-wrap title-wrap-3" {if isset($config_info['if_show_title_icon']) && $config_info['if_show_title_icon']==0}style="display:none"{/if}>
+        <div class="title-left">
+          <img src="{if isset($config_info['title_icon']) && $config_info['title_icon']}{$config_info['title_icon']}{else}{$Think.HOME_SITE_ROOT}/images/editable_page/pintuan_style3_title.png{/if}">
+          <!---->
+        </div>
+      </div>
+    </div>
+    <div class="list-wrap">
+      {if isset($config_info['goods_list']) && !empty($config_info['goods_list'])} 
+		    {foreach name='config_info.goods_list' item='goods'} 
+        <div class="item">
+          <div class="img-wrap">
+            <img src="{:goods_thumb($goods)}">
+          </div>
+          <div class="content">
+            <div class="top">
+              <div class="content-desc">{$goods.goods_name}</div>
+              <div class="label">
+                <div class="label-person">
+                  <i class="iconfont">&#xe73f;</i>
+                  <span>{$goods.member_count}人团</span>
+                </div>
+                <div class="label-num">
+                  <span>已拼{$goods.order_count}件</span>
+                </div>
+              </div>
+            </div>
+            <div class="bot">
+              <div class="content-price">
+                <div>¥<span>{:floatval($goods.goods_promotion_price)}</span></div>
+                <div class="content-num">￥{:floatval($goods.goods_price)}</div>
+              </div>
+              <div class="layui-btn">去拼团</div>
+            </div>
+          </div>
+        </div>
+        {/foreach} 
+		    {else}
+      <div class="item">
+        <div class="img-wrap">
+          <img src="{:goods_thumb()}">
+        </div>
+        <div class="content">
+          <div class="top">
+            <div class="content-desc">商品名称</div>
+            <div class="label">
+              <div class="label-person">
+                <i class="iconfont">&#xe73f;</i>
+                <span>2人团</span>
+              </div>
+              <div class="label-num">
+                <span>已拼10件</span>
+              </div>
+            </div>
+          </div>
+          <div class="bot">
+            <div class="content-price">
+              <div>¥<span>99.00</span></div>
+              <div class="content-num">￥139.00</div>
+            </div>
+            <div class="layui-btn">去拼团</div>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="img-wrap">
+          <img src="{:goods_thumb()}">
+        </div>
+        <div class="content">
+          <div class="top">
+            <div class="content-desc">商品名称</div>
+            <div class="label">
+              <div class="label-person">
+                <i class="iconfont">&#xe73f;</i>
+                <span>2人团</span>
+              </div>
+              <div class="label-num">
+                <span>已拼10件</span>
+              </div>
+            </div>
+          </div>
+          <div class="bot">
+            <div class="content-price">
+              <div>¥<span>99.00</span></div>
+              <div class="content-num">￥139.00</div>
+            </div>
+            <div class="layui-btn">去拼团</div>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="img-wrap">
+          <img src="{:goods_thumb()}">
+        </div>
+        <div class="content">
+          <div class="top">
+            <div class="content-desc">商品名称</div>
+            <div class="label">
+              <div class="label-person">
+                <i class="iconfont">&#xe73f;</i>
+                <span>2人团</span>
+              </div>
+              <div class="label-num">
+                <span>已拼10件</span>
+              </div>
+            </div>
+          </div>
+          <div class="bot">
+            <div class="content-price">
+              <div>¥<span>99.00</span></div>
+              <div class="content-num">￥139.00</div>
+            </div>
+            <div class="layui-btn">去拼团</div>
+          </div>
+        </div>
+      </div>
+      {/if}
+    </div>
+    <div class="more">
+      <span>更多拼团</span>
+      <i class="iconfont iconyoujiantou">
+      </i>
+    </div>
+  </div>
+</div>

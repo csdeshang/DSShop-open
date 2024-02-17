@@ -1,0 +1,246 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/goods.css">
+<div class="w1200">
+
+    <div class="dss-goods-layout expanded">
+        <div class="dss-goods-main">
+            <div class="dss-goods-title-bar">
+                <h4>{$Think.lang.goods_index_goods_consult}</h4>
+            </div>
+            <div class="dss-goods-info-content bd" id="dsGoodsRate">
+                <div class="top" style="overflow: hidden;">
+                    <div class="dss-cosult-askbtn"><a href="#askQuestion" class="dss-btn dss-btn-red">{$Think.lang.want_questions}</a></div>
+                </div>
+                <div class="dss-goods-title-nav">
+                    <ul id="comment_tab">
+                        <li class="{if $Request.param.ctid == 0}current{/if}"><a
+                                href="{:url('Goods/consulting_list',['goods_id'=>$Request.param.goods_id])}">{$Think.lang.ds_all}</a></li>
+                        {notempty name="consult_type"}
+                        {foreach name="consult_type" item="val"}
+                        <li class="{if $Request.param.ctid == $val.consulttype_id}current{/if}"><a
+                                href="{:url('Goods/consulting_list',['goods_id'=>$Request.param.goods_id,'ctid'=>$val.consulttype_id])}">{$val.consulttype_name}</a>
+                        </li>
+                        {/foreach}
+                        {/notempty}
+                    </ul>
+                </div>
+                <div class="dss-commend-main">
+                    {notempty name="consult_list"}
+                    {foreach name="consult_list" item="v"}
+                    <div class="dss-cosult-list">
+                        <dl class="asker">
+                            <dt>{$Think.lang.consulting_net_friend}{$Think.lang.ds_colon}</dt>
+                            <dd>
+                                {if $v.member_id=='0'}{$Think.lang.ds_guest}
+                                {elseif $v.consult_isanonymous == '1'}
+                                {:str_cut($v.member_name,2)}***
+                                {else /}
+                                <a href="javascript:void(0)">{:str_cut($v.member_name,8)}</a>
+                                {/if}
+                                &nbsp;<span>{$Think.lang.consulting_type}：{$consult_type[$v.consulttype_id]['consulttype_name']}</span>
+                                <time datetime="{:date('Y-m-d H:i:s',$v.consult_addtime)}" pubdate="pubdate" class="ml20">{:date('Y-m-d H:i:s',$v.consult_addtime)}</time>
+                            </dd>
+                        </dl>
+                        <dl class="ask-con">
+                            <dt>{$Think.lang.goods_index_consult_content}{$Think.lang.ds_colon}</dt>
+                            <dd>
+                                <p>{:nl2br($v.consult_content)}</p>
+                            </dd>
+                        </dl>
+                        {if $v.consult_reply != ''}
+                        <dl class="reply">
+                            <dt>{$Think.lang.goods_index_platform_reply}</dt>
+                            <dd>
+                                <p>{:nl2br($v.consult_reply)}</p>
+                                <time datetime="{:date('Y-m-d H:i:s',$v.consult_replytime)}" pubdate="pubdate">
+                                    [{:date('Y-m-d H:i:s',$v.consult_replytime)}]
+                                </time>
+                            </dd>
+                        </dl>
+                        {/if}
+                    </div>
+                    {/foreach}
+                    <div class="tr pr5 pb5">
+                        <div class="pagination"> {$show_page|raw}</div>
+                    </div>
+                    {else /}
+                    <div class="dss-norecord">{$Think.lang.goods_index_no_reply}</div>
+                    {/notempty}
+                </div>
+            </div>
+            {if $consult_able}
+            <!-- S 咨询表单部分 -->
+            <div class="dss-goods-title-bar" id="askQuestion">
+                <h4>{$Think.lang.published_consulting}</h4>
+            </div>
+            <form method="post" id="message" action="{:url('Goods/save_consult')}">
+                <input type="hidden" name="__token__" value="{:token()}" />
+                {notpresent name="type_name"}
+                <input type="hidden" name="goods_id" value="{$Request.param.goods_id}"/>
+                {/notpresent}
+                <div class="dss-consult-form">
+                    {notempty name="consult_type"}
+                    <dl>
+                        <dt>{$Think.lang.consulting_type}：</dt>
+                        <dd>
+                            {foreach name="consult_type" item="val"}
+                            <label>
+                                <input type="radio" {if $key== '1'}checked="checked"{/if} dstype="ctype{$val.consulttype_id}" name="consult_type_id" class="radio" value="{$val.consulttype_id}" />
+                                {$val.consulttype_name}
+                            </label>
+                            {/foreach}
+                        </dd>
+                    </dl>
+                    {/notempty}
+                    {foreach name="consult_type" item="val"}
+                    <div class="dss-consult-type-intro" {if $key !='1' }style="display:none;" {/if} dstype="ctype{$val.consulttype_id}"> {$val.consulttype_introduce|raw}</div>
+                    {/foreach}
+                <div>
+                    {if session('member_id')}
+                    <label><strong>{$Think.lang.login_index_username}{$Think.lang.ds_colon}</strong>{:session('member_name')}</label>
+                    <label for="gbCheckbox">
+                        <input type="checkbox" class="checkbox" name="hide_name" value="hide" id="gbCheckbox">
+                        {$Think.lang.goods_index_anonymous_publish}</label>
+                    {/if}
+                </div>
+                <dl class="dss-consult">
+                    <dt>{$Think.lang.consulting_content}：</dt>
+                    <dd>
+                        <textarea name="goods_content" id="textfield3" class="textarea w700 h60"></textarea>
+                        <span id="consultcharcount"></span></dd>
+                </dl>
+                <dl>
+                    <dt>&nbsp;</dt>
+                    <dd>
+                        {if $Think.config.ds_config.captcha_status_goodsqa == '1'}
+                        <input name="captcha" class="text w60" type="text" id="captcha" size="4" placeholder="{$Think.lang.goods_index_checkcode}" autocomplete="off" maxlength="4"/>
+                        <div class="code">
+                            <div class="arrow"></div>
+                            <div class="code-img">
+                                <a href="javascript:void(0)">
+                                    <img src="{:url('Seccode/makecode')}" name="codeimage" border="0" id="codeimage" onclick="this.src='{:url('Seccode/makecode')}?'+(new Date().getTime())"/>
+                                </a>
+                            </div>
+                            <a href="JavaScript:void(0);" id="hide" class="close" title="{$Think.lang.ds_close}"><i></i></a>
+                            </a>
+                        </div>
+                        {/if}
+                        <a href="JavaScript:void(0);" dstype="consult_submit" title="{$Think.lang.goods_index_publish_consult}" class="dss-btn dss-btn-red">{$Think.lang.goods_index_publish_consult}</a>
+                    </dd>
+                    <dd dstype="error_msg"></dd>
+                </dl>
+            </form>
+            <!-- E 咨询表单部分 -->
+            {/if}
+        </div>
+    </div>
+        <div class="dss-sidebar">
+            <div class="dss-sidebar-container mb10">
+                <div class="title">
+                    <h4>{$Think.lang.product_information}</h4>
+                </div>
+                <div class="content">
+                    <dl class="dss-comment-goods">
+                        <dt class="goods-name"><a href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}"> {$goods.goods_name} </a>
+                        </dt>
+                        <dd class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}">
+                            <img src="{:goods_cthumb($goods.goods_image,240)}" alt="{$goods.goods_name}"> </a></dd>
+                        <dd class="goods-price">{$Think.lang.goods_index_goods_price|raw}{$Think.lang.ds_colon}<em class="saleP">{$Think.lang.currency}{$goods.goods_price}</em></dd>
+                        <dd class="goods-raty">{$Think.lang.goods_index_evaluation}{$Think.lang.ds_colon}
+                            <span class="raty" data-score="{$goods.evaluation_good_star}"></span>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.charCount.js"></script>
+<script>
+    $(function () {
+        $('.raty').raty({
+            path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+            readOnly: true,
+        });
+        {if $consult_able}
+            $('a[dstype="consult_submit"]').click(function () {
+                $('#message').submit();
+            });
+
+            $('#message').validate({
+                errorPlacement: function (error, element) {
+                    $('dd[dstype="error_msg"]').append(error);
+                },
+                submitHandler: function (form) {
+                    ds_ajaxpost('message');
+                },
+                onkeyup: false,
+                rules: {
+                    goods_content: {
+                        required: true,
+                        maxlength: 120
+                    }
+        {if $Think.config.ds_config.captcha_status_goodsqa == '1'}
+        ,captcha: {
+                required : true,
+                    remote   : {
+                    url : "{:url('Seccode/check')}",
+                        type:'get',
+                        data:{
+                        captcha : function(){
+                            return $('#captcha').val();
+                        }
+                    },
+                    complete: function(data) {
+                        if(data.responseText == 'false') {
+                            document.getElementById('codeimage').src='{:url('Seccode/makecode')}';
+                        }
+                    }
+                }
+            }
+       {/if}
+        },
+            messages : {
+                goods_content : {
+                    required : '{$Think.lang.goods_index_cosult_not_null}',
+                    maxlength:'{$Think.lang.goods_index_max_120}'
+                }
+                {if $Think.config.ds_config.captcha_status_goodsqa == '1'}
+                ,captcha: {
+                    required : '{$Think.lang.wrong_null}',
+                    remote   : '{$Think.lang.login_index_wrong_checkcode}'
+                }
+                {/if}
+            }
+        });
+
+            // textarea 字符个数动态计算
+            $("#textfield3").charCount({
+                allowed: 120,
+                warning: 10,
+                counterContainerID: 'consultcharcount',
+                firstCounterText: '{$Think.lang.goods_index_textarea_note_one}',
+                endCounterText: '{$Think.lang.goods_index_textarea_note_two}',
+                errorCounterText: '{$Think.lang.goods_index_textarea_note_three}'
+            });
+        {/if}
+        $('input[type="radio"]').click(function () {
+            $('div[dstype^="ctype"]').hide();
+            $('div[dstype="' + $(this).attr('dstype') + '"]').show();
+        });
+        //Hide Show verification code
+        $("#hide").click(function () {
+            $(".code").fadeOut("slow");
+        });
+        $("#captcha").focus(function () {
+            $(".code").fadeIn("fast");
+        });
+    });
+</script>
+
+
+{/block}

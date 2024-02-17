@@ -1,0 +1,78 @@
+{include file="public/header" /}
+{include file="public/topnav" /}
+<div class="admincp-container">
+    <div class="admincp-container-left">
+        {include file="public/left" /}
+    </div>
+    <div class="admincp-container-right">
+        <div class="top-border"></div>
+        <iframe src="{:url('Dashboard/index')}" id="main-frame" name="main-frame" style="overflow: visible;" frameborder="0" width="100%" height="94%" scrolling="yes" onload="window.parent"></iframe>
+    </div>
+</div>
+<script>
+            $(function() {
+                $('#welcome,dashboard,dashboard').addClass('active');
+                if ($.cookie('now_location_controller') != null) {
+                    openItem($.cookie('now_location_action') + ',' + $.cookie('now_location_controller') + ',' + $.cookie('now_location_module'));
+                } else {
+                    $('#mainMenu>ul').first().css('display', 'block');
+                    //第一次进入后台时，默认定到欢迎界面
+                    $('#item_welcome').addClass('selected');
+                    $('#workspace').attr('src', ADMINSITEURL+'/Dashboard/welcome.html');
+                }
+                $('#iframe_refresh').click(function() {
+                    var fr = document.frames ? document.frames("workspace") : document.getElementById("workspace").contentWindow;
+                    fr.location.reload();
+                });
+            });
+
+
+            function openItem(args) {
+                spl = args.split(',');
+                action = spl[0];
+                try {
+                    controller = spl[1];
+                    module = spl[2];
+                }
+                catch (ex) {
+                }
+                if (typeof(controller) == 'undefined') {
+                    var module = args;
+                }
+                //顶部导航样式处理
+                $('.actived').removeClass('actived');
+                $('#nav_' + module).addClass('actived');
+                //清除左侧样式
+                $('.selected').removeClass('selected');
+
+                //show
+                $('#mainMenu ul').css('display', 'none');
+                $('#sort_' + module).css('display', 'block');
+                if (typeof(controller) == 'undefined') {
+                    //顶部菜单事件
+                    html = $('#sort_' + module + '>li').first().html();
+                    str = html.match(/openItem\('(.*)'\)/ig);
+                    arg = str[0].split("'");
+                    spl = arg[1].split(',');
+                    action = spl[0];
+                    controller = spl[1];
+                    module = spl[2];
+                    first_obj = $('#sort_' + module + '>li').first();
+                    $(first_obj).addClass('selected');
+                } else {
+                    //左侧菜单事件
+                    //location
+                    $.cookie('now_location_module', module);
+                    $.cookie('now_location_controller', controller);
+                    $.cookie('now_location_action', action);
+                    $("#left_"+ module + controller + action).addClass('selected');
+                    
+                }
+                src = ADMINSITEURL + '/' + controller + '/' + action + '/';
+                $('#main-frame').attr('src', src);
+            }
+</script>
+
+{include file="public/footer" /} 
+
+

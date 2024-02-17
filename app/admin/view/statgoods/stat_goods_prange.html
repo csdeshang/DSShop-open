@@ -1,0 +1,144 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>商品分析</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+   <div class="fixed-empty"></div>
+  <form method="get"  name="formSearch" id="formSearch">
+      <div class="ds-search-form">
+          <dl>
+              <dd id="searchgc_td"></dd>
+              <input type="hidden" id="choose_gcid" name="choose_gcid" value="0"/>
+              <dd>
+                  <select name="search_type" id="search_type" class="querySelect">
+                      <option value="day" {if isset($search_arr.search_type) && $search_arr.search_type == 'day'}selected{/if}>按照天统计</option>
+                      <option value="week" {if isset($search_arr.search_type) && $search_arr.search_type == 'week'}selected{/if}>按照周统计</option>
+                      <option value="month" {if isset($search_arr.search_type) && $search_arr.search_type == 'month'}selected{/if}>按照月统计</option>
+                  </select>
+              </dd>
+              <dd id="searchtype_day" style="display:none;">
+                  <input class="txt date" type="text" value="{:date('Y-m-d',$search_arr.day.search_time)}" id="search_time" name="search_time">
+              </dd>
+              <dd id="searchtype_week" style="display:none;">
+                  <select name="searchweek_year" class="querySelect">
+                      {foreach name="year_arr" item="v"}
+                      <option value="{$key}" {$search_arr.week.current_year == $key ?'selected':''}>{$v}</option>
+                      {/foreach}
+                  </select>
+                  <select name="searchweek_month" class="querySelect">
+                      {foreach name="month_arr" item="v"}
+                      <option value="{$key}" {$search_arr.week.current_month == $key ?'selected':''}>{$v}</option>
+                      {/foreach}
+                  </select>
+                  <select name="searchweek_week" class="querySelect">
+                      {foreach name="week_arr" item="v"}
+                      <option value="{$v.key}" {$search_arr.week.current_week == $key ?'selected':''}>{$v.val}</option>
+                      {/foreach}
+                  </select>
+              </dd>
+              <dd id="searchtype_month" style="display:none;">
+                  <select name="searchmonth_year" class="querySelect">
+                      {foreach name="year_arr" item="v"}
+                      <option value="{$key}" {$search_arr.month.current_year == $key ?'selected':''}>{$v}</option>
+                      {/foreach}
+                  </select>
+                  <select name="searchmonth_month" class="querySelect">
+                      {foreach name="month_arr" item="v"}
+                      <option value="{$key}" {$search_arr.month.current_month == $key ? 'selected':''}>{$v}</option>
+                      {/foreach}
+                  </select>
+              </dd>
+          </dl>
+            <div class="btn_group">
+                <a href="javascript:void(0);" id="dssubmit" class="btn tooltip">{$Think.lang.ds_query}</a>
+                <a href="{:url('Statgoods/pricerange')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+
+  <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.stat_validorder_explain}</li>
+            <li>点击“设置价格区间”进入设置价格区间页面，下方统计图将根据您设置的价格区间进行统计</li>
+            <li>统计图展示符合搜索条件的有效订单中的商品单价，在所设置的价格区间的分布情况</li>
+        </ul>
+    </div>
+
+  <table class="ds-default-table">
+	<thead class="thead">
+		<tr class="space">
+			<th colspan="15">价格销量分布（<a href="{:url('Statgeneral/setting')}" style="font-size:12px; font-weight:normal;">设置价格区间</a>）</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+              {if $pricerange_statjson}
+              <div id="container_pricerange" class="w100pre close_float" style="height:400px"></div>
+              {else /}
+              <div class="w100pre close_float align-center h36 mt10">查看分布情况前，请先设置价格区间。
+                <a href="{:url('Statgeneral/setting')}" style="font-size:12px; font-weight:normal;">马上设置</a>
+              </div>
+              {/if}
+			</td>
+		</tr>
+	</tbody>
+  </table>
+</div>
+
+<script src="{$Think.PLUGINS_SITE_ROOT}/highcharts/highcharts.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/statistics.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<script>
+//展示搜索时间框
+function show_searchtime(){
+    s_type = $("#search_type").val();
+    $("[id^='searchtype_']").hide();
+    $("#searchtype_"+s_type).show();
+}
+$(function () {
+    //统计数据类型
+    var s_type = $("#search_type").val();
+    $('#search_time').datepicker({dateFormat: 'yy-mm-dd'});
+
+    show_searchtime();
+    $("#search_type").change(function(){
+        show_searchtime();
+    });
+
+    //更新周数组
+    $("[name='searchweek_month']").change(function(){
+        var year = $("[name='searchweek_year']").val();
+        var month = $("[name='searchweek_month']").val();
+        $("[name='searchweek_week']").html('');
+        $.getJSON(ADMINSITEURL+'/Common/getweekofmonth.html',{y:year,m:month},function(data){
+            if(data != null){
+                for(var i = 0; i < data.length; i++) {
+                    $("[name='searchweek_week']").append('<option value="'+data[i].key+'">'+data[i].val+'</option>');
+                }
+            }
+        });
+    });
+
+    $('#container_pricerange').highcharts({$pricerange_statjson|raw});
+
+    $('#dssubmit').click(function(){
+        $('#formSearch').submit();
+    });
+
+    //商品分类
+    init_gcselect({$gc_choose_json|raw},{$gc_json|raw});
+});
+</script>

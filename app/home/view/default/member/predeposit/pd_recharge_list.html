@@ -1,0 +1,84 @@
+{extend name="default/base/base_member" /}
+{block name="member_btn"}
+<a class="dsm-btn dsm-btn-orange" title="{$Think.lang.predeposit_online_recharge}" href="{:url('Predeposit/recharge_add')}"> <i class="iconfont">&#xe6f0;</i> {$Think.lang.predeposit_online_recharge} </a>
+{/block}
+{block name="member_main"}
+
+
+
+
+<div class="alert"><span class="mr30">{$Think.lang.predeposit_pricetype_available}{$Think.lang.ds_colon}<strong class="mr5 red" style="font-size: 18px;">{$member_info.available_predeposit}</strong>{$Think.lang.ds_yuan}</span><span>{$Think.lang.predeposit_pricetype_freeze}{$Think.lang.ds_colon}<strong class="mr5 blue" style="font-size: 18px;">{$member_info.freeze_predeposit}</strong>{$Think.lang.ds_yuan}</span></div>
+        <form method="get">
+            <table class="dsm-search-table">
+                <tr>
+                    <td>&nbsp;</td>
+                    <th>{$Think.lang.predeposit_rechargesn}</th>
+                    <td class="w160 tc"><input type="text" class="text w150" name="pdr_sn" value="{$Request.param.pdr_sn}"/></td>
+                    <td class="w70 tc">
+                        <input type="submit" class="submit" value="{$Think.lang.ds_search}" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <table class="dsm-default-table">
+            <thead>
+                <tr>
+                    <th>{$Think.lang.predeposit_rechargesn}</th>
+                    <th class="w150">{$Think.lang.predeposit_addtime}</th>
+                    <th class="w150">{$Think.lang.ds_payment_method}</th>
+                    <th class="w150">{$Think.lang.predeposit_recharge_price}({$Think.lang.ds_yuan})</th>
+                    <th class="w150">{$Think.lang.ds_state}</th>
+                    <th class="w110">{$Think.lang.ds_handle}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {notempty name="predeposit_list"}
+                {foreach name="predeposit_list" item="val" }
+                <tr class="bd-line">
+                    <td>{$val.pdr_sn}</td>
+                    <td>{$val.pdr_addtime|date="Y-m-d H:i:s"}</td>
+                    <td>{:get_order_payment_name($val['pdr_payment_code'])}</td>
+                    <td class="red">+{$val.pdr_amount}</td>
+                    <td>{if intval($val['pdr_payment_state'])}{$Think.lang.predeposit_rechargepaysuccess}{else/}{$Think.lang.predeposit_rechargewaitpaying}{/if}</td>
+                    <td class="dsm-table-handle">
+                        {if !intval($val['pdr_payment_state'])}
+                        <span><a class="btn-green" href="{:url('Buy/pd_pay',['pay_sn'=>$val.pdr_sn])}"> <i class="iconfont">&#xe6f0;</i>
+                                <p>{$Think.lang.predeposit_pay}</p>
+                            </a></span> <span><a class="btn-red" href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('Predeposit/recharge_del',['id'=>$val.pdr_id])}','{$Think.lang.ds_ensure_del}');"><i class="iconfont">&#xe725;</i>
+                                <p>{$Think.lang.ds_delete}</p>
+                            </a></span>
+                        {else/}
+                        <span><a href="{:url('Predeposit/recharge_show',['id'=>$val.pdr_id])}" class="btn-blue"><i class="iconfont">&#xe70b;</i>
+                                <p>{$Think.lang.ds_view}</p>
+                            </a></span>
+                        {/if}
+                    </td>
+                </tr>
+                {/foreach}
+                {else/}
+                <tr>
+                    <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+                </tr>
+                {/notempty}
+            </tbody>
+            <tfoot>
+                {notempty name="predeposit_list"}
+                <tr>
+                    <td colspan="20"><div class="pagination">{$show_page|raw}</div></td>
+                </tr>
+                {/notempty}
+            </tfoot>
+        </table>
+
+
+
+
+
+
+
+
+
+{/block}
+
+
+

@@ -1,0 +1,228 @@
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home.css">
+<div class="header clearfix">
+    <div class="w1200">
+        <div class="logo">
+            <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+        </div>
+        <div class="top_search">
+            <div class="top_search_box">
+                <div id="search">
+                    <ul class="tab" dstype="{$Request.controller}">
+                        <li class="current"><span>{$Think.lang.ds_goods}</span></li>
+                    </ul>
+                </div>
+                <div class="form_fields">
+                    <form class="search-form" id="search-form" method="get" action="{:url('Search/index')}">
+                        <input placeholder="{$Think.lang.search_merchandise_keywords}" name="keyword" id="keyword" type="text" class="keyword" value="{$Request.param.keyword}" maxlength="60" />
+                        <input type="submit" id="button" value="{$Think.lang.ds_search}" class="submit">
+                    </form>
+                </div>
+            </div>
+            <ul class="top_search_keywords">
+                {foreach name="hot_search" item="hot_keyword" key="hot_k" }
+                <li {if $hot_k==0}class="first"{/if}><a href="{$Think.HOME_SITE_URL}/Search/index.html?keyword={$hot_keyword}">{$hot_keyword}</a></li>
+                {/foreach}
+            </ul>
+        </div>
+        <div class="user_menu">
+            <dl class="my-mall">
+                <dt><span class="ico iconfont">&#xe702;</span>{$Think.lang.ds_user_center}<i class="arrow"></i></dt>
+                <dd>
+                    <div class="sub-title">
+                        <h4></h4>
+                        <a href="{:url('Member/index')}" class="arrow">{$Think.lang.ds_my_user_center}<i></i></a>
+                    </div>
+                    <div class="user-centent-menu">
+                        <ul>
+                            <li><a href="{:url('Membermessage/message')}">{$Think.lang.ds_message}(<span>{if session('member_id')}{$message_num|default=0}{else}0{/if}</span>)</a></li>
+                            <li><a href="{:url('Memberorder/index')}" class="arrow">{$Think.lang.ds_my_order}<i></i></a></li>
+                            <li><a href="{:url('Memberconsult/index')}">{$Think.lang.ds_consulting_reply}(<span id="member_consult">0</span>)</a></li>
+                            <li><a href="{:url('Memberfavorites/fglist')}" class="arrow">{$Think.lang.ds_favorites}<i></i></a></li>
+                            <li><a href="{:url('Membervoucher/index')}">{$Think.lang.ds_vouchers}(<span id="member_voucher">0</span>)</a></li>
+                            <li><a href="{:url('Memberpoints/index')}" class="arrow">{$Think.lang.ds_my_points}<i></i></a></li>
+                        </ul>
+                    </div>
+                    <div class="browse-history">
+                        <div class="part-title">
+                            <h4>{$Think.lang.ds_recently_browsed_items}</h4>
+                            <span style="float:right;"><a href="{:url('Membergoodsbrowse/listinfo')}">{$Think.lang.ds_full_history}</a></span>
+                        </div>
+                        <ul>
+                            <li class="no-goods"><img class="loading" src="{$Think.HOME_SITE_ROOT}/images/loading.gif"></li>
+                        </ul>
+                    </div>
+                </dd>
+            </dl>
+            <dl class="my-cart">
+                <dt><span class="ico iconfont">&#xe69a;</span>{$Think.lang.ds_shopping_cart_settlement}<i class="arrow"></i></dt>
+                <dd>
+                    <div class="sub-title">
+                        <h4>{$Think.lang.ds_latest_additions}</h4>
+                    </div>
+                    <div class="incart-goods-box">
+                        <div class="incart-goods"><div class="no-order"><span>{$Think.lang.ds_shopping_cart_empty}</span></div></div>
+                    </div>
+                    <div class="checkout"> <span class="total-price"></span><a href="{:url('Cart/index')}" class="btn-cart">{$Think.lang.ds_checkout_cart}</a> </div>
+                </dd>
+                <div class="addcart-goods-num">{$cart_goods_num}</div>
+            </dl>
+        </div>
+    </div>
+</div>
+
+
+<div class="mall_nav">
+    <div class="w1200">
+        <div class="all_categorys">
+            <div class="mt">
+                <i></i>
+                <h3><a href="{:url('Category/goods')}">{$Think.lang.ds_all_commodity_classes}</a></h3>
+            </div>
+            <div class="mc">
+                <ul class="menu">
+                    {notempty name="header_categories"}
+                    {php}$i = 0;{/php}
+                    {foreach name="header_categories" item="val" key="key" }
+                    {php}$i++;{/php}
+                    <li cat_id="{$val.gc_id}" {if $i>11}style="display:none;"{/if}>
+                        <div class="class">
+                            <span class="arrow"></span>
+                            {notempty name="$val.pic"}
+                            <span class="ico"><img src="{$val.pic}"></span>
+                            {else/}
+                            <span class="iconfont category-ico-{$i}"></span>
+                            {/notempty}
+                            <h4><a href="{:url('Search/index',['cate_id'=>$val.gc_id])}">{$val.gc_name}</a></h4>
+                        </div>
+                        <div class="sub-class" cat_menu_id="{$val.gc_id}">
+                            <div class="sub-class-content">
+                                <div class="recommend-class">
+                                    {notempty name="$val.cn_classs"}
+                                    {foreach name="$val.cn_classs" item="v" key="k" }
+                                    <span><a href="{:url('Search/index',['cate_id'=>$v.gc_id])}" title="{$v.gc_name}">{$v.gc_name}</a></span>
+                                    {/foreach}
+                                    {/notempty}
+                                </div>
+                                {notempty name="$val.class2"}
+                                {foreach name="$val.class2" item="v" key="k" }
+                                <dl>
+                                    <dt>
+                                    <h3><a href="{:url('Search/index',['cate_id'=>$v.gc_id])}">{$v.gc_name}</a></h3>
+                                    </dt>
+                                    <dd class="goods-class">
+                                        {notempty name="$v.class3"}
+                                        {foreach name="$v.class3" item="v3" key="k3" }
+                                        <a href="{:url('Search/index',['cate_id'=>$v3.gc_id])}">{$v3.gc_name}</a>
+                                        {/foreach}
+                                        {/notempty}
+                                    </dd>
+                                </dl>
+                                {/foreach}
+                                {/notempty}
+                            </div>
+                            <div class="sub-class-right">
+                                {notempty name="$val.cn_brands"}
+                                <div class="brands-list">
+                                    <ul>
+                                        {foreach name="$val.cn_brands" item="brand"}
+                                        <li>
+                                            <a href="{:url('Brand/brand_goods',['brand_id'=>$brand.brand_id])}" title="{$brand.brand_name}">{if ($brand['brand_pic'] != '')}<img src="{:brand_image($brand['brand_pic'])}"/>{/if}
+                                                <span>{$brand.brand_name}</span>
+                                            </a>
+                                        </li>
+                                       {/foreach}
+                                    </ul>
+                                </div>
+                                {/notempty}
+                                <div class="adv-promotions">
+                                    {if isset($val.goodscn_adv1) && $val.goodscn_adv1 != ''}
+                                    <a {if $val.goodscn_adv1_link == ''}href="javascript:;"{else/}target="_blank" href="{$val.goodscn_adv1_link}{/if}><img src="{$val.goodscn_adv1}" data-url="{$val.goodscn_adv1}" class="scrollLoading" /></a>
+                                    {/if}
+                                    {if isset($val.goodscn_adv2) && $val.goodscn_adv2 != ''}
+                                    <a {if $val.goodscn_adv2_link == ''}href="javascript:;"{else/}target="_blank" href="{$val.goodscn_adv2_link}{/if}><img src="{$val.goodscn_adv2}" data-url="{$val.goodscn_adv2}" class="scrollLoading" /></a>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {/foreach}
+                    {/notempty}
+                </ul>
+            </div>
+        </div>
+        <div class="nav_list">
+            <ul class="site_menu">
+                <li><a href="{:url('Index/index')}" class="current">{$Think.lang.ds_index}</a></li>
+                {foreach $navs.middle as $nav}
+                <li><a href="{$nav.nav_url}" {if $nav.nav_new_open == 1}target="_blank"{/if}>{$nav.nav_title}</a></li>
+                {/foreach}
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!--面包屑导航 BEGIN-->
+{notempty name="nav_link_list"}
+<div class="dsh-breadcrumb-layout">
+    <div class="dsh-breadcrumb w1200"><i class="iconfont">&#xe6ff;</i>
+        {foreach $nav_link_list as $nav_link} 
+        {empty name="nav_link.link"}
+        <span>{$nav_link.title}</span>
+        {else /}
+        <span><a href="{$nav_link.link}">{$nav_link.title}</a></span><span class="arrow">></span>
+        {/empty}
+        {/foreach}
+    </div>
+</div>
+{/notempty}
+<!--面包屑导航 END-->
+
+
+<script>
+    $(function() {
+	//首页左侧分类菜单
+	$(".all_categorys ul.menu").find("li").each(
+		function() {
+			$(this).hover(
+				function() {
+				    var cat_id = $(this).attr("cat_id");
+					var menu = $(this).find("div[cat_menu_id='"+cat_id+"']");
+					menu.show();
+					$(this).addClass("hover");					
+					var menu_height = menu.height();
+					if (menu_height < 60) menu.height(80);
+					menu_height = menu.height();
+					var li_top = $(this).position().top;
+					$(menu).css("top",-li_top + 40);
+				},
+				function() {
+					$(this).removeClass("hover");
+				    var cat_id = $(this).attr("cat_id");
+					$(this).find("div[cat_menu_id='"+cat_id+"']").hide();
+				}
+			);
+		}
+	);
+
+        $(".user_menu dl").hover(function() {
+            $(this).addClass("hover");
+        }, function() {
+            $(this).removeClass("hover");
+        });
+        $('.user_menu .my-mall').mouseover(function() {
+            // 最近浏览的商品
+            load_history_information();
+            $(this).unbind('mouseover');
+        });
+        $('.user_menu .my-cart').mouseover(function() {
+            // 运行加载购物车
+            load_cart_information();
+            $(this).unbind('mouseover');
+        });
+    });
+    
+</script>

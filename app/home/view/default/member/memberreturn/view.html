@@ -1,0 +1,114 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+<div class="dsm-flow-layout">
+    <div class="dsm-flow-container">
+        <div class="title">
+            <h3>{$Think.lang.refund_service}</h3>
+        </div>
+        <div class="alert">
+            <h4>{$Think.lang.prompt}：</h4>
+            <ul>
+                <li>{$Think.lang.notice_application_refund1|raw}</li>
+                <li>{$Think.lang.notice_application_refund2|raw}</li>
+            </ul>
+        </div>
+        <div id="saleRefundreturn" show_id="1">
+            <div class="dsm-flow-step">
+                <dl class="step-first current">
+                    <dt>{$Think.lang.buyer_application_return}</dt>
+                    <dd class="bg"></dd>
+                </dl>
+                <dl class="current">
+                    <dt>{$Think.lang.processing_return_application}</dt>
+                    <dd class="bg"> </dd>
+                </dl>
+                <dl class="{if ($return['ship_time'] > 0 || $return['return_type']==1)}current{/if}">
+                    <dt>{$Think.lang.buyer_returns_merchant}</dt>
+                    <dd class="bg"> </dd>
+                </dl>
+                <dl class="{if $return.admin_time > 0 && $return['return_type']==1 || $return['goods_state']==4}current{/if}">
+                    <dt>{$Think.lang.confirm_receipt}</dt>
+                    <dd class="bg"> </dd>
+                </dl>
+            </div>
+            <div class="dsm-default-form">
+                <h3>{$Think.lang.my_return_refund_application}</h3>
+                <dl>
+                    <dt>{$Think.lang.return_refund_number}：</dt>
+                    <dd>{$return.refund_sn} </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.refund_reason}：</dt>
+                    <dd>{$return.reason_info} </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.refund_amount}：</dt>
+                    <dd>{$Think.lang.currency}{$return.refund_amount} </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.return_order_return}{$Think.lang.ds_colon}</dt>
+                    <dd>{if $return.return_type==2}{$return.goods_num}{else/}{$Think.lang.ds_none}{/if}</dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.refund_instructions_returns}：</dt>
+                    <dd>{$return.buyer_message} </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.proof_uploaded}：</dt>
+                    <dd>
+                        {notempty name="pic_list"}
+                        <ul class="dsm-evidence-pic">
+                            {foreach name="pic_list" item="val" key="key" }
+                            {notempty name="val"}
+                            <li><a href="{:ds_get_pic(ATTACH_PATH.'/refund',$val)}" data-lightbox="lightbox-image"> <img class="show_image" src="{:ds_get_pic(ATTACH_PATH.'/refund',$val)}"></a></li>
+                            {/notempty}
+                            {/foreach}
+                        </ul>
+                        {/notempty}
+                    </dd>
+                </dl>
+                {if ($return['examine_type'] == 2 && $return['return_type'] == 2 && $return['goods_state'] == 1 && $ship == 1)}
+                {include file="default/member/memberreturn/ship"}
+                {else/}
+                {if ($return['express_id'] > 0 && !empty($return['invoice_no']))}
+                <h3>{$Think.lang.my_return_shipping_information}</h3>
+                <dl>
+                    <dt>{$Think.lang.logistics_information}{$Think.lang.ds_colon}</dt>
+                    <dd>{$return_e_name},{$return.invoice_no}</dd>
+                </dl>
+                {/if}
+                {if ($return['refund_state'] >= 2)}
+                <h3>{$Think.lang.refund_check_mall}</h3>
+                <dl>
+                    <dt>{$Think.lang.platform_confirmation}{$Think.lang.ds_colon}</dt>
+                    <dd>{$admin_array[$return['refund_state']]}</dd>
+                </dl>
+                {/if}
+                {if $return.admin_time > 0}
+                <dl>
+                    <dt>{$Think.lang.remarks_platform}{$Think.lang.ds_colon}</dt>
+                    <dd>{$return.admin_message} </dd>
+                </dl>
+                {/if}
+                <div class="bottom"><a href="javascript:history.go(-1);" class="dsm-btn"><i class="iconfont">&#xe74e;</i>{$Think.lang.return_list}</a></div>
+                {/if}
+            </div>
+        </div>
+    </div>
+    {include file="default/member/memberrefund/member_refund_right"}
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+
+
+
+
+
+
+{/block}
+

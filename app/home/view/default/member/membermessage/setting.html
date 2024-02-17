@@ -1,0 +1,81 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+<div class="dsm-message-setting">
+    <form method="post" action="{:url('Membermessage/setting')}" id="setting_form">
+        <dl>
+            <dt><span><i class="iconfont">&#xe69a;</i></span>{$Think.lang.order_transaction_notification}</dt>
+            <dd>
+                <ul>
+                    <li>
+                        <input type="checkbox" name="order_payment_success" id="order_payment_success" value="1" {if $setting_array.order_payment_success}checked{/if} />
+                               <label for="order_payment_success">{$Think.lang.payment_success_prompt}</label></li>
+                    <li>
+                        <input type="checkbox" name="order_deliver_success" id="order_deliver_success" value="1" {if $setting_array.order_deliver_success}checked{/if} />
+                               <label for="order_deliver_success">{$Think.lang.goods_delivery_prompt}</label></li>
+                    <li>
+                        <input type="checkbox" name="vr_code_will_expire" id="vr_code_will_expire" value="1" {if $setting_array.vr_code_will_expire}checked{/if} />
+                               <label for="vr_code_will_expire">{$Think.lang.reminder_redemption_code_expire}</label></li>
+                </ul>
+            </dd>
+        </dl>
+        <dl>
+            <dt><span><i class="iconfont">&#xe6a1;</i></span>{$Think.lang.reminder_balance_card}</dt>
+            <dd>
+                <ul>
+                    <li>
+                        <input type="checkbox" name="predeposit_change" id="predeposit_change" value="1" {if $setting_array.predeposit_change}checked{/if} />
+                               <label for="predeposit_change">{$Think.lang.balance_change_reminder}</label></li>
+                    <li>
+                        <input type="checkbox" name="recharge_card_balance_change" id="recharge_card_balance_change" value="1" {if $setting_array.recharge_card_balance_change}checked{/if} />
+                               <label for="recharge_card_balance_change">{$Think.lang.recharge_card_balance_reminder}</label></li>
+                    <li>
+                        <input type="checkbox" name="voucher_use" id="voucher_use" value="1" {if $setting_array.voucher_use}checked{/if} />
+                               <label for="voucher_use">{$Think.lang.voucher_use_reminder}</label></li>
+                    <li>
+                        <input type="checkbox" name="voucher_will_expire" id="voucher_will_expire" value="1" {if $setting_array.voucher_will_expire}checked{/if} />
+                               <label for="voucher_will_expire">{$Think.lang.voucher_about_expire}</label></li>
+                </ul>
+            </dd>
+        </dl>
+        <dl>
+            <dt><span><i class="iconfont">&#xe615;</i></span>{$Think.lang.service_message}</dt>
+            <dd>
+                <ul>
+                    <li>
+                        <input type="checkbox" name="refund_return_notice" id="refund_return_notice" value="1" {if $setting_array.refund_return_notice}checked{/if} />
+                               <label for="refund_return_notice">{$Think.lang.return_service_messageexchange_message}</label></li>
+                    <li>
+                        <input type="checkbox" name="arrival_notice" id="arrival_notice" value="1" {if $setting_array.arrival_notice}checked{/if} />
+                               <label for="arrival_notice">{$Think.lang.arrival_notification_message}</label></li>
+                    <li>
+                        <input type="checkbox" name="consult_goods_reply" id="consult_goods_reply" value="1" {if $setting_array.consult_goods_reply}checked{/if} />
+                               <label for="consult_goods_reply">{$Think.lang.prompt_consultation_reply}</label></li>
+                    <li>
+                        <input type="checkbox" name="consult_mall_reply" id="consult_mall_reply" value="1" {if $setting_array.consult_mall_reply}checked{/if} />
+                               <label for="consult_mall_reply">{$Think.lang.platform_consultation_response_prompt}</label></li>
+                </ul>
+            </dd>
+        </dl>
+        <div class="bottom tc">
+            <input id="btn_inform_submit" type="submit" class="submit" value="{$Think.lang.ds_submit}" />
+        </div>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('#setting_form').validate({
+            submitHandler:function(form){
+                ds_ajaxpost('setting_form');
+            },
+        });
+    });
+</script>
+
+
+
+
+
+
+{/block}

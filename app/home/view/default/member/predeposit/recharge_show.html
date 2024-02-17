@@ -1,0 +1,51 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<div class="dsm-default-form">
+    <dl>
+        <dt>{$Think.lang.predeposit_rechargesn}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdr_sn}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.ds_payment_method}{$Think.lang.ds_colon}</dt>
+        <dd>{:get_order_payment_name($info['pdr_payment_code'])}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.predeposit_recharge_price}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdr_amount}{$Think.lang.ds_yuan}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.predeposit_addtime}{$Think.lang.ds_colon}</dt>
+        <dd><?php echo @date('Y-m-d H:i:s',$info['pdr_addtime']); ?></dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.predeposit_paytime}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdr_paymenttime|date="Y-m-d H:i:s"}</dd>
+    </dl>
+    <dl>
+        <dt>{:get_order_payment_name($info['pdr_payment_code'])}{$Think.lang.predeposit_trade_no}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdr_trade_sn}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.ds_state}{$Think.lang.ds_colon}</dt>
+        <dd>{if !intval($info['pdr_payment_state'])}{$Think.lang.predeposit_rechargewaitpaying}{else/}{$Think.lang.predeposit_rechargepaysuccess}{/if}</dd>
+    </dl>
+    <dl class="sumbit">
+        <dt>&nbsp;</dt>
+        <dd>
+            <input type="submit"  class="submit" value="{$Think.lang.predeposit_backlist}" onclick="window.location = '<?php echo $_SERVER['HTTP_REFERER'];?>'"/>
+        </dd>
+    </dl>
+</div>
+
+
+
+
+
+
+
+
+{/block}
+

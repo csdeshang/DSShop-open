@@ -1,0 +1,69 @@
+<div class="dsc-receipt-info">
+    <div class="dsc-receipt-info-title">
+        <h3>{$Think.lang.consignee_information}</h3>
+        <a href="javascript:void(0)" ds_type="buy_edit" id="edit_reciver">[{$Think.lang.modification}]</a></div>
+    <div id="addr_list" class="dsc-candidate-items">
+        <ul>
+            <li>
+                <span class="true-name">{$address_info.address_realname}</span>
+                <span class="address">{$address_info.area_info}{$address_info.address_detail}</span>
+                <span class="phone"><i class="iconfont">&#xe60e;</i>{if condition="$address_info.address_mob_phone"}{$address_info.address_mob_phone}{else}{$address_info.address_tel_phone}{/if}</span>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<script type="text/javascript">
+//隐藏收货地址列表
+    function hideAddrList(addr_id, true_name, address, phone) {
+        $('#edit_reciver').show();
+        $("#address_id").val(addr_id);
+        $("#addr_list").html('<ul><li><span class="true-name">' + true_name + '</span><span class="address">' + address + '</span><span class="phone"><i class="iconfont">&#xe60e;</i>' + phone + '</span></li></ul>');
+        $('.current_box').removeClass('current_box');
+        ableOtherEdit();
+        $('#edit_payment').click();
+    }
+//加载收货地址列表
+    $('#edit_reciver').on('click', function() {
+        $(this).hide();
+        disableOtherEdit('{$Think.lang.save_consignee_information} ');
+        $(this).parent().parent().addClass('current_box');
+        var url = HOMESITEURL + '/Buy/load_addr.html';
+        $('#addr_list').load(url);
+    });
+    
+//异步显示运费 city_id计算运费area_id计算是否支持货到付款
+    function showShippingPrice(city_id, area_id) {
+        $('#buy_city_id').val(city_id);
+        var url = HOMESITEURL + '/Buy/change_addr.html';
+        $.post(url, {'freight_hash': '{$freight_hash}',city_id: city_id, 'area_id': area_id}, function(data) {
+            if (data.state == 'success') {
+                $('#buy_city_id').val(city_id);
+                $('#allow_offpay').val(data.allow_offpay);
+                if (data.allow_offpay_batch) {
+                    var arr = new Array();
+                    $.each(data.allow_offpay_batch, function(k, v) {
+                        arr.push('' + k + ':' + (v ? 1 : 0));
+                    });
+                    $('#allow_offpay_batch').val(arr.join(";"));
+                }
+                $('#offpay_hash').val(data.offpay_hash);
+                $('#offpay_hash_batch').val(data.offpay_hash_batch);
+                var content = data.content;
+                var amount = 0;
+                $('#eachFreight_').html(number_format(content,2));
+                amount = amount + parseFloat(content[i]);
+                calcOrder();
+            }
+
+        }, 'json');
+    }
+    $(function() {
+        {notempty name="$address_info.address_id"}
+            showShippingPrice({$address_info.city_id},{$address_info.area_id});
+        {else /}
+            $('#edit_reciver').click();
+        {/notempty}
+    });
+    
+</script>

@@ -1,0 +1,29 @@
+<div class="eject_con">
+  <div id="warning"></div>
+  {notempty name="order_info"}
+  <form action="{:url('Memberorder/change_state',['state_type'=>'order_receive','order_id'=>$order_info.order_id])}" method="post" id="confirm_order_form">
+    <h3 class="orange">{$Think.lang.member_change_ensure_receive1}</h3>
+    <dl>
+      <dt>{$Think.lang.member_change_order_no}{$Think.lang.ds_colon}</dt>
+      <dd>{$Request.param.order_sn}
+        <p class="hint">{$Think.lang.member_change_receive_tip}</p>
+      </dd>
+    </dl>
+    <div class="bottom">
+        <input type="submit" class="submit" id="confirm_yes" value="{$Think.lang.ds_ok}" />
+        <a class="dsm-btn ml5" href="javascript:DialogManager.close('buyer_order_confirm_order');">{$Think.lang.ds_cancel}</a>
+    </div>
+  </form>
+  {else /}
+  <p style="line-height:80px;text-align:center">{$Think.lang.check_parameters_correct}</p>
+  {/notempty}
+</div>
+<script>
+    $(document).ready(function(){
+        $('#confirm_order_form').validate({
+            submitHandler:function(form){
+                ds_ajaxpost('confirm_order_form');
+            }
+        });
+    });
+</script>

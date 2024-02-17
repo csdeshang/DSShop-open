@@ -1,0 +1,46 @@
+{include file="default/base/mall_top" /} 
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<script src="{$Think.HOME_SITE_ROOT}/js/goods_cart.js"></script>
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+    <ul class="dsc-flow">
+        <li class="current"><i class="iconfont">&#xe69a;</i>
+            <p>{$Think.lang.ds_my_shopping_cart}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe731;</i>
+            <p>{$Think.lang.cart_index_ensure_info}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe64f;</i>
+            <p>{$Think.lang.cart_index_payment}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe67e;</i>
+            <p>{$Think.lang.cart_index_buy_finish}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+    </ul>
+</div>
+<div class="dsc-line"></div>
+<div class="dsc-main">
+    <div class="dsc-null-shopping">
+        <i class="ico"></i>
+        <div class="fl">
+            <h4>{$Think.lang.cart_index_no_goods_in_cart}</h4>
+            <p>
+                <a href="{$Think.HOME_SITE_URL}" class="bg-blue"><i class="iconfont">&#xe74e;</i>回首页</a>
+                <a href="{:url('Search/index')}" class="bg-green10"><i class="iconfont">&#xe732;</i>去购物</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+{include file="default/base/mall_footer" /}

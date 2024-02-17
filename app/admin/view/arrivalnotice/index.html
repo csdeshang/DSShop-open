@@ -1,0 +1,108 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.arrivalnotice_arrivalnotice}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.arrivalnotice_goods_name}</dt>
+                <dd><input class="txt" name="search_goods" value="{$Request.get.search_goods}" type="text"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.arrivalnotice_state}</dt>
+                <dd>
+                    <select name="search_state">
+                        <option value="">{$Think.lang.ds_please_choose}...</option>
+                        <option value="1">{$Think.lang.arrivalnotice_noinformed}</option>
+                        <option value="2">{$Think.lang.arrivalnotice_informed}</option>
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('arrivalnotice/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.arrivalnotice_tips}</li>
+        </ul>
+    </div>
+
+    <form method='post' id="picForm" name="picForm">
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="w24"></th>
+                <th class="">Email</th>
+                <th class="">{$Think.lang.arrivalnotice_goods_name}</th>
+                <th class="">{$Think.lang.arrivalnotice_member_name}</th>
+                <th class="">{$Think.lang.arrivalnotice_mobile}</th>
+                <th class="">{$Think.lang.arrivalnotice_state}</th>
+                <th class="">{$Think.lang.arrivalnotice_addtime}</th>
+                <th class="">{$Think.lang.arrivalnotice_time}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="arrivalnotice_list"}
+            {foreach name="arrivalnotice_list" item="v"}
+            <tr class="hover edit">
+                <td><input value="{$v.arrivalnotice_id}" class="checkitem" type="checkbox" name="arrivalnotice_id[]"></td>
+                <td class="name">{$v.arrivalnotice_email}</td>
+                <td class="name">{$v.goods_name}</td>
+                <td class="name">{$v.member_name}</td>
+                <td class="name">{:encrypt_show($v.arrivalnotice_mobile,4,4)}</td>
+                <td class="name">{$v.arrivalnotice_state==2?'已通知':'未通知'}</td>
+                <td class="name">{$v.arrivalnotice_addtime|date="Y-m-d H:i:s"}</td>
+                <td class="name">{if $v.arrivalnotice_time neq '0'}{$v.arrivalnotice_time|date="Y-m-d H:i:s"}{/if}</td>
+                <td class="align-center">
+                    <a href="javascript:dsLayerConfirm('{:url('arrivalnotice/arrivalnotice_del',['arrivalnotice_id'=>$v.arrivalnotice_id])}','{$Think.lang.ds_ensure_del}')"
+                       class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="arrivalnotice_list"}
+            <tr colspan="15" class="tfoot">
+                <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                <td colspan="16"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                    &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+        {$show_page|raw}
+    </form>
+</div>
+<script type="text/javascript">
+    function submit_delete(ids_str) {
+        _uri = ADMINSITEURL + "/arrivalnotice/arrivalnotice_del.html?arrivalnotice_id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+</script>

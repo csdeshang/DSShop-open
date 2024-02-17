@@ -1,0 +1,135 @@
+<div class="model-22">
+  <div class="seckill-list-preview marketing-box marketing-box-two marketing-box-3" style="background-color:{$config_info.back_color|default='unset'};">
+    <div>
+      <div class="title-wrap title-wrap-3" {if isset($config_info['if_show_title_icon']) && $config_info['if_show_title_icon']==0}style="display:none"{/if}>
+        <div class="title-left">
+          <div class="img">
+            <img src="{if isset($config_info['title_icon']) && $config_info['title_icon']}{$config_info['title_icon']}{else}{$Think.HOME_SITE_ROOT}/images/editable_page/seckill_style3_title.png{/if}">
+          </div>
+          <div class="time">
+            <label class="font">距离结束</label>
+            <span class="hour">02</span>:
+            <span class="minute">00</span>:
+            <span class="second">00</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="list-wrap">
+      {if isset($config_info['goods_list']) && !empty($config_info['goods_list'])} 
+		    {foreach name='config_info.goods_list' item='goods'}
+        <div class="item">
+          <div class="img-wrap">
+            <img src="{:goods_thumb($goods)}">
+          </div>
+          <div class="content">
+            <div class="top">
+              <div class="content-desc">{$goods.goods_name}</div>
+              <div class="mprogress">
+                <div class="img">
+                  <div class="img-con" style="width:{$goods.order_ratio}%">
+                  </div>
+                </div>
+                <div class="num">已抢{$goods.order_ratio}%</div>
+              </div>
+            </div>
+            <div class="bot">
+              <div class="content-price">
+                <div>¥
+                  <span>{:floatval($goods.goods_promotion_price)}</span>
+                </div>
+                <div class="content-num">￥{:floatval($goods.goods_price)}</div>
+              </div>
+              <div class="layui-btn">立即抢购</div>
+            </div>
+          </div>
+        </div> 
+        {/foreach} 
+		    {else}
+      <div class="item">
+        <div class="img-wrap">
+          <img src="{:goods_thumb()}">
+        </div>
+        <div class="content">
+          <div class="top">
+            <div class="content-desc">商品名称</div>
+            <div class="mprogress">
+              <div class="img">
+                <div class="img-con">
+                </div>
+              </div>
+              <div class="num">已抢65.32%</div>
+            </div>
+          </div>
+          <div class="bot">
+            <div class="content-price">
+              <div>¥
+                <span>99.00</span>
+              </div>
+              <div class="content-num">￥139.00</div>
+            </div>
+            <div class="layui-btn">立即抢购</div>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="img-wrap">
+          <img src="{:goods_thumb()}">
+        </div>
+        <div class="content">
+          <div class="top">
+            <div class="content-desc">商品名称</div>
+            <div class="mprogress">
+              <div class="img">
+                <div class="img-con">
+                </div>
+              </div>
+              <div class="num">已抢65.32%</div>
+            </div>
+          </div>
+          <div class="bot">
+            <div class="content-price">
+              <div>¥
+                <span>99.00</span>
+              </div>
+              <div class="content-num">￥139.00</div>
+            </div>
+            <div class="layui-btn">立即抢购</div>
+          </div>
+        </div>
+      </div>
+      <div class="item">
+        <div class="img-wrap">
+          <img src="{:goods_thumb()}">
+        </div>
+        <div class="content">
+          <div class="top">
+            <div class="content-desc">商品名称</div>
+            <div class="mprogress">
+              <div class="img">
+                <div class="img-con">
+                </div>
+              </div>
+              <div class="num">已抢65.32%</div>
+            </div>
+          </div>
+          <div class="bot">
+            <div class="content-price">
+              <div>¥
+                <span>99.00</span>
+              </div>
+              <div class="content-num">￥139.00</div>
+            </div>
+            <div class="layui-btn">立即抢购</div>
+          </div>
+        </div>
+      </div>
+      {/if}
+    </div>
+    <div class="more">
+      <span>更多秒杀</span>
+      <i class="iconfont iconyoujiantou">
+      </i>
+    </div>
+  </div>
+</div>

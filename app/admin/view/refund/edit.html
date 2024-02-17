@@ -1,0 +1,115 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_refund}</h3>
+            </div>
+        </div>
+    </div>
+    <form method="post" id='post_form' action="">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="required w120">{$Think.lang.refund_order_refund}</td>
+                <td>{:ds_price_format($refund['refund_amount'])}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120">商品名称</td>
+                <td>{$refund.goods_name}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120">{$Think.lang.refund_buyer_message}</td>
+                <td>{$refund.reason_info}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120">退款说明</td>
+                <td class="vatop rowform">{$refund.buyer_message}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120">凭证上传</td>
+                <td class="vatop rowform">
+                    {notempty name="pic_list"}
+                    {foreach name="pic_list" item="val" key="key" }
+                    {notempty name="val"}
+                    <a href="{:ds_get_pic(ATTACH_PATH.'/refund',$val)}" data-lightbox="lightbox-image">
+                        <img width="64" height="64" class="show_image" src="{:ds_get_pic(ATTACH_PATH.'/refund',$val)}">
+                    </a>
+                    {/notempty}
+                    {/foreach}
+                    {/notempty}
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required w120"><label class="validation">是否同意</label></td>
+                <td class="vatop rowform onoff">
+                    <label for="state1" class="cb-enable" title="{$Think.lang.ds_yes} {if condition='$refund.examine_type eq 2'}selected{/if}"><span>{$Think.lang.ds_yes}</span></label>
+                    <label for="state0" class="cb-disable" title="{$Think.lang.ds_no} {if condition='$refund.examine_type eq 3'}selected{/if}"><span>{$Think.lang.ds_no}</span></label>
+                    <input id="state1" name="examine_type"  value="2" type="radio" {if condition="$refund.examine_type eq 2"} checked="checked"{/if}>
+                    <input id="state0" name="examine_type" value="3" type="radio" {if condition="$refund.examine_type eq 3"} checked="checked"{/if}>
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder" dstype="state1" style="display: none"> 
+                        <td class="required w120">{$Think.lang.trade_no}</td>
+                        <td class="vatop rowform"><input type="text" class="txt2" name="trade_no" id="trade_no" value="{$trade_no}"></td>
+			<td class="vatop tips">{$Think.lang.trade_no_tip}</td>
+                    </tr>
+            <tr class="noborder">
+                <td class="required w120"><label class="validation">{$Think.lang.refund_message}</label></td>
+                <td class="vatop rowform"><textarea id="admin_message" name="admin_message" class="tarea"></textarea></td>
+                <td class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td></td>
+                <td colspan="15">{:token_field()}<input class="btn" onclick="submitForm()" type='button' value="确认提交"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script type="text/javascript">
+    function submitForm(){
+        $('#post_form').submit()
+    }
+    $(function () {
+        $('input[name="refund_state"]').change(function(){
+            if($(this).val()==3){
+                $('*[dstype="state1"]').show()
+            }else{
+                $('*[dstype="state1"]').hide()
+            }
+        })
+        $('#post_form').validate({
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().next());
+            },
+            rules: {
+                examine_type: {
+                    required: true
+                },
+                admin_message: {
+                    required: true
+                }
+            },
+            messages: {
+                examine_type: {
+                    required: '{$Think.lang.refund_message_null}'
+                },
+                admin_message: {
+                    required: '{$Think.lang.refund_message_null}'
+                }
+            }
+        });
+    });
+</script>

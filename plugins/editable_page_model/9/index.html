@@ -1,0 +1,222 @@
+
+<div class="editable-page-model editable-page-model-9" style="background-color:{$config_info.back_color|default=''};">
+    <div class="editable-page-content" style="padding-top:{$config_info.padding_top|default=''};padding-bottom:{$config_info.padding_bottom|default=''};">
+        <div class="fresh_category_body">
+            <div class="fresh_category_acts">
+                {if isset($config_info.back_image) && $config_info.back_image != ''}
+                <div class="fresh_category_act1" style="position:relative" style="background: url({$config_info.back_image|default=''}) 0 0 no-repeat;">
+                {else}
+                <div class="fresh_category_act1" style="position:relative"><div style="background:#e1e1e1;color:#fff;position:absolute;top:0;bottom:0;left:0;right:0;font-size: 30px;font-weight: bold;text-align: center;padding-top: 100px;">200×300</div>
+                {/if}
+                    <h4 class="fresh_category_title">{$config_info.title_big|default='大标题'}</h4>
+                    <p class="fresh_category_subtitle">{$config_info.title_small|default='小标题'}</p>
+                    <div class="fresh_category_keys" style="position: relative;">
+                        {if isset($config_info.gc_list_l[0])}
+                            <a class="fresh_category_keys_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.gc_id])}" target="_blank">{$config_info.gc_list.0.gc_name}</a>
+                        {else}
+                            <a class="fresh_category_keys_item">商品分类</a>
+                        {/if}
+                        {if isset($config_info.gc_list_l[1])}
+                            <a class="fresh_category_keys_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.gc_id])}" target="_blank">{$config_info.gc_list.1.gc_name}</a>
+                        {else}
+                            <a class="fresh_category_keys_item">商品分类</a>
+                        {/if}
+                        {if isset($config_info.gc_list_l[2])}
+                            <a class="fresh_category_keys_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.gc_id])}" target="_blank">{$config_info.gc_list.2.gc_name}</a>
+                        {else}
+                            <a class="fresh_category_keys_item">商品分类</a>
+                        {/if}
+                        {if isset($config_info.gc_list_l[3])}
+                            <a class="fresh_category_keys_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.gc_id])}" target="_blank">{$config_info.gc_list.3.gc_name}</a>
+                        {else}
+                            <a class="fresh_category_keys_item">商品分类</a>
+                        {/if}
+                        {if isset($config_info.gc_list_l[4])}
+                            <a class="fresh_category_keys_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.gc_id])}" target="_blank">{$config_info.gc_list.4.gc_name}</a>
+                        {else}
+                            <a class="fresh_category_keys_item">商品分类</a>
+                        {/if}
+                    </div>
+                </div>
+                {if $config_info['adv_center']['image'] != '' && isset($config_info['adv_center']['image'])}
+                <div class="fresh_category_act2">
+                    <div>
+                        <a href="{$config_info['adv_center']['link']|default=''}" target="_blank"><img class="fresh_category_act2_img lazyload" data-original="{$config_info['adv_center']['image']|default=''}" alt="" title="" /></a>
+                    </div>
+                </div>
+                {else}
+                <div class="fresh_category_act2">
+                        <div class="fresh_category_act2_img lazyload" style="background:#e1e1e1;color:#fff;font-size: 30px;font-weight: bold;text-align: center;padding-top: 100px;height: 100%;box-sizing: border-box;">600×300</div>
+                </div>
+                {/if}
+                {if $config_info['adv_right']['image'] != '' && isset($config_info['adv_right']['image'])}
+                <a class="fresh_category_act3" href="{$config_info['adv_right']['link']|default=''}" target="_blank"><img class="fresh_category_act3_img lazyload" alt="" title="" data-original="{$config_info['adv_right']['image']|default=''}" /></a>
+                {else}
+                <a class="fresh_category_act3"><div style="background:#e1e1e1;color:#fff;font-size: 30px;font-weight: bold;text-align: center;padding-top: 100px;height: 100%;box-sizing: border-box;">400×300</div></a>
+                {/if}
+            </div>
+            <div class="fresh_category_goods goods">
+                {if isset($config_info.gc_list[0])}
+                <div class="goods_item">
+                    <a class="goods_item_link" href="{:url('goods/index',['goods_id'=>$config_info.gc_list[0]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb($config_info.gc_list[0], 240)}" /><p class="goods_item_name">{$config_info.gc_list.0.goods_name}</p></a>
+                    <p class="goods_item_price">￥{$config_info.gc_list[0].goods_price}</p>
+                </div>
+                {else}
+                <div class="goods_item">
+                    <a class="goods_item_link"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb()}" /><p class="goods_item_name">商品名称</p></a>
+                    <p class="goods_item_price">￥100</p>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[1])}
+                <div class="goods_item">
+                    <a class="goods_item_link" href="{:url('goods/index',['goods_id'=>$config_info.gc_list[1]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb($config_info.gc_list[1], 240)}" /><p class="goods_item_name">{$config_info.gc_list.1.goods_name}</p></a>
+                    <p class="goods_item_price">￥{$config_info.gc_list[1].goods_price}</p>
+                </div>
+                {else}
+                <div class="goods_item">
+                    <a class="goods_item_link"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb()}" /><p class="goods_item_name">商品名称</p></a>
+                    <p class="goods_item_price">￥100</p>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[2])}
+                <div class="goods_item">
+                    <a class="goods_item_link" href="{:url('goods/index',['goods_id'=>$config_info.gc_list[2]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb($config_info.gc_list[2], 240)}" /><p class="goods_item_name">{$config_info.gc_list.2.goods_name}</p></a>
+                    <p class="goods_item_price">￥{$config_info.gc_list[2].goods_price}</p>
+                </div>
+                {else}
+                <div class="goods_item">
+                    <a class="goods_item_link"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb()}" /><p class="goods_item_name">商品名称</p></a>
+                    <p class="goods_item_price">￥100</p>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[3])}
+                <div class="goods_item">
+                    <a class="goods_item_link" href="{:url('goods/index',['goods_id'=>$config_info.gc_list[3]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb($config_info.gc_list[3], 240)}" /><p class="goods_item_name">{$config_info.gc_list.3.goods_name}</p></a>
+                    <p class="goods_item_price">￥{$config_info.gc_list[3].goods_price}</p>
+                </div>
+                {else}
+                <div class="goods_item">
+                    <a class="goods_item_link"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb()}" /><p class="goods_item_name">商品名称</p></a>
+                    <p class="goods_item_price">￥100</p>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[4])}
+                <div class="goods_item">
+                    <a class="goods_item_link" href="{:url('goods/index',['goods_id'=>$config_info.gc_list[4]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb($config_info.gc_list[4], 240)}" /><p class="goods_item_name">{$config_info.gc_list.4.goods_name}</p></a>
+                    <p class="goods_item_price">￥{$config_info.gc_list[4].goods_price}</p>
+                </div>
+                {else}
+                <div class="goods_item">
+                    <a class="goods_item_link"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb()}" /><p class="goods_item_name">商品名称</p></a>
+                    <p class="goods_item_price">￥100</p>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[5])}
+                <div class="goods_item">
+                    <a class="goods_item_link" href="{:url('goods/index',['goods_id'=>$config_info.gc_list[5]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb($config_info.gc_list[5], 240)}" /><p class="goods_item_name">{$config_info.gc_list.5.goods_name}</p></a>
+                    <p class="goods_item_price">￥{$config_info.gc_list[5].goods_price}</p>
+                </div>
+                {else}
+                <div class="goods_item">
+                    <a class="goods_item_link"><img class="goods_item_img lazyload" width="150" height="150" data-original="{:goods_thumb()}" /><p class="goods_item_name">商品名称</p></a>
+                    <p class="goods_item_price">￥100</p>
+                </div>
+                {/if}
+            </div>
+            <div class="fresh_category_brands brands"> 
+              {if isset($config_info.brand_list[0])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[0].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[0].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[1])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[1].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[1].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[2])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[2].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[2].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[3])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[3].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[3].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[4])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[4].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[4].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[5])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[5].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[5].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[6])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[6].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[6].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[7])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[7].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[7].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[8])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[8].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[8].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+              {if isset($config_info.brand_list[9])}
+              <a class="brands_item" href="{:url('Brand/brand_goods',array('brand_id'=>$config_info.brand_list[9].brand_id))}" target="_blank">
+              <img class="brands_item_img lazyload" data-original="{:brand_image($config_info.brand_list[9].brand_pic)}" />
+              </a>
+              {else}
+              <a class="brands_item">
+              <img class="brands_item_img lazyload" data-original="{:goods_thumb()}" />
+              </a>
+              {/if}
+            </div>
+        </div>
+        
+    </div>  
+</div>
+

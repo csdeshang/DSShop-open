@@ -1,0 +1,51 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>预存款</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form id="inviter_form" method="post" enctype="multipart/form-data" name="form1" action="">
+        <table class="ds-default-table">
+                <tbody>
+                    
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.member_withdraw_cycle}</td>
+                        <td class="vatop rowform">
+                            <input id="member_withdraw_cycle" name="member_withdraw_cycle" value="{$list_setting.member_withdraw_cycle}" class="input-txt" type="text">
+                            <span class="err"></span>     
+                        </td>
+			<td class="vatop tips">{$Think.lang.member_withdraw_cycle_tips}</td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.member_withdraw_min}</td>
+                        <td class="vatop rowform">
+                            <input id="member_withdraw_min" name="member_withdraw_min" value="{$list_setting.member_withdraw_min}" class="input-txt" type="text">
+                        </td>
+			<td class="vatop tips">{$Think.lang.ds_yuan}</td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.member_withdraw_max}</td>
+                        <td class="vatop rowform">
+                            <input id="member_withdraw_max" name="member_withdraw_max" value="{$list_setting.member_withdraw_max}" class="input-txt" type="text">
+                        </td>
+			<td class="vatop tips">{$Think.lang.ds_yuan}</td>
+                    </tr>                    
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>					
+                </tfoot>
+            </table>
+    </form>
+</div>

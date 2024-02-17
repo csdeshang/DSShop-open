@@ -1,0 +1,261 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.web_set}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form method="post" enctype="multipart/form-data" name="form1" action="">
+        <div class="ncap-form-default">
+            <dl>
+                <dt>{$Think.lang.site_name}</dt>
+                <dd>
+                    <input id="site_name" name="site_name" value="{$list_config.site_name}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic">{$Think.lang.web_name_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.fixed_suspension_state}</dt>
+                <dd>
+                    <div class="onoff">
+                        <label for="fixed_suspension_state1" class="cb-enable {if condition="$list_config.fixed_suspension_state eq 1"}selected{/if}">{$Think.lang.ds_open}</label>
+                        <label for="fixed_suspension_state0" class="cb-disable {if condition="$list_config.fixed_suspension_state eq 0"}selected{/if}">{$Think.lang.ds_close}</label>
+                        <input id="fixed_suspension_state1" name="fixed_suspension_state" value="1" type="radio" {if condition="$list_config.fixed_suspension_state eq 1"} checked="checked"{/if}>
+                        <input id="fixed_suspension_state0" name="fixed_suspension_state" value="0" type="radio" {if condition="$list_config.fixed_suspension_state eq 0"} checked="checked"{/if}>
+                    </div>
+                </dd>
+            </dl>
+            <dl id="fixed_suspension_img" class="noborder">
+                <dt class="required"><label for="file_fixed_suspension_img">{$Think.lang.fixed_suspension_img}</label></dt>
+                <dd class="vatop rowform">
+                    {notempty name="$list_config.fixed_suspension_img"}
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_config.fixed_suspension_img)}?{$Think.TIMESTAMP}"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box">
+                        <input type='text' name='textfield' id='textfield6' class='type-file-text' />
+                        <input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                        <input name="fixed_suspension_img" id="file_fixed_suspension_img" type="file" class="type-file-file" id="site_logo" size="30" hidefocus="true">
+                    </span>
+                    <p class="notic">{$Think.lang.fixed_suspension_img_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.fixed_suspension_url}</dt>
+                <dd>
+                    <input id="fixed_suspension_url" name="fixed_suspension_url" value="{$list_config.fixed_suspension_url}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic">{$Think.lang.fixed_suspension_url_notice}</p>
+                </dd>
+			</dl> 
+              <dl>
+                <dt>{$Think.lang.hot_search}</dt>
+                <dd>
+                    <textarea id="hot_search" name="hot_search">{$list_config.hot_search}</textarea>
+                    <span class="err"></span>
+                    <p class="notic">{$Think.lang.field_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.h5_site_url}</dt>
+                <dd>
+                    <input id="h5_site_url" name="h5_site_url" value="{$list_config.h5_site_url}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.h5_force_redirect}</dt>
+                <dd>
+                    <div class="onoff">
+                        <label for="h5_force_redirect1" class="cb-enable {if condition="$list_config.h5_force_redirect eq 1"}selected{/if}">{$Think.lang.ds_open}</label>
+                        <label for="h5_force_redirect0" class="cb-disable {if condition="$list_config.h5_force_redirect eq 0"}selected{/if}">{$Think.lang.ds_close}</label>
+                        <input id="h5_force_redirect1" name="h5_force_redirect" value="1" type="radio" {if condition="$list_config.h5_force_redirect eq 1"} checked="checked"{/if}>
+                        <input id="h5_force_redirect0" name="h5_force_redirect" value="0" type="radio" {if condition="$list_config.h5_force_redirect eq 0"} checked="checked"{/if}>
+                    </div>
+                    <p class="notic">{$Think.lang.h5_force_redirect_tips}</p>
+                </dd>
+            </dl>
+			<!-- 开启实名认证 -->
+			<dl>
+				<dt>{$Think.lang.member_auth}</dt>
+				<dd>
+					<div class="onoff">
+					   <label for="member_auth_1" class="cb-enable {if $list_config.member_auth == '1'}selected{/if}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+					   <label for="member_auth_0" class="cb-disable {if $list_config.member_auth == '0'}selected{/if}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+					   <input id="member_auth_1" name="member_auth" {if $list_config.member_auth == '1'} checked=checked {/if} value="1" type="radio">
+					   <input id="member_auth_0" name="member_auth" {if $list_config.member_auth == '0'} checked=checked {/if} value="0" type="radio">
+					</div>
+					<p class="notic">{$Think.lang.member_auth_notice}</p>
+				</dd>
+			</dl>
+			<dl>
+				<dt>{$Think.lang.mapak_type}</dt>
+				<dd>
+					<label class="radio-label">
+						<i  class="radio-common {if !$list_config.mapak_type || $list_config.mapak_type =='1'}selected{/if}">
+							<input type="radio" value="1" name="mapak_type" class='gaoderadio' {if !$list_config.mapak_type || $list_config.mapak_type =='1'} checked="checked"{/if}>
+						</i>
+						<span>{$Think.lang.gaode_map}</span>
+					</label>
+					<label class="radio-label">
+						<i class="radio-common {if $list_config.mapak_type =='2'}selected{/if}">
+							<input type="radio" value="2" name="mapak_type" class='baiduradio' {if $list_config.mapak_type =='2'} checked="checked"{/if}>
+						</i>
+						<span>{$Think.lang.baidu_map}</span>
+					</label>
+					<span class="tips"></span>
+				</dd>
+			
+			</dl>
+            <dl class='gaodedl'>
+				<dt>{$Think.lang.gaode_ak}</dt>
+				<dd>
+					<input id="gaode_ak" name="gaode_ak" value="{$list_config.gaode_ak}" class="input-txt" type="text">
+					<span class="err"></span>
+					<p class="notic"></p>
+				</dd>
+			</dl>
+			<dl class='gaodedl'>
+				<dt>{$Think.lang.gaode_jscode}</dt>
+				<dd>
+					<input id="gaode_jscode" name="gaode_jscode" value="{$list_config.gaode_jscode}" class="input-txt" type="text">
+					<span class="err"></span>
+					<p class="notic"></p>
+				</dd>
+			</dl>
+			<dl class='baidudl'>
+				<dt>{$Think.lang.baidu_mapservice_ak_key}</dt>
+				<dd>
+					<input id="baiduservice_ak" name="baiduservice_ak" value="{$list_config.baiduservice_ak}" class="input-txt" type="text">
+					<span class="err"></span>
+					<p class="notic"></p>
+				</dd>
+			</dl>
+			<dl class='baidudl'>
+				<dt>{$Think.lang.baidu_map_ak_key}</dt>
+				<dd>
+					<input id="baidu_ak" name="baidu_ak" value="{$list_config.baidu_ak}" class="input-txt" type="text">
+					<span class="err"></span>
+					<p class="notic"></p>
+				</dd>
+			</dl>
+            <dl>
+                <dt>{$Think.lang.icp_number}</dt>
+                <dd>
+                    <input id="icp_number" name="icp_number" value="{$list_config.icp_number}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.wab_number}</dt>
+                <dd>
+                    <input id="wab_number" name="wab_number" value="{$list_config.wab_number}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.site_phone}</dt>
+                <dd>
+                    <input id="site_phone" name="site_phone" value="{$list_config.site_phone}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            
+            <dl>
+                <dt>{$Think.lang.site_tel400}</dt>
+                <dd>
+                    <input id="site_tel400" name="site_tel400" value="{$list_config.site_tel400}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.site_email}</dt>
+                <dd>
+                    <input id="site_email" name="site_email" value="{$list_config.site_email}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.flow_static_code}</dt>
+                <dd>
+                    <textarea id="flow_static_code" name="flow_static_code">{$list_config.flow_static_code}</textarea>
+                    <span class="err"></span>
+                    <p class="notic">{$Think.lang.flow_static_code_notice}</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.cache_open}</dt>
+                <dd>
+                    <div class="onoff">
+                        <label for="cache_open1" class="cb-enable {if condition="$list_config.cache_open eq 1"}selected{/if}">{$Think.lang.ds_open}</label>
+                        <label for="cache_open0" class="cb-disable {if condition="$list_config.cache_open eq 0"}selected{/if}">{$Think.lang.ds_close}</label>
+                        <input id="cache_open1" name="cache_open" value="1" type="radio" {if condition="$list_config.cache_open eq 1"} checked="checked"{/if}>
+                        <input id="cache_open0" name="cache_open" value="0" type="radio" {if condition="$list_config.cache_open eq 0"} checked="checked"{/if}>
+                    </div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.site_state}</dt>
+                <dd>
+                    <div class="onoff">
+                        <label for="site_state1" class="cb-enable {if condition="$list_config.site_state eq 1"}selected{/if}">{$Think.lang.ds_open}</label>
+                        <label for="site_state0" class="cb-disable {if condition="$list_config.site_state eq 0"}selected{/if}">{$Think.lang.ds_close}</label>
+                        <input id="site_state1" name="site_state" value="1" type="radio" {if condition="$list_config.site_state eq 1"} checked="checked"{/if}>
+                        <input id="site_state0" name="site_state" value="0" type="radio" {if condition="$list_config.site_state eq 0"} checked="checked"{/if}>
+                    </div>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.closed_reason}</dt>
+                <dd>
+                    <textarea id="closed_reason" name="closed_reason">{$list_config.closed_reason}</textarea>
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt></dt>
+                <dd><a href="JavaScript:void(0);" class="btn" onclick="document.form1.submit()">{$Think.lang.ds_confirm_submit}</a></dd>
+            </dl>
+        </div>
+    </form>
+</div>
+<script>
+	$(function(){
+		if ($('.gaoderadio').prop('checked')) {
+		    $('.baidudl').hide();
+		    $('.gaodedl').show();
+		}else{
+		    $('.gaodedl').hide();
+		    $('.baidudl').show();
+		}
+		$('.gaoderadio').click(function(){
+			$('.gaodedl').show();
+			$('.baidudl').hide();
+		})
+		$('.baiduradio').click(function(){
+			$('.baidudl').show();
+			$('.gaodedl').hide();
+		})
+	})
+</script>
+
+

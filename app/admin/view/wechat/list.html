@@ -1,0 +1,122 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>消息推送</h3>
+            </div>
+            <a href="javascript:dsLayerOpen('{:url('Wechat/Sendgroup')}','添加关键字')"  class="btn btn-small" style="float: right">消息群发</a>
+        </div>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th class="w24"></th>
+                <th style="width: 10%">{$Think.lang.tomember}</th>
+                <th style="width: 10%">{$Think.lang.totype}</th>
+                <th style="width: 40%">{$Think.lang.content}</th>
+                <th style="width: 20%">{$Think.lang.totime}</th>
+                <th style="width: 10%">{$Think.lang.state}</th>
+                <th style="width: 10%">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        {notempty name="lists"}
+        <tbody>
+            {foreach name="lists" item="list"}
+            <tr>
+                <td><input type="checkbox" class="checkitem" name="id[]" value="{$list.id}" /></td>
+                <td>{$list.member_name}</td>
+                <td>{$list.type}</td>
+                <td>{$list.content|raw}</td>
+                <td>{:date('Y-m-d H:i:s',$list.createtime)}</td>
+                <td>{if $list.issend}已发送{else/}<span style="color: red">未发送</span>{/if}</td>
+                <td>
+                    <a href="javascript:submit_delete({$list.id})" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+        
+        <tfoot>
+            {notempty name="lists"}
+            <tr class="tfoot">
+                <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                <td colspan="16"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                    &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                </td>
+            </tr>
+            {/notempty}
+        </tfoot>
+        
+        {else /}
+        <tbody>
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.no_record}</td>
+            </tr>
+        </tbody>
+        {/notempty}
+    </table>
+    {$show_page|raw}
+</div>
+
+<div class="ncap-form-default show_new" id="dialog" style="display: none">
+    <form method="post">
+        <dl>
+            <dt>标题</dt>
+            <dd>
+                <input type="text" name="title" id="Title" style="width: 300px" value="">
+            </dd>
+        </dl>
+        <dl>
+            <dt>描述</dt>
+            <dd>
+                <input type="text" name="description" id="Description" style="width: 300px">
+            </dd>
+        </dl>
+        <dl>
+            <dt>图片</dt>
+            <dd>
+                <input type="file" name="s_pic">
+            </dd>
+        </dl>
+        <dl>
+            <dt>跳转链接</dt>
+            <dd>
+                <input type="text" name="url" id="Url" style="width: 300px">
+            </dd>
+        </dl>
+    </form>
+</div>
+
+<script>
+    $('.news').click(function() {
+        $( "#dialog" ).dialog("open");
+        });
+    $( "#dialog" ).dialog({
+        autoOpen: false,
+        modal: true,
+        width: 500,
+        height: 400,
+        show: {
+            effect: "explode",
+            duration: 1000
+        },
+        hide: {
+            effect: "puff",
+            duration: 1000
+        }
+    });
+
+    var content= $.attr('content');
+
+</script>
+
+<script type="text/javascript">
+    function submit_delete(ids_str) {
+        _uri = ADMINSITEURL + "/Wechat/del_wxmsg.html?id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+</script>

@@ -1,0 +1,108 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>拼团</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.pintuan_name}</dt>
+                <dd><input type="text" value="{$Request.get.pintuan_name}" name="pintuan_name" id="pintuan_name" class="txt" style="width:100px;"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.ds_state}</dt>
+                <dd>
+                    <select name="state">
+                        {notempty name="pintuan_state_array"}
+                        <option value="">{$Think.lang.ds_please_choose}...</option>
+                        {foreach name="pintuan_state_array" item="val" key="k"}
+                        <option value="{$k}"{if condition="$Request.get.state != '' && $Request.get.state eq $k"}selected{/if}>{$val}</option>
+                        {/foreach}
+                        {/notempty}
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Promotionpintuan/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+    
+    
+    <!-- 帮助 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.pintuan_list_help1}</li>
+            <li>{$Think.lang.pintuan_list_help2}</li>
+            <li>{$Think.lang.pintuan_list_help3}</li>
+        </ul>
+    </div>
+    
+    <!-- 列表 -->
+    <form id="list_form" method="post">
+        <input type="hidden" id="object_id" name="object_id"/>
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="align-left" width="300"><span>{$Think.lang.pintuan_name}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.pintuan_starttime}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.pintuan_end_time}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.pintuan_count}</span></th>
+                <th class="align-center" width="120"><span>{$Think.lang.pintuan_ok_count}</span></th>
+                <th class="align-center" width="80"><span>{$Think.lang.pintuan_limit_number}</span></th>
+                <th class="align-center" width="80"><span>{$Think.lang.ds_state}</span></th>
+                <th class="align-center"><span>{$Think.lang.ds_handle}</span></th>
+            </tr>
+            </thead>
+            <tbody id="treet1">
+            {notempty name="pintuan_list"}
+            {foreach name="pintuan_list" item="val"}
+            <tr class="hover">
+                <td class="align-left"><span>{$val.pintuan_name}</span></td>
+                <td class="align-center"><span>{$val.pintuan_starttime|date="Y-m-d H:i"}</span></td>
+                <td class="align-center"><span>{$val.pintuan_end_time|date="Y-m-d H:i"}</span></td>
+                <td class="align-center"><span>{$val.pintuan_count}</span></td>
+                <td class="align-center"><span>{$val.pintuan_ok_count}</span></td>
+                <td class="align-center"><span>{$val.pintuan_limit_number}</span></td>
+                <td class="align-center"><span>{$val.pintuan_state_text}</span></td>
+
+                <td class="nowrap align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Promotionpintuan/pintuan_manage',['pintuan_id'=>$val.pintuan_id])}','开团-{$val.pintuan_name}')" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_detail}</a>
+                    {if $val.editable}
+                    <a href="javascript:dsLayerConfirm('{:url('Promotionpintuan/pintuan_end',['pintuan_id'=>$val.pintuan_id])}','{$Think.lang.ds_ensure_operation}')" class="dsui-btn-del"><i class="iconfont"></i>提前结束</a>
+                    {/if}
+                    {if $val.pintuan_state==0}
+                    <a href="javascript:dsLayerConfirm('{:url('Promotionpintuan/pintuan_del',['pintuan_id'=>$val.pintuan_id])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    {/if}
+                </td>
+            </tr>
+           {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="16">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+        </table>
+        {$show_page|raw}
+    </form>
+
+</div>
+    
+    

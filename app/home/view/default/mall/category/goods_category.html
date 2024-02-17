@@ -1,0 +1,31 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+<div class="dsh-container wrapper">
+   
+    <div class="all-warpper">
+        {notempty name='header_categories'}  
+        {foreach $header_categories as $gc_list}  
+        <div class="all-category-floor" id='cate-{$gc_list.gc_id}'>
+            <div class="floor-top">
+                <div class="title"><a class="iconfont toggle" onclick='$(this).parents(".all-category-floor").find(".floor-bot").toggle();$(this).toggleClass("active")'>&#xe689;</a><a href="{:url('Search/index',['cate_id'=>$gc_list.gc_id])}">{$gc_list.gc_name}</a></div>
+            </div>
+            {notempty name='gc_list.class2'}  
+            <div class="floor-bot">
+                <div class="floor-category-list"> 
+                    {foreach $gc_list.class2 as $gc_list2}  
+                    <dl>
+                        <dt> <a href="{:url('Search/index',['cate_id'=>$gc_list2.gc_id])}" target="_blank"><i>{if $gc_list2.gc_image}<img src='{$gc_list2.gc_image}'>{else}<span class="iconfont">&#xe709;</span>{/if}</i><p>{$gc_list2.gc_name}</p></a> </dt>
+                    </dl>
+                    {/foreach}
+                </div>
+            </div>
+            {/notempty}
+        </div>
+        {/foreach}
+        {/notempty}
+    </div>
+</div>
+
+{/block}
+

@@ -1,0 +1,190 @@
+<div class="editable-page-model editable-page-model-11" style="background-color:{$config_info.back_color|default=''};">
+    <div class="editable-page-content" style="padding-top:{$config_info.padding_top|default=''};padding-bottom:{$config_info.padding_bottom|default=''};">
+        <div class="tab_head">
+            {if $config_info.adv.0.image != ''}
+            <div class="tab_head_item on">
+                <span class="tab_head_item_inner"><i class="mod_iconfont" style="background-image:url({$config_info.adv.0.image})"></i></span>
+            </div>
+            {else}
+            <div class="tab_head_item on">
+                <span class="tab_head_item_inner"><i class="mod_iconfont" style="background:#27a9e3;color:#fff;">90×90<br>下半部分</i></span>
+            </div>
+            {/if}
+            {if isset($config_info.adv.1) && $config_info.adv.1.image != ''}
+            <div class="tab_head_item">
+                <span class="tab_head_item_inner"><i class="mod_iconfont" style="background-image:url({$config_info.adv.1.image})"></i></span>
+            </div>
+            {else}
+            <div class="tab_head_item">
+                <span class="tab_head_item_inner"><i class="mod_iconfont" style="background:#27a9e3;color:#fff;">90×90<br>上半部分</i></span>
+            </div>
+            {/if}
+        </div>
+        <div class="tab_body">
+            <div class="tab_body_list">
+                {foreach name="config_info.adv" item='image' key='i'}
+            <div class="tab_body_item"{if $i!=0} style="display: none;"{/if}>
+                {if isset($image.goods_list[0])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[0]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[0], 240)}" /><p class="goods_item_tag">{if $image.goods_list.0.goods_advword}“{$image.goods_list.0.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.0.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.0.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.0.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[1])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[1]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[1], 240)}" /><p class="goods_item_tag">{if $image.goods_list.1.goods_advword}“{$image.goods_list.1.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.1.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.1.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.1.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[2])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[2]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[2], 240)}" /><p class="goods_item_tag">{if $image.goods_list.2.goods_advword}“{$image.goods_list.2.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.2.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.2.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.2.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[3])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[3]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[3], 240)}" /><p class="goods_item_tag">{if $image.goods_list.3.goods_advword}“{$image.goods_list.3.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.3.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.3.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.3.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[4])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[4]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[4], 240)}" /><p class="goods_item_tag">{if $image.goods_list.4.goods_advword}“{$image.goods_list.4.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.4.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.4.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.4.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[5])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[5]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[5], 240)}" /><p class="goods_item_tag">{if $image.goods_list.5.goods_advword}“{$image.goods_list.5.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.5.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.5.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.5.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[6])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[6]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[6], 240)}" /><p class="goods_item_tag">{if $image.goods_list.6.goods_advword}“{$image.goods_list.6.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.6.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.6.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.6.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[7])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[7]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[7], 240)}" /><p class="goods_item_tag">{if $image.goods_list.7.goods_advword}“{$image.goods_list.7.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.7.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.7.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.7.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[8])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[8]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[8], 240)}" /><p class="goods_item_tag">{if $image.goods_list.8.goods_advword}“{$image.goods_list.8.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.8.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.8.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.8.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+                {if isset($image.goods_list[9])}
+                <a class="goods_item" href="{:url('goods/index',['goods_id'=>$image.goods_list[9]['goods_id']])}" target="_blank"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb($image.goods_list[9], 240)}" /><p class="goods_item_tag">{if $image.goods_list.9.goods_advword}“{$image.goods_list.9.goods_advword}”{/if}</p><p class="goods_item_name">{$image.goods_list.9.goods_name}</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥{$image.goods_list.9.goods_price}</span>
+                        <span class="goods_item_g">￥{$image.goods_list.9.goods_marketprice}</span>
+                    </div>
+                </a>
+                {else}
+                <a class="goods_item"><img class="goods_item_img lazyload" width="180" height="180" data-original="{:goods_thumb()}" /><p class="goods_item_tag">“商品广告语”</p><p class="goods_item_name">商品名称</p>
+                    <div class="goods_item_priceg">
+                        <span class="goods_item_price">￥100</span>
+                        <span class="goods_item_g">￥120</span>
+                    </div>
+                </a>
+                {/if}
+            </div>
+            {/foreach}
+            </div>
+        </div>
+
+    </div>  
+</div>
+<script>
+    if(typeof(loadHtml11)=='undefined'){
+      function loadHtml11(obj){
+        obj.find('.editable-page-model-11').slide({mainCell: ".tab_body_list",titCell:".tab_head_item"})
+      }
+    }
+</script>

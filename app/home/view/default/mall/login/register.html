@@ -1,0 +1,278 @@
+{include file='default/base/mall_top'/}
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home.css">
+<div class="header-login clearfix">
+    <div class="w1200">
+        <div class="logo">
+            <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+        </div>
+    </div>
+</div>
+
+
+<div class="page_login clearfix" style="background-image: url('{$Think.HOME_SITE_ROOT}/images/login/login-bg.jpg');background-position: center center;">
+    <div class="w1000">
+        <div class="login_form">
+            <div class="mt">
+                <a href="javascript:void(0)" class="on"><span>{$Think.lang.register_account}</span><i></i></a>
+                {if $Think.config.ds_config.sms_register == 1}
+                <a href="javascript:void(0)" ><span>{$Think.lang.register_mobile}</span><i></i></a>
+                {/if}
+            </div>
+            <div class="mc">
+                <form id="login_normal_form" method="post" action="{:url('Login/register')}">
+                {if $member && $member.member_id}
+                <div class="item" style="margin:0">
+                    <div class="text-area">{$Think.lang.recommender}<input name='inviter_id' type='hidden' value='{$member.member_id}'><span>{$member.member_name}</span></div>
+                </div>
+                {/if}
+                <div class="form">
+                    <div class="item">
+                        <div class="text-area">
+                            <div class="iconfont ico">&#xe702;</div>
+                            <input type="text" id="member_name" name="member_name" class="text" placeholder="{$Think.lang.login_register_username_to_login}" tabindex="1"/>
+                        </div>
+                    </div>
+                    {if $Think.config.ds_config.captcha_status_register == '1'}
+                     <div class="item">
+                        <div class="text-area">
+                            <div class="iconfont ico">&#xe67b;</div>
+                            <input type="text" id="captcha_normal" name="captcha_normal" class="text" style="width:130px;float:left" placeholder="{$Think.lang.login_register_code}" tabindex="2" maxlength="4"/>
+                            <span class="span">
+                           <img style="position: absolute;top: 0;height:46px;" src="{:url('Seccode/makecode')}" title="{$Think.lang.login_index_change_checkcode}" id="codeimage">
+                                <a class="makecode" href="javascript:void(0);" onclick="javascript:document.getElementById('codeimage').src='{:url('Seccode/makecode')}'+'?'+(new Date().getTime());">{$Think.lang.login_password_change_code}</a>
+                            </span>
+                        </div>
+                    </div>
+                    {/if}
+                </div>
+                {if $Think.config.ds_config.sms_register == 1}
+                <div class="form" style="display:none">
+                    <div class="item">
+                        <div class="text-area">
+                            <div class="iconfont ico">&#xe702;</div>
+                            <input type="text" id="sms_mobile" name="sms_mobile" class="text" placeholder="{$Think.lang.login_mobile_phone}" oninput = "value=value.replace(/[^\d]/g,'')" maxlength="11" tabindex="1"/>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="text-area">
+                            <div class="iconfont ico">&#xe67b;</div>
+                            <input type="text" oninput="value=value.replace(/[^\d]/g,'')"  id="sms_captcha" name="sms_captcha" class="text" placeholder="{$Think.lang.login_mobile_verification_code}" tabindex="2" style="width:130px;float:left" maxlength="6"/>
+                            <a class="send_code valid" id="btn_sms_captcha" ds_type="1" >{$Think.lang.login_get_verification_code}</a>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                
+                
+                    <div class="item">
+                        <div class="text-area">
+                            <div class="iconfont ico">&#xe67b;</div>
+                            <input type="password" id="member_password" name="member_password" autocomplete="new-password" class="text" placeholder="{$Think.lang.login_password}" tabindex="2"/>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="text-area">
+                            <div class="iconfont ico">&#xe67b;</div>
+                            <input type="password" id="member_password_confirm" name="member_password_confirm" class="text" placeholder="{$Think.lang.login_register_ensure_password}" tabindex="2"/>
+                        </div>
+                    </div>
+                    <div class="item">
+                        {$Think.lang.agree_upon_registration}<a href='{:url("Document/index",["code"=>"agreement"])}' target='_blank'>{$Think.lang.user_registration_protocol}</a>
+                    </div>
+                    <div class="item">
+                        <input type="hidden" value="{$Request.param.ref_url}" name="ref_url">
+                        <input type="hidden" value="0" id="register_type" name="register_type">
+                        <input type="submit" class="btn login-btn" value="{$Think.lang.login_register_login_now_2}"/>
+                    </div>    
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script>
+$(function () {
+    $(".login_form .mt a").click(function(){
+        var index=$(this).index();
+        $('#register_type').val(index)
+        $(this).parent().next().find(".form").hide().eq(index).show();
+        $(this).addClass("on").siblings().removeClass("on");
+    });
+    
+    $("#login_normal_form").validate({
+        errorPlacement: function (error, element) {
+            var error_td = element.parent('.text-area');
+            error_td.append(error);
+            element.parents('.text-area:first').addClass('error');
+        },
+        success: function (label) {
+            label.parents('.text-area:first').removeClass('error').find('label').remove();
+        },
+        submitHandler:function(form){
+            ds_ajaxpost('login_normal_form','url','{if $Request.param.ref_url}{$Request.param.ref_url}{else/}{:url("Member/index")}{/if}');
+        },
+        onkeyup: false,
+        rules: {
+                member_name: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 15,
+                    remote: {
+                        url: HOMESITEURL + '/Login/check_member.html',
+                        type: 'get',
+                        data: {
+                            user_name: function () {
+                                return $('#member_name').val();
+                            }
+                        }
+                    }
+                },
+                member_password: {
+                    required: true,
+                    minlength: 6,
+                    maxlength: 20
+                },
+                member_password_confirm: {
+                    required: true,
+                    equalTo: '#member_password'
+                },
+                {if $Think.config.ds_config.sms_register == '1'}
+                sms_mobile: {
+                    required: true,
+                    minlength: 11,
+                    maxlength: 11
+                },
+                sms_captcha: {
+                    required: true,
+                    minlength: 6
+                },
+                {/if}
+            {if $Think.config.ds_config.captcha_status_register == '1'}
+            captcha_normal: {
+                required: true,
+                remote: {
+                    url: "{:url('Seccode/check',['reset'=>'false'])}",
+                    type: 'get',
+                    data: {
+                        captcha: function () {
+                            return $('#captcha_normal').val();
+                        }
+                    },
+                    complete: function (data) {
+                        if (data.responseText == 'false') {
+                            document.getElementById('codeimage').src = "{:url('Seccode/makecode')}"+"?" + new Date().getTime();
+                        }
+                    }
+                }
+            }
+            {/if}
+        },
+        messages: {
+                member_name: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_input_username}',
+                    minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_username_range}',
+                    maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_username_range}',
+                    remote: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_username_exists}'
+                },
+                member_password: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_input_password}',
+                    minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_password_range}',
+                    maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_password_range}'
+                },
+                member_password_confirm: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_input_password_again}',
+                    equalTo: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_register_password_not_same}'
+                },
+                {if $Think.config.ds_config.sms_register == '1'}
+                sms_mobile: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_phone}',
+                    minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_phone}',
+                    maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_phone}'
+                },
+                sms_captcha: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_sms_dynamic_code}',
+                    minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_sms_dynamic_code}'
+                },
+                {/if}
+            {if $Think.config.ds_config.captcha_status_register == '1'}
+            captcha_normal: {
+                required: '<i class="iconfont" title="{$Think.lang.login_index_input_checkcode}">&#xe64c;</i>{$Think.lang.login_index_input_checkcode}',
+                remote: '<i class="iconfont" title="{$Think.lang.login_index_wrong_checkcode}">&#xe64c;</i>{$Think.lang.login_index_wrong_checkcode}'
+            }
+            {/if}
+        }
+    });
+});
+</script>
+{if $Think.config.ds_config.sms_register == 1}
+<script type="text/javascript" src="{$Think.HOME_SITE_ROOT}/js/connect_sms.js"></script>
+<script>
+            $(function () {
+                $("#login_mobile_form").validate({
+                    errorPlacement: function (error, element) {
+                        var error_td = element.parent('.text-area');
+                        error_td.append(error);
+                        element.parents('.text-area:first').addClass('error');
+                    },
+                    success: function (label) {
+                        label.parents('.text-area:first').removeClass('error').find('label').remove();
+                    },
+                    submitHandler:function(form){
+                        ds_ajaxpost('login_mobile_form','url','{if $Request.param.ref_url}{$Request.param.ref_url}{else/}{:url("Member/index")}{/if}');
+                    },
+                    onkeyup: false,
+                    rules: {
+                        sms_mobile: {
+                            required: true,
+                            number:true,
+                            rangelength:[11,11]
+                        },
+                        sms_captcha: {
+                            required: true,
+                            rangelength:[6,6]
+                        }
+                        {if $Think.config.ds_config.captcha_status_register == '1'},
+                        captcha_mobile: {
+                            required: true,
+                            minlength: 4,
+                            remote: {
+                                url: "{:url('Seccode/check',['reset'=>'false'])}",
+                                type: 'get',
+                                data: {
+                                    captcha: function () {
+                                        return $('#captcha_mobile').val();
+                                    }
+                                },
+                                complete: function (data) {
+                                    if (data.responseText == 'false') {
+                                        document.getElementById('sms_codeimage').src = "{:url('Seccode/makecode')}"+"?" + new Date().getTime();
+                                    }
+                                }
+                            }
+                        }
+                        {/if}
+                    },
+                    messages: {
+                        sms_mobile: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_phone}',
+                            number: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_phone}',
+                            rangelength:'<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_phone}'
+                        },
+                        sms_captcha: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_sms_dynamic_code}',
+                            rangelength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_sms_dynamic_code}'
+                        }
+                        {if $Think.config.ds_config.captcha_status_register == '1'},
+                        captcha_mobile: {
+                            required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_verification_code}',
+                            minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_verification_code}',
+                            remote: '<i class="iconfont">&#xe64c;</i>{$Think.lang.login_correct_verification_code}'
+                        }
+                        {/if}
+                    }
+                });
+            });
+</script>
+{/if}
+
+{include file='default/base/mall_footer'/}

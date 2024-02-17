@@ -1,0 +1,210 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.goods_class_index_class}</h3>
+            </div>
+        </div>
+    </div>
+
+<form id="goods_class_form" name="goodsClassForm" enctype="multipart/form-data" method="post">
+    <input type="hidden" name="gc_id" value="{$class_info.gc_id}" />
+    <div class="ncap-form-default">
+      <dl class="row">
+        <dt class="tit">
+          <label class="cn_name" for="cn_name">分类别名</label>
+        </dt>
+        <dd class="opt">
+          <input type="text" maxlength="20"  value="{$nav_info.goodscn_alias|default=''}" name="goodscn_alias" id="goodscn_alias" class="input-txt">
+          <span class="err"></span>
+          <p class="notic">可选项。设置别名后，别名将会替代原分类名称展示在分类导航菜单列表中。</p>
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label><em>*</em>推荐分类</label>
+        </dt>
+        <dd class="opt">
+          <div> 分类下的三级分类 <a class="ncap-btn" dstype="class_hide" href="javascript:void(0);">隐藏未选项</a></div>
+          <div id="class_div" class="scrollbar-box">
+            <div class="ncap-type-spec-list">
+              {notempty name="third_class"}
+              {foreach name="third_class" item="val" key="key" }
+              <dl>
+                <dt id="class_dt_{$key}">{$val.name}</dt>
+                {notempty name="$val.class"}
+                <dd>
+                  {foreach name="$val.class" item="v" key="k" }
+                  <label for="class_{$k}">
+                    <input type="checkbox" name="class_id[]" value="{$k}" <?php if(!empty($nav_info['goodscn_classids']) && in_array($k, $nav_info['goodscn_classids'])){ echo 'checked="checked"';}?>>
+                    {$v} </label>
+                  {/foreach}
+                </dd>
+                {/notempty}
+              </dl>
+              {/foreach}
+              {/notempty}
+            </div>
+          </div>
+          <p class="notic">推荐分类将在展开后的二、三级导航列表上方突出显示，建议根据分类名称长度控制选择数量不超过8个以确保展示效果。</p>
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label><em>*</em>推荐品牌</label>
+        </dt>
+        <dd class="opt">
+          <div id="brandcategory">快捷定位
+            <select class="class-select">
+              <option value="0">{$Think.lang.ds_please_choose}</option>
+              {notempty name="gc_list"}
+              {foreach name="gc_list" item="v" key="k" }
+              {if $v.gc_parent_id == 0}
+              <option value="{$v.gc_id}">{$v.gc_name}</option>
+              {/if}
+              {/foreach}
+              {/notempty}
+            </select>
+            分类下对应的品牌 <a class="ncap-btn" dstype="brand_hide" href="javascript:void(0);">隐藏未选项</a></div>
+          <div id="brand_div" class="scrollbar-box">
+            <div class="ncap-type-spec-list">
+              {notempty name="brand_list"}
+              {foreach name="brand_list" item="val" key="k" }
+              <dl>
+                <dt id="brand_dt_{$k}">{$val.name}</dt>
+                {if $val.brand}
+                <dd>
+                   {foreach name="$val.brand" item="bval"}
+                  <label for="brand_{$bval.brand_id}">
+                    <input type="checkbox" name="brand_id[]" value="{$bval.brand_id}" <?php if(in_array($bval['brand_id'], $nav_info['goodscn_brandids'])){ echo 'checked="checked"';}?> id="brand_{$bval.brand_id}" />
+                    {$bval.brand_name}</label>
+                  {/foreach}
+                </dd>
+                {/if}
+              </dl>
+             {/foreach}
+             {else /}
+              <div>{$Think.lang.type_add_brand_null_one}<a href="JavaScript:void(0);" onclick="window.parent.openItem('index,Brand,goods')">{$Think.lang.ds_brand_manage}</a>{$Think.lang.type_add_brand_null_two}</div>
+             {/notempty}
+            </div>
+          </div>
+          <p class="notic">推荐品牌将在展开后的二、三级导航列表右侧突出显示，建议选择数量为8个具有图片的品牌，超过将被隐藏。</p>
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label for="pic">广告1图</label>
+        </dt>
+        <dd class="opt">
+          <div class="input-file-show-shop"><span class="show"><a data-lightbox="lightbox-image" href="{$nav_info.goodscn_adv1|default=''}"> <i class="iconfont">&#xe72a;</i> </a></span><span class="type-file-box-shop">
+            <input class="type-file-file" id="adv1" name="adv1" type="file" size="30" ds_type="change_pic" hidefocus="true" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+            <input type="text" name="textfield" id="textfield2" class="type-file-text" />
+            <input type="button" name="button" id="button1" value="上传" class="type-file-button" />
+            </span></div>
+          <label title="分类导航广告图1-跳转链接" for="goodscn_adv1_link" class="ml5"><i class="iconfont">&#xe67d;</i>
+            <input type="text" value="{$nav_info.goodscn_adv1_link|default=''}" name="goodscn_adv1_link" id="goodscn_adv1_link" class="input-txt ml5">
+          </label>
+          <p class="notic">广告图片将展示在推荐品牌下方，请使用宽度190像素，高度150像素的jpg/gif/png格式图片作为分类导航广告上传，<br/>
+            如需跳转请在后方添加以http://开头的链接地址。</p>
+        </dd>
+      </dl>
+      <dl class="row">
+        <dt class="tit">
+          <label for="pic">广告2图</label>
+        </dt>
+        <dd class="opt">
+          <div class="input-file-show-shop"><span class="show"><a data-lightbox="lightbox-image" href="{$nav_info.goodscn_adv2|default=''}"> <i class="iconfont">&#xe72a;</i> </a></span><span class="type-file-box-shop">
+            <input class="type-file-file" id="adv2" name="adv2" type="file" size="30" ds_type="change_pic" hidefocus="true" title="点击前方预览图可查看大图，点击按钮选择文件并提交表单后上传生效">
+            <input type="text" name="textfield" id="textfield3" class="type-file-text" />
+            <input type="button" name="button" id="button1" value="上传" class="type-file-button" />
+            </span></div>
+          <label for="goodscn_adv2_link" title="分类导航广告图2-跳转链接" class="ml5"><i class="iconfont">&#xe67d;</i>
+            <input type="text" value="{$nav_info.goodscn_adv2_link|default=''}" name="goodscn_adv2_link" id="goodscn_adv2_link" class="input-txt ml5">
+          </label>
+          <p class="notic">广告图片将展示在推荐品牌下方，请使用宽度190像素，高度150像素的jpg/gif/png格式图片作为分类导航广告上传，<br/>
+            如需跳转请在后方添加以http://开头的链接地址。</p>
+        </dd>
+      </dl>
+      <div class="bot"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></div>
+    </div>
+  </form>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<script>
+$(function(){
+//自动加载滚动条
+    $('#class_div').perfectScrollbar();
+    $('#brand_div').perfectScrollbar();
+
+    $("#pic").change(function(){
+        $("#textfield1").val($(this).val());
+    });
+    $("#adv1").change(function(){
+        $("#textfield2").val($(this).val());
+    });
+    $("#adv2").change(function(){
+        $("#textfield3").val($(this).val());
+    });
+
+    // 类型搜索
+    $("#brandcategory > select").on('change',function(){
+        brand_scroll($(this));
+    });
+
+    // 品牌隐藏未选项
+    $(document).off('click','a[dstype="brand_hide"]').on('click','a[dstype="brand_hide"]', function() {
+        checked_hide('brand');
+    });
+    // 品牌全部显示
+    $(document).off('click','a[dstype="brand_show"]').on('click','a[dstype="brand_show"]', function() {
+        checked_show('brand');
+    });
+    // 子级分类隐藏未选项
+    $(document).off('click','a[dstype="class_hide"]').on('click','a[dstype="class_hide"]', function() {
+        checked_hide('class');
+    });
+    // 子级分类全部显示
+    $(document).off('click','a[dstype="class_show"]').on('click','a[dstype="class_show"]', function() {
+        checked_show('class');
+    });
+});
+var brandScroll = 0;
+function brand_scroll(o){
+    var id = o.val();
+    if(!$('#brand_dt_'+id).is('dt')){
+        return false;
+    }
+    $('#brand_div').scrollTop(-brandScroll);
+    var sp_top = $('#brand_dt_'+id).offset().top;
+    var div_top = $('#brand_div').offset().top;
+    $('#brand_div').scrollTop(sp_top-div_top);
+    brandScroll = sp_top-div_top;
+}
+
+
+//隐藏未选项
+function checked_show(str) {
+    $('#'+str+'_div').find('dt').show().end().find('label').show();
+    $('#'+str+'_div').find('dl').show();
+    $('a[dstype="'+str+'_show"]').attr('dstype',str+'_hide').html('隐藏未选项');
+    $('#'+str+'_div').perfectScrollbar('destroy').perfectScrollbar();
+}
+
+//显示全部选项
+function checked_hide(str) {
+    $('#'+str+'_div').find('dt').hide();
+    $('#'+str+'_div').find('input[type="checkbox"]').parents('label').hide();
+    $('#'+str+'_div').find('input[type="checkbox"]:checked').parents('label').show();
+    $('#'+str+'_div').find('dl').each(function(){
+        if ($(this).find('input[type="checkbox"]:checked').length == 0 ) $(this).hide();
+    });
+    $('a[dstype="'+str+'_hide"]').attr('dstype',str+'_show').html('显示未选项');
+    $('#'+str+'_div').perfectScrollbar('destroy').perfectScrollbar();
+}
+gcategoryInit('brandcategory');
+</script>

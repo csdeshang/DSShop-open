@@ -1,0 +1,48 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+<div class="dsm-default-form fl">
+    <form method="post" action="" id="memberfeedback_form">
+        <dl>
+            <dt>{$Think.lang.memberfeedback_content}：</dt>
+            <dd>
+                <span class="w400">
+                    <textarea name="fb_content" cols="50" rows="10"></textarea>
+                </span>
+            </dd>
+        </dl>
+        <dl class="bottom">
+            <dt></dt>
+            <dd>
+                <input type="submit" class="submit" value="{$Think.lang.ds_submit}">
+            </dd>
+        </dl>
+    </form>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $('#memberfeedback_form').validate({
+            submitHandler: function (form) {
+                ds_ajaxpost('memberfeedback_form', 'url', "{:url('Memberfeedback/add')}");
+            },
+            rules: {
+                fb_content: {
+                    required: true
+                }
+            },
+            messages: {
+                fb_content: {
+                    required: '{$Think.lang.memberfeedback_content_tip}'
+                }
+            }
+        });
+    });
+</script>
+
+
+{/block}
+
+

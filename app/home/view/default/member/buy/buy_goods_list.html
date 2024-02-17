@@ -1,0 +1,158 @@
+<style>
+.dsc-table-style tbody tr.item_disabled td{background: none repeat scroll 0 0 #F9F9F9;height: 30px;padding: 10px 0;text-align: center;}
+</style>
+<div class="dsc-receipt-info">
+  <div class="dsc-receipt-info-title">
+    <h3>{$Think.lang.list_of_items}</h3>
+    {notempty name="ifcart"}
+    <a href="{:url('Cart/index')}">{$Think.lang.cart_step1_back_to_cart}</a>
+    {/notempty}
+  </div>
+  <table class="dsc-table-style">
+    <thead>
+      <tr>
+        <th class="w20"></th>
+        <th></th>
+        <th>{$Think.lang.ds_goods_name}</th>
+        <th class="w120">{$Think.lang.ds_unit_price}({$Think.lang.ds_yuan})</th>
+        <th class="w120">{$Think.lang.ds_quantity}</th>
+        <th class="w120">{$Think.lang.cart_index_sum}({$Think.lang.ds_yuan})</th>
+      </tr>
+    </thead>
+    <tbody>
+      <?php foreach($cart_list as $cart_info) {?>
+      <tr id="cart_item_{$cart_info.cart_id}" class="shop-list {if $cart_info.state && $cart_info.storage_state}{else/}item_disabled{/if}">
+          <td>
+              {if $cart_info['state'] && $cart_info['storage_state']}
+              <input type="hidden" value="{$cart_info.cart_id}|{$cart_info.goods_num}" name="cart_id[]">
+              {/if}
+          </td>
+          {if $cart_info['bl_id'] == '0'}
+          <td class="w60"><a href="{:url('Goods/index',['goods_id'=>$cart_info.goods_id])}" target="_blank" class="dsc-goods-thumb"><img src="{:goods_thumb($cart_info,240)}" alt="{$cart_info.goods_name}" /></a></td>
+          {/if}
+        <td class="tl" {if $cart_info.bl_id != '0'}colspan="2"{/if}><dl class="dsc-goods-info">
+            <dt><a href="{:url('Goods/index',['goods_id'=>$cart_info.goods_id])}" target="_blank">{$cart_info.goods_name}</a></dt>
+            {notempty name="$cart_info.xianshi_info"}
+            <dd> <span class="xianshi">{$Think.lang.ds_mansong_flag}<strong>{$cart_info.xianshi_info.xianshigoods_lower_limit}</strong>{$Think.lang.unit_price_down}<em>￥{$cart_info.xianshi_info.down_price}</em></span> </dd>
+            {/notempty}
+            {if isset($cart_info['ifgroupbuy'])}
+            <dd> <span class="groupbuy">{$Think.lang.ds_groupbuy}</span></dd>
+            {/if}
+            {if $cart_info['bl_id'] != '0'}
+            <dd> <span class="buldling">{$Think.lang.single_set_vertical_drop}<em>￥{$cart_info.down_price}</em></span></dd>
+            {/if}
+            {notempty name="$cart_info.gift_list"}
+            <dd><span class="dsc-goods-gift">{$Think.lang.a_gift}</span>
+              <ul class="dsc-goods-gift-list">
+                {foreach name="$cart_info.gift_list" item="goods_info"  }
+                <li ds_group="{$cart_info.cart_id}"><a href="{:url('Goods/index',['goods_id'=>$goods_info.gift_goodsid])}" target="_blank" class="thumb" ><img src="{:goods_cthumb($goods_info['gift_goodsimage'],240)}" alt="{$goods_info.gift_goodsname}"/></a> </li>
+                {/foreach}
+              </ul>
+            </dd>
+            {/notempty}
+          </dl></td>
+          <td class="w120">
+              <em>{$cart_info.goods_price}</em>
+              <!--{if $cart_info.goods_price<$cart_info.goods_original_price}-->
+              <div><del>{$cart_info.goods_original_price}</del></div>
+              <!--{/if}-->
+          </td>
+        <td class="w60">{if $cart_info.state}{$cart_info.goods_num}{/if}</td>
+        <td class="w120">
+          {if $cart_info['state'] && $cart_info['storage_state']}
+          <em id="item{$cart_info.cart_id}_subtotal" ds_type="eachGoodsTotal">{$cart_info.goods_total}</em>
+          {elseif !$cart_info['storage_state'] /}
+          <span style="color: #F00;">{$Think.lang.cart_add_too_much}</span>
+          {elseif !$cart_info['state'] /}
+          <span style="color: #F00;">{$Think.lang.has_been_off_shelves}</span>
+          {/if}
+        </td>
+      </tr>
+
+      <!-- S bundling goods list -->
+      {notempty name="$cart_info.bl_goods_list"}
+      {foreach name="$cart_info.bl_goods_list" item="goods_info"  }
+      <tr class="shop-list {if $cart_info.state && $cart_info.storage_state}{else/}item_disabled{/if}">
+        <td></td>
+        <td class="w60"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank" class="dsc-goods-thumb"><img src="{:goods_thumb($goods_info,240)}" alt="{$goods_info.goods_name}" /></a></td>
+        <td class="tl"><dl class="dsc-goods-info">
+            <dt><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank">{$goods_info.goods_name}</a> </dt>
+          </dl>
+        </td>
+        <td>
+            <em>{$goods_info.blgoods_price}</em>
+            <!--{if $goods_info.blgoods_price<$cart_info.goods_original_price}-->
+              <div><del>{$goods_info.goods_original_price}</del></div>
+            <!--{/if}-->
+        </td>
+        <td></td>
+        <td></td>
+      </tr>
+      {/foreach}
+      {/notempty}
+      <!-- E bundling goods list -->
+
+      <?php } ?>
+      <tr>
+        <td class="w10"></td>
+        <td class="tl" colspan="2">{$Think.lang.buyer_message}：
+          <textarea  name="pay_message[]" class="dsc-msg-textarea" placeholder="{$Think.lang.transaction_statement}" title="{$Think.lang.transaction_statement}"  maxlength="150"></textarea></td>
+        <td class="tl" colspan="3"><div class="dsc-form-default"> </div></td>
+      </tr>
+      <tr>
+        <td class="tr" colspan="6"><div class="dsc-account">
+            <dl class="freight">
+              <dt>{$Think.lang.cart_index_freight}：</dt>
+              <dd><em id="eachFreight_">0.00</em>{$Think.lang.ds_yuan}</dd>
+            </dl>
+            <dl>
+              <dt>{$Think.lang.amount_of_goods}：</dt>
+              <dd><em>{$goods_original_total}</em><em id="eachGoodsTotal_" style="display: none">{$goods_total}</em>{$Think.lang.ds_yuan}</dd>
+            </dl>
+            <!--{if $goods_discount_total>0}-->    
+            <dl class="mansong">
+              <dt>{$Think.lang.amount_of_discount}：</dt>
+              <dd><em>{$goods_discount_total}</em>{$Think.lang.ds_yuan}</dd>
+            </dl>  
+            <!--{/if}-->   
+                {if !empty($mansong_rule_list['discount'])}
+                <dl class="mansong">
+                    <dt>{$Think.lang.ds_mansong}-{$mansong_rule_list['desc']|raw}：</dt>
+                    <dd><em id="eachManSong_">-{$mansong_rule_list['discount']}</em>{$Think.lang.ds_yuan}</dd>
+                </dl>
+                {/if}
+
+            <!-- S voucher list -->
+            {notempty name="$voucher_list"}
+            <dl class="voucher">
+              <dt>
+                <select dstype="voucher" name="voucher[]">
+                  <option value="{$voucher.vouchertemplate_id|default=''}|0.00">{$Think.lang.cart_step1_select_voucher}</option>
+                  {foreach name="$voucher_list" item="voucher" }
+                  <option value="{$voucher.vouchertemplate_id}|{$voucher.voucher_price}">{$voucher.desc}</option>
+                  {/foreach}
+                </select>：
+              </dt>
+              <dd><em id="eachVoucher_">-0.00</em>{$Think.lang.ds_yuan}</dd>
+            </dl>
+            {/notempty}
+
+            <!-- E voucher list -->
+
+            <dl class="total">
+              <dt>{$Think.lang.our_total}：</dt>
+              <dd><em ds_type="eachStoreTotal"></em>{$Think.lang.ds_yuan}</dd>
+            </dl>
+          </div></td>
+      </tr>
+
+
+
+    </tbody>
+    <tfoot>
+      <tr>
+        <td colspan="6"><div class="dsc-all-account">{$Think.lang.total_order_amount}：<em id="orderTotal"></em>{$Think.lang.ds_yuan}</div></td>
+      </tr>
+    </tfoot>
+  </table>
+</div>

@@ -1,0 +1,148 @@
+<!-- 秒杀 -->
+<form onchange="changeForm($(this),22)">
+  <input type="hidden" name="model_id" value="22" />
+<h2 class="attr-title">秒杀</h2>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">背景颜色</label>
+    <div class="layui-input-block">
+        <div class="color-wrapper">
+            <input data-js="color"  type="text"  name="back_color" value="{$config_info.back_color|default=''}"/>
+        </div>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label sm">固定商品</label>
+    <div class="layui-input-block">
+        <div class="onoff">
+            <label for="if_fixed_goods_22_1" class="cb-enable{if !isset($config_info.if_fixed_goods) || $config_info.if_fixed_goods==1} selected{/if}" onclick="$(this).parents('form').find('[data-fixed=0]').hide();$(this).parents('form').find('[data-fixed=1]').show()">{$Think.lang.ds_yes}</label>
+            <label for="if_fixed_goods_22_0" class="cb-disable{if isset($config_info.if_fixed_goods) && $config_info.if_fixed_goods==0} selected{/if}" onclick="$(this).parents('form').find('[data-fixed=0]').show();$(this).parents('form').find('[data-fixed=1]').hide()">{$Think.lang.ds_no}</label>
+            <input id="if_fixed_goods_22_1"{if !isset($config_info.if_fixed_goods) || $config_info.if_fixed_goods==1} checked="checked"{/if} name="if_fixed_goods" value="1" type="radio">
+            <input id="if_fixed_goods_22_0"{if isset($config_info.if_fixed_goods) && $config_info.if_fixed_goods==0} checked="checked"{/if} name="if_fixed_goods" value="0" type="radio">
+        </div>
+    </div>
+  </div>
+  <div class="layui-form-item" data-fixed="1"{if isset($config_info.if_fixed_goods) && $config_info.if_fixed_goods==0} style="display:none"{/if}>
+      <label class="layui-form-label sm">选择商品</label>
+      <div class="layui-input-block">
+          <div class="select-wrapper" data-select="goods">
+              <span class="text" data-count>请选择</span>
+              <span class="icon iconfont">&#xe687;</span>
+          </div>
+          <div data-content="goods_ids" style="display:none">
+            {if isset($config_info['goods_id']) && !empty($config_info['goods_id'])}
+            {foreach name='config_info.goods_id' item='item' key='key'}
+            <input data-goods="{$key}" type="number" min="0" max="255" size="1" name="goods_id[{$key}][sort]" value="{$item.sort}" />
+            {/foreach}
+            {/if}
+          </div>
+      </div>
+  </div>
+  <div class="layui-form-item" data-fixed="0"{if !isset($config_info.if_fixed_goods) || $config_info.if_fixed_goods==1} style="display:none"{/if}>
+    <label class="layui-form-label sm">商品数量</label>
+    <div class="layui-input-block">
+        <div class="range-wrapper">
+          <input type="range" name="goods_count" value="{$config_info.goods_count|default='1'}" min="1" onchange="$(this).next().text($(this).val())">
+          <span>{$config_info.goods_count|default='1'}</span>
+        </div>
+    </div>
+  </div>
+  <div class="layui-form-item" data-fixed="0"{if !isset($config_info.if_fixed_goods) || $config_info.if_fixed_goods==1} style="display:none"{/if}>
+    <label class="layui-form-label sm">商品分类</label>
+    <div class="layui-input-block">
+      <div data-js="goods_class"><div data-select></div><input type="hidden" name="goods_class" data-input value="{$config_info.goods_class|default='0'}"/></div>
+      
+    </div>
+  </div>
+  <div class="layui-form-item" data-fixed="0"{if !isset($config_info.if_fixed_goods) || $config_info.if_fixed_goods==1} style="display:none"{/if}>
+    <label class="layui-form-label sm">商品排序</label>
+    <div class="layui-input-block">
+            <select name="goods_sort">
+              <option value="1"{if isset($config_info.goods_sort) && $config_info.goods_sort==1} selected="selected"{/if}>按新品</option>
+              <option value="2"{if isset($config_info.goods_sort) && $config_info.goods_sort==2} selected="selected"{/if}>按热销</option>
+              <option value="3"{if isset($config_info.goods_sort) && $config_info.goods_sort==3} selected="selected"{/if}>按好评</option>
+            </select>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label sm">显示头标</label>
+    <div class="layui-input-block">
+        <div class="onoff">
+          <label for="if_show_title_icon_22_1" class="cb-enable{if !isset($config_info.if_show_title_icon) || $config_info.if_show_title_icon==1} selected{/if}">{$Think.lang.ds_yes}</label>
+          <label for="if_show_title_icon_22_0" class="cb-disable{if isset($config_info.if_show_title_icon) && $config_info.if_show_title_icon==0} selected{/if}">{$Think.lang.ds_no}</label>
+          <input id="if_show_title_icon_22_1"{if !isset($config_info.if_show_title_icon) || $config_info.if_show_title_icon==1} checked="checked"{/if} name="if_show_title_icon" value="1" type="radio">
+          <input id="if_show_title_icon_22_0"{if isset($config_info.if_show_title_icon) && $config_info.if_show_title_icon==0} checked="checked"{/if} name="if_show_title_icon" value="0" type="radio">
+        </div>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label sm">头标图片</label>
+    <div class="layui-input-block">
+        <div class="uploader-wrapper">
+            <div class="uploader-image-wrapper" {if !isset($config_info.title_icon) || !$config_info.title_icon}style="display:none" {/if}>
+                                        <img class='uploader-image' src='{$config_info.title_icon|default=""}' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+            <div class='uploader-content' {if isset($config_info.title_icon) && $config_info.title_icon}style="display:none"{/if}>
+                <div class="uploader-icon iconfont">&#xe6bf;</div>
+                <div class="uploader-text">点击上传</div>
+                <div class="uploader-notice">174×37</div>
+                <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+            <input type='hidden' name='title_icon' value='{$config_info.title_icon|default=""}'>
+            </div>
+            
+        </div>
+    </div>
+  </div>
+  
+</form>
+<script>
+  if(typeof(loadConfig22)=='undefined'){
+        function loadConfig22(obj){
+            obj.find('[data-js="color"]').colorpicker({showOn: 'both'});
+            var id=obj.attr('data-id')
+            obj.find('[data-js="goods_class"]').attr('id','goods_class_'+id)
+            var gc_id=parseInt(obj.find('*[data-input]').val())
+            if(gc_id){
+                getGoodsClass(gc_id,'goods_class_'+id)
+            }else{
+                loadGoodsClass(1,0,'goods_class_'+id)
+            }
+            
+            
+            var i=0
+            obj.find('[data-select="goods"]').each(function(){
+                $(this).attr('id','select_goods_'+i+'_'+id)
+                i++
+            })
+            obj.find('*[data-select="goods"]').click(function(){
+                var goods_id=''
+                $(this).parent().find('*[data-content="goods_ids"] input').each(function(){
+                    goods_id+='&goods_id['+$(this).attr('data-goods')+'][sort]='+$(this).val()
+                })
+                dsLayerOpen('{:url(request()->controller()."/search_goods")}?type=xianshi&id='+$(this).attr('id')+goods_id,'选择商品')
+            })
+
+            obj.find('.onoff').each(function(){
+                        $(this).find(".cb-enable").click(function() {
+                            var parent = $(this).parents('.onoff');
+                            $('.cb-disable', parent).removeClass('selected');
+                            $(this).addClass('selected');
+                            $('.checkbox', parent).prop('checked', true);
+                        });
+                        $(this).find(".cb-disable").click(function() {
+                            var parent = $(this).parents('.onoff');
+                            $('.cb-enable', parent).removeClass('selected');
+                            $(this).addClass('selected');
+                            $('.checkbox', parent).prop('checked', false);
+                        });
+                    })
+        }
+    }
+    if(typeof(saveGoods)=='undefined'){
+        function saveGoods(html,id,count){
+            $('#'+id).parent().find('[data-content="goods_ids"]').html(html)
+            $('#'+id).parent().find('[data-count]').text(count?('已选择'+count+'个'):'请选择')
+            $('#'+id).parents('form').change()
+        }
+    }
+</script>

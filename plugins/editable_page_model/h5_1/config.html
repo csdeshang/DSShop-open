@@ -1,0 +1,121 @@
+<!-- 图片广告 -->
+<form onchange="changeForm($(this),1)">
+    <input type="hidden" name="model_id" value="1" />
+<h2 class="attr-title">图片广告</h2>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">背景颜色</label>
+    <div class="layui-input-block">
+        <div class="color-wrapper">
+            <input data-js="color" type="text" name="back_color" value="{$config_info.back_color|default=''}" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">图片宽度</label>
+    <div class="layui-input-block">
+        <input type="text" name="image_width" value="{$config_info.image_width|default=''}" placeholder="请输入图片宽度，例：1200px" class="layui-input">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">图片高度</label>
+    <div class="layui-input-block">
+        <input type="text" name="image_height" value="{$config_info.image_height|default=''}" placeholder="请输入图片高度，例：400px" class="layui-input">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">展示形式</label>
+    <div class="layui-input-block">
+        <div class="ds-icon-radio">
+            <input type="hidden" name="show_format" value="{$config_info.show_format|default='1'}" />
+            <ul class="ds-icon">
+                <li{if !isset($config_info['show_format']) || $config_info['show_format']==1} class="ds-icon-active"{/if} data-val="1" onclick="setRadio($(this))">
+                    <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/banner.png">
+                    <div class="text">竖向</div>
+                </li>
+                <li{if isset($config_info['show_format']) && $config_info['show_format']==2} class="ds-icon-active"{/if} data-val="2" onclick="setRadio($(this))">
+                    <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/cross_slip.png">
+                    <div class="text">横向</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+{if isset($config_info['adv']) && !empty($config_info['adv'])}
+{foreach name='config_info.adv' item='item' key='key'}
+<div class="model-item"{if $key==0} id="adv_item"{/if}>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">广告图片</label>
+        <div class="layui-input-block">
+            <div class="uploader-wrapper">
+                <div class="uploader-image-wrapper" {if !$item.image}style="display:none" {/if}>
+                                        <img class='uploader-image' src='{$item.image|default=''}' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+                <div class='uploader-content' {if $item.image}style="display:none" {/if}>
+                    <div class="uploader-icon iconfont">&#xe6bf;</div>
+                    <div class="uploader-text">点击上传</div>
+                    <div class="uploader-notice">750×376</div>
+                    <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+                <input type='hidden' name='adv[i_{$key}][image]' value="{$item.image|default=''}">
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">跳转页面</label>
+        <div class="layui-input-block">
+            <input type="text" name="adv[i_{$key}][link]" value="{$item.link|default=''}" placeholder="请输入跳转页面" class="layui-input">
+        </div>
+    </div>
+</div>
+{/foreach}
+{else}
+<div class="model-item" id="adv_item">
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">广告图片</label>
+        <div class="layui-input-block">
+            <div class="uploader-wrapper">
+                <div class="uploader-image-wrapper" style="display:none">
+                                        <img class='uploader-image' src='' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+                <div class='uploader-content'>
+                    <div class="uploader-icon iconfont">&#xe6bf;</div>
+                    <div class="uploader-text">点击上传</div>
+                    <div class="uploader-notice">750×376</div>
+                    <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+                <input type='hidden' name='adv[i_0][image]' value="">
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">跳转页面</label>
+        <div class="layui-input-block">
+            <input type="text" name="adv[i_0][link]" value="" placeholder="请输入跳转页面" class="layui-input">
+        </div>
+    </div>
+</div>
+{/if}
+<div class="model-btn" onclick="addModel($(this),1)">
+    <span>+</span>
+    <span>添加一个图片广告</span>
+</div>
+
+</form>
+<script>
+    if(typeof(loadConfig1)=='undefined'){
+        function loadConfig1(obj){
+            obj.find('[data-js="color"]').colorpicker({showOn: 'both'});
+        }
+    }
+    $(function(){
+        if(typeof(index['i_1'])=='undefined'){
+            index['i_1']={if isset($config_info['adv'])}{:count($config_info['adv'])}{else}0{/if};
+            html['i_1']=$('#adv_item').html()
+        }
+    })
+</script>

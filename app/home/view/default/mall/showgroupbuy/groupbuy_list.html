@@ -1,0 +1,106 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_group.css">
+<div class="w1200">
+  <form id="search_form">
+  <input id="groupbuy_class" name="groupbuy_class" type="hidden" value="{$Request.param.groupbuy_class}"/>
+  <input id="groupbuy_price" name="groupbuy_price" type="hidden" value="{$Request.param.groupbuy_price}"/>
+  <input id="groupbuy_order_key" name="groupbuy_order_key" type="hidden" value="{$Request.param.groupbuy_order_key}"/>
+  <input id="groupbuy_order" name="groupbuy_order" type="hidden" value="{$Request.param.groupbuy_order}"/>
+</form>
+<div class="dsh-breadcrumb-layout" style="display: block;">
+  <div class="dsh-breadcrumb wrapper"> <i class="iconfont">&#xe6ff;</i> <span> <a href="{:url('Index/index')}">{$Think.lang.ds_index}</a> </span> <span class="arrow">></span> <span>{$Think.lang.online_grab}</span></div>
+</div>
+
+<div class="dsg-container">
+  
+
+  <div>
+    
+
+    <div class="dsg-screen">
+
+        {notempty name="$groupbuy_classes.children.0"}
+      <!-- 分类过滤列表 -->
+      <dl>
+        <dt>{$Think.lang.classification}：</dt>
+        <dd class="nobg<?php if (!($hasChildren = !empty(input('class')))) echo ' selected'; ?>"><a href="{:dropParam(array('class', 's_class'))}">{$Think.lang.text_no_limit}</a></dd>
+        <?php $names = $groupbuy_classes['name']; foreach ($groupbuy_classes['children'][0] as $v) { ?>
+        <dd<?php if ($hasChildren && input('get.class') == $v) echo ' class="selected"'; ?>><a href="{:replaceAndDropParam(array('class' => $v), array('s_class'))}">{$names[$v]}</a></dd>
+        <?php } ?>
+        <?php if ($hasChildren && !empty($groupbuy_classes['children'][input('param.class')])) { ?>
+        <ul>
+        <?php foreach ($groupbuy_classes['children'][input('class')] as $v) { ?>
+          <li {if $Request.param.s_class == $v}class="selected"{/if}><a href="{:replaceParam(array('s_class' => $v))}">{$names[$v]}</a></li>
+          <?php } ?>
+        </ul>
+        <?php } ?>
+      </dl>
+      {/notempty}
+
+      <!-- 价格过滤列表 -->
+      <dl>
+        <dt>{$Think.lang.text_price}：</dt>
+        <dd class="{if $Request.param.groupbuy_price==''}selected{/if}"><a href="{:dropParam(array('groupbuy_price'))}">{$Think.lang.text_no_limit}</a></dd>
+        {notempty name="price_list"}
+        {foreach name="price_list" item="groupbuy_price" }
+        <dd {if $Request.param.groupbuy_price == $groupbuy_price.gprange_id}class='selected'{/if}> <a href="{:replaceParam(array('groupbuy_price' => $groupbuy_price['gprange_id']))}">{$groupbuy_price.gprange_name}</a> </dd>
+       {/foreach}
+       {/notempty}
+      </dl>
+      <dl class="dsg-sortord">
+        <dt>{$Think.lang.ds_sort}：</dt>
+        <dd class="{if $Request.param.groupbuy_order_key==''}selected{/if}"><a href="{:dropParam(array('groupbuy_order_key', 'groupbuy_order'))}">{$Think.lang.text_default}<i></i></a></dd>
+        <dd {if $Request.param.groupbuy_order_key=='1'}class='selected'{/if}><a <?php echo input('groupbuy_order_key') == '1'?"class='". (input('groupbuy_order') == 1 ? 'asc' : 'desc') ."'":'';?> href="<?php echo (input('groupbuy_order_key') == '1' && input('groupbuy_order') == '2' ? replaceParam(array('groupbuy_order_key' => '1', 'groupbuy_order' => '1')) : replaceParam(array('groupbuy_order_key' => '1', 'groupbuy_order' => '2')));?>">{$Think.lang.text_price}<i class="iconfont"></i></a></dd>
+        <dd {if $Request.param.groupbuy_order_key=='2'}class='selected'{/if}><a <?php echo input('groupbuy_order_key') == '2'?"class='". (input('groupbuy_order') == 1 ? 'asc' : 'desc') ."'":'';?> href="<?php echo (input('groupbuy_order_key') == '2' && input('groupbuy_order') == '2' ? replaceParam(array('groupbuy_order_key' => '2', 'groupbuy_order' => '1')) : replaceParam(array('groupbuy_order_key' => '2', 'groupbuy_order' => '2')));?>">{$Think.lang.text_rebate}<i class="iconfont"></i></a></dd>
+        <dd {if $Request.param.groupbuy_order_key=='3'}class='selected'{/if}><a <?php echo input('groupbuy_order_key') == '3'?"class='". (input('groupbuy_order') == 1 ? 'asc' : 'desc') ."'":'';?> href="<?php echo (input('groupbuy_order_key') == '3' && input('groupbuy_order') == '2' ? replaceParam(array('groupbuy_order_key' => '3', 'groupbuy_order' => '1')) : replaceParam(array('groupbuy_order_key' => '3', 'groupbuy_order' => '2')));?>">{$Think.lang.text_sale}<i class="iconfont"></i></a></dd>
+      </dl>
+    </div>
+      <div class="dsg-nav">
+      <ul>
+        <li {if $current == 'online'}class="current"{/if}><a href="{:url('Showgroupbuy/groupbuy_list')}">{$Think.lang.ongoing}</a></li>
+        <li {if $current == 'soon'}class="current"{/if}><a href="{:url('Showgroupbuy/groupbuy_soon')}">{$Think.lang.about_to_start}</a></li>
+        <li {if $current == 'history'}class="current"{/if}><a href="{:url('Showgroupbuy/groupbuy_history')}">{$Think.lang.finished}</a></li>
+      </ul>
+    </div>
+    {notempty name="groupbuy_list"}
+    <!-- 抢购活动列表 -->
+    <div class="group-list">
+      <ul>
+        {foreach name="groupbuy_list" item="groupbuy" }
+        <li class="{$current}">
+          <div class="dsg-list-content">
+              <a title="{$groupbuy.groupbuy_name}" href="{$groupbuy.groupbuy_url}" class="pic-thumb" target="_blank">
+                  <img class="lazyload" data-original="{:groupbuy_thumb($groupbuy['groupbuy_image'],'normal')}" alt="">
+              </a>
+            <h3 class="title"><a title="{$groupbuy.groupbuy_name}" href="{$groupbuy.groupbuy_url}" target="_blank">{$groupbuy.groupbuy_name}</a></h3>
+            <?php list($integer_part, $decimal_part) = explode('.', $groupbuy['groupbuy_price']);?>
+            <div class="item-prices"> <span class="price"><i>{$Think.lang.currency}</i>{$integer_part}<em>.{$decimal_part}</em></span>
+              <div class="dock"><span class="limit-num">{$groupbuy.groupbuy_rebate}&nbsp;{$Think.lang.ds_zhe}</span> <del class="orig-price">{$Think.lang.currency}{$groupbuy.goods_price}</del></div>
+              <span class="sold-num"><em><?php echo $groupbuy['groupbuy_buy_quantity']+$groupbuy['virtual_quantity'];?></em>{$Think.lang.piece}{$Think.lang.text_buy}</span>
+              <a href="{$groupbuy.groupbuy_url}" target="_blank" class="buy-button">{$buy_button}</a>
+            </div>
+          </div>
+        </li>
+        {/foreach}
+      </ul>
+    </div>
+    <div class="tc mt20 mb20">
+      <div class="pagination">{$show_page|raw}</div>
+    </div>
+    {else /}
+    <div class="no-content">{$Think.lang.no_groupbuy_info}</div>
+    {/notempty}
+  </div>
+</div>
+  </div>
+
+
+
+
+
+{/block}

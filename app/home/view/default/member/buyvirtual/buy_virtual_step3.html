@@ -1,0 +1,174 @@
+{include file="default/base/mall_top" /}
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+</div>
+<div class="dsc-line"></div>
+<div class="dsc-main">
+  <div class="dsc-title">
+    <h3>{$Think.lang.cart_step2_online_pay}</h3>
+    <h5><a href="{:url('Membervrorder/show_order',['order_id'=>$order_info.order_id])}" target="_blank">{$Think.lang.view_order_details}</a></h5>
+  </div>
+  <form action="{:url('Payment/vr_order')}" method="POST" id="buy_form">
+    <input type="hidden" name="order_sn" value="{$order_info.order_sn}">
+    <input type="hidden" id="payment_code" name="payment_code" value="">
+    <div class="dsc-receipt-info">
+      <div class="dsc-receipt-info-title">
+        <h3>{$Think.lang.please_pay_time}<strong>￥{$diff_pay_amount}</strong></h3>
+      </div>
+      <table class="dsc-table-style">
+        <thead>
+          <tr>
+            <th class="w50"></th>
+            <th class="w150 tc">{$Think.lang.order_number}</th>
+            <th class="w250 tc">{$Think.lang.ds_goods}</th>
+            <th class="tc">{$Think.lang.ds_unit_price}</th>
+            <th class="w150 tc">{$Think.lang.ds_quantity}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td></td>
+            <td class="tc">{$order_info.order_sn}</td>
+            <td class="tc">{$order_info.goods_name}</td>
+            <td class="tc">￥{$order_info.goods_price}</td>
+            <td class="tc">{$order_info.goods_num}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+      <!-- S 预存款 & 充值卡 -->
+      {if !empty($available_pd_amount) || !empty($available_rcb_amount)}
+      <div id="pd_panel">
+          <div class="pd-account" colspan="6"><div class="dsc-pd-account">
+                  {notempty name="available_rcb_amount"}
+                  <div class="mt5 mb5">
+                      <label>
+                          <input type="checkbox" class="vm mr5" value="1" name="rcb_pay">
+                          {$Think.lang.use_top_up_cards}：<em>{$available_rcb_amount}</em>{$Think.lang.ds_yuan}
+                      </label>
+                  </div>
+                  {/notempty}
+                  {notempty name="available_pd_amount"}
+                  <div class="mt5 mb5">
+                      <label>
+                          <input type="checkbox" class="vm mr5" value="1" name="pd_pay">
+                          {$Think.lang.pre_deposit}：<em>{$available_pd_amount}</em>{$Think.lang.ds_yuan}）</label>
+                  </div>
+                  {/notempty}
+                  {if !empty($available_pd_amount) && !empty($available_rcb_amount)}
+                  <div class="mt5 mb5">{$Think.lang.system_priority}&nbsp;&nbsp;</div>
+                  {/if}
+                  <div id="pd_password" style="display: none">{$Think.lang.pay_the_password}（{$Think.lang.pay_the_password_tips}）：
+                      <input type="password" class="text w120" value="" name="password" id="pay-password" maxlength="35" autocomplete="off">
+                      <input type="hidden" value="" name="password_callback" id="password_callback">
+                      <a class="dsc-btn-mini dsc-btn-orange" id="pd_pay_submit" href="javascript:void(0)">{$Think.lang.use}</a>
+                      {if !$member_paypwd}
+                      {$Think.lang.no_payment_password_set}，<a href="{:url('Membersecurity/auth',['type'=>'modify_paypwd'])}" target="_blank">{$Think.lang.set_up_immediately}</a>
+                      {/if}
+                  </div>
+              </div>
+          </div>
+      </div>
+      {/if}
+      <!-- E 预存款 -->
+    <div class="dsc-receipt-info">
+        {empty name="payment_list"}
+      <div class="nopay">{$Think.lang.cart_step2_paymentnull_1} <a href="{:url('Membermessage/sendmsg',['member_id'=>$order.seller_id])}">{$Think.lang.cart_step2_paymentnull_2}</a> {$Think.lang.cart_step2_paymentnull_3}</div>
+      {else /}
+      <div class="dsc-receipt-info-title">
+        <h3>{$Think.lang.payment_option}</h3>
+      </div>
+      <ul class="dsc-payment-list">
+          {foreach name="payment_list" item="val"}
+        <li payment_code="{$val.payment_code}">
+          <label>
+          <i></i>
+          <div class="logo" for="pay_{$val.payment_code}"> <img src="{$Think.HOME_SITE_ROOT}/images/payment/{$val.payment_code}_logo.gif" /> </div>
+          </label>
+        </li>
+       {/foreach}
+      </ul>
+      {/empty}
+    </div>
+    <div class="dsc-bottom tc mb50"><a href="javascript:void(0);" id="next_button" class="dsc-btn dsc-btn-green"><i class="iconfont">&#xe6f0;</i>{$Think.lang.cart_step2_ensure_pay}</a></div>
+  </form>
+</div>
+{include file="default/base/mall_footer" /}
+<script type="text/javascript">
+$(function(){
+    $('.dsc-payment-list > li').on('click',function(){
+        $('.dsc-payment-list > li').removeClass('using');
+        $(this).addClass('using');
+        $('#payment_code').val($(this).attr('payment_code'));
+    });
+    $('#next_button').on('click',function(){
+        if ($('#payment_code').val() == '') {
+            layer.alert('{$Think.lang.cart_step2_choose_pay_method}');return false;
+        }
+        $('#buy_form').submit();
+    });
+    
+    {if !empty($available_pd_amount) || !empty($available_rcb_amount)}
+    function showPaySubmit() {
+        if ($('input[name="pd_pay"]').prop('checked') || $('input[name="rcb_pay"]').prop('checked')) {
+        	$('#pay-password').val('');
+        	$('#password_callback').val('');
+        	$('#pd_password').show();
+        } else {
+        	$('#pd_password').hide();
+        }
+    }
+
+    $('#pd_pay_submit').on('click',function(){
+        if ($('#pay-password').val() == '') {
+                layer.alert('{$Think.lang.enter_payment_password}');return;
+        }
+        $('#password_callback').val('');
+        var url = HOMESITEURL+'/Buy/check_pd_pwd.html'
+	   $.post(url, {'password':$('#pay-password').val()}, function(data){
+            if (data == '1') {
+            	$('#password_callback').val('1');
+            	$('#pd_password').hide();
+            } else {
+            	$('#pay-password').val('');
+                layer.alert('{$Think.lang.payment_password_error}');return;
+            }
+        });
+    });
+    {/if}
+
+    {if !empty($available_rcb_amount)}
+    $('input[name="rcb_pay"]').on('change',function(){
+    	showPaySubmit();
+    	if ($(this).prop('checked') && !$('input[name="pd_pay"]').prop('checked')) {
+        	if ({$available_rcb_amount} >= parseFloat($('#orderTotal').html())) {
+            	$('input[name="pd_pay"]').prop('checked',false).prop('disabled',true);
+        	}
+    	} else {
+    		$('input[name="pd_pay"]').prop('disabled',false);
+    	}
+    });
+    {/if}
+
+    {if !empty($available_pd_amount)}
+    $('input[name="pd_pay"]').on('change',function(){
+    	showPaySubmit();
+    	if ($(this).prop('checked') && !$('input[name="rcb_pay"]').prop('checked')) {
+        	if ({$available_pd_amount} >= parseFloat($('#orderTotal').html())) {
+            	$('input[name="rcb_pay"]').prop('checked',false).prop('disabled',true);
+        	}
+    	} else {
+    		$('input[name="rcb_pay"]').prop('disabled',false);
+    	}    	
+    });
+    {/if}
+});
+</script>
+<style>
+    .pd-account { background-color: #FFAA01; padding: 2px;}
+
+</style>

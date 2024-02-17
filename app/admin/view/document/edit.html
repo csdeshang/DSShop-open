@@ -1,0 +1,131 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_document}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form id="doc_form" method="post">
+        <input type="hidden" name="document_id" value="{$doc.document_id}" />
+        <table class="ds-default-table">
+            <tbody>
+            <tr>
+                <td class="required"><label class="validation">{$Think.lang.document_index_title}: </label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" value="{$doc.document_title}" name="document_title" id="document_title" class="infoTableInput w300"></td>
+            </tr>
+            <tr>
+                <td class="required"><label class="validation">{$Think.lang.document_index_content}: </label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    {:build_editor(['name'=>'document_content','content'=>htmlspecialchars_decode($doc.document_content)])}
+                    <textarea name="document_content" id="document_content" style="width:100%"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="required">{$Think.lang.document_index_pic_upload}:</td>
+            </tr>
+            <tr class="noborder">
+                <td id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
+            </tr>
+            <tr>
+                <td class="required">{$Think.lang.document_index_uploaded_pic}:</td>
+            </tr>
+            <tr>
+                <td><div class="tdare">
+                    <table width="600px" cellspacing="0" class="dataTable">
+                        <tbody id="thumbnails">
+                        {notempty name="file_upload"}
+                        {foreach name="file_upload" item="v"}
+                        <tr id="{$v.upload_id}" class="tatr2">
+                            <input type="hidden" name="file_id[]" value="{$v.upload_id}" />
+                            <td><img width="40px" height="40px" src="{:ds_get_pic(ATTACH_ARTICLE,$v.upload_path)}" /></td>
+                            <td>{$v.file_name}</td>
+                            <td><a href="javascript:insert_editor('{:ds_get_pic(ATTACH_ARTICLE,$v.upload_path)}');">{$Think.lang.document_index_insert}</a> | <a href="javascript:del_file_upload('{$v.upload_id}');">{$Think.lang.ds_del}</a></td>
+                        </tr>
+                        {/foreach}
+                        {/notempty}
+                        </tbody>
+                    </table>
+                </div></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="15" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+    
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-file-upload/jquery.fileupload.js"></script>
+<script>
+    $(document).ready(function(){
+        $('#doc_form').validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                document_title : {
+                    required   : true
+                },
+                document_content : {
+                    required   : true
+                }
+            },
+            messages : {
+                document_title : {
+                    required   : '{$Think.lang.document_index_title_null}'
+                },
+                document_content : {
+                    required   : '{$Think.lang.document_index_content_null}'
+                }
+            }
+        });
+        // 图片上传
+        $('#fileupload').each(function(){
+            $(this).fileupload({
+                dataType: 'json',
+                url: "{:url('Document/document_pic_upload',['item_id'=>$doc.document_id])}",
+                done: function (e,data) {
+                    if(data != 'error'){
+                        add_uploadedfile(data.result);
+                    }
+                }
+            });
+        });
+    });
+    function add_uploadedfile(file_data)
+    {
+        var newImg = '<tr id="' + file_data.file_id + '" class="tatr2"><input type="hidden" name="file_id[]" value="' + file_data.file_id + '" /><td><img width="40px" height="40px" src="' + file_data.file_path + '" /></td><td>' + file_data.file_name + '</td><td><a href="javascript:insert_editor(\'' + file_data.file_path + '\');">{$Think.lang.document_index_insert}</a> | <a href="javascript:del_file_upload(' + file_data.file_id + ');">{$Think.lang.ds_del}</a></td></tr>';
+        $('#thumbnails').prepend(newImg);
+    }
+    function insert_editor(file_path){
+        ue.execCommand('insertimage', {src:file_path});
+    }
+    function del_file_upload(file_id)
+    {
+        if(!window.confirm('{$Think.lang.ds_ensure_del}')){
+            return;
+        }
+        $.getJSON("{:url('Document/ajax')}",{branch:'del_file_upload',file_id: + file_id}, function(result){
+            if(result){
+                $('#' + file_id).remove();
+                layer.msg('{$Think.lang.ds_common_del_succ}');
+            }else{
+                layer.alert('{$Think.lang.ds_common_del_fail}');
+            }
+        });
+    }
+</script>

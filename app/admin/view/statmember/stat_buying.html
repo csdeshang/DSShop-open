@@ -1,0 +1,184 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>会员统计</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="get" action="" name="formSearch" id="formSearch">
+
+        <div class="ds-search-form">
+            <dl>
+                <dd>
+                    <select name="search_type" id="search_type" class="querySelect">
+                        <option value="day" {if isset($search_arr.search_type) && $search_arr.search_type == 'day'}selected{/if}>按照天统计</option>
+                        <option value="week" {if isset($search_arr.search_type) && $search_arr.search_type == 'week'}selected{/if}>按照周统计</option>
+                        <option value="month" {if isset($search_arr.search_type) && $search_arr.search_type == 'month'}selected{/if}>按照月统计</option>
+                    </select>
+                </dd>
+                <dd id="searchtype_day" style="display:none;">
+                    <input class="txt date"  type="text" value="{:date('Y-m-d',$search_arr.day.search_time)}" id="search_time" name="search_time">
+                </dd>
+                <dd id="searchtype_week" style="display:none;">
+                    <select name="searchweek_year" class="querySelect">
+                        {foreach name="year_arr" item="v"}
+                        <option value="{$key}" {$search_arr.week.current_year== $key ? 'selected': ''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchweek_month" class="querySelect">
+                        {foreach name="month_arr" item="v"}
+                        <option value="{$key}" {$search_arr.week.current_month== $key ? 'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchweek_week" class="querySelect">
+                        {foreach name="week_arr" item="v"}
+                        <option value="{$v.key}" {$search_arr.week.current_week==$v['key'] ? 'selected' :''}>{$v.val}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+                <dd id="searchtype_month" style="display:none;">
+                    <select name="searchmonth_year" class="querySelect">
+                        {foreach name="year_arr" item="v"}
+                        <option value="{$key}" {$search_arr.month.current_year== $key?'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchmonth_month" class="querySelect">
+                        {foreach name="month_arr" item="v"}
+                        <option value="{$key}" {$search_arr.month.current_month== $key?'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>会员名称</dt>
+                <dd><input type="text" name="membername" value="{$Request.param.membername}"/></dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:void(0);" id="dssubmit" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Statmember/buying')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+<div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+           <li>{$Think.lang.stat_validorder_explain}</li>
+            <li>点击“设置价格区间”进入设置价格区间页面，客单价分布图将根据您设置的价格区间进行分布统计</li>
+            <li>“购买频次分析”列表统计了该时间段内重复并有效购买过该次数的会员数量及占全部下单会员的比例，助于分析会员的粘性</li>
+            <li>“购买时段分布”统计图展示时间段内的有效订单在各个时间段的分布情况，为工作时间的合理安排提供依据</li>
+        </ul>
+    </div>
+
+  <table class="ds-default-table">
+	<thead class="thead">
+		<tr class="space">
+			<th colspan="15">客单价分布（<a href="{:url('Statgeneral/orderprange')}" style="font-size:12px; font-weight:normal;">设置价格区间</a>）</th>
+		</tr>
+	</thead>
+	<tbody>
+            <tr>
+                <td>
+                    {if $guestprice_statjson}
+                    <div id="container_guestprice" class="w100pre close_float" style="height:400px"></div>
+                    {else /}
+                    <div class="w100pre close_float align-center h36 mt10">查看客单价分布情况前，请先设置价格区间。<a href="{:url('Statgeneral/orderprange')}" style="font-size:12px; font-weight:normal;">马上设置</a></div>
+                    {/if}
+                </td>
+            </tr>
+	</tbody>
+  </table>
+
+  <table class="ds-default-table">
+      <thead class="thead">
+          <tr class="space">
+              <th colspan="15">购买频次分析</th>
+          </tr>
+          <tr class="thead">
+              <th class="align-center">序号</th>
+              <th class="align-center">购买频次</th>
+              <th class="align-center">下单会员数</th>
+              <th class="align-center">人数占比</th>
+          </tr>
+      </thead>
+    <tbody id="datatable">
+    {notempty name="stattimes_arr"}
+    {foreach name="stattimes_arr" item="v"}
+      <tr class="hover">
+        <td class="align-center">{$key}</td>
+        <td class="align-center">{$v.text}</td>
+        <td class="align-center">{$v.num}</td>
+        <td class="align-center">{$v.rate}%</td>
+      </tr>
+   {/foreach}
+    {else /}
+    <tr class="no_data">
+      	<td colspan="15">{$Think.lang.no_record}</td>
+      </tr>
+   {/notempty}
+    </tbody>
+  </table>
+
+  <table class="ds-default-table">
+	<thead class="thead">
+		<tr class="space">
+			<th colspan="15">购买时段分布</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td><div id="container_hour" class="w100pre close_float" style="height:400px"></div></td>
+		</tr>
+	</tbody>
+  </table>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/highcharts/highcharts.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/statistics.js"></script>
+<script>
+//展示搜索时间框
+function show_searchtime(){
+    s_type = $("#search_type").val();
+    $("[id^='searchtype_']").hide();
+    $("#searchtype_"+s_type).show();
+}
+$(function () {
+    //统计数据类型
+    var s_type = $("#search_type").val();
+    $('#search_time').datepicker({dateFormat: 'yy-mm-dd'});
+
+    show_searchtime();
+    $("#search_type").change(function(){
+        show_searchtime();
+    });
+
+    //更新周数组
+    $("[name='searchweek_month']").change(function(){
+        var year = $("[name='searchweek_year']").val();
+        var month = $("[name='searchweek_month']").val();
+        $("[name='searchweek_week']").html('');
+        $.getJSON(ADMINSITEURL+'/Common/getweekofmonth',{y:year,m:month},function(data){
+            if(data != null){
+                for(var i = 0; i < data.length; i++) {
+                    $("[name='searchweek_week']").append('<option value="'+data[i].key+'">'+data[i].val+'</option>');
+                }
+            }
+        });
+    });
+
+    $('#container_guestprice').highcharts({$guestprice_statjson|raw});
+    $('#container_hour').highcharts({$hour_statjson|raw});
+
+    $('#dssubmit').click(function(){
+        $('#formSearch').submit();
+    });
+});
+</script>

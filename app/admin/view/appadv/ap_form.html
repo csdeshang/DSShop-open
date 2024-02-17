@@ -1,0 +1,81 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form id="link_form" enctype="multipart/form-data" method="post">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td class="required"><label class="validation" for="ap_name">{$Think.lang.ap_name}:</label></td>
+                    <td class="vatop rowform"><input type="text" name="ap_name" id="ap_name" class="txt" value="{$ap.ap_name|default=''}">
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required w120">{$Think.lang.ap_isuse}:</td>
+                    <td class="vatop rowform">
+                        <div class="onoff">
+                            <label for="ap_isuse1" class="cb-enable {if condition="$ap.ap_isuse eq 1"}selected{/if}">{$Think.lang.ap_use_s}</label>
+                            <label for="ap_isuse0" class="cb-disable {if condition="$ap.ap_isuse eq 0"}selected{/if}">{$Think.lang.ap_not_use_s}</label>
+                            <input id="ap_isuse1" name="ap_isuse" value="1" type="radio" {if condition="$ap.ap_isuse eq 1"} checked="checked"{/if} />
+                            <input id="ap_isuse0" name="ap_isuse" value="0" type="radio" {if condition="$ap.ap_isuse eq 0"} checked="checked"{/if} />
+                        </div>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="validation" for="ap_width">{$Think.lang.ap_width}:</label></td>
+                    <td class="vatop rowform"><input type="text" name="ap_width" class="txt" id="ap_width" value="{$ap.ap_width|default=''}"></td>
+                    <td class="vatop tips">{$Think.lang.adv_pix}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="validation" for="ap_height">{$Think.lang.ap_height}:</label></td>
+                    <td class="vatop rowform"><input type="text" name="ap_height" class="txt" id="ap_height" value="{$ap.ap_height|default=''}"></td>
+                    <td class="vatop tips">{$Think.lang.adv_pix}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script>
+$(document).ready(function () {
+
+    $('#link_form').validate({
+        errorPlacement: function (error, element) {
+            error.appendTo(element.parent().parent().find('td:last'));
+        },
+        rules: {
+            ap_name: {
+                required: true
+            },
+            ap_width: {
+                required: true,
+                number:true
+            },
+            ap_height: {
+                required: true,
+                number:true
+            }
+        },
+        messages: {
+            ap_name: {
+                required: '{$Think.lang.ap_can_not_null}'
+            },
+            ap_width: {
+                required: '{$Think.lang.ap_input_digits_pixel}',
+                number:'{$Think.lang.ds_sort_number}'
+            },
+            ap_height: {
+                required: '{$Think.lang.ap_input_digits_pixel}',
+                number:'{$Think.lang.ds_sort_number}'
+            }
+        }
+    });
+});
+</script>

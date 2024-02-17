@@ -1,0 +1,80 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>抢购管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.groupbuy_price_range_help1}</li>
+        </ul>
+    </div>
+
+    
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th></th>
+                <th>{$Think.lang.gprange_name}</th>
+                <th class="align-center">{$Think.lang.gprange_start}</th>
+                <th class="align-center">{$Think.lang.gprange_end}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="groupbuypricerange_list"}
+            {foreach name="groupbuypricerange_list" item="val"}
+            <tr class="hover">
+                <td class="w36"><input type="checkbox"  value="{$val.gprange_id}" class="checkitem"></td>
+                <td>{$val.gprange_name}</td>
+                <td class="w18pre align-center">{$val.gprange_start}</td>
+                <td class="w18pre align-center">{$val.gprange_end}</td>
+                <td class="w156 align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Groupbuy/price_edit',['gprange_id'=>$val.gprange_id])}','{$Think.lang.ds_edit}-{$Think.lang.groupbuy_price_list}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a> | 
+                    <a href="JavaScript:void(0);" onClick="submit_delete('{$val.gprange_id}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+          {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            <tr><td colspan="20"><a href="javascript:dsLayerOpen('{:url('Groupbuy/price_add')}','{$Think.lang.groupbuy_price_add}')" class="btn-add-nofloat marginleft">{$Think.lang.groupbuy_price_add}</a></td></tr>
+            </tbody>
+            {notempty name="groupbuypricerange_list"}
+            <tfoot>
+            <tr class="tfoot">
+                <td><input type="checkbox" class="checkall" id="checkall_1"></td>
+                <td id="batchAction" colspan="15"><span class="all_checkbox">
+            <label for="checkall_1">{$Think.lang.ds_select_all}</label>
+            </span>&nbsp;&nbsp; <a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch();"><span>{$Think.lang.ds_del}</span></a>
+            </tr>
+            </tfoot>
+            {/notempty}
+        </table>
+
+
+</div>
+
+<script type="text/javascript">
+    
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Groupbuy/price_drop.html?gprange_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+
+</script>

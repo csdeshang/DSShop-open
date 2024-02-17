@@ -1,0 +1,58 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>快递查询设置</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" name="form1" action="">
+        <div class="ncap-form-default">
+            <dl>
+                <dt>接口类型</dt>
+                <dd>
+                    <label class="radio-label">
+                        <i  class="radio-common {if !$list_config.expresscf_kdn_type || $list_config.expresscf_kdn_type =='1002'}selected{/if}">
+                            <input type="radio" value="1002" name="expresscf_kdn_type" {if !$list_config.expresscf_kdn_type || $list_config.expresscf_kdn_type =='1002'} checked="checked"{/if}>
+                        </i>
+                        <span>即时查询API</span>
+                    </label>
+                    <label class="radio-label">
+                        <i class="radio-common {if $list_config.expresscf_kdn_type =='8002'}selected{/if}">
+                            <input type="radio" value="8002" name="expresscf_kdn_type" {if $list_config.expresscf_kdn_type =='8002'} checked="checked"{/if}>
+                        </i>
+                        <span>快递查询API</span>
+                    </label>
+                    <span class="tips"></span>
+                </dd>
+
+            </dl>
+            <dl>
+                <dt>用户ID:</dt>
+                <dd>
+                    <input id="expresscf_kdn_id" name="expresscf_kdn_id" value="{$list_config.expresscf_kdn_id}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <a href="http://www.kdniao.com/reg?from=SD-YDKQD" target="_blank" class="btn btn-blue btn-mini">立即申请</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>API key:</dt>
+                <dd>
+                    <input id="expresscf_kdn_key" name="expresscf_kdn_key" value="{$list_config.expresscf_kdn_key}" class="input-txt" type="text">
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt></dt>
+                <dd><a href="JavaScript:void(0);" class="btn" onclick="document.form1.submit()">{$Think.lang.ds_confirm_submit}</a></dd>
+            </dl>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,69 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+  <div class="fixed-bar">
+    <div class="item-title">
+      <h3>{$Think.lang.ds_refund}</h3>
+    </div>
+  </div>
+  <div class="fixed-empty"></div>
+  <form id="post_form" method="post" name="form1">
+    <table class="ds-default-table">
+      <tbody>
+      	<tr class="noborder">
+          <td colspan="2" class="required"><label class="validation" for="reason_info">原因:</label></td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input id="reason_info" name="reason_info" value="" class="txt" type="text"></td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required"><label class="validation" for="reason_sort">{$Think.lang.ds_sort}:</label>
+            </td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform"><input type="text" value="100" name="reason_sort" id="reason_sort" class="txt"></td>
+          <td class="vatop tips">数字范围为0~255，数字越小越靠前</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="tfoot">
+          <td colspan="15" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+        </tr>
+      </tfoot>
+    </table>
+  </form>
+</div>
+<script>
+//按钮先执行验证再提交表单
+$(function(){
+	$("#post_form").validate({
+		errorPlacement: function(error, element){
+			error.appendTo(element.parent().parent().prev().find('td:first'));
+        },
+        rules : {
+            reason_info : {
+                required : true
+            },
+            reason_sort : {
+                required : true,
+                digits   : true,
+                range :[0,255]
+            }
+        },
+        messages : {
+            reason_info : {
+                required : "原因不能为空"
+            },
+            reason_sort  : {
+                required : "排序仅可以为数字",
+                digits   : "排序仅可以为数字",
+                range : '数字范围为0~255'
+            }
+        }
+	});
+});
+
+</script>

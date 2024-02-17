@@ -1,0 +1,113 @@
+{include file="public/header" /}
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_activity_manage}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="get">
+        <input type="hidden" value="{$Request.param.activity_id}" name="activity_id"/>
+        <table class="dssc-default-table">
+            <thead>
+            <tr>
+                <th class="w50"></th>
+                <th class="w300 tl">{$Think.lang.ds_goods_name}</th>
+                <th>{$Think.lang.sale_price}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="activitydetail_list"}
+            {foreach name="activitydetail_list" item="v"}
+            <tr class="bd-line">
+                <td>
+                    <div class="pic-thumb"><a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" target="_blank"><img
+                            src="{:goods_cthumb($v.goods_image,240)}"></a></div>
+                </td>
+                <td class="tl">
+                    <dl class="goods-name">
+                        <dt><a target="_blank" href="{:url('Goods/index',['goods_id'=>$v.goods_id])}">{$v.goods_name}</a></dt>
+
+                    </dl>
+                </td>
+                <td>￥{$v.goods_price}</td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr>
+                <td colspan="20" class="norecord">
+                    <div class="warning-option"><i class="iconfont">&#xe64c;</i><span>{$Think.lang.no_record}</span></div>
+                </td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="20"></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+    <div class="div-goods-select">
+        <form method="get">
+            <input type="hidden" name="activity_id" value="{$Request.get.activity_id}"/>
+            <table class="search-form">
+                <tr>
+                    <th><strong>{$Think.lang.choose_products_event}</strong></th>
+                    <td>
+                        <input type="text" class="text w150" name="name" value="{$search.name}" placeholder="{$Think.lang.search_product_names}"/>
+                    </td>
+                    <td>
+                        <input type="submit" class="submit" value="{$Think.lang.ds_search}"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <form method="POST" id="apply_form" action="{:url('activity/activity_apply')}">
+            <input type="hidden" name="activity_id" value="{$Request.param.activity_id}"/>
+            {notempty name="goods_list"}
+            <div class="search-result">
+                <ul class="goods-list">
+                    {foreach name="goods_list" item="goods"}
+                    <li>
+                        <div class="goods-thumb"><a href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}" target="_blank"><img
+                                alt="{$goods.goods_name}" title="{$goods.goods_name}"
+                                src="{:goods_cthumb($goods['goods_image'], 240)}"/></a></div>
+                        <dl class="goods-info">
+                            <dt>
+                                <input type="checkbox" value="{$goods.goods_id}" class="vm" name="item_id[]"/>
+                                <label><a href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}"
+                                          target="_blank">{$goods.goods_name}</a></label>
+                            </dt>
+                            <dd>{$Think.lang.sale_price}：￥{$goods.goods_price}</dd>
+                        </dl>
+                    </li>
+                    {/foreach}
+                    <div class="clear"></div>
+                </ul>
+            </div>
+            <div class="pagination">{$show_page|raw}</div>
+            {else /}
+            <div class="warning-option"><i class="iconfont">&#xe64c;</i><span>{$Think.lang.no_record}</span></div>
+            {/notempty}
+            {notempty name="goods_list"}
+            <div class="center">
+                <input id="submit_button" type="submit" value="确认选择" class="btn center">
+            </div>
+            {/notempty}
+        </form>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#apply_form').validate({
+            submitHandler: function (form) {
+                ds_ajaxpost('apply_form', 'url', "{:url('activity/index')}");
+            },
+        });
+    });
+</script>

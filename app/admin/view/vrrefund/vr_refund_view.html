@@ -1,0 +1,73 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>虚拟订单退款</h3>
+            </div>
+        </div>
+    </div>
+  <div class="fixed-empty"></div>
+    <table class="ds-default-table">
+      <tbody>
+        <tr class="noborder">
+          <td colspan="2" class="required">退款单号</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">{$refund.refund_sn}</td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required">商品名称</td>
+        </tr>
+        <tr class="noborder">
+            <td class="vatop rowform"><a href="{:url('home/goods/index',['goods_id'=>$refund.goods_id])}" target="_blank">{$refund.goods_name}</a></td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required">退款兑换码</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">
+              {notempty name="code_array"}
+              {foreach name="code_array" item="val" key="key" }
+              {$val}<br />
+              {/foreach}
+              {/notempty}
+            </td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required">{$Think.lang.refund_order_refund}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">{:ds_price_format($refund.refund_amount)}</td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required">退款说明</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">{$refund.buyer_message}</td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr>
+          <td colspan="2" class="required">平台审核</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">{$admin_array[$refund['admin_state']]}</td>
+          <td class="vatop tips"></td>
+        </tr>
+        {if $refund.admin_state > 1}
+        <tr>
+          <td colspan="2" class="required">{$Think.lang.refund_message}</td>
+        </tr>
+        <tr class="noborder">
+          <td class="vatop rowform">{$refund.admin_message}</td>
+          <td class="vatop tips"></td>
+        </tr>
+        {/if}
+      </tbody>
+    </table>
+</div>

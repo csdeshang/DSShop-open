@@ -1,0 +1,125 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>群发消息</h3>
+            </div>
+        </div>
+    </div>
+     <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>1.服务号提供每月（自然月）4条的群发权限</li>
+            <li>2.用户每月只能接收4条，无论在公众平台网站上，还是使用接口群发，用户每月只能接收4条群发消息，多于4条的群发将对该用户发送失败；</li>
+        </ul>
+    </div>
+
+<div class="ncap-form-default">
+        <form method="post" id="m_form">
+            <dl>
+                <dt>消息类型</dt>
+                <dd>
+                     <input type="radio" name="type" value="text" onclick="showDiv(1)" checked>文本
+                   <!-- <input type="radio" name="type" value="news" onclick="showDiv(2)">图文-->
+                </dd>
+            </dl>
+            <div id="radioDIV1">
+            <dl>
+                <dt><span class="error">*</span> 回复内容</dt>
+                <dd><textarea name="text" id="text"  placeholder="群发内容"></textarea></dd>
+            </dl>
+            </div>
+             <div id="radioDIV2" style="display: none">
+            <dl>
+                <dt></dt>
+                <dd><a href="javascript:;" onclick="addArticle()" class="btn btn-sm btn-success"><i class="iconfont bigger-120">&#xe6db;</i>图文新增</a>
+                </dd>
+            </dl>
+            <dl>
+                <dt>标题</dt>
+                <dd>
+                    <input type="text" name="title" id="title" style="width: 300px">
+                </dd>
+            </dl>
+            <dl>
+                <dt>摘要</dt>
+                <dd>
+                    <input type="text" name="digest" id="digest" style="width: 300px">
+                </dd>
+            </dl>
+            <dl>
+                <dt>作者</dt>
+                <dd>
+                    <input type="text" name="author" id="author" style="width: 300px">
+                </dd>
+            </dl>
+            <dl>
+                <dt>阅读原文链接</dt>
+                <dd>
+                    <input type="text" name="content_source_url" id="content_source_url" style="width: 300px">
+                </dd>
+            </dl>
+            <dl>
+                <dt>图文缩略图</dt>
+                <dd>
+                    <input type="file" name="file" >
+                    <input type="hidden" name="mediaId"/>
+                </dd>
+            </dl>
+
+            <dl>
+                <dt>内容</dt>
+                <dd>
+                <textarea name="article_content" id="article_content"> </textarea>
+                </dd>
+            </dl>
+            </div>
+
+            <dl>
+                <dt></dt>
+                <dd><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></dd>
+            </dl>
+
+        </form>
+
+    </div>
+</div>
+<script>
+    function showDiv(objID) {
+        if(objID == 1)
+        {
+            document.getElementById('radioDIV1').style.display = "block";
+            document.getElementById('radioDIV2').style.display = "none";
+        }
+        else
+        {
+            document.getElementById('radioDIV1').style.display = "none";
+            document.getElementById('radioDIV2').style.display = "block";
+        }
+    }
+
+    $(document).ready(function(){
+        $('#m_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('dd:last'));
+            },
+            rules : {
+                text  : {
+                    required : true,
+                }
+            },
+            messages:{
+                text :{
+                   required:'请输入群发类容'
+                  }
+            }
+        });
+    });
+</script>

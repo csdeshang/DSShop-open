@@ -1,0 +1,7 @@
+{if $admin_item}
+<ul class="tab-base ds-row">
+    {foreach name="admin_item" item="item" }
+    <li><a href="{$item.url}" {if condition="$item.name eq $curitem"}class="current"{/if}><span>{$item.text}</span></a></li>
+    {/foreach}
+</ul>
+{/if}

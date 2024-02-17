@@ -1,0 +1,64 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>邮箱短信</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="提示相关设置操作时应注意的要点">操作提示</h4>
+            <span id="explanationZoom" title="收起提示" class="arrow"></span>
+        </div>
+        <ul>
+            <li>平台可以选择开启一种或多种消息通知方式。</li>
+            <li>手机短信、邮件需要用户绑定手机、邮箱后才能正常接收。</li>
+        </ul>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+            <tr class="space">
+                <th colspan="15" class="nobg">{$Think.lang.ds_list}</th>
+            </tr>
+            <tr class="thead">
+                <th>&nbsp;</th>
+                <th>{$Think.lang.mailtemplates_index_desc}</th>
+                <th class="align-center">站内信</th>
+                <th class="align-center">手机短信</th>
+                <th class="align-center">邮件</th>
+                <th class="align-center">{$Think.lang.mt_weixin_switch}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="mmtpl_list"}
+            {foreach name="mmtpl_list" item="val"}
+            <tr class="hover">
+                <td class="w24">&nbsp;</td>
+                <td class="w25pre">{$val.membermt_name}</td>
+                <td class="align-center">{if $val.membermt_message_switch}开启{else/}关闭{/if}</td>
+                <td class="align-center">{if $val.membermt_short_switch}开启{else/}关闭{/if}</td>
+                <td class="align-center">{if $val.membermt_mail_switch}开启{else/}关闭{/if}</td>
+                <td class="align-center">{if $val.membermt_weixin_switch}{$Think.lang.ds_open}{else/}{$Think.lang.ds_close}{/if}</td>
+                <td class="w60 align-center"><a href="{:url('Message/member_tpl_edit',['code'=>$val.membermt_code])}" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a></td>
+            </tr>
+            {/foreach}
+            {/notempty}
+        </tbody>
+    </table>
+
+
+
+</div>
+
+

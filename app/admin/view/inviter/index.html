@@ -1,0 +1,187 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_inviter_set}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form id="inviter_form" method="post" enctype="multipart/form-data" name="form1" action="">
+        <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.inviter_open}</td>
+                        <td class="vatop">
+                            <div class="onoff">
+                                <label for="inviter_open1" class="cb-enable {if condition="$list_setting.inviter_open eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="inviter_open0" class="cb-disable {if condition="$list_setting.inviter_open eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="inviter_open1" name="inviter_open" value="1" type="radio" {if condition="$list_setting.inviter_open eq 1"} checked="checked"{/if}>
+                                <input id="inviter_open0" name="inviter_open" value="0" type="radio" {if condition="$list_setting.inviter_open eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                    <td class="required"><label> {$Think.lang.inviter_level}:</label></td>
+                    <td class="vatop">
+                        <label>
+                            <input type="radio" {if condition="$list_setting.inviter_level eq 1"} checked="checked"{/if} value="1" name="inviter_level">{$Think.lang.inviter_level_1}
+                        </label>
+                        <label>
+                            <input type="radio" {if condition="$list_setting.inviter_level eq 2"} checked="checked"{/if} value="2" name="inviter_level">{$Think.lang.inviter_level_2}
+                        </label>
+                        <label>
+                            <input type="radio" {if condition="$list_setting.inviter_level eq 3"} checked="checked"{/if} value="3" name="inviter_level">{$Think.lang.inviter_level_3}
+                        </label>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                 <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.inviter_show}</td>
+                        <td class="vatop">
+                            <div class="onoff">
+                                <label for="inviter_show1" class="cb-enable {if condition="$list_setting.inviter_show eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="inviter_show0" class="cb-disable {if condition="$list_setting.inviter_show eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="inviter_show1" name="inviter_show" value="1" type="radio" {if condition="$list_setting.inviter_show eq 1"} checked="checked"{/if}>
+                                <input id="inviter_show0" name="inviter_show" value="0" type="radio" {if condition="$list_setting.inviter_show eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                        <td class="vatop tips">{$Think.lang.inviter_show_notice}</td>
+                    </tr>
+                    
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.inviter_return}</td>
+                        <td class="vatop">
+                            <div class="onoff">
+                                <label for="inviter_return1" class="cb-enable {if condition="$list_setting.inviter_return eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="inviter_return0" class="cb-disable {if condition="$list_setting.inviter_return eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="inviter_return1" name="inviter_return" value="1" type="radio" {if condition="$list_setting.inviter_return eq 1"} checked="checked"{/if}>
+                                <input id="inviter_return0" name="inviter_return" value="0" type="radio" {if condition="$list_setting.inviter_return eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                        <td class="vatop tips">{$Think.lang.inviter_return_notice}</td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.inviter_view}</td>
+                        <td class="vatop">
+                            <div class="onoff">
+                                <label for="inviter_view1" class="cb-enable {if condition="$list_setting.inviter_view eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="inviter_view0" class="cb-disable {if condition="$list_setting.inviter_view eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="inviter_view1" name="inviter_view" value="1" type="radio" {if condition="$list_setting.inviter_view eq 1"} checked="checked"{/if}>
+                                <input id="inviter_view0" name="inviter_view" value="0" type="radio" {if condition="$list_setting.inviter_view eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                        <td class="vatop tips">{$Think.lang.inviter_view_notice}</td>
+                    </tr>
+                    <tr class="noborder">
+                    <td class="required"><label> {$Think.lang.inviter_condition}:</label></td>
+                    <td class="vatop">
+                        <label>
+                            <input type="radio" {if condition="$list_setting.inviter_condition eq 0"} checked="checked"{/if} value="0" name="inviter_condition">{$Think.lang.inviter_condition_0}
+                        </label>
+                        <label>
+                            <input type="radio" {if condition="$list_setting.inviter_condition eq 1"} checked="checked"{/if} value="1" name="inviter_condition">{$Think.lang.inviter_condition_1}<input type='text' name='inviter_condition_amount' id='inviter_condition_amount' value="{$list_setting.inviter_condition_amount}" class='input-txt valid' />
+                        </label>
+                        
+                    </td>
+                    <td class="vatop tips">{$Think.lang.ds_yuan}</td>
+                </tr>
+                
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.inviter_back}</td>
+                        <td class="vatop">
+                            {notempty name="$list_setting.inviter_back"}
+                            <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                                <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_setting.inviter_back)}?{$Think.TIMESTAMP}"></div>
+                            </span>
+                            {/notempty}
+                            <span class="type-file-box"><input type='text' name='textfield' id='textfield1' class='type-file-text' />
+                                <input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                                <input name="inviter_back" type="file" class="type-file-file" id="inviter_back" size="30" hidefocus="true" ds_type="change_inviter_back">
+                            </span>
+                        </td>
+                        <td class="vatop tips"><p class="notic">推广背景图片，最佳显示尺寸为360*578像素</p></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">一级推广佣金比例</td>
+                        <td class="vatop">
+                            <input id="inviter_ratio_1" name="inviter_ratio_1" value="{$list_setting.inviter_ratio_1}" class="input-txt" type="text">%
+                            <span class="err"></span>     
+                        </td>
+			<td class="vatop tips">{$Think.lang.inviter_ratio_1_notice}</td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">二级推广佣金比例</td>
+                        <td class="vatop">
+                            <input id="inviter_ratio_2" name="inviter_ratio_2" value="{$list_setting.inviter_ratio_2}" class="input-txt" type="text">%
+                        </td>
+			<td class="vatop tips">{$Think.lang.inviter_ratio_2_notice}</td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">三级推广佣金比例</td>
+                        <td class="vatop">
+                            <input id="inviter_ratio_3" name="inviter_ratio_3" value="{$list_setting.inviter_ratio_3}" class="input-txt" type="text">%
+                        </td>
+			<td class="vatop tips">{$Think.lang.inviter_ratio_3_notice}</td>
+                    </tr>                    
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>					
+                </tfoot>
+            </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $('#inviter_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                inviter_ratio_1 : {
+                    number:true,
+                    min:0,
+                    max:100
+                },
+                inviter_ratio_2 :{
+                    number:true,
+                    min:0,
+                    max:100
+                },
+                inviter_ratio_3 :{
+                    number:true,
+                    min:0,
+                    max:100
+                }
+            },
+            messages: {
+                inviter_ratio_1 : {
+                    number   : '请输入有效的数字',
+                    min :'值不能小于0',
+                    max :'值不能大于100'
+                },
+                inviter_ratio_2 :{
+                    number : '请输入有效的数字',
+                    min :'值不能小于0',
+                    max :'值不能大于100'
+                },
+                inviter_ratio_3 :{
+                    number: '请输入有效的数字',
+                    min :'值不能小于0',
+                    max :'值不能大于100'
+                }
+            }
+        });
+    });
+</script>

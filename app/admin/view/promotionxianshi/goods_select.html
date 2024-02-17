@@ -1,0 +1,38 @@
+
+{notempty name="goods_list"}
+<ul class="goods-list">
+    {foreach name="goods_list" item="val"}
+    <li>
+        <div class="goods-thumb"> <a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}" target="_blank"><img src="{:goods_thumb($val,240)}"/></a></div>
+        <dl class="goods-info">
+            <dt><a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}" target="_blank">{$val.goods_name}</a> </dt>
+            <dd>{$Think.lang.sale_price}：{$Think.lang.currency}{$val.goods_price}
+        </dl>
+        <a dstype="btn_add_xianshi_goods" data-goods-id="{$val.goods_id}" data-goods-name="{$val.goods_name}" data-goods-img="{:goods_thumb($val,240)}" data-goods-price="{$val.goods_price}" href="javascript:void(0);" class="dssc-btn-mini">{$Think.lang.modified_discount_price}</a>
+    </li>
+   {/foreach}
+</ul>
+<div class="pagination">{$show_page|raw}</div>
+{else /}
+<div>{$Think.lang.no_record}</div>
+{/notempty}
+<div id="dialog_add_xianshi_goods" style="display:none;">
+    <input id="dialog_goods_id" type="hidden">
+    <input id="dialog_input_goods_price" type="hidden">
+    <div class="selected-goods-info">
+        <div class="goods-thumb"><img id="dialog_goods_img" src="" alt=""></div>
+        <dl class="goods-info">
+            <dt id="dialog_goods_name"></dt>
+            <dd>{$Think.lang.sale_price}：{$Think.lang.currency}<span id="dialog_goods_price"></span></dd>
+            <dd>{$Think.lang.discount_price}：<input id="dialog_xianshi_price" type="text" class="text w70"><em class="add-on"><i class="iconfont">&#xe65c;</i></em>
+                <p id="dialog_add_xianshi_goods_error">
+                    <label for="dialog_xianshi_price" class="error" >
+                        <i class='iconfont'>&#xe64c;</i>{$Think.lang.discount_price_cannot_empty}</label>
+                </p>
+            </dd>
+        </dl>
+    </div>
+    <div class="eject_con">
+        <div class="bottom pt10 pb10"><a id="btn_submit" class="submit" href="javascript:void(0);">{$Think.lang.ds_submit}</a></div>
+    </div>
+</div>

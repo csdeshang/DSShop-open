@@ -1,0 +1,69 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+<form method="post" target="_self">
+    <table class="dsm-search-table">
+        <tr>
+            <th>{$Think.lang.inviter_member_name}</th>
+            <td class="w160"><input type="text" class="text w150" name="member_name" value="{$Request.param.member_name}"></td>
+            <td class="w70 tc">
+                <input type="submit" class="submit" value="{$Think.lang.ds_search}"/>
+            </td>
+        </tr>
+    </table>
+</form>
+<table class="dsm-default-table">
+    <thead>
+        <tr>
+            <th class="w10"></th>
+            <th class="w150 tl">{$Think.lang.inviter_member}</th>
+            <th class="w150 tl">{$Think.lang.inviter_registration_time}</th>
+            <th class="w150 tl">{$Think.lang.inviter_last_login}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {notempty name="member_list"}
+        {foreach name="member_list" item="v"}
+        <tr class="bd-line">
+            <td>
+                <div class="size-44x44">
+                    <span class="thumb"><i></i>
+                        <img src="{:get_member_avatar($v.member_avatar)}?{:microtime()}"  onload="javascript:ResizeImage(this,44,44);"/>
+                    </span>
+                </div>
+            </td>
+
+            <td class="tl">
+                <strong>{$v.member_name}</strong>
+                {foreach name="$v.inviters" item="i"}->{$i}{/foreach}
+            </td>
+            <td class="tl">{$v.member_addtime}</td>
+            <td class="tl">{$v.member_logintime}</td>
+
+        </tr>
+        {/foreach}
+        {else/}
+        <tr>
+            <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+        </tr>
+        {/notempty}
+    </tbody>
+    <tfoot>
+        {notempty name="member_list"}
+        <tr>
+            <td colspan="20"><div class="pagination">{$show_page|raw}</div></td>
+        </tr>
+        {/notempty}
+    </tfoot>
+</table>
+
+
+
+
+
+
+
+
+{/block}

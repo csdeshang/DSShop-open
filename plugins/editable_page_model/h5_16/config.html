@@ -1,0 +1,30 @@
+<!-- 辅助空白 -->
+<form onchange="changeForm($(this),16)">
+    <input type="hidden" name="model_id" value="16" />
+<h2 class="attr-title">辅助空白</h2>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">背景颜色</label>
+    <div class="layui-input-block">
+        <div class="color-wrapper">
+            <input data-js="color" type="text" name="back_color" value="{$config_info.back_color|default=''}" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">空白高度</label>
+    <div class="layui-input-block">
+        <div class="range-wrapper">
+            <input type="range" name="height" value="{$config_info.height|default='10'}" min="10" onchange="$(this).next().text($(this).val())">
+            <span>{$config_info.height|default='10'}</span>
+        </div>
+    </div>
+</div>
+
+</form>
+<script>
+    if(typeof(loadConfig16)=='undefined'){
+        function loadConfig16(obj){
+            obj.find('[data-js="color"]').colorpicker({showOn: 'both'});
+        }
+    }
+</script>

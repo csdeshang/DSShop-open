@@ -1,0 +1,63 @@
+<!-- 搜索 -->
+<form onchange="changeForm($(this),14)">
+    <input type="hidden" name="model_id" value="14" />
+<h2 class="attr-title">搜索</h2>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">背景颜色</label>
+    <div class="layui-input-block">
+        <div class="color-wrapper">
+            <input data-js="color" type="text" name="back_color" value="{$config_info.back_color|default=''}" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">跳转页面</label>
+    <div class="layui-input-block">
+        <input type="text" name="link" value="{$config_info.link|default=''}" placeholder="请输入跳转页面" class="layui-input">
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">显示logo</label>
+    <div class="layui-input-block">
+        <div class="onoff">
+            <label for="if_show_logo_1" class="cb-enable{if !isset($config_info.if_show_logo) || $config_info.if_show_logo==1} selected{/if}">{$Think.lang.ds_yes}</label>
+            <label for="if_show_logo_0" class="cb-disable{if isset($config_info.if_show_logo) && $config_info.if_show_logo==0} selected{/if}">{$Think.lang.ds_no}</label>
+            <input id="if_show_logo_1"{if !isset($config_info.if_show_logo) || $config_info.if_show_logo==1} checked="checked"{/if} name="if_show_logo" value="1" type="radio">
+            <input id="if_show_logo_0"{if isset($config_info.if_show_logo) && $config_info.if_show_logo==0} checked="checked"{/if} name="if_show_logo" value="0" type="radio">
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">显示更多</label>
+    <div class="layui-input-block">
+        <div class="onoff">
+            <label for="if_show_more_1" class="cb-enable{if !isset($config_info.if_show_more) || $config_info.if_show_more==1} selected{/if}">{$Think.lang.ds_yes}</label>
+            <label for="if_show_more_0" class="cb-disable{if isset($config_info.if_show_more) && $config_info.if_show_more==0} selected{/if}">{$Think.lang.ds_no}</label>
+            <input id="if_show_more_1"{if !isset($config_info.if_show_more) || $config_info.if_show_more==1} checked="checked"{/if} name="if_show_more" value="1" type="radio">
+            <input id="if_show_more_0"{if isset($config_info.if_show_more) && $config_info.if_show_more==0} checked="checked"{/if} name="if_show_more" value="0" type="radio">
+        </div>
+    </div>
+</div>
+
+</form>
+<script>
+    if(typeof(loadConfig14)=='undefined'){
+        function loadConfig14(obj){
+            obj.find('[data-js="color"]').colorpicker({showOn: 'both'});
+            obj.find('.onoff').each(function(){
+                        $(this).find(".cb-enable").click(function() {
+                            var parent = $(this).parents('.onoff');
+                            $('.cb-disable', parent).removeClass('selected');
+                            $(this).addClass('selected');
+                            $('.checkbox', parent).prop('checked', true);
+                        });
+                        $(this).find(".cb-disable").click(function() {
+                            var parent = $(this).parents('.onoff');
+                            $('.cb-enable', parent).removeClass('selected');
+                            $(this).addClass('selected');
+                            $('.checkbox', parent).prop('checked', false);
+                        });
+                    })
+        }
+    }
+</script>

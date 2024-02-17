@@ -1,0 +1,48 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+<table class="dsm-default-table">
+    <thead>
+        <tr>
+            <th class="w80">{$Think.lang.consignee}</th>
+            <th class="w150">{$Think.lang.area}</th>
+            <th class="tl">{$Think.lang.street_address}</th>
+            <th class="w120">{$Think.lang.telephone_or_mobile}</th>
+            <th class="w150"></th>
+            <th class="w110">{$Think.lang.ds_handle}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {foreach name="address_list" item="address"}
+        <tr class="bd-line">
+            <td>{$address.address_realname}</td>
+            <td>{$address.area_info}</td>
+            <td class="tl"><em class="delivery"></em>{$address.address_detail}</td>
+            <td><p><i class="iconfont">&#xe697;</i>{$address.address_tel_phone}</p>
+                <p><i class="iconfont">&#xe60e;</i>{$address.address_mob_phone}</p></td>
+            <td></td>
+            <td class="dsm-table-handle">
+                <span>
+                    <a href="{:url('Memberaddress/edit',['address_id'=>$address.address_id])}" class="btn-blue"><i class="iconfont">&#xe731;</i><p>{$Think.lang.ds_edit}</p></a>
+                </span>
+                <span>
+                    <a href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('Memberaddress/drop',['address_id'=>$address.address_id])}','{$Think.lang.ds_ensure_del}');" class="btn-red" ><i class="iconfont">&#xe725;</i>
+                        <p>{$Think.lang.ds_delete}</p>
+                    </a>
+                </span>
+            </td>
+        </tr>
+        {/foreach}
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+{/block}

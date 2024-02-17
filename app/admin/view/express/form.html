@@ -1,0 +1,110 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <form id="express_form" method="post" name="form1" enctype="multipart/form-data">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation">{$Think.lang.express_name}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="{$express.express_name|default=''}" name="express_name" id="express_name" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation">{$Think.lang.express_code}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="{$express.express_code|default=''}" name="express_code" id="express_code" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation">{$Think.lang.express_letter}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="{$express.express_letter|default=''}" name="express_letter" id="express_letter" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation">{$Think.lang.express_url}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="{$express.express_url|default=''}" name="express_url" id="express_url" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.express_state}: </td>
+                    <td class="vatop rowform onoff">
+                        <label for="express_state1" class="cb-enable {if $express.express_state == '1'}selected{/if}" title="{$Think.lang.ds_yes}"><span>{$Think.lang.ds_yes}</span></label>
+                        <label for="express_state0" class="cb-disable {if $express.express_state == '0'}selected{/if}" title="{$Think.lang.ds_no}"><span>{$Think.lang.ds_no}</span></label>
+                        <input id="express_state1" name="express_state" {if $express.express_state == '1'}checked="checked"{/if} value="1" type="radio">
+                        <input id="express_state0" name="express_state" {if $express.express_state == '0'}checked="checked"{/if} value="0" type="radio">
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.express_order}: </td>
+                    <td class="vatop rowform onoff">
+                        <label for="express_order1" class="cb-enable {if $express.express_order == '1'}selected{/if}" title="{$Think.lang.ds_yes}"><span>{$Think.lang.ds_yes}</span></label>
+                        <label for="express_order0" class="cb-disable {if $express.express_order == '2'}selected{/if}" title="{$Think.lang.ds_no}"><span>{$Think.lang.ds_no}</span></label>
+                        <input id="express_order1" name="express_order" {if $express.express_order == '1'}checked="checked"{/if} value="1" type="radio">
+                        <input id="express_order0" name="express_order" {if $express.express_order == '2'}checked="checked"{/if} value="2" type="radio">
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.express_zt_state}: </td>
+                    <td class="vatop rowform onoff">
+                        <label for="express_zt_state1" class="cb-enable {if $express.express_zt_state == '1'}selected{/if}" title="{$Think.lang.ds_yes}"><span>{$Think.lang.ds_yes}</span></label>
+                        <label for="express_zt_state0" class="cb-disable {if $express.express_zt_state == '0'}selected{/if}" title="{$Think.lang.ds_no}"><span>{$Think.lang.ds_no}</span></label>
+                        <input id="express_zt_state1" name="express_zt_state" {if $express.express_zt_state == '1'}checked="checked"{/if} value="1" type="radio">
+                        <input id="express_zt_state0" name="express_zt_state" {if $express.express_zt_state == '0'}checked="checked"{/if} value="0" type="radio">
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script>
+    //按钮先执行验证再提交表单
+    $(function () {
+        jQuery.validator.addMethod("initial", function(value, element) {
+            return /^[A-Za-z0-9]$/i.test(value);
+        }, "");
+        $("#express_form").validate({
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                express_name: {
+                    required: true,
+                },
+                express_code: {
+                    required: true
+                },
+                express_letter: {
+                    initial: true
+                },
+                express_url: {
+                    required: true
+                },
+            },
+            messages: {
+                express_name: {
+                    required: '{$Think.lang.express_name_null}',
+                },
+                express_code: {
+                    required: '{$Think.lang.express_code_null}'
+                },
+                express_letter: {
+                    initial: '{$Think.lang.express_letter_null}',
+                },
+                express_url: {
+                    required: '{$Think.lang.express_url_null}'
+                },
+            }
+        });
+    });
+</script>

@@ -1,0 +1,125 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>实物订单</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="get">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.order_number}</dt>
+                <dd><input type="text" class="text w150" name="order_sn" value="{$Request.param.order_sn}"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.order_state}</dt>
+                <dd>
+                    <select name="order_state" class="querySelect">
+                        <option value="">{$Think.lang.ds_please_choose}</option>
+                        <option value="10" {if condition="$Request.param.order_state eq '10'"}selected{/if}>{$Think.lang.order_state_new}</option>
+                        <option value="20" {if condition="$Request.param.order_state eq '20'"}selected{/if}>{$Think.lang.order_state_pay}</option>
+                        <option value="30" {if condition="$Request.param.order_state eq '30'"}selected{/if}>{$Think.lang.order_state_send}</option>
+                        <option value="40" {if condition="$Request.param.order_state eq '40'"}selected{/if}>{$Think.lang.order_state_success}</option>
+                        <option value="0" {if condition="$Request.param.order_state eq '0'"}selected{/if}>{$Think.lang.order_state_cancel}</option>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.order_time}</dt>
+                <dd>
+                    <input type="text" class="txt date" name="query_start_time" id="query_start_time" value="{$Request.param.query_start_time}">
+                        &nbsp;–&nbsp;
+                        <input id="query_end_time" class="txt date" type="text" name="query_end_time" value="{$Request.param.query_end_time}">
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.buyer_name}</dt>
+                <dd>
+                    <input type="text" class="text w80" name="buyer_name" value="{$Request.param.buyer_name}">
+                </dd>
+                <dd>
+                    <select name="payment_code">
+                        <option value="">{$Think.lang.ds_please_choose}</option>
+                        {foreach $payment_list as $val}
+                        <option {if condition="$Request.param.payment_code eq $val.payment_code"}selected{/if} value="{$val.payment_code}">{$val.payment_name}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="搜索">
+                {if $filtered}
+                <a href="{:url('Order/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+                <a class="btn btn-mini" href="javascript:export_xls('{:url('Order/export_step1')}')"><span>{$Think.lang.ds_export}Excel</span></a>
+            </div>
+        </div>
+    </form>
+
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.order_number}</th>
+                <th>{$Think.lang.buyer_name}</th>
+                <th>{$Think.lang.order_time}</th>
+                <th>{$Think.lang.order_total_price}</th>
+                <th>{$Think.lang.payment}</th>
+                <th>{$Think.lang.order_state}</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        {empty  name="order_list"}
+        <tbody>
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.no_record}</td>
+            </tr>
+        </tbody>
+        {else /}
+        <tbody>
+            {foreach name="order_list" item="order"}
+            <tr>
+                <td>{$order.order_sn}</td>
+                <td>{$order.buyer_name}</td>
+                <td>{$order.add_time|date="Y-m-d H:i:s"}</td>
+                <td>{$order.order_amount}</td>
+                <td>{:get_order_payment_name($order['payment_code'])}</td>
+                <td>{:get_order_state($order)}</td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Order/show_order',['order_id'=>$order.order_id])}','查看实物订单-{$order.order_sn}')" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_view}</a>
+                    {if condition="$order.if_cancel"}
+                    <a href="javascript:dsLayerConfirm('{:url('Order/change_state',['type_state'=>'cancel','order_id'=>$order.order_id])}','{$Think.lang.order_confirm_cancel}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_cancel}</a>
+                    {/if}
+                    {if condition="$order.if_system_receive_pay"}
+                    <a href="javascript:dsLayerOpen('{:url('Order/change_state',['type_state'=>'receive_pay','order_id'=>$order.order_id])}','实物订单-{$order.order_sn}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.order_change_received}</a>
+                    {/if}
+                    {if isset($order.pintuanorder_state)}
+                    <p>{$order.pintuanorder_state_text}</p>
+                    {/if}
+                    {if condition="$order.if_spay_price"}
+                    <a href="javascript:dsLayerOpen('{:url('Order/change_state',['type_state'=>'spay_price','order_id'=>$order.order_id])}','实物订单-{$order.order_sn}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.order_revise_price}</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+        {/empty}
+    </table>
+    {$show_page|raw}
+</div>
+
+<script type="text/javascript">
+$(function(){
+    $('#query_start_time').datepicker({dateFormat: 'yy-mm-dd'});
+    $('#query_end_time').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+

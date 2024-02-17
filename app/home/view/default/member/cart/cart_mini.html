@@ -1,0 +1,41 @@
+<ul class="cart-list">
+    {notempty name="cart_list.list"}
+    {foreach name="cart_list.list" item="v" length='9'}
+    <li ds_type="cart_item_{$v.cart_id}">
+        <div class="goods-pic"><a href="{$v.goods_url}" title="{$v.goods_name}" target="_blank";>
+            <img src="{$v.goods_image}" alt="{$v.goods_name}"/></a></div>
+        <dl>
+            <dt class="goods-name"><a href="{$v.goods_url}" title="{$v.goods_name}" target="_blank";>{$v.goods_name}</a></dt>
+            <dd><em class="goods-price">{$Think.lang.currency}{$v.goods_price}</em>×{$v.goods_num}</dd>
+        </dl>
+        <a href="javascript:drop_topcart_item({$v.cart_id});" class="del" title="{$Think.lang.ds_delete}">X</a>
+    </li>
+    {/foreach}
+    <script>
+        $(function(){
+            $('.head-user-menu .my-cart').append('<div class="addcart-goods-num">{$cart_list.cart_goods_num}</div>');
+            $('#rtoobar_cart_count').html({$cart_list.cart_goods_num}).show();
+        });
+    </script>
+    {else /}
+    <li>
+        <dl><dd style="text-align: center; font-size: 12px">{$Think.lang.ds_common_goods_null}</dd></dl>
+    </li>
+    <script>
+        $(function(){
+            $('.addcart-goods-num').remove();
+            $('#rtoobar_cart_count').html('').hide();
+        });
+    </script>
+   {/notempty}
+</ul>
+<div class="btn-box">
+    {present name="cart_list.list"}
+    
+    <div dstype="rtoolbar_total_price" class="total-price">
+        <p>{$Think.lang.ds_goods_num_one}<em class="goods-price" style="margin-left: 5px">{$cart_list.cart_goods_num}</em>{$Think.lang.ds_planting_goods}</p>
+        <p>{$Think.lang.total}：<em class="goods-price">&yen;{$cart_list.cart_all_price}</em></p>
+    </div>
+    <a href="javascript:void(0);" onclick="javascript:window.location.href='{:url('Cart/index')}'">{$Think.lang.shopping_cart_settlement}</a>
+    {/present}
+</div>

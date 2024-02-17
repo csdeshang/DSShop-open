@@ -1,0 +1,72 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <table class="ds-default-table">
+        <tbody>
+            <tr>
+                <td colspan="2" class="required">商品名称{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$return.goods_name}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">{$Think.lang.refund_order_refund}{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{:ds_price_format($return['refund_amount'])}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">{$Think.lang.return_buyer_message}{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$return.reason_info}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">退货说明{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$return.buyer_message}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">凭证上传{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">
+                    {notempty name="pic_list"}
+                    {foreach name="pic_list" item="val" key="key" }
+                    {notempty name="val"}
+                    <a href="{:ds_get_pic(ATTACH_PATH.'/refund',$val)}" data-lightbox="lightbox-image">
+                        <img width="64" height="64" class="show_image" src="{:ds_get_pic(ATTACH_PATH.'/refund',$val)}"></a>
+                    {/notempty}
+                    {/foreach}
+                    {/notempty}
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">平台确认{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$admin_array[$return['refund_state']]}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">{$Think.lang.refund_message}{$Think.lang.ds_colon}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$return.admin_message}</td>
+                <td class="vatop tips"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>

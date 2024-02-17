@@ -1,0 +1,48 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>类型管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.type_index_tip1}</li>
+        </ul>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.type_id}</th>
+                <th>{$Think.lang.type_name}</th>
+                <th>{$Think.lang.gc_name}</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach name="type_list" item="type"}
+            <tr>
+                <td>{$type.type_id}</td>
+                <td>{$type.type_name}</td>
+                <td>{$type.class_name}</td>
+                <td>
+                    <a href="{:url('Type/type_edit',['type_id'=>$type.type_id])}" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Type/type_drop',['type_id'=>$type.type_id])}','{$Think.lang.ds_ensure_del}')"  class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>

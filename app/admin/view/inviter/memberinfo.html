@@ -1,0 +1,44 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_inviter_set}</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="fixed-empty"></div>  
+    <table class="search-form">
+        <tbody>
+            <tr><td>{$Think.lang.ds_member}{$Think.lang.ds_colon}{$inviter_info.member_name}</td></tr>
+            <tr><td>{$Think.lang.inviter_class}{$Think.lang.ds_colon}{$inviter_info.inviter_class}</td></tr>
+            <tr><td>{$Think.lang.inviter_parent_name}{$Think.lang.ds_colon}{$inviter_info.inviter_parent_name}</td></tr>
+            <tr><td>{$Think.lang.refund_buyer_add_time}{$Think.lang.ds_colon}{$inviter_info.inviter_applytime|date='Y-m-d'}</td></tr>
+            <tr><td>{$Think.lang.inviter_goods_quantity}{$Think.lang.ds_colon}{$inviter_info.inviter_goods_quantity}</td></tr>
+            <tr><td>{$Think.lang.inviter_goods_amount}{$Think.lang.ds_colon}{$inviter_info.inviter_goods_amount}</td></tr>
+            <tr><td>{$Think.lang.inviter_amount}{$Think.lang.ds_colon}{$inviter_info.inviter_total_amount}</td></tr>
+        </tbody>
+    </table>
+<div class="fixed-bar">
+        <div class="item-title">
+            <ul class="tab-base ds-row" id="member_level">
+        <li><a href="javascript:getMemberList(1)" class="current"><span>一级成员</span></a></li>
+        <li><a href="javascript:getMemberList(2)"><span>二级成员</span></a></li>
+        <li><a href="javascript:getMemberList(3)"><span>三级成员</span></a></li>
+    </ul>
+        </div>
+    </div>
+    <div id="member_list_wrap"></div>
+</div>
+<script>
+    $(function(){
+        getMemberList(1)
+    })
+    function getMemberList(type){
+        $('#member_level li a').removeClass('current');
+        $('#member_level li:eq('+(type-1)+') a').addClass('current');
+        $('#member_list_wrap').load(ADMINSITEURL+'/Inviter/memberlist?member_id={$Request.param.member_id}&type='+type);
+    }
+</script>

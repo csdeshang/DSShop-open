@@ -1,0 +1,108 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>虚拟订单退款</h3>
+            </div>
+        </div>
+    </div>
+    <div class="fixed-empty"></div>
+    <div class="fixed-empty"></div>
+    <form id="post_form" method="post" action="{:url('Vrrefund/edit',['refund_id'=>$refund.refund_id])}">
+        <table class="ds-default-table">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="required">{$Think.lang.refund_order_refund}{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{:ds_price_format($refund['refund_amount'])}{$Think.lang.ds_search}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required">商品名称{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><a href="{:url('/home/Goods/index',['goods_id'=>$refund.goods_id])}" target="_blank">{$refund.goods_name}</a></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required">退款兑换码{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        {notempty name="code_array"}
+                        {foreach name="code_array" item="val" key="key" }
+                        {$val}<br />
+                        {/foreach}
+                        {/notempty}
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required">退款说明{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{$refund.buyer_message}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label class="validation">是否同意{$Think.lang.ds_colon}</label>
+                    </td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform onoff">
+                        <label for="state1" class="cb-enable" title="{$Think.lang.ds_yes} {if condition='$refund.admin_state eq 2'}selected{/if}"><span>{$Think.lang.ds_yes}</span></label>
+                        <label for="state0" class="cb-disable" title="{$Think.lang.ds_no} {if condition='$refund.admin_state eq 3'}selected{/if}"><span>{$Think.lang.ds_no}</span></label>
+                        <input id="state1" name="admin_state"  value="2" type="radio" {if condition="$refund.admin_state eq 2"} checked="checked"{/if}>
+                               <input id="state0" name="admin_state" value="3" type="radio" {if condition="$refund.admin_state eq 3"} checked="checked"{/if}>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label class="validation">{$Think.lang.refund_message}{$Think.lang.ds_colon}</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <textarea id="admin_message" name="admin_message" class="tarea"></textarea>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function() {
+        $('#post_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parentsUntil('tr').parent().prev().find('td:first'));
+            },
+            rules: {
+                admin_state: {
+                    required: true
+                },
+                admin_message: {
+                    required: true
+                }
+            },
+            messages: {
+                admin_state: {
+                    required: '请选择是否同意退款'
+                },
+                admin_message: {
+                    required: '{$Think.lang.refund_message_null}'
+                }
+            }
+        });
+    });
+</script>

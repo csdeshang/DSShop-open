@@ -1,0 +1,36 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_activity.css">
+<div class="dsh-activity">
+    <div class="activity_detail">
+        <div class="p_img">
+            <img src="{:ds_get_pic(ATTACH_ACTIVITY,$activity.activity_banner)}"/>
+        </div>
+        <div class="p_info">
+            <p class="p_name">{$activity.activity_title}</p>
+            <p class="p_time">{$activity.activity_startdate|date='Y-m-d'} {$Think.lang.ds_to} {$activity.activity_enddate|date='Y-m-d'}</p>
+            <p class="p_desc">{$activity.activity_desc}</p>
+        </div>
+    </div>
+    <div class="activity_show" id="sale">
+        {notempty name="activitydetail_list"}
+        <ul class="list_pic">
+            {foreach name="activitydetail_list" item="v"}
+            <li>
+                <dl>
+                    <dt><a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" target="_blank"><img src="{:goods_thumb($v, 240);}"/></a></dt>
+                    <dd class="p_name"><a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" target="_blank" title="{$v.goods_name}">{$v.goods_name}</a></dd>
+                    <dd class="p_info">
+                        <span class="p_price">{:ds_price_format_forlist($v['goods_price'])}</span>
+                        <a class="p_buy" href="{:url('Goods/index',['goods_id'=>$v.goods_id])}" target="_blank">{$Think.lang.ds_buy_now}</a>
+                    </dd>
+                </dl>
+            </li>
+            {/foreach}
+        </ul>
+        {/notempty}
+    </div>
+</div>
+
+{/block}

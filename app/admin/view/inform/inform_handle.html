@@ -1,0 +1,68 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form id="handle_form" method="post" action="{:url('Inform/inform_handle')}" name="form1">
+        <input id="inform_id" name="inform_id" type="hidden" value="{$inform_id}"/>
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td colspan="2" class="required">
+                        <label>{$Think.lang.ds_goods_name}:</label>
+                    </td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform" id="goods_name">{$inform_goods_name}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label>{$Think.lang.inform_handle_type}:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <ul>
+                            <li>
+                                <label><input type="radio" value="1" name="inform_handle_type">{$Think.lang.inform_handle_type_unuse_message}</label>
+                            </li>
+                            <li>
+                                <label><input type="radio" value="2" name="inform_handle_type">{$Think.lang.inform_handle_type_venom_message}</label>
+                            </li>
+                        </ul>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label>{$Think.lang.inform_handle_message}:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><textarea class="tarea" name="inform_handle_message" rows="6" id="inform_handle_message"></textarea></td>
+                    <td class="vatop tips"></td>
+                </tr>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="2" ><a href="JavaScript:void(0);" class="btn" id="btn_handle_submit"><span>{$Think.lang.ds_submit}</span></a></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //默认选中第一个radio
+        $(":radio").first().attr("checked", true);
+        $("#btn_handle_submit").click(function () {
+            if ($("#inform_handle_message").val() == '') {
+                layer.alert("{$Think.lang.inform_handle_message_null}");
+            } else {
+                layer.confirm("{$Think.lang.inform_handle_confirm}", {
+                    btn: ['确定', '取消'],
+                    title: false,
+                }, function () {
+                    $("#handle_form").submit();
+                });
+            }
+        });
+    });
+</script>

@@ -1,0 +1,91 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>邮箱短信</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="post">
+        <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.smtp_server}</td>
+                        <td class="vatop rowform"><input type="text" name="email_host" id="email_host" value="{$list_config.email_host}" class="w200"/></td>
+			<td class="vatop tips"><p class="notic">{$Think.lang.set_smtp_server_address}</p></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.email_secure}</td>
+                        <td class="vatop rowform">
+                            <select name="email_secure" id="email_secure">
+                                <option value="tls" {if $list_config.email_secure eq 'tls'}selected=selected{/if}>非SSL协议</option>
+                                <option value="ssl" {if $list_config.email_secure eq 'ssl'}selected=selected{/if}>SSL协议</option>
+                            </select>
+                        </td>
+			<td class="vatop tips"><p class="notic">{$Think.lang.set_email_secure}</p></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.email_port}</td>
+                        <td class="vatop rowform"><input type="text" name="email_port" id="email_port" value="{$list_config.email_port}" class="w200"/></td>
+			<td class="vatop tips"><p class="notic">{$Think.lang.set_email_port}</p></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.sender_mail_address}</td>
+                        <td class="vatop rowform"><input type="text" name="email_addr" id="email_addr" value="{$list_config.email_addr}" class="w200"/></td>
+			<td class="vatop tips"><p class="notic">{$Think.lang.if_smtp_authentication}</p></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.smtp_user_name}</td>
+                        <td class="vatop rowform"><input type="text" name="email_id" id="email_id" value="{$list_config.email_id}" class="w200"/></td>
+			<td class="vatop tips"><p class="notic">{$Think.lang.smtp_user_name_tip}</p></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.smtp_user_pwd}</td>
+                        <td class="vatop rowform"><input type="password" name="email_pass" id="email_pass" value="{$list_config.email_pass}" class="w200"/></td>
+			<td class="vatop tips"><p class="notic">{$Think.lang.smtp_user_pwd_tip}</p></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.test_mail_address}</td>
+                        <td class="vatop rowform">
+                            <input type="text" name="email_test" id="email_test" value="" class="w200"/>
+                            <input type="button" value="测试" name="send_test_email" class="btn btn-small" id="send_test_email" >
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>					
+                </tfoot>
+            </table>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $('#send_test_email').click(function(){
+            $.ajax({
+                type:'POST',
+                url:"{:url('Message/email_testing')}",
+                data:{'email_host':$('#email_host').val(),'email_secure':$('#email_secure option:selected').val(),'email_port':$('#email_port').val(),'email_addr':$('#email_addr').val(),'email_id':$('#email_id').val(),'email_pass':$('#email_pass').val(),'email_test':$('#email_test').val()},
+                error:function(html){
+                    layer.alert(html.msg);
+                },
+                success:function(html){
+                    layer.alert(html.msg);
+                },
+                dataType:'json'
+            });
+        });
+    });
+</script>

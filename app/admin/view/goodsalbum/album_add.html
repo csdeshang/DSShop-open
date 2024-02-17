@@ -1,0 +1,73 @@
+{include file="public/header" /}
+
+<div class="page">
+    <form method="post" id="album_class_form">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation" for="aclass_name">{$Think.lang.album_class_add_name}{$Think.lang.ds_colon}</label></td>
+                    <td class="vatop rowform"><input class="w300 text" type="text" name="aclass_name" id="aclass_name" value="{$class_info.aclass_name|default=''}" /></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="validation" for="aclass_des">{$Think.lang.album_class_add_des}{$Think.lang.ds_colon}</label></td>
+                    <td class="vatop rowform"><textarea class="w300 textarea" rows="3" name="aclass_des" id="aclass_des">{$class_info.aclass_des|default=''}</textarea></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="validation" for="aclass_sort">{$Think.lang.ds_sort}{$Think.lang.ds_colon}</label></td>
+                    <td class="vatop rowform"><input class="w50 text" type="text" name="aclass_sort" id="aclass_sort" value="{$class_info.aclass_sort|default='0'}" /></td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function() {
+        $('#album_class_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                aclass_name: {
+                    required: true,
+                    maxlength: 20,
+                    remote: {
+                        url: "{:url('Goodsalbum/ajax_check_class_name',['column'=>'ok','type'=>$controller])}",
+                        type: 'get',
+                        data: {
+                            ac_name: function() {
+                                return $('#aclass_name').val();
+                            }
+                        }
+                    }
+                },
+                aclass_des: {
+                    maxlength: 100
+                },
+                aclass_sort: {
+                    digits: true
+                }
+            },
+            messages: {
+                aclass_name: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.album_class_add_name_null}',
+                    maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.album_class_add_name_max}',
+                    remote: '<i class="iconfont">&#xe64c;</i>{$Think.lang.album_class_add_name_repeat}'
+                },
+                aclass_des: {
+                    maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.album_class_add_des_max}'
+                },
+                aclass_sort: {
+                    digits: '<i class="iconfont">&#xe64c;</i>{$Think.lang.album_class_add_sort_digits}'
+                }
+            }
+        });
+    });
+</script>

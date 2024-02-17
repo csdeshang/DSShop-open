@@ -1,0 +1,33 @@
+<?php $i = 1; $areas = $areas; foreach ($areas['region'] as $region => $provinceIds) { ?>
+<li<?php if ($i % 2 == 0) echo ' class="even"'; ?>>
+    <dl class="dssc-region">
+        <dt class="dssc-region-title">
+        <span>
+            <input type="checkbox" id="J_Group_{$i}" class="J_Group" value=""/>
+            <label for="J_Group_{$i}">{$region}</label>
+        </span>
+        </dt>
+        <dd class="dssc-province-list">
+            {foreach name="provinceIds" item="provinceId" }
+            <div class="dssc-province"><span class="dssc-province-tab">
+                    <input type="checkbox" class="J_Province" id="J_Province_{$provinceId}" value="{$provinceId}"/>
+                    <label for="J_Province_{$provinceId}"><?php echo $areas['name'][$provinceId]; ?></label>
+                    <span class="check_num"/> </span><i class="iconfont trigger">&#xe689;</i>
+                <div class="dssc-citys-sub">
+                    <?php if(isset($areas['children'][$provinceId])){ ?>
+                    <?php foreach ($areas['children'][$provinceId] as $cityId) { ?>
+                    <span class="areas">
+                        <input type="checkbox" class="J_City" id="J_City_{$cityId}" value="{$cityId}"/>
+                        <label for="J_City_{$cityId}"><?php echo $areas['name'][$cityId]; ?></label>
+                    </span>
+                    <?php } ?>
+                    <?php } ?>
+                    <p class="tr hr8"><a href="javascript:void(0);" class="dssc-btn-mini dssc-btn-orange close_button">{$Think.lang.ds_close}</a></p>
+                </div>
+                </span>
+            </div>
+            {/foreach}
+        </dd>
+    </dl>
+</li>
+<?php $i++; } ?>

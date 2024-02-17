@@ -1,0 +1,51 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+<table class="dsm-default-table">
+    <thead>
+        <tr>
+            <th class="w80">{$Think.lang.memberbank_type}</th>
+            <th class="w150">{$Think.lang.memberbank_truename}</th>
+            <th>{$Think.lang.memberbank_no}</th>
+            <th class="w120">{$Think.lang.memberbank_name}</th>
+            <th class="w110">{$Think.lang.ds_handle}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {notempty name="memberbank_list"}
+        {foreach name="memberbank_list" item="memberbank"}
+        <tr class="bd-line">
+            <td>{$memberbank.memberbank_type}</td>
+            <td>{$memberbank.memberbank_truename}</td>
+            <td>{$memberbank.memberbank_no}</td>
+            <td>{$memberbank.memberbank_name}</td>
+            <td class="dsm-table-handle">
+                <span>
+                    <a href="{:url('Memberbank/edit',['memberbank_id'=>$memberbank.memberbank_id])}" class="btn-blue"><i class="iconfont">&#xe731;</i><p>{$Think.lang.ds_edit}</p></a>
+                </span>
+                <span>
+                    <a href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('Memberbank/drop',['memberbank_id'=>$memberbank.memberbank_id])}','{$Think.lang.ds_ensure_del}');" class="btn-red" ><i class="iconfont">&#xe725;</i>
+                        <p>{$Think.lang.ds_delete}</p>
+                    </a>
+                </span>
+            </td>
+        </tr>
+        {/foreach}
+        {else}
+        <tr>
+                <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+            </tr>
+        {/notempty}
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+{/block}

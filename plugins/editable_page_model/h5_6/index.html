@@ -1,0 +1,131 @@
+<div class="model-6">
+		<div style="background-color:{$config_info.back_color|default='unset'};" class="goods-list {if isset($config_info['show_format']) && $config_info['show_format']==2}single-column{else}double-column{/if}">
+		{if isset($config_info['goods_list']) && !empty($config_info['goods_list'])} 
+		{foreach name='config_info.goods_list' item='goods'} 
+		<div class="goods-item margin-bottom">
+			<div class="goods-img">
+			  <img src="{$goods.goods_image}">
+			  {if $config_info['if_show_goods_icon']==1 && $config_info['goods_icon']!=''}
+			  <div class="goods-tag-img">
+				  <img src="{$config_info.goods_icon}" />
+			  </div>
+			  {/if}
+			</div>
+			<div class="info-wrap">
+			  <div class="name-wrap">
+				<div class="goods-name">{$goods.goods_name}</div>
+			  </div>
+			  <div class="pro-info">
+				{if $goods['goods_marketprice']>0}  
+				<div class="delete-price">
+				  <span class="unit">¥</span>{:floatval($goods.goods_marketprice)}
+				</div>
+				{/if}
+				{if $goods['goods_price']>$goods['goods_promotion_price']}
+				<div class="delete-price">
+					<span class="unit">¥</span>{:floatval($goods.goods_price)}
+				</div>
+				{/if}
+				<div class="sale">{$goods.goods_salenum}人已购</div>
+			  </div>
+			  <div class="lineheight-clear">
+				<div class="discount-price">
+				  <span class="unit">¥</span>
+				  <span class="price">{:floatval($goods.goods_promotion_price)}</span>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		{/foreach} 
+		{else}
+		<div class="goods-item margin-bottom">
+			<div class="goods-img">
+			  <img src="{:goods_thumb()}">
+			  <div class="goods-tag">爆款</div>
+			</div>
+			<div class="info-wrap">
+			  <div class="name-wrap">
+				<div class="goods-name">商品名称</div>
+			  </div>
+			  <div class="pro-info">
+				<div class="delete-price">
+				  <span class="unit">¥</span>15.99</div>
+				<div class="sale">1005人已购</div>
+			  </div>
+			  <div class="lineheight-clear">
+				<div class="discount-price">
+				  <span class="unit">¥</span>
+				  <span class="price">25.69</span>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		  <div class="goods-item margin-bottom">
+			<div class="goods-img">
+			  <img src="{:goods_thumb()}">
+			  <div class="goods-tag">爆款</div>
+			</div>
+			<div class="info-wrap">
+			  <div class="name-wrap">
+				<div class="goods-name">商品名称</div>
+			  </div>
+			  <div class="pro-info">
+				<div class="delete-price">
+				  <span class="unit">¥</span>15.99</div>
+				<div class="sale">1005人已购</div>
+			  </div>
+			  <div class="lineheight-clear">
+				<div class="discount-price">
+				  <span class="unit">¥</span>
+				  <span class="price">25.69</span>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		  <div class="goods-item margin-bottom">
+			<div class="goods-img">
+			  <img src="{:goods_thumb()}">
+			  <div class="goods-tag">爆款</div>
+			</div>
+			<div class="info-wrap">
+			  <div class="name-wrap">
+				<div class="goods-name">商品名称</div>
+			  </div>
+			  <div class="pro-info">
+				<div class="delete-price">
+				  <span class="unit">¥</span>15.99</div>
+				<div class="sale">1005人已购</div>
+			  </div>
+			  <div class="lineheight-clear">
+				<div class="discount-price">
+				  <span class="unit">¥</span>
+				  <span class="price">25.69</span>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		  <div class="goods-item margin-bottom">
+			<div class="goods-img">
+			  <img src="{:goods_thumb()}">
+			  <div class="goods-tag">爆款</div>
+			</div>
+			<div class="info-wrap">
+			  <div class="name-wrap">
+				<div class="goods-name">商品名称</div>
+			  </div>
+			  <div class="pro-info">
+				<div class="delete-price">
+				  <span class="unit">¥</span>15.99</div>
+				<div class="sale">1005人已购</div>
+			  </div>
+			  <div class="lineheight-clear">
+				<div class="discount-price">
+				  <span class="unit">¥</span>
+				  <span class="price">25.69</span>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		  {/if}
+		</div>
+</div>

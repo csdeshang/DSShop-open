@@ -1,0 +1,115 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+<div class="dsm-flow-layout">
+            <div class="dsm-flow-container">
+                <div class="title">
+                    <h3>{$Think.lang.service_type_refund}</h3>
+                </div>
+                <div class="alert">
+                    <h4>{$Think.lang.operating_hints}：</h4>
+                    <ul>
+                        <li>{$Think.lang.refund_notice1|raw}</li>
+                        <li>{$Think.lang.refund_notice2|raw}</li>
+                    </ul>
+                </div>
+                <div id="saleRefund" show_id="1">
+                    <div class="dsm-flow-step">
+                        <dl class="step-first current">
+                            <dt>{$Think.lang.buyer_application_refund}</dt>
+                            <dd class="bg"></dd>
+                        </dl>
+                        <dl class="">
+                            <dt>{$Think.lang.platform_review}</dt>
+                            <dd class="bg"> </dd>
+                        </dl>
+                    </div>
+                    <div class=" dsm-default-form">
+                        <div id="warning"></div>
+                        <form id="post_form1" enctype="multipart/form-data" method="post" action="{:url('Memberrefund/add_refund_all',['order_id'=>$order.order_id])}">
+                            <h3>{$Think.lang.refund_notice3}</h3>
+                            <dl>
+                                <dt>{$Think.lang.refund_buyer_message}：</dt>
+                                <dd>{$Think.lang.refund_notice4}</dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>{$Think.lang.refund_order_refund}：</dt>
+                                <dd><strong class="green">{:ds_price_format($order['order_amount'])}</strong> {$Think.lang.ds_yuan}</dd>
+                            </dl>
+                            <dl>
+                                <dt><i class="required">*</i>{$Think.lang.refund_instructions}：</dt>
+                                <dd>
+                                    <textarea name="buyer_message" rows="3" class="textarea w400"></textarea>
+                                    <br />
+                                    <span class="error"></span> </dd>
+                            </dl>
+                            <dl>
+                                <dt>{$Think.lang.upload_voucher}：</dt>
+                                <dd>
+                                    <p>
+                                        <input name="refund_pic1" type="file" />
+                                        <span class="error"></span> </p>
+                                    <p>
+                                        <input name="refund_pic2" type="file" />
+                                        <span class="error"></span> </p>
+                                    <p>
+                                        <input name="refund_pic3" type="file" />
+                                        <span class="error"></span> </p>
+                                </dd>
+                            </dl>
+                            <div class="bottom">
+                                <input type="submit" class="submit" value="{$Think.lang.submit_confirmation}" />
+                                <a href="javascript:history.go(-1);" class="dsm-btn ml10">{$Think.lang.cancel_return}</a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+<script type="text/javascript">
+$(function(){
+    $('#post_form1').validate({
+		errorPlacement: function(error, element){
+			error.appendTo(element.nextAll('span.error'));
+        },
+		submitHandler:function(form){
+            $('#post_form1').submit();
+        },
+        rules : {
+            buyer_message : {
+                required   : true
+            },
+            refund_pic1: {
+                accept: 'jpg|jpeg|gif|png'
+            },
+            refund_pic2: {
+                accept: 'jpg|jpeg|gif|png'
+            },
+            refund_pic3: {
+                accept: 'jpg|jpeg|gif|png'
+            }
+        },
+        messages : {
+            buyer_message  : {
+                required   : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_fill_refund_instructions}'
+            },
+            refund_pic1: {
+                accept: '<i class="iconfont">&#xe64c;</i>{$Think.lang.image_format}'
+            },
+            refund_pic2: {
+                accept: '<i class="iconfont">&#xe64c;</i>{$Think.lang.image_format}'
+            },
+            refund_pic3: {
+                accept: '<i class="iconfont">&#xe64c;</i>{$Think.lang.image_format}'
+            }
+        }
+    });
+});
+</script>
+
+
+
+
+
+
+{/block}

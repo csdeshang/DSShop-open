@@ -1,0 +1,55 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>满即送</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+    
+    
+    <table class="ds-default-table">
+        <thead>
+        <tr class="thead">
+            <th class="w24"></th>
+            <th class="align-left">{$Think.lang.mansong_name}</th>
+            <th class="align-center">{$Think.lang.start_time}</th>
+            <th class="align-center">{$Think.lang.end_time}</th>
+            <th class="align-center">活动内容</th>
+            <th class="align-center">{$Think.lang.ds_state}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="bd-line">
+            <td></td>
+            <td class="align-left">{$mansong_info.mansong_name}</td>
+            <td class="align-center">{$mansong_info.mansong_starttime|date="Y-m-d H:i"}</td>
+            <td class="align-center">{$mansong_info.mansong_endtime|date="Y-m-d H:i"}</td>
+            <td>
+                <ul class="mansong-rule-list">
+                    {notempty name="mansongrule_list"}
+                    {foreach name="mansongrule_list" item="val"}
+                    <li>
+                        {$Think.lang.level_price}<strong>{$val.mansongrule_price}</strong>元，&nbsp;{$Think.lang.level_discount}<strong>{empty
+                        name="val.mansongrule_discount"}{$Think.lang.text_not_join}{else}{$val.mansongrule_discount}{/empty}</strong>元，&nbsp;
+                        {empty name="val.goods_id"}
+                        {$Think.lang.gift_name} <span>{$Think.lang.text_not_join}</span>
+                        {else}
+                        <a href="{$val.goods_url}" title="{$val.mansong_goods_name}" target="_blank"
+                           class="goods-thumb"> <img width="20" src="{:goods_cthumb($val.goods_image)}"/> </a>
+                        {/empty}
+                    </li>
+                    {/foreach}
+                    {/notempty}
+                </ul>
+            </td>
+            <td class="align-center">{$mansong_info.mansong_state_text}</td>
+        </tr>
+        <tbody>
+    </table>
+
+</div>

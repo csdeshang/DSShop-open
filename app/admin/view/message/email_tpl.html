@@ -1,0 +1,42 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>邮箱短信</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <table class="ds-default-table">
+        <thead>
+            <tr class="space">
+                <th colspan="15" class="nobg">{$Think.lang.ds_list}</th>
+            </tr>
+            <tr class="thead">
+                <th class="w24">&nbsp;</th>
+                <th>{$Think.lang.mailtemplates_index_desc}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="templates_list"}
+            {foreach name="templates_list" item="v" key="k" }
+            <tr class="hover">
+                <td class="w24"></td>
+                <td>{$v.mailmt_name|raw}</td>
+                <td class="w60 align-center"><a href="{:url('Message/email_tpl_edit',['code'=>$v.mailmt_code])}" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a></td>
+            </tr>
+            {/foreach}
+            {/notempty}
+        </tbody>
+    </table>
+
+</div>

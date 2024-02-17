@@ -1,0 +1,87 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+<link href="{$Think.HOME_SITE_ROOT}/css/point.css" rel="stylesheet" type="text/css">
+  <div class="dsp-base-layout">
+    <div class="dsp-member-left">
+      {include file="default/member/pointprod/pointshop_minfo" /}
+    </div>
+    <div class="dsp-member-right w1200">
+      <div class="dsp-grade">
+        <div class="title">
+          <h3>{$Think.lang.my_upgrade_progress}</h3>
+        </div>
+        <div class="dsp-gradeall-bar">
+          {if $membergrade_arr}
+          {foreach name="membergrade_arr" item="v"}
+          <div class="itemlevel exp-lv{$v.level}" >
+            {present name="v.is_cur"}
+            <div class="bar" title='{if $v.is_cur}{$Think.lang.experience}：{$member_info.member_exppoints}{/if}'><i></i> <span class="arrow"></span>
+              <div class="tips">
+                <p class="p1"> {$Think.lang.my_current_level}： <strong>{$v.level_name}</strong> {$Think.lang.current_experience_value}： <em>{$member_info.member_exppoints}</em> </p>
+                <p class="p2">
+                  <?php if ($key >= count($membergrade_arr)-1){?>
+                 {$Think.lang.highest_member_level_reached}
+                  <?php } else {?>
+                  {$Think.lang.reaccumulation_before_expiration}
+                  <strong>{php}echo $membergrade_arr[$key+1]['exppoints']-$member_info['member_exppoints'];{/php}</strong>
+                  {$Think.lang.experience_value_can_upgraded}
+                  <em>{$membergrade_arr[$key+1]['level_name']}</em>
+                  <?php } ?>
+                </p>
+              </div>
+            </div>
+          {/present}
+          <div class="gradelabel">
+            <strong>{$v.level_name}</strong>
+            <i>({$v.exppoints})</i>
+          </div>
+          </div>
+        {/foreach}
+        {else /}
+        {$Think.lang.no_level}
+        {/if}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="dsp-grade-layout mt20 w1200">
+    <div class="title">
+      <h3>{$Think.lang.experience_value_structure}</h3>
+    </div>
+    <dl>
+      <dt><i class="iconfont f26">&#xeb7c;</i>
+        <p>{$Think.lang.how_calculate_experience_value}</p>
+      </dt>
+      <dd>
+        {if $ruleexplain_arr}
+        <ul>
+          {foreach name="ruleexplain_arr" item="v"}
+          <li>{$v}</li>
+          {/foreach}
+        </ul>
+       {/if}
+      </dd>
+    </dl>
+  </div>
+  <div class="dsp-grade-layout w1200">
+    <div class="title">
+      <h3>{$Think.lang.amount_valid_shopping}</h3>
+    </div>
+    <dl>
+      <dt><i class="iconfont">&#xe6f5;</i>
+        <p>{$Think.lang.valid_range}</p>
+      </dt>
+      <dd>
+        {if $ruleexplain_arr.exp_order}
+        <ul>
+          <li>{$Think.lang.valid_range_notes1}
+            <strong>{$Think.lang.valid_range_notes2}</strong>{$Think.lang.valid_range_notes3}
+            <strong>{$Think.lang.valid_range_notes4}</strong>{$Think.lang.valid_range_notes5}<strong>{$Think.lang.valid_range_notes6}</strong>{$Think.lang.valid_range_notes7}</li>
+          <li>{$Think.lang.valid_range_notes8}<strong>{$Think.lang.valid_range_notes9}</strong>{$Think.lang.valid_range_notes10}</li>
+        </ul>
+        {/if}
+      </dd>
+    </dl>
+  </div>
+
+{/block}

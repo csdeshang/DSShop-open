@@ -1,0 +1,41 @@
+<div class="eject_con" style="overflow: visible;">
+  <form id="add_form" action="{:url('Membervrorder/resend')}" method="post">
+    <input type="hidden" name="order_id" value="{$Request.param.order_id}" />
+    <dl style="overflow: visible;">
+      <dt><i class="required">*</i>{$Think.lang.receiving_phone}：</dt>
+      <dd>
+        <div class="parentCls"><input class="text w200" name="buyer_phone" type="text" id=buyer_phone value="{$Request.param.buyer_phone}" autocomplete="off" autofocus="autofocus" maxlength="11"  /></div>
+        <span></span>
+        
+      </dd>
+    </dl>
+    <div class="bottom">
+        <input type="submit" id="submit" class="submit" value="{$Think.lang.confirm_sending}" />
+        <a class="dsm-btn ml5" href="javascript:DialogManager.close('vr_code_resend');">{$Think.lang.ds_cancel}</a>
+    </div>
+  </form>
+</div>
+<script>
+$(document).ready(function(){
+    $("#add_form").validate({
+        onkeyup: false,
+        submitHandler:function(form){
+            ds_ajaxpost('add_form')
+        },
+        rules: {
+            buyer_phone : {
+                required : true,
+                digits : true,
+                minlength : 11
+            }
+        },
+        messages: {
+            buyer_phone : {
+                required : "<i class='iconfont'>&#xe64c;</i>{$Think.lang.fill_mobile_number}",
+                digits : "<i class='iconfont'>&#xe64c;</i>{$Think.lang.correct_fill_mobile_number}",
+                minlength : "<i class='iconfont'>&#xe64c;</i>{$Think.lang.correct_fill_mobile_number}"
+            }
+        }
+    });
+});
+</script>

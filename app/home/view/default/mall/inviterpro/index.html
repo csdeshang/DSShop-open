@@ -1,0 +1,39 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+<div class="dsh-inviterpro w1200">
+    <div class="filter-box mb20">
+        <dl class="clearfix">
+            <dt>{$Think.lang.classification}</dt>
+            <dd><a href="{:url('inviterpro/index')}" {if condition="!$Request.param.cate_id"}class="selected"{/if}>{$Think.lang.ds_all}</a></dd>
+            {foreach name="goods_class_array" item="value"}
+            <dd>
+                <a href="{:url('inviterpro/index',['cate_id'=>$value.gc_id,'keyword'=>$Request.param.keyword])}" {if condition="$value.gc_id eq $Request.param.cate_id"}class="selected"{/if}>{$value.gc_name}</a>
+            </dd>
+            {/foreach}
+        </dl>
+    </div>
+    {notempty name="goods_list"}
+    <div class="goods-list clearfix">
+
+        <ul>
+            {foreach name="goods_list" item="value"}
+            <li>
+                <div class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$value.goods_id])}" target="_blank" title="{$value.goods_name}"><img class="lazyload" data-original="{:goods_thumb($value, 240)}" title="{$value.goods_name}" src="{$Think.HOME_SITE_ROOT}/images/loading.gif" alt="{$value.goods_name}" /></a></div>
+                <div class="goods-name">
+                    <a href="{:url('Goods/index',['goods_id'=>$value.goods_id])}" target="_blank" title="{$value.goods_advword}">{$value.goods_name}</a>
+                </div>
+                <div class="goods-info">
+                    <span class="goods-price" title="{$Think.lang.goods_class_index_store_goods_price}{$Think.lang.ds_colon}{$Think.lang.currency}{$value.goods_price}">{:ds_price_format_forlist($value['goods_price'])}</span>
+                    <span class="inviter_amount">{if $value.inviter_amount>0}{$Think.lang.inviterpro_most_inviter_amount}&nbsp;<em>{:ds_price_format_forlist($value['inviter_amount'])}</em>{/if}</span>
+                </div>
+            </li>
+            {/foreach}
+        </ul>
+    </div>
+    <div class="pagination">{$show_page|raw}</div>
+    {else /}
+    <div class="no_results">{$Think.lang.inviterpro_no_record}</div>
+    {/notempty}
+    
+</div>
+{/block}

@@ -1,0 +1,112 @@
+{include file="public/header" /}
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_brand_manage}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.brand_index_name}</dt>
+                <dd><input class="txt" name="search_brand_name" id="search_brand_name" value="{$search_brand_name}" type="text"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.brand_index_class}</dt>
+                <dd><input class="txt" name="search_brand_class" id="search_brand_class" value="{$search_brand_class}" type="text"></dd>
+            </dl>
+            <div class="btn_group">
+                 <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                 {if $search_brand_name != '' || $search_brand_class != ''}
+                    <a class="btn" href="{:url('Brand/index')}" title="{$Think.lang.ds_cancel_search}"><span>{$Think.lang.ds_cancel_search}</span></a>
+                 {/if}
+                 <a class="btn btn-default" href="javascript:export_xls('{:url('Brand/export_step1')}')"><span>{$Think.lang.ds_export}Excel</span></a>
+            </div>
+        </div>
+        <input type="hidden" value="" name="export">
+    </form>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.brand_index_help1}</li>
+            <li>{$Think.lang.brand_index_help2}</li>
+            <li>{$Think.lang.brand_index_help3}</li>
+        </ul>
+    </div>
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="w24"></th>
+                <th class="w48">{$Think.lang.ds_sort}</th>
+                <th class="w270">{$Think.lang.brand_index_name}</th>
+                <th class="w150">{$Think.lang.brand_index_class}</th>
+                <th class="w150">{$Think.lang.brand_index_pic_sign}</th>
+                <th class="w48 align-center">{$Think.lang.brand_showtype}</th>
+                <th class="w48 align-center">{$Think.lang.ds_recommend}</th>
+                <th class="w72 align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="brand_list"}
+            {foreach name="brand_list" item="v"}
+            <tr class="hover edit">
+                <td><input value="{$v.brand_id}" class="checkitem" type="checkbox" name="del_brand_id[]"></td>
+                <td class="sort"><span class="editable"  ds_type="inline_edit" fieldname="brand_sort" ajax_branch='brand_sort' fieldid="{$v.brand_id}" datatype="pint" maxvalue="255" title="{$Think.lang.ds_editable}">{$v.brand_sort}</span></td>
+                <td class="name"><span class="editable" ds_type="inline_edit" fieldname="brand_name" ajax_branch='brand_name' fieldid="{$v.brand_id}" required="1"  title="{$Think.lang.ds_editable}">{$v.brand_name}</span></td>
+                <td class="class">{$v.brand_class}</td>
+                <td class="picture"><div class="brand-picture"><img src="{:brand_image($v.brand_pic)}" style="height:30px;"/></div></td>
+                <td class="align-center">{$v.brand_showtype==1 ?lang('brand_showtype_text'):lang('brand_showtype_img')}</td>
+                <td class="align-center yes-onoff">
+                    {if $v.brand_recommend == '0'}
+                    <a href="JavaScript:void(0);" class="disabled" ajax_branch='brand_recommend' ds_type="inline_edit" fieldname="brand_recommend" fieldid="{$v.brand_id}" fieldvalue="0" title="{$Think.lang.ds_editable}"><img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif"></a>
+                    {else /}
+                    <a href="JavaScript:void(0);" class="enabled" ajax_branch='brand_recommend' ds_type="inline_edit" fieldname="brand_recommend" fieldid="{$v.brand_id}" fieldvalue="1"  title="{$Think.lang.ds_editable}"><img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif"></a>
+                   {/if}
+                </td>
+                <td class="align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Brand/brand_edit',['brand_id'=>$v.brand_id])}','{$Think.lang.ds_edit}-{$v.brand_name}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Brand/brand_del',['brand_id'=>$v.brand_id])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+           {/foreach}
+           {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+                {notempty name="brand_list"}
+                <tr colspan="15" class="tfoot">
+                    <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                    <td colspan="16">
+                        <label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                        &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                    </td>
+                </tr>
+                {/notempty}
+            </tfoot>
+        </table>
+        {$showpage|raw}
+    <div class="clear"></div>
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>
+<script type="text/javascript">
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Brand/brand_del.html?brand_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+</script>

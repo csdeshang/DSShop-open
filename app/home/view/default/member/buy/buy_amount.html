@@ -1,0 +1,38 @@
+<div class="dsc-bottom"> <a href="javascript:void(0)" id='submitOrder' class="dsc-btn dsc-btn-acidblue fr">{$Think.lang.cart_index_submit_order}</a> </div>
+<script>
+    function submitNext() {
+        if (!SUBMIT_FORM)
+            return;
+        if ($('input[name="cart_id[]"]').size() == 0) {
+            alert('{$Think.lang.commodity_is_invalid}');
+            return;
+        }
+        if ($('#address_id').val() == '') {
+            alert('{$Think.lang.cart_step1_please_set_address}');
+                    return;
+        }
+        if ($('#buy_city_id').val() == '') {
+            alert('{$Think.lang.reselect_the_item}');
+            return;
+        }
+ 
+        if ($('input[name="fcode"]').size() == 1 && $('#fcode_callback').val() != '1') {
+            layer.alert('{$Think.lang.enter_f_code}');
+    		return;
+	}
+        SUBMIT_FORM = false;
+        $('#order_form').submit();
+    }
+    $(function() {
+        $(document).keydown(function(e) {
+            if (e.keyCode == 13) {
+                submitNext();
+                return false;
+            }
+        });
+        $('#submitOrder').on('click', function() {
+            submitNext()
+        });
+        calcOrder();
+    });
+</script>

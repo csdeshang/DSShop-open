@@ -1,0 +1,94 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+<table class="dsm-default-table">
+    <thead>
+    <tr ds_type="table_header">
+        <td><input type="checkbox" id="all" class="checkall"/>
+            <label for="all">{$Think.lang.ds_select_all}</label>
+            <a href="javascript:void(0);" class="dsm-btn-mini" uri="{:url('Memberfavorites/delfavorites',['type'=>'goods'])}" name="fav_id"
+               confirm="{$Think.lang.ds_ensure_del}" ds_type="batchbutton"><i class="iconfont">&#xe725;</i>{$Think.lang.ds_delete}</a>
+            <div class="model-switch-btn">{$Think.lang.favorite_view_mode}{$Think.lang.ds_colon}
+                <a href="{:url('Memberfavorites/fglist',['show'=>'list'])}" title="{$Think.lang.favorite_view_mode_list}"><i class="iconfont">&#xe600;</i></a>
+                <a href="{:url('Memberfavorites/fglist',['show'=>'pic'])}" class="current" title="{$Think.lang.favorite_view_mode_pic}"><i class="iconfont">&#xe72a;</i></a>
+            </div>
+        </td>
+    </tr>
+    </thead>
+    <tbody>
+    {notempty name="favorites_list"}
+    <tr>
+        <td colspan="2" class="pic-model">
+            <ul>
+                {foreach name="favorites_list" item="favorites"}
+                <li class="favorite-pic-list">
+                    <div class="favorite-goods-thumb"><a href="{:url('Goods/index',['goods_id'=>$favorites.goods.goods_id])}" target="_blank"><img src="{:goods_thumb($favorites.goods,240)}"/></a></div>
+                    <div class="favorite-goods-info">
+                        <dl>
+                            <dt>
+                                <input type="checkbox" class="checkitem" value="{$favorites.goods.goods_id}"/>
+                                <a href="{:url('Goods/index',['goods_id'=>$favorites.goods.goods_id])}" target="_blank">{$favorites.goods.goods_name}</a></dt>
+                            <dd>
+                                <span><strong>{:ds_price_format($favorites.goods.goods_price)}</strong>{$Think.lang.ds_yuan}</span>
+                            </dd>
+                            <dd>
+                                <span>{$Think.lang.favorite_selled}{$Think.lang.ds_colon}<em>{$favorites.goods.goods_salenum}</em>{$Think.lang.piece}</span>
+                                <span>(<em>{$favorites.goods.evaluation_count}</em>{$Think.lang.favorite_number_of_consult})</span>
+                                <span>{$Think.lang.favorite_popularity}{$Think.lang.ds_colon}{$favorites.goods.goods_collect}</span>
+                                <a href="javascript:void(0)" onclick="ds_ajaxget_confirm('{:url('Memberfavorites/delfavorites',['fav_id'=>$favorites.fav_id,'type'=>'goods'])}','{$Think.lang.ds_ensure_del}');" class="dsm-btn-mini" title="{$Think.lang.ds_delete}">{$Think.lang.ds_delete}</a>
+                            </dd>
+                        </dl>
+                    </div>
+                </li>
+                {/foreach}
+            </ul>
+        </td>
+    </tr>
+    {else /}
+    <tr>
+        <td colspan="20" class="norecord">
+            <div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div>
+        </td>
+    </tr>
+    {/notempty}
+    </tbody>
+    <tfoot>
+    {notempty name="favorites_list"}
+    <tr>
+        <td colspan="20">
+            <div class="pagination" {$show_page|raw}</div>
+        </td>
+    </tr>
+    {/notempty}
+    </tfoot>
+</table>
+
+<!-- 猜你喜欢 -->
+<div id="guesslike_div" style="width:980px;"></div>
+
+<script>
+    //鼠标经过弹出图片信息
+    $(document).ready(function () {
+        $(".favorite-pic-list div").hover(function () {
+                $(this).animate({
+                        "top": "-40px"
+                    },
+                    400, "swing");
+            },
+            function () {
+                $(this).stop(true, false).animate({
+                        "top": "0"
+                    },
+                    400, "swing");
+            });
+
+        //猜你喜欢
+        $('#guesslike_div').load("{:url('Search/get_guesslike')}", function () {
+            $(this).show();
+        });
+    });
+</script>
+
+
+{/block}

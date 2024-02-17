@@ -1,0 +1,92 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form method="post" id="bonus_form">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.bonus_type}</td>
+                    <td class="vatop rowform">
+                        <select name="bonus_type" {if $Request.action eq 'edit'}disabled{/if}>
+                            {foreach name="bonus_type_list" item="v" key="k"}
+                            <option value="{$k}" {if condition="$bonus.bonus_type eq $k"}selected{/if}>{$v}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.bonus_name}</td>
+                    <td class="vatop rowform"><input id="bonus_name" name="bonus_name" value="{$bonus.bonus_name|default=''}" class="input-txt" type="text"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.bonus_blessing}</td>
+                    <td class="vatop rowform"><input id="bonus_blessing" name="bonus_blessing" value="{$bonus.bonus_blessing|default=''}" class="input-txt" type="text"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.bonus_totalprice}</td>
+                    <td class="vatop rowform"><input id="bonus_totalprice" name="bonus_totalprice" value="{$bonus.bonus_totalprice|default=''}" class="input-txt" type="text" {if $Request.action eq 'edit'}disabled{/if}></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder" {if $Request.action eq 'edit'}style="display:none;"{/if}> 
+                    <td class="required w120">{$Think.lang.bonus_pricetype}</td>
+                    <td class="vatop rowform">
+                        <input id="bonus_pricetype" name="bonus_pricetype" value="1" type="radio" checked="checked" >固定金额
+                        <input id="bonus_fixedprice" name="bonus_fixedprice" value="{$bonus.bonus_fixedprice|default=''}" class="input-txt w36" type="text" >
+                        <br/><br/>
+                        <input id="bonus_pricetype" name="bonus_pricetype" value="0" type="radio" >随机金额
+                        <input id="bonus_randomprice_start" name="bonus_randomprice_start" value="{$bonus.bonus_randomprice_start|default=''}" class="input-txt w36" type="text" >-
+                        <input id="bonus_randomprice_end" name="bonus_randomprice_end" value="{$bonus.bonus_randomprice_end|default=''}" class="input-txt w36" type="text" >
+                    </td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.bonus_begintime}</td>
+                    <td class="vatop rowform"><input id="bonus_begintime" name="bonus_begintime" value="{$bonus.bonus_begintime|date='Y-m-d H:i'}" class="input-txt" type="text"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.bonus_endtime}</td>
+                    <td class="vatop rowform"><input id="bonus_endtime" name="bonus_endtime" value="{$bonus.bonus_endtime|date='Y-m-d H:i'}" class="input-txt" type="text"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.bonus_remark}</td>
+                    <td class="vatop rowform"><textarea name="bonus_remark">{$bonus.bonus_remark|default=''}</textarea></td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input type="submit" value="{$Think.lang.ds_confirm_submit}" class="btn" /></a>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/i18n/jquery-ui-timepicker-zh-CN.js"></script>
+<script>
+    $(function () {
+        $('#bonus_begintime').datetimepicker({dateFormat: 'yy-mm-dd'});
+        $('#bonus_endtime').datetimepicker({dateFormat: 'yy-mm-dd'});
+        $('#bonus_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                bonus_name : {
+                    required: true
+                }
+            },
+            messages: {
+                bonus_name : {
+                    required   : '{$Think.lang.bonus_name_error}'
+                }
+            }
+        });
+    });
+</script>

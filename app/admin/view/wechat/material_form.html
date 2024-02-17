@@ -1,0 +1,400 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.wechat_material}</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class='material-wrapper'>
+        <div class='material-left'>
+            <div class="material-mobile">
+                <img class="material-mobile-head" src='{$Think.ADMIN_SITE_ROOT}/images/mobile_head.png' />
+                <div class='material-mobile-content'>
+                    <div class='material-message'>
+                        <div class='material-message-big material-message-active' onclick='getMaterial($(this))'>
+                            <img class='material-message-big-image' {if !isset($material_info[0])}style="display:none"{/if} src='{if isset($material_info[0])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[0]["thumb_media_id"]}{/if}' />
+                            <div class='material-message-big-wrapper' {if isset($material_info[0])}style="display:none"{/if}>
+                                <div class='material-message-big-text'>封面图</div>
+                            </div>
+                            <div class='material-message-big-title'>{$material_info[0]["title"]|default="标题"}</div>
+                        </div>
+                        <div>
+                            <div class='material-message-small' {if !isset($material_info[1])}style='display:none'{/if} onclick='getMaterial($(this))'>
+                                <div class='material-message-small-title'>{$material_info[1]["title"]|default="标题"}</div>
+                                <img class='material-message-small-image' {if !isset($material_info[1])}style="display:none"{/if} src='{if isset($material_info[1])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[1]["thumb_media_id"]}{/if}' />
+                                <div class='material-message-small-wrapper' {if isset($material_info[1])}style="display:none"{/if}>
+                                    <div class='material-message-small-text'>缩略图</div>
+                                </div>
+                            </div>
+                            <div class='material-message-small' {if !isset($material_info[2])}style='display:none'{/if} onclick='getMaterial($(this))'>
+                                <div class='material-message-small-title'>{$material_info[2]["title"]|default="标题"}</div>
+                                <img class='material-message-small-image' {if !isset($material_info[2])}style="display:none"{/if} src='{if isset($material_info[2])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[2]["thumb_media_id"]}{/if}' />
+                                <div class='material-message-small-wrapper' {if isset($material_info[2])}style="display:none"{/if}>
+                                    <div class='material-message-small-text'>缩略图</div>
+                                </div>
+                            </div>
+                            <div class='material-message-small' {if !isset($material_info[3])}style='display:none'{/if} onclick='getMaterial($(this))'>
+                                <div class='material-message-small-title'>{$material_info[3]["title"]|default="标题"}</div>
+                                <img class='material-message-small-image' {if !isset($material_info[3])}style="display:none"{/if} src='{if isset($material_info[3])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[3]["thumb_media_id"]}{/if}' />
+                                <div class='material-message-small-wrapper' {if isset($material_info[3])}style="display:none"{/if}>
+                                    <div class='material-message-small-text'>缩略图</div>
+                                </div>
+                            </div>
+                            <div class='material-message-small' {if !isset($material_info[4])}style='display:none'{/if} onclick='getMaterial($(this))'>
+                                <div class='material-message-small-title'>{$material_info[4]["title"]|default="标题"}</div>
+                                <img class='material-message-small-image' {if !isset($material_info[4])}style="display:none"{/if} src='{if isset($material_info[4])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[4]["thumb_media_id"]}{/if}' />
+                                <div class='material-message-small-wrapper' {if isset($material_info[4])}style="display:none"{/if}>
+                                    <div class='material-message-small-text'>缩略图</div>
+                                </div>
+                            </div>
+                            <div class='material-message-small' {if !isset($material_info[5])}style='display:none'{/if} onclick='getMaterial($(this))'>
+                                <div class='material-message-small-title'>{$material_info[5]["title"]|default="标题"}</div>
+                                <img class='material-message-small-image' {if !isset($material_info[5])}style="display:none"{/if} src='{if isset($material_info[5])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[5]["thumb_media_id"]}{/if}' />
+                                <div class='material-message-small-wrapper' {if isset($material_info[5])}style="display:none"{/if}>
+                                    <div class='material-message-small-text'>缩略图</div>
+                                </div>
+                            </div>
+                            <div class='material-message-small' {if !isset($material_info[6])}style='display:none'{/if} onclick='getMaterial($(this))'>
+                                <div class='material-message-small-title'>{$material_info[6]["title"]|default="标题"}</div>
+                                <img class='material-message-small-image' {if !isset($material_info[6])}style="display:none"{/if} src='{if isset($material_info[6])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[6]["thumb_media_id"]}{/if}' />
+                                <div class='material-message-small-wrapper' {if isset($material_info[6])}style="display:none"{/if}>
+                                    <div class='material-message-small-text'>缩略图</div>
+                                </div>
+                            </div>
+                            <div class='material-message-small' {if !isset($material_info[7])}style='display:none'{/if} onclick='getMaterial($(this))'>
+                                <div class='material-message-small-title'>{$material_info[7]["title"]|default="标题"}</div>
+                                <img class='material-message-small-image' {if !isset($material_info[7])}style="display:none"{/if} src='{if isset($material_info[7])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[7]["thumb_media_id"]}{/if}' />
+                                <div class='material-message-small-wrapper' {if isset($material_info[7])}style="display:none"{/if}>
+                                    <div class='material-message-small-text'>缩略图</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {notpresent name='material_info'}
+                <div class='material-mobile-foot'>
+                    <i class='material-arrow'></i>
+                    <div class='material-label' onclick='addMaterial()'>新增</div>
+                </div>
+                {/notpresent}
+            </div>
+        </div>
+        <div class='material-right'>
+            <i class='material-arrow'></i>
+            <div class="material-right-content">
+                <div class="material-editor-head">
+                    <div class="material-editor-head-title">图文消息（<span class='material-editor-head-number'>1</span>）</div>
+                    {notpresent name='material_info'}<div class="material-editor-head-btn" onclick='delMaterial()' style='display: none'>删除</div>{/notpresent}
+                </div>
+                <div class="material-editor-content">
+                    <form method="post" enctype="multipart/form-data" id="form1" action="">
+                        <div class="ncap-form-default">
+                            <dl>
+                                <dt><label class="validation">封面</label></dt>
+                                <dd>
+                                    <div class="uploader-wrapper">
+                                        <img class='uploader-image' {if !isset($material_info[0])}style="display:none"{/if} src='{if isset($material_info[0])}{:url("admin/Wechat/get_material_image")}?media_id={$material_info[0]["thumb_media_id"]}{/if}' />
+                                        <div class='uploader-content' {if isset($material_info[0])}style="display:none"{/if}>
+                                            <div class="uploader-icon iconfont">&#xe6bf;</div>
+                                            <div class="uploader-text">点击上传</div>
+                                        </div>
+                                        <input type='file' id='uploader1' class='uploader-file'>
+                                        <input type='hidden' name='thumb_media_id' value='{$material_info[0]["thumb_media_id"]|default=""}'>
+                                    </div>
+                                    <p class="notic">图片建议尺寸：封面图900 x 500像素，缩略图200 x 200像素，图片仅支持jpg/png格式，大小必须在1MB以下</p>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><label class="validation">标题</label></dt>
+                                <dd>
+                                    <input name="title" value="{$material_info[0]["title"]|default=""}" class="input-txt" type="text" onchange='setTitle($(this))'>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><label>作者</label></dt>
+                                <dd>
+                                    <input name="author" value="{$material_info[0]["author"]|default=""}" class="input-txt" type="text">
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><label class="validation">内容</label></dt>
+                                <dd>
+                                        {:build_editor(['name'=>'content','content'=>htmlspecialchars_decode('')])}
+                                        <textarea name="content" id="content" style="width:100%;">{if isset($material_info[0])}{$material_info[0]["content"]|raw}{/if}</textarea>
+                                        <div class="type-file-button" style='float:none;display: block'>
+                                            <input type='file' id='uploader2' class='uploader-file'>
+                                            <span>上传</span>
+                                        </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><label class="validation">原文地址</label></dt>
+                                <dd>
+                                    <input name="content_source_url" value="{$material_info[0]["content_source_url"]|default=""}" class="input-txt" type="text">
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><label>是否打开评论</label></dt>
+                                <dd>
+                                    <div class="onoff">
+                                        <label for="need_open_comment_1" class="cb-enable {if isset($material_info[0]) && $material_info[0]["need_open_comment"]==1}selected{/if}" title="{$Think.lang.ds_yes}"><span>{$Think.lang.ds_yes}</span></label>
+                                        <label for="need_open_comment_0" class="cb-disable {if !isset($material_info[0]) || $material_info[0]["need_open_comment"]==0}selected{/if}" title="{$Think.lang.ds_no}"><span>{$Think.lang.ds_no}</span></label>
+                                        <input type="radio" id="need_open_comment_1" name="need_open_comment" value="1" {if isset($material_info[0]) && $material_info[0]["need_open_comment"]==1}checked=checked{/if}>
+                                        <input type="radio" id="need_open_comment_0" name="need_open_comment" value="0" {if !isset($material_info[0]) || $material_info[0]["need_open_comment"]==0}checked=checked{/if}>
+                                     </div>
+                                </dd>
+                            </dl>
+                            <dl>
+                                <dt><label>是否粉丝可评</label></dt>
+                                <dd>
+                                    <div class="onoff">
+                                        <label for="only_fans_can_comment_1" class="cb-enable {if isset($material_info[0]) && $material_info[0]["only_fans_can_comment"]==1}selected{/if}" title="{$Think.lang.ds_yes}"><span>{$Think.lang.ds_yes}</span></label>
+                                        <label for="only_fans_can_comment_0" class="cb-disable {if !isset($material_info[0]) || $material_info[0]["only_fans_can_comment"]==0}selected{/if}" title="{$Think.lang.ds_no}"><span>{$Think.lang.ds_no}</span></label>
+                                        <input type="radio" id="only_fans_can_comment_1" name="only_fans_can_comment" value="1" {if isset($material_info[0]) && $material_info[0]["only_fans_can_comment"]==1}checked=checked{/if}>
+                                        <input type="radio" id="only_fans_can_comment_0" name="only_fans_can_comment" value="0" {if !isset($material_info[0]) || $material_info[0]["only_fans_can_comment"]==0}checked=checked{/if}>
+                                     </div>
+                                </dd>
+                            </dl>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+    <div class="btn-wrapper">
+        <a href="JavaScript:void(0);" class="btn" onclick="submit()">{$Think.lang.ds_confirm_submit}</a>
+    </div>
+</div>
+
+<style>
+    .material-wrapper{display: flex;margin-top:20px}
+    .material-wrapper .material-left{margin-right:20px;}
+    .material-wrapper .material-left .material-mobile{width:320px;border:1px solid #e1e1e1;font-size: 0;}
+    .material-wrapper .material-left .material-mobile .material-mobile-head{width:100%;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content{padding:20px;width:100%;box-sizing: border-box;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message{border:1px solid #e1e1e1;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-big{padding:10px;position:relative;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-big .material-message-big-image{width:258px;height: 150px;object-fit: cover;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-big .material-message-big-title{font-size:12px;position:absolute;bottom:10px;width:238px;height: 30px;line-height: 30px;padding:0 10px;color:#fff;background:rgba(0,0,0,.5);white-space: nowrap;overflow: hidden;text-overflow:ellipsis;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-big .material-message-big-wrapper{width:258px;height: 150px;background:#eee;display: flex;justify-content: center;align-items: center;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-big .material-message-big-wrapper .material-message-big-text{font-size:16px;color:#999}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-small{display: flex;border-top:1px solid #e1e1e1;padding:10px;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-small .material-message-small-title{font-size:12px;flex:1;height:50px;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-small .material-message-small-image{width:50px;height:50px;object-fit: cover;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-small .material-message-small-wrapper{width:50px;height:50px;background:#eee;display: flex;justify-content: center;align-items: center;}
+    .material-wrapper .material-left .material-mobile .material-mobile-content .material-message .material-message-small .material-message-small-wrapper .material-message-small-text{font-size:12px;color:#999}
+    .material-wrapper .material-left .material-mobile .material-mobile-foot{height: 50px;border-top:1px solid #e1e1e1;text-align: center;position: relative;cursor: pointer}
+    .material-wrapper .material-left .material-mobile .material-mobile-foot .material-label{line-height: 50px;font-size:16px;font-weight: bold}
+    .material-wrapper .material-left .material-mobile .material-mobile-foot .material-arrow{position:absolute;left: 150px;top:-19px;}
+    .material-wrapper .material-left .material-mobile .material-mobile-foot .material-arrow::before{content: ' ';border: 8px solid transparent;border-bottom-width: 10px;border-bottom-color: #e1e1e1;height: 0;width:0;display: block;}
+    .material-wrapper .material-left .material-mobile .material-mobile-foot .material-arrow::after{position: absolute;content: ' ';border: 8px solid transparent;border-bottom-width: 10px;border-bottom-color: #fff;top: 1px;left:0;height: 0;width:0;display: block;}
+    .material-wrapper .material-right{flex:1;position:relative;border:1px solid #e1e1e1;background: #f4f5f9}
+    .material-wrapper .material-right .material-arrow{position:absolute;left: -18px;top:167px;}
+    .material-wrapper .material-right .material-arrow::before{content: ' ';border: 8px solid transparent;border-right-width: 10px;border-right-color: #e1e1e1;height: 0;width:0;display: block;}
+    .material-wrapper .material-right .material-arrow::after{position: absolute;content: ' ';border: 8px solid transparent;border-right-width: 10px;border-right-color: #f4f5f9;top: 0;left:1px;height: 0;width:0;display: block;}
+    .material-wrapper .material-right .material-right-content .material-editor-head{display: flex;align-items:center;border-bottom: 1px solid #e1e1e1;padding:10px 20px;}
+    .material-wrapper .material-right .material-right-content .material-editor-head .material-editor-head-title{font-size:16px;flex:1;}
+    .material-wrapper .material-right .material-right-content .material-editor-head .material-editor-head-btn{background: #fff;border:1px solid #e1e1e1;text-align: center;line-height: 40px;width:100px;font-size:14px;cursor: pointer}
+    .material-wrapper .material-right .material-right-content .material-editor-content{margin:20px;}
+    .material-message-active{border: 1px solid #8b8b8b !important;}
+    .btn-wrapper{text-align: center}
+    .btn-wrapper .btn{margin:20px auto;}
+    .uploader-wrapper{border:1px solid #e1e1e1;border-radius:5px;text-align: center;width: 258px;height: 150px;cursor: pointer;position:relative;}
+    .uploader-wrapper .uploader-icon{font-size:50px;padding-top:50px;}
+    .uploader-wrapper .uploader-text{font-size:16px;font-weight: bold;}
+    .uploader-file{opacity: 0;position:absolute;top:0;bottom:0;left:0;right:0;}
+    .uploader-image{object-fit: cover;width: 258px;height: 150px;cursor: pointer;}
+    .type-file-button{cursor: pointer;text-align: center;position:relative}
+</style>
+<script type="text/javascript">
+    var materialList=[null]
+    $(function() {
+    {present name='material_info'}
+    materialList=[];
+    {foreach name='material_info' item='item'}
+    var temp=[];
+    {foreach name='item' key='k' item='v'}
+    {if in_array($k,['thumb_media_id','title','author','content','content_source_url','need_open_comment','only_fans_can_comment'])}
+    var value={name:'{$k}'};
+    {if $k=='content'}
+    value["value"]='{:htmlspecialchars_decode($v)}';
+    {else}
+    value["value"]='{$v}';
+    {/if}
+    temp.push(value);
+    {/if}
+    {/foreach}
+    materialList.push(temp);
+    {/foreach}
+    {/present}
+        $('#uploader1').change(function(){
+            var formData = new FormData();
+            formData.append('file', event.target.files[0]);
+            formData.append('type', 1);
+            $.ajax({
+                type: "POST",
+                url: '{:url("admin/Wechat/upload_material_image")}',
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (res.code == 10000) {
+                        $('[name="thumb_media_id"]').val(res.result.media_id)
+                        if(!materialIndex){
+                            $('.material-message-big-image').attr('src','{:url("admin/Wechat/get_material_image")}?media_id='+res.result.media_id).show()
+                            $('.material-message-big-wrapper').hide()
+                        }else{
+                            $('.material-message-small-image').eq(materialIndex-1).attr('src','{:url("admin/Wechat/get_material_image")}?media_id='+res.result.media_id).show()
+                            $('.material-message-small-wrapper').eq(materialIndex-1).hide()
+                        }
+                        $('.uploader-image').attr('src','{:url("admin/Wechat/get_material_image")}?media_id='+res.result.media_id).show()
+                        $('.uploader-content').hide()
+                    } else {
+                        layer.msg(res.message)
+                    }
+                }
+            })
+        })
+        $('#uploader2').change(function(){
+            var formData = new FormData();
+            formData.append('file', event.target.files[0]);
+            formData.append('type', 2);
+            $.ajax({
+                type: "POST",
+                url: '{:url("admin/Wechat/upload_material_image")}',
+                dataType: 'json',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function (res) {
+                    if (res.code == 10000) {
+                        ue.execCommand('insertimage', {src:res.result.url});
+                    } else {
+                        layer.msg(res.message)
+                    }
+                }
+            })
+        })
+    });
+    
+    var materialArrow=[167,290,360,430,500,570,640,710]
+    
+    var materialIndex=0
+    function addMaterial(){
+        materialList[materialIndex]=$("#form1").serializeArray()
+        materialList.push([])
+        materialIndex=materialList.length-1
+        $('.material-message-active').removeClass('material-message-active')
+        $('.material-message-small').eq(materialIndex-1).addClass('material-message-active').show()
+        $('.material-right .material-arrow').css('top',materialArrow[materialIndex]+'px')
+        $('.material-editor-head-number').text(materialIndex+1)
+        $('.material-editor-head-btn').show()
+        $('#form1 input').val('')
+        $('.uploader-image').hide()
+        $('.uploader-content').show()
+        ue.setContent('')
+        if(materialList.length>=8){
+            $('.material-mobile-foot').hide()
+        }
+    }
+    function delMaterial(){
+        materialList.splice(materialIndex,1)
+        var obj=$('.material-message-small').eq(materialIndex-1)
+        obj.hide()
+        obj.parent().append(obj)
+        if((materialList.length-1)<materialIndex){
+            materialIndex=materialList.length-1
+        }
+        if(materialIndex!=0){
+            getMaterial($('.material-message-small').eq(materialIndex-1),false)
+        }else{
+            getMaterial($('.material-message-big'),false)
+        }
+        if(materialList.length<8){
+            $('.material-mobile-foot').show()
+        }
+    }
+    function getMaterial(obj,if_save=true){
+        var index
+        if(obj.attr('class').indexOf("material-message-small") != -1 ){
+            index=obj.index()+1
+        }else{
+            index=0
+        }
+        if(if_save){
+            materialList[materialIndex]=$("#form1").serializeArray()
+        }
+        materialIndex=index
+        $('.material-message-active').removeClass('material-message-active')
+        if(materialIndex){
+            $('.material-message-small').eq(materialIndex-1).addClass('material-message-active').show()
+            $('.material-editor-head-btn').show()
+        }else{
+            $('.material-message-big').addClass('material-message-active').show()
+            $('.material-editor-head-btn').hide()
+        }
+        $('.material-right .material-arrow').css('top',materialArrow[materialIndex]+'px')
+        $('.material-editor-head-number').text(materialIndex+1)
+        if(materialList[materialIndex]){
+            for(var i in materialList[materialIndex]){
+                $('[name="'+materialList[materialIndex][i]['name']+'"]').val(materialList[materialIndex][i]['value'])
+                if(materialList[materialIndex][i]['name']=='content'){
+                    ue.setContent(materialList[materialIndex][i]['value'])
+                }else if(materialList[materialIndex][i]['name']=='thumb_media_id'){
+                    if(materialList[materialIndex][i]['value']){
+                        $('.uploader-image').attr('src','{:url("admin/Wechat/get_material_image")}?media_id='+materialList[materialIndex][i]['value']).show()
+                        $('.uploader-content').hide()
+                    }else{
+                        $('.uploader-image').hide()
+                        $('.uploader-content').show()
+                    }
+                }
+            }
+        }
+    }
+    function setTitle(obj){
+        var title='标题'
+        if(obj.val()){
+            title=obj.val()
+        }
+        if(materialIndex){
+            $('.material-message-small').eq(materialIndex-1).find('.material-message-small-title').text(title)
+        }else{
+            $('.material-message-big-title').text(title)
+        }
+    }
+    function submit(){
+        $('label.error').remove()
+        materialList[materialIndex]=$("#form1").serializeArray()
+            $.ajax({
+                type: "POST",
+                url: '{$Request.url}',
+                dataType: 'json',
+                data: {articles:materialList},
+                success: function (res) {
+                    if (res.code == 10000) {
+                        window.history.back(-1)
+                    } else {
+                        if(res.result){
+                            $('[name="'+res.result.name+'"]').parents('dd').append('<label class="error">不能为空</label>')
+                            if(res.result.index!=0){
+                                getMaterial($('.material-message-small').eq(res.result.index-1),false)
+                            }else{
+                                getMaterial($('.material-message-big'),false)
+                            }
+                        }else{
+                            layer.msg(res.message)
+                        }
+                    }
+                }
+            })
+    }
+</script>

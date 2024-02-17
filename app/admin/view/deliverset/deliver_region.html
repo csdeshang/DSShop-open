@@ -1,0 +1,40 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>默认配送地区</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="dssc-form-default">
+        <form method="post" action="" id="my_form">
+            <dl>
+                <dt>{$Think.lang.default_delivery_area}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input name="region" type="hidden" id="region" value="{$deliver_region[1]}"/>
+                    <input name="area_ids" type="hidden" id="_areas" value="{$deliver_region[0]}">
+                    <p class="hint">{$Think.lang.guidelines_distribution_areas}</p>
+                </dd>
+            </dl>
+            <div class="bottom">
+                <input type="submit" class="btn" value="{$Think.lang.ds_common_button_save}"/>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#region').ds_region();
+    });
+    $(document).ready(function(){
+        $('#my_form').validate({
+            submitHandler:function(form){
+                ds_ajaxpost('my_form','url',"{:url('deliverset/deliver_region')}");
+            }
+        });
+    });
+</script>

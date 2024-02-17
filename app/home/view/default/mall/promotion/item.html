@@ -1,0 +1,24 @@
+{foreach name="goods_list" item="goods_info"}
+<div class="item">
+    <div class="scope">
+        <dl class="goods">
+            <dt class="goods-thumb"> <a title="{$goods_info.goods_name}" target="_blank" href="{$goods_info.goods_url}"><img src="{$goods_info.image_url_240}" /></a> </dt>
+            <dd class="goods-name"><span><strong>{$goods_info.xianshi_title}</strong></span> <a target="_blank" href="{$goods_info.goods_url}">{$goods_info.goods_name}</a></dd>
+        </dl>
+        <div class="goods-price"><span class="sale">{$Think.lang.sale_price}<em>{:ds_price_format_forlist($goods_info['xianshigoods_price'])}</em>{$Think.lang.ds_yuan}</span><span class="depreciate"><i class="iconfont">&#xe689;</i>{$Think.lang.direct_fall}：¥{$goods_info.down_price}</span></div>
+        {if (session('is_login') === '1')}
+        <div class="goods-buy"><a href="javascript:void(0);" dstype="add_cart" data-param="{goods_id:{$goods_info.goods_id}}" class="btn">{$Think.lang.immediate_rush}</a> <span class="raty" data-score="{$goods_info.evaluation_good_star}" style="width: 100px;"></span> </div>
+        {/if}
+        <ul class="goodseval">
+            {notempty name="$goodsevallist[$goods_info['goods_id']]"}
+            {foreach name="$goodsevallist[$goods_info['goods_id']]" item="v" key="k" }
+            <li>
+                <div class="user-avatar"> <a  href="javascript:void(0)"> <img src="{:get_member_avatar_for_id($v['geval_frommemberid'])}"> </a> </div>
+                <div class="eval"><i class="iconfont">&#xe752;</i>{$v.geval_content}<i class="iconfont">&#xe751;</i></div>
+            </li>
+            {/foreach}
+            {/notempty}
+        </ul>
+    </div>
+</div>
+{/foreach}

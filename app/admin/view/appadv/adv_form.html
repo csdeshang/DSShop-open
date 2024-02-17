@@ -1,0 +1,144 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+  <form id="adv_form" enctype="multipart/form-data" method="post" name="advForm">
+    <table class="ds-default-table">
+      <tbody>
+        <tr class="noborder">
+          <td class="required w120"><label class="validation" for="adv_name">{$Think.lang.adv_name}:</label></td>
+          <td class="vatop rowform"><input type="text" name="adv_name" id="adv_name" class="txt" value="{$adv.adv_title|default=''}"></td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr class="noborder">
+            <td class="required"><label>{$Think.lang.adv_ap_id}:</label></td>
+            <td class="vatop rowform">
+                <select name="ap_id" id="ap_id">
+                    {foreach name="ap_list" item="ap" key="ap_k" }
+                    <option value='{$ap.ap_id}' {if condition="$Request.param.ap_id eq $ap.ap_id || $adv.ap_id eq $ap.ap_id"}selected{/if}>{$ap.ap_name}[{$ap.ap_width}X{$ap.ap_height}]</option>
+                    {/foreach}
+                </select>
+            </td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr class="noborder">
+          <td class="required"><label for="adv_startdate">{$Think.lang.start_time}:</label></td>
+          <td class="vatop rowform"><input type="text" name="adv_startdate" id="adv_startdate" class="txt date" value="{:date('Y-m-d',$adv.adv_startdate)}"></td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr class="noborder">
+            <td class="required"><label for="adv_startdate">{$Think.lang.adv_sort}:</label></td>
+            <td class="vatop rowform"><input type="text" name="adv_sort" id="adv_sort" class="txt" value="{$adv.adv_sort|default='255'}"></td>
+            <td class="vatop tips">{$Think.lang.adv_sort_role}</td>
+        </tr>
+        <tr class="noborder">
+            <td class="required"><label for="adv_startdate">{$Think.lang.adv_enabled}:</label></td>
+            <td class="vatop rowform">
+                <div class="onoff">
+                    <label for="adv_enabled1" class="cb-enable {if condition="$adv.adv_enabled eq 1"}selected{/if}">{$Think.lang.ds_open}</label>
+                    <label for="adv_enabled0" class="cb-disable {if condition="$adv.adv_enabled eq 0"}selected{/if}">{$Think.lang.ds_close}</label>
+                    <input id="adv_enabled1" name="adv_enabled" value="1" type="radio" {if condition="$adv.adv_enabled eq 1"} checked="checked"{/if}>
+                    <input id="adv_enabled0" name="adv_enabled" value="0" type="radio" {if condition="$adv.adv_enabled eq 0"} checked="checked"{/if}>
+                </div>
+            </td>
+            <td class="vatop tips"></td>
+        </tr>
+        <tr class="noborder">
+          <td class="required"><label for="adv_enddate">{$Think.lang.end_time}:</label></td>
+          <td class="vatop rowform"><input type="text" name="adv_enddate" id="adv_enddate" class="txt date" value="{:date('Y-m-d',$adv.adv_enddate)}"></td>
+          <td class="vatop tips"></td>
+        </tr>
+        <tr class="noborder" id="adv_code">
+            <input type="hidden" name="mark" value="0">
+            <td class="required"><label for="file_adv_code">{$Think.lang.adv_img_upload}:</label></td>
+            <td class="vatop rowform">
+                {notempty name="$adv.adv_code"}
+                <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                    <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_APPADV,$adv.adv_code)}"></div>
+                </span>
+                {/notempty}
+                <span class="type-file-box">
+                    <input type='text' name='textfield' id='textfield1' class='type-file-text' />
+                    <input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                    <input name="adv_code" id="file_adv_code" type="file" class="type-file-file" id="site_logo" size="30" hidefocus="true">
+                </span>
+            </td>
+          <td class="vatop tips">{$Think.lang.adv_edit_support}gif,jpg,jpeg,png </td>
+        </tr>
+        <tr class="noborder">
+            <td class="required"><label for="adv_type">{$Think.lang.app_adv_type}:</label></td>
+            <td class="vatop rowform">
+              <select name="adv_type" id="adv_type">
+                  <option value="">{$Think.lang.ds_please_choose}</option>
+                  <option value="goods" {if $adv.adv_type=="goods"}selected='selected'{/if}>{$Think.lang.ds_goods}</option>
+                  <option value="groupbuy" {if $adv.adv_type=="groupbuy"}selected='selected'{/if}>{$Think.lang.appadv_adv_form_groupbuy}</option>
+                   <option value="article" {if $adv.adv_type=="article"}selected='selected'{/if}>{$Think.lang.appadv_adv_form_article}</option>
+                   <option value="url" {if $adv.adv_type=="url"}selected='selected'{/if}>{$Think.lang.appadv_adv_form_url}</option>
+              </select>
+            </td>
+        </tr>
+        <tr class="noborder">
+            <td class="required"><label for="adv_type">{$Think.lang.app_adv_typedate}:</label></td>
+    
+            <td class="vatop rowform"><input type="text" name="adv_typedate" class="txt" value="{$adv.adv_typedate|default=''}"></td>
+          <td class="vatop tips adv_type_desc">{$Think.lang.appadv_adv_form_type}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr class="tfoot">
+          <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+        </tr>
+      </tfoot>
+    </table>
+  </form>
+</div>
+<script type="text/javascript">
+$(function(){
+    $('#adv_startdate').datepicker({dateFormat: 'yy-mm-dd'});
+    $('#adv_enddate').datepicker({dateFormat: 'yy-mm-dd'});
+
+    $('#adv_type').on('change', function() {
+        change_image_type_desc($(this).val());
+    });
+$("#file_adv_code").change(function () {
+            $("#textfield1").val($("#file_adv_code").val());
+        });
+    function change_image_type_desc(type) {
+        var desc_array = {};
+            desc_array['goods'] = '{$Think.lang.appadv_adv_form_goods_type}';
+            desc_array['article'] = '{$Think.lang.appadv_adv_form_article_type}';
+            desc_array['url'] = '{$Think.lang.appadv_adv_form_url_type}';
+        $('.adv_type_desc').text(desc_array[type]);
+    }
+});
+</script>
+
+<script>
+$(document).ready(function () {
+
+    $('#adv_form').validate({
+        errorPlacement: function (error, element) {
+            error.appendTo(element.parent().parent().find('td:last'));
+        },
+        rules: {
+            adv_name : {
+                required: true
+            },
+            adv_sort : {
+                number:true,
+                range:[0,255]
+            }
+        },
+        messages: {
+            adv_name : {
+                required : '{$Think.lang.adv_can_not_null}'
+            },
+            adv_sort : {
+                number:'{$Think.lang.ds_sort_number}',
+                range:'{$Think.lang.class_sort_explain}'
+            }
+        }
+    });
+});
+</script>

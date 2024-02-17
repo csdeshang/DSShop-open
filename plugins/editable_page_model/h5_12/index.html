@@ -1,0 +1,42 @@
+<div class="model-12">
+  <div class="graphic-nav" style="background-color:{$config_info.back_color|default='unset'};">
+    <div class="wrap">
+      {if isset($config_info['nav']) && count($config_info['nav'])}
+      {foreach name='config_info.nav' item='v'}
+      <div class="item" {if isset($config_info['show_format'])}style="width:{if $config_info['show_format']==1}25{elseif $config_info['show_format']==2}20{/if}%"{/if}>
+        <div>
+          <img src="{$v.image}">
+        </div>
+        <span>{$v.text}</span>
+    </div>
+    {/foreach}
+      {else}
+      <div class="item" style="width:25%">
+          <div>
+            <img src="{:goods_thumb()}">
+          </div>
+          <span>菜单</span>
+      </div>
+      <div class="item" style="width:25%">
+          <div>
+            <img src="{:goods_thumb()}">
+          </div>
+          <span>菜单</span>
+      </div>
+      <div class="item" style="width:25%">
+          <div>
+            <img src="{:goods_thumb()}">
+          </div>
+          <span>菜单</span>
+      </div>
+      <div class="item" style="width:25%">
+          <div>
+            <img src="{:goods_thumb()}">
+          </div>
+          <span>菜单</span>
+      </div>
+      {/if}
+    </div>
+  </div>
+</div>
+

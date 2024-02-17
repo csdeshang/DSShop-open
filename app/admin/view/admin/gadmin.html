@@ -1,0 +1,48 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_admin}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+            <tr class="space">
+                <th colspan="15" class="nobg">{$Think.lang.ds_list}</th>
+            </tr>
+            <tr class="thead">
+                <th>{$Think.lang.gadmin_name}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="gadmin_list"}
+            {foreach name="gadmin_list" item="v"}
+            <tr class="hover">
+                <td>{$v.gname}</td>
+                <td class="w150 align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Admin/gadmin_set',['gid'=>$v.gid])}','{$Think.lang.ds_edit}-{$v.gname}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Admin/gadmin_del',['gid'=>$v.gid])}','{$Think.lang.gadmin_del_confirm}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.admin_index_del_admin}</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+
+
+
+</div>

@@ -1,0 +1,29 @@
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.cookie.js"></script>
+<script src="{$Think.HOME_SITE_ROOT}/js/compare.js"></script>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/perfect-scrollbar.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/perfect-scrollbar.min.js"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/qtip/jquery.qtip.min.js"></script>
+<link href="{$Think.PLUGINS_SITE_ROOT}/js/qtip/jquery.qtip.min.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery.lazyload.min.js"></script>
+<script>
+    //懒加载
+    $("img.lazyload").lazyload({
+//        placeholder : "{$Think.HOME_SITE_ROOT}/images/loading.gif",
+        effect: "fadeIn",
+        skip_invisible : false,
+        threshold : 200,
+    });
+</script>
+<div class="footer-info">
+    <div class="links w1200">
+        {if $Think.config.ds_config.business_licence}<a href="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.business_licence)}" target="_blank">营业执照</a>|{/if}
+        {foreach $navs.footer as $nav}
+        <a href="{$nav.nav_url}" {if $nav.nav_new_open == 1}target="_blank"{/if}>{$nav.nav_title}</a>|
+        {/foreach}
+    </div>
+    <div class="copyright">
+        <p><a href="http://www.beian.gov.cn/portal/registerSystemInfo" target="_blank">{$Think.config.ds_config.wab_number}</a></p>
+        <p><a href="https://beian.miit.gov.cn" target="_blank">{$Think.config.ds_config.icp_number}</a></p>
+        <p>{$Think.config.ds_config.flow_static_code}</p>
+    </div>
+</div>

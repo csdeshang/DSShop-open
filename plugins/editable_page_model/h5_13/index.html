@@ -1,0 +1,28 @@
+<div class="model-13">
+	<div class="notice-box notice-box-1" style="background-color:{$config_info.back_color|default='unset'};">
+		<div class="notice-con">
+		  <div class="notice-con-icon">
+			<img src="{if isset($config_info['notice_image']) && $config_info['notice_image']}{$config_info['notice_image']}{else}{$Think.HOME_SITE_ROOT}/images/editable_page/ds-notice.png{/if}">
+		  </div>
+		  <div class="notice-con-split">
+		  </div>
+		  <div class="notice-slid">
+			  {if isset($config_info['notice_title']) && count($config_info['notice_title'])}
+			  {foreach name='config_info.notice_title' item='v'}
+			<div class="notice-con-font">{$v.text}</div>
+			{/foreach}
+			{else}
+			<div class="notice-con-font">公告</div>
+		  {/if}
+		  </div>
+		</div>
+	  </div>
+</div>
+<script>
+	if(typeof(loadHtml13)=='undefined'){
+	function loadHtml13(obj){
+		obj.find('.notice-box').slide({mainCell: ".notice-slid",autoPage:true, autoPlay: true,effect:"topLoop"})
+	}
+	}
+</script>
+

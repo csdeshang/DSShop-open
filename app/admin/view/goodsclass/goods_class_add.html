@@ -1,0 +1,197 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.goods_class_index_class}</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form id="goods_class_form" enctype="multipart/form-data" method="post">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label class="validation" for="gc_name">{$Think.lang.goods_class_index_name}:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input type="text" value="" name="gc_name" id="gc_name" maxlength="20" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label for="parent_id">{$Think.lang.goods_class_add_sup_class}:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><select name="gc_parent_id" id="gc_parent_id">
+                            <option value="0">{$Think.lang.ds_please_choose}...</option>
+                            {notempty name="parent_list"}
+                            {foreach name="parent_list" item="v" key="k" }
+                            <option {if $gc_parent_id == $v.gc_id}selected='selected'{/if} value="{$v.gc_id}">{$v.gc_name|raw}</option>
+                            {/foreach}
+                            {/notempty}
+                        </select></td>
+                    <td class="vatop tips">{$Think.lang.goods_class_add_sup_class_notice}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label for="pic">分类图片:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <span class="type-file-box">
+                            <input type='text' name='textfield' id='textfield1' class='type-file-text' />
+                            <input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                            <input name="pic" type="file" class="type-file-file" id="pic" size="30" hidefocus="true" ds_type="change_pic">
+                        </span>
+                    </td>
+                    <td class="vatop tips">第一级图标显示在首页，建议用16px * 16px。二级分类图标显示在电脑端商品分类页，建议用70px * 70px。三级分类图标显示在手机端商品分类页，建议用60px * 60px</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label>发布虚拟商品:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><label><input type="checkbox" name="gc_virtual" id="gc_virtual" value="1">允许</label></td>
+                    <td class="vatop tips">勾选允许发布虚拟商品后，在发布该分类的商品时可选择交易类型为“虚拟兑换码”形式。</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label class="validation">分佣比例:</label></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label for="gc_name">{$Think.lang.type}:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td colspan="2" id="gcategory"><select class="class-select">
+                            <option value="0">{$Think.lang.ds_please_choose}...</option>
+                            {notempty name="gc_list"}
+                            {foreach name="gc_list" item="v" key="k" }
+                            {if $v.gc_parent_id == 0}
+                            <option value="{$v.gc_id}">{$v.gc_name}</option>
+                            {/if}
+                            {/foreach}
+                            {/notempty}
+                        </select>
+                        {$Think.lang.ds_quickly_targeted}
+                    </td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input type="hidden" name="t_name" id="t_name" value="" />
+                        <div id="type_div" class="goods-sort-type">
+                            <div class="container">
+                                <dl>
+                                    <dd>
+                                        <input type="radio" name="t_id" value="0" checked="checked" />{$Think.lang.goods_class_null_type} </dd>
+                                </dl>
+                                {notempty name="type_list"}
+                                {foreach name="type_list" item="val" key="k" }
+                                {notempty name="$val.type"}
+                                <dl>
+                                    <dt id="type_dt_{$k}">{$val.name}</dt>
+                                    {foreach name="$val.type" item="v"}
+                                    <dd>
+                                        <input type="radio" name="t_id" value="{$v.type_id}" />
+                                        <span>{$v.type_name}</span></dd>
+                                    {/foreach}
+                                </dl>
+                                {/notempty}
+                                {/foreach}
+                                {/notempty}
+                            </div>
+                        </div></td>
+                    <td class="vatop tips">{$Think.lang.goods_class_add_type_desc_one}<a onclick="window.parent.openItem('index,type,goods')" href="JavaScript:void(0);">{$Think.lang.ds_type}</a>{$Think.lang.goods_class_add_type_desc_two}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label>{$Think.lang.ds_sort}:</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input type="text" value="255" name="gc_sort" id="gc_sort" class="txt"></td>
+                    <td class="vatop tips">{$Think.lang.goods_class_add_update_sort}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="2"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/jquery.mousewheel.js"></script> 
+<script>
+//按钮先执行验证再提交表单
+              $(function() {
+                  $("#pic").change(function() {
+                      $("#textfield1").val($(this).val());
+                  });
+                  $('input[type="radio"][name="t_id"]').click(function() {
+                      if ($(this).val() == '0') {
+                          $('#t_name').val('');
+                      } else {
+                          $('#t_name').val($(this).next('span').html());
+                      }
+                  });
+
+                  $('#goods_class_form').validate({
+                      errorPlacement: function(error, element) {
+                          error.appendTo(element.parent().parent().prev().find('td:first'));
+                      },
+                      rules: {
+                          gc_name: {
+                              required: true,
+                              remote: {
+                                  url: "{:url('Goodsclass/ajax',['branch'=>'check_class_name'])}",
+                                  type: 'get',
+                                  data: {
+                                      gc_name: function() {
+                                          return $('#gc_name').val();
+                                      },
+                                      gc_parent_id: function() {
+                                          return $('#gc_parent_id').val();
+                                      },
+                                      gc_id: ''
+                                  }
+                              }
+                          },
+                          gc_sort: {
+                              number: true
+                          }
+                      },
+                      messages: {
+                          gc_name: {
+                              required: '{$Think.lang.goods_class_add_name_null}',
+                              remote: '{$Think.lang.goods_class_add_name_exists}'
+                          },
+                          gc_sort: {
+                              number: '{$Think.lang.goods_class_add_sort_int}'
+                          }
+                      }
+                  });
+
+                  // 所属分类
+                  $(document).off('change',"#gc_parent_id").on("change","#gc_parent_id", function() {
+                      type_scroll($(this));
+                  });
+                  // 类型搜索
+                  $(document).off('change',"#gcategory > select").on("change","#gcategory > select", function() {
+                      type_scroll($(this));
+                  });
+              });
+              var typeScroll = 0;
+              function type_scroll(o) {
+                  var id = o.val();
+                  if (!$('#type_dt_' + id).is('dt')) {
+                      return false;
+                  }
+                  $('#type_div').scrollTop(-typeScroll);
+                  var sp_top = $('#type_dt_' + id).offset().top;
+                  var div_top = $('#type_div').offset().top;
+                  $('#type_div').scrollTop(sp_top - div_top);
+                  typeScroll = sp_top - div_top;
+              }
+              gcategoryInit('gcategory');
+</script> 

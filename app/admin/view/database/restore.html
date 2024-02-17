@@ -1,0 +1,109 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.db_restore}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <!-- 操作说明 -->
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li> {$Think.lang.db_restore_help1}</li>
+            <li> {$Think.lang.db_restore_help2}</li>
+        </ul>
+    </div>
+    <div class="ds-search-form">
+        <dl>
+            <dt style="font-size:14px;color: #09C;">{$Think.lang.db_restore_file_list}({$Think.lang.db_backup_file_count}：{$filenum}，{$Think.lang.db_backup_file_size}：{$total|format_bytes})</dt>
+        </dl>
+        <div title="{$Think.lang.db_restore_refresh}" class="btn"><i class="iconfont" onclick="window.location.reload()">&#xe717;</i></div>
+    </div>
+
+
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>
+                    <i class="ico-check"></i>
+                </th>
+                <th>{$Think.lang.db_restore_file_name}</th>
+                <th>{$Think.lang.db_restore_volume_num}</th>
+                <th>{$Think.lang.db_restore_compress}</th>
+                <th>{$Think.lang.db_restore_data_size}</th>
+                <th>{$Think.lang.db_restore_backup_time}</th>
+                <th>{$Think.lang.ds_state}</th>
+                <th class="handle">{$Think.lang.db_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach name="restore_list" item="vo" key="k" }
+            <tr>
+                <td class="sign">
+                    <i class="ico-check"></i>
+                </td>
+                <td>{$vo.basename}</td>
+                <td>{$vo.part}</td>
+                <td>{$vo.compress}</td>
+                <td>{$vo.size|format_bytes}</td>
+                <td>{$vo.time|date="Y-m-d H:i:s"}</td>
+                <td class='state'>-</td>
+                <td class="handle">
+                         <a value="{:url('Database/import',['time'=>$vo.time])}" href="javascript:void(0)" class="db-import"><i class="iconfont">&#xe6d1;</i>{$Think.lang.db_restore_restore}</a> | 
+                        <a href="{:url('Database/downFile',['time'=>$vo.time])}"><i class="iconfont">&#xe6d1;</i>{$Think.lang.ds_download}</a> | 
+                        <a href="{:url('Database/del',['time'=>$vo.time])}"><i class="iconfont">&#xe725;</i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+
+
+    <script>
+
+
+        $(".db-import").click(function() {
+            var self = this, status = ".";
+            $.get($(self).attr('value'), success, "json");
+//            window.onbeforeunload = function() {
+//                return "正在还原数据库，请不要关闭！"
+//            }
+            
+            function success(data) {
+                if (data.code) {
+                    if (data.gz) {
+                        data.info += status;
+                        if (status.length === 5) {
+                            status = ".";
+                        } else {
+                            status += ".";
+                        }
+                    }
+                    if (data.data) {
+                        $(self).parents('tr').find('td.state').text(data.msg);
+                        $.get($(self).attr('value'), {"part": data.data.part, "start": data.data.start}, success, "json");
+                    } else {
+                        $(self).parents('tr').find('td.state').text(data.msg);
+//                        window.onbeforeunload = function() {
+//                            return null;
+//                        }
+                    }
+                } else {
+                    layer.alert(data.msg, {icon: 2});
+                }
+            }
+        });
+    </script>

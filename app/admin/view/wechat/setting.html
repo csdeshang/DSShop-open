@@ -1,0 +1,112 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>公众号配置</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <form id='Wechat_form' method="post"  name="form1">
+            <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w150"><label class="validation" for="apiurl">{$Think.lang.wx_url}:</label></td>
+                        <td class="vatop rowform"><input id="apiurl" name="apiurl" value="{$wx_apiurl}" class="input-txt w400" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w150"><label class="validation" for="wx_token">{$Think.lang.wx_token}:</label></td>
+                        <td class="vatop rowform"><input id="wx_token" name="wx_token" value="{$wx_config.token}" class="input-txt w400" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w150"><label class="validation" for="wx_name">{$Think.lang.wx_name}:</label></td>
+                        <td class="vatop rowform"><input id="wx_name" name="wx_name" value="{$wx_config.wxname}" class="input-txt w400" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w150"><label class="validation" for="wx_appid">{$Think.lang.wx_appid}:</label></td>
+                        <td class="vatop rowform"><input id="wx_appid" name="wx_appid" value="{$wx_config.appid}" class="input-txt w400" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w150"><label class="validation" for="wx_AppSecret">{$Think.lang.wx_AppSecret}:</label></td>
+                        <td class="vatop rowform"><input id="wx_AppSecret" name="wx_AppSecret" value="{$wx_config.appsecret}" class="input-txt w400" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w150"><label class="" for="xcx_appid">{$Think.lang.xcx_appid}:</label></td>
+                        <td class="vatop rowform"><input id="wx_appid" name="xcx_appid" value="{$wx_config.xcx_appid}" class="input-txt w400" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w150"><label class="" for="xcx_AppSecret">{$Think.lang.xcx_AppSecret}:</label></td>
+                        <td class="vatop rowform"><input id="wx_AppSecret" name="xcx_AppSecret" value="{$wx_config.xcx_appsecret}" class="input-txt w400" type="text"></td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td><input type="hidden" name="wx_id" value="{$wx_config.id}"></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>
+                </tfoot>
+            </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $('#Wechat_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                apiurl : {
+                    required: true,
+                },
+                wx_token : {
+                    required: true,
+                },
+                wx_name : {
+                    required: true,
+                },
+                wx_appid : {
+                    required: true,
+                },
+                wx_AppSecret :{
+                    required: true,
+                }
+            },
+            messages: {
+                apiurl : {
+                    required: '{$Think.lang.ds_none_input}{$Think.lang.wx_url}',
+                },
+                wx_token : {
+                    required: '{$Think.lang.ds_none_input}{$Think.lang.wx_token}',
+                },
+                wx_name : {
+                    required: '{$Think.lang.ds_none_input}{$Think.lang.wx_name}',
+                },
+                wx_appid : {
+                    required: '{$Think.lang.ds_none_input}{$Think.lang.wx_appid}',
+                },
+                wx_AppSecret :{
+                    required: '{$Think.lang.ds_none_input}{$Think.lang.wx_AppSecret}',
+                }
+            }
+        });
+    });
+</script>
+
+
+
+
+
+

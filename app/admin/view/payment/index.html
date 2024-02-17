@@ -1,0 +1,50 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>支付方式</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th width="10%">支付方式</th>
+                <th width="10%">启用</th>
+                <th width="10%">适配平台</th>
+                <th width="20%">描述</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {foreach name="payment_list" item="payment"}
+            <tr>
+                <td>{$payment.payment_name}</td>
+                <td>{if $payment.payment_state eq '1'}{$Think.lang.payment_index_enable_ing}{else}{$Think.lang.payment_index_disable_ing}{/if}</td>
+                <td>{$payment.payment_platform}</td>
+                <td>{$payment.payment_desc}</td>
+                <td>
+                    {if $payment.install == '1'}
+                    <a href="javascript:dsLayerOpen('{:url('Payment/edit',['payment_code'=>$payment.payment_code])}','{$Think.lang.ds_edit}-{$payment.payment_name}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Payment/del',['payment_code'=>$payment.payment_code])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    {else/}
+                    <a href="javascript:dsLayerConfirm('{:url('Payment/install',['payment_code'=>$payment.payment_code])}','{$Think.lang.ds_ensure_install}')" class="dsui-btn-add"><i class="iconfont"></i>{$Think.lang.ds_install}</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+    </table>
+</div>
+
+

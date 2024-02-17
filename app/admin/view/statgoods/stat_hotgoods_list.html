@@ -1,0 +1,37 @@
+<div id="container_{$stat_field}" class="w100pre close_float" style="height:400px"></div>
+
+  <table class="ds-default-table">
+  	<thead class="thead">
+		<tr class="space">
+			<th colspan="15">热卖商品TOP50</th>
+		</tr>
+		<tr class="thead sortbar-array">
+			<th class="align-center w18pre">序号</th>
+            <th class="align-center">商品名称</th>
+            <th class="align-center">{$sort_text}</th>
+        </tr>
+    </thead>
+    <tbody id="datatable">
+    {notempty name="statlist"}
+    {foreach name="statlist" item="v"}
+          <tr class="hover">
+          	<td class="alignleft">{$v.sort}</td>
+          	<td class="alignleft">
+              <a href="{:url('home/Goods/index',['goods_id'=>$v.goods_id])}" target="_blank">{$v.goods_name}</a>
+            </td>
+          	<td>{$v[$stat_field]}</td>
+          </tr>
+    {/foreach}
+   {else /}
+    <tr class="no_data">
+        	<td colspan="11">{$Think.lang.no_record}</td>
+        </tr>
+    {/notempty}
+    </tbody>
+  </table>
+
+<script>
+$(function () {
+    $('#container_{$stat_field}').highcharts({$stat_json|raw});
+});
+</script>

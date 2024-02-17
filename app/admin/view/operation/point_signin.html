@@ -1,0 +1,94 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>签到设置</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" name="settingForm" id="settingForm">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="hover">
+                <td>{$Think.lang.points_signin_isuse}:</td>
+                <td class="vatop rowform onoff">
+                    <label for="points_signin_isuse_1" class="cb-enable {eq name='list_setting.points_signin_isuse' value='1'}selected{/eq}" title="{$Think.lang.ds_open}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="points_signin_isuse_0" class="cb-disable {eq name='list_setting.points_signin_isuse' value='0'}selected{/eq}" title="{$Think.lang.ds_close}"><span>{$Think.lang.ds_close}</span></label>
+                    <input id="points_signin_isuse_1" name="points_signin_isuse" {if $list_setting.points_signin_isuse== '1'} checked=checked {/if} value="1" type="radio">
+                    <input id="points_signin_isuse_0" name="points_signin_isuse" {if $list_setting.points_signin_isuse== '0' } checked=checked {/if}} value="0" type="radio">
+                </td>
+                <td class="vatop tips">{$Think.lang.points_signin_isuse_notice}</td>
+            </tr>
+            <tr class="hover">
+                <td>签到积分</td>
+                <td><input id="points_signin" name="points_signin" value="{$list_setting.points_signin}" class="txt" type="text" style="width:60px;"></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="hover">
+                <td>连续签到周期</td>
+                <td><input id="points_signin" name="points_signin_cycle" value="{$list_setting.points_signin_cycle}" class="txt" type="text" style="width:60px;"></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="hover">
+                <td>连续签到奖励</td>
+                <td><input id="points_signin" name="points_signin_reward" value="{$list_setting.points_signin_reward}" class="txt" type="text" style="width:60px;"></td>
+                <td class="vatop tips"></td>
+            </tr>
+            
+            </tbody>
+        </table>
+
+        
+        <table class="ds-default-table">
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="2"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<script>
+    $(document).ready(function(){
+        $("#settingForm").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules : {
+                points_signin :{
+                    number:true,
+                    min:0
+                },
+                points_signin_cycle :{
+                    number:true,
+                    min:0
+                },
+                points_signin_reward :{
+                    number:true,
+                    min:0
+                },
+            },
+            messages : {
+                points_signin :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_signin_cycle :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+                points_signin_reward :{
+                    number:'请输入数字',
+                    min:'输入值不能小于0'
+                },
+            }
+        });
+    });
+</script>

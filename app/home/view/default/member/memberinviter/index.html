@@ -1,0 +1,42 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+<div>
+    <p class="link p15">
+        <span class="label">{$Think.lang.invitation_register_link}：</span>
+        <span>
+            <b id="foo">{$inviter_url}</b>   <a class="artdilog_btn" id="copyurlbt" data-clipboard-action="copy" data-clipboard-target="#foo" >{$Think.lang.inviter_copy}</a>
+        </span>
+    </p>
+    <p class="link p15">
+        <span class="label">{$Think.lang.promotion_public_number_code}：</span>
+        {if $refer_qrcode_weixin}<img src="{$refer_qrcode_weixin}" style='vertical-align: top' width='150' />{else}{$Think.lang.failed_generate_code}{$wx_error_msg}{/if}
+    </p>
+    <p class="link p15">
+        <span class="label">{$Think.lang.promotion_registration_poster}：</span>
+        <img src="{$refer_qrcode_logo}" style='vertical-align: top'/>
+    </p>
+</div>
+
+
+
+<script src="{$Think.PLUGINS_SITE_ROOT}/clipboard.min.js"></script>
+<script>
+$(function(){
+    var clipboard = new Clipboard('#copyurlbt');
+
+    clipboard.on('success', function(e) {
+        alert('{$Think.lang.copy_link_successfully}')
+    });
+
+})
+</script>
+
+
+
+
+{/block}
+

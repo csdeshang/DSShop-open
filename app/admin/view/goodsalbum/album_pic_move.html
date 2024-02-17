@@ -1,0 +1,32 @@
+{include file="public/header" /}
+
+<div class="page">
+    {notempty name="class_list"}
+    <form enctype="multipart/form-data" method="post">
+        <input type="hidden" name="id" value="{$id}" />
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation" for="member_name">{$Think.lang.album_plist_move_album_change}{$Think.lang.ds_colon}</label></td>
+                    <td class="vatop rowform">
+                        <select name="cid" class="w100">
+                            {foreach name="class_list" item="v"  }
+                            <option value="{$v.aclass_id}" class="w100" >{$v.aclass_name}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+    {else /}
+    <h2>{$Think.lang.album_plist_move_album_only_one}{$Think.lang.album_class_add}{$Think.lang.album_plist_move_album_only_two} </h2>
+    {/notempty}
+</div>
+

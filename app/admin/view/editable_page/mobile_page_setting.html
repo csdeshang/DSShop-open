@@ -1,0 +1,772 @@
+{include file="public/header" /}
+
+
+
+    <script src="{$Think.PLUGINS_SITE_ROOT}/jquery.SuperSlide.2.1.1.js"></script>
+    <link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/editable_page.css">
+    <link href="{$Think.PLUGINS_SITE_ROOT}/colorpicker/evol.colorpicker.css" rel="stylesheet" type="text/css">
+    <script src="{$Think.PLUGINS_SITE_ROOT}/colorpicker/evol.colorpicker.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="{$Think.PLUGINS_SITE_ROOT}/ueditor/ueditor.config.js"></script> 
+    <script type="text/javascript" charset="utf-8" src="{$Think.PLUGINS_SITE_ROOT}/ueditor/ueditor.all.min.js"> </script>
+    <script type="text/javascript" charset="utf-8" src="{$Think.PLUGINS_SITE_ROOT}/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <div class="page" style="min-height: 0;padding-bottom:0">
+        <div class="fixed-bar" style="padding-bottom:0">
+            <div class="item-title" style="border-bottom:0">
+                <div class="subject">
+                    <h3>{$Think.lang.editable_page_h5}</h3>
+                </div>
+                {include file="public/admin_items" /}
+            </div>
+        </div>
+    <div class="page-wrapper" style="top:65px;">
+        <div class="component-list">
+            <nav>
+                <h3>公共设置</h3>
+                <ul>
+                    <li data-config="page" title="页面设置">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/text.png">
+                        <span>页面设置</span>
+                    </li>
+                    <li data-config="jump" title="弹出广告">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/pop_adv.png">
+                        <span>弹出广告</span>
+                    </li>
+                    <li data-config="button" title="浮动按钮" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/float_btn.png">
+                        <span>浮动按钮</span>
+                    </li>
+                </ul>
+                <h3>基础组件</h3>
+                <ul>
+                    <li data-config="13" title="公告" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/notice.png">
+                        <span>公告</span>
+                    </li>
+                    <li data-config="12" title="图文导航" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/graphic_nav.png">
+                        <span>图文导航</span>
+                    </li>
+                    <li data-config="1" title="图片广告" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/image_ads.png">
+                        <span>图片广告</span>
+                    </li>
+                    <li data-config="14" title="搜索" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/search.png">
+                        <span>搜索</span>
+                    </li>
+                    <li data-config="2" title="富文本" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/rich_text.png">
+                        <span>富文本</span>
+                    </li>
+                    <li data-config="15" title="魔方" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/rubik_cube.png">
+                        <span>魔方</span>
+                    </li>
+                    <li data-config="16" title="辅助空白" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/horz_blank.png">
+                        <span>辅助空白</span>
+                    </li>
+                    <li data-config="6" title="商品列表" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/goods_list.png">
+                        <span>商品列表</span>
+                    </li>
+                    <li data-config="17" title="视频" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/video_moba.png">
+                        <span>视频</span>
+                    </li>
+                </ul>
+                <h3>营销插件</h3>
+                <ul>
+                    <li data-config="18" title="砍价" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/bargain.png">
+                        <span>砍价</span>
+                    </li>
+                    <li data-config="19" title="团购" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/groupbuy.png">
+                        <span>抢购</span>
+                    </li>
+                    <li data-config="20" title="拼团" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/pintuan.png">
+                        <span>拼团</span>
+                    </li>
+                    <li data-config="21" title="预售" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/presale.png">
+                        <span>预售</span>
+                    </li>
+                    <li data-config="22" title="秒杀" class="">
+                        <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/seckill.png">
+                        <span>秒杀</span>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="preview-wrap">
+            <div class="preview-restore-wrap">
+                <div class="dv-wrap">
+                    <div class="diy-view-wrap">
+                        <div class="preview-head">
+                            <div class="preview-head_div">
+                                <span id="page_head">{$editable_page.editable_page_name|default=''}</span>
+                            </div>
+                        </div>
+                        <div class="float-button" id="float_button" style="display:{if !isset($editable_page['editable_page_theme_config']['if_show_button']) || $editable_page['editable_page_theme_config']['if_show_button']==0}none{else}block{/if};inset: {if isset($editable_page.editable_page_theme_config.button_position) && $editable_page.editable_page_theme_config.button_position==1}{$editable_page.editable_page_theme_config.button_margin|default='0'}px auto auto 0px{/if}{if isset($editable_page.editable_page_theme_config.button_position) && $editable_page.editable_page_theme_config.button_position==2}{$editable_page.editable_page_theme_config.button_margin|default='0'}px 0px auto auto{/if}{if isset($editable_page.editable_page_theme_config.button_position) && $editable_page.editable_page_theme_config.button_position==3}auto auto {$editable_page.editable_page_theme_config.button_margin|default='0'}px 0px{/if}{if isset($editable_page.editable_page_theme_config.button_position) && $editable_page.editable_page_theme_config.button_position==4}auto 0px {$editable_page.editable_page_theme_config.button_margin|default='0'}px auto{/if};padding-left: {$editable_page.editable_page_theme_config.page_margin|default='0'}px; padding-right: {$editable_page.editable_page_theme_config.page_margin|default='0'}px;"><img src="{$editable_page.editable_page_theme_config.button_image|default=''}" /></div>
+                        <div class="preview-content" id="page_content" style="background-color:{$editable_page.editable_page_theme_config.back_color|default='#f5f5f5'}; padding-left: {$editable_page.editable_page_theme_config.page_margin|default='0'}px; padding-right: {$editable_page.editable_page_theme_config.page_margin|default='0'}px; padding-bottom: {if !isset($editable_page['editable_page_theme_config']['if_show_footer']) || $editable_page['editable_page_theme_config']['if_show_footer']==1}60{else}0{/if}px; background-image: {$editable_page.editable_page_theme_config.back_image|default='unset'};">
+                            
+                            {if isset($config_list)}
+                            {foreach name='config_list' item='item' key='key'}
+                            <div onclick="setConfig({$key+1})" data-type="html" data-id="{$key+1}"><div class="model-del iconfont" onclick="delConfig({$key+1})">&#xe6e6;</div>{$item.html|raw}</div>
+                            {/foreach}
+                            {/if}
+                        </div>
+                        <div class="jump-adv-wrapper" id="jump_adv" style="display:none">
+                            <div class="jump-adv">
+                                <img class="jump-adv-image" src="{$editable_page.editable_page_theme_config.jump_image|default=''}" />
+                                <div class="jump-adv-button iconfont">&#xe696;</div>
+                            </div>
+                        </div>
+                        <div class="preview-foot" id="page_foot"{if isset($editable_page['editable_page_theme_config']['if_show_footer']) && $editable_page['editable_page_theme_config']['if_show_footer']==0} style="display:none"{/if}>
+                            <div class="preview-foot-item">
+                                <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/icon_home_nor.png">
+                                <div>首页</div>
+                            </div>
+                            <div class="preview-foot-item">
+                                <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/icon_classify_nor.png">
+                                <div>分类</div>
+                            </div>
+                            <div class="preview-foot-item">
+                                <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/icon_seek_nor.png">
+                                <div>搜索</div>
+                            </div>
+                            <div class="preview-foot-item">
+                                <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/icon_shopping_nor.png">
+                                <div>购物车</div>
+                            </div>
+                            <div class="preview-foot-item">
+                                <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/icon_mine_nor.png">
+                                <div>我的</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="edit-attribute">
+            <div class="attr-wrap">
+                <div class="restore-wrap">
+                    <!-- 页面设置 -->
+                    <div data-type="config" data-id="page">
+                        <form onchange="changeForm($(this))">
+                            <input type="hidden" name="model_id" value="page" />
+                        <h2 class="attr-title">页面设置</h2>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">页面名称</label>
+                            <div class="layui-input-block">
+                                <input name="page_title" value="{$editable_page.editable_page_name|default=''}" type="text" placeholder="请输入页面名称" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">页面颜色</label>
+                            <div class="layui-input-block">
+                                <div class="color-wrapper">
+                                    <input id="back_color" value="{$editable_page.editable_page_theme_config.back_color|default=''}" type="text" name="back_color" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">页面边距</label>
+                            <div class="layui-input-block">
+                                <div class="range-wrapper">
+                                    <input type="range" id="page_margin" name="page_margin" value="{$editable_page.editable_page_theme_config.page_margin|default='0'}"
+                                        onchange="$(this).next().text($(this).val())">
+                                    <span>{$editable_page.editable_page_theme_config.page_margin|default='0'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">背景图片</label>
+                            <div class="layui-input-block">
+                                <div class="uploader-wrapper">
+                                    <div class="uploader-image-wrapper" {if !isset($editable_page['editable_page_theme_config']['back_image']) || !$editable_page['editable_page_theme_config']['back_image']}style="display:none" {/if}>
+                                        <img class='uploader-image' src='{if isset($editable_page['editable_page_theme_config']['back_image']) && $editable_page['editable_page_theme_config']['back_image']}{$editable_page['editable_page_theme_config']['back_image']}{/if}' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+                                    <div class='uploader-content' {if isset($editable_page['editable_page_theme_config']['back_image']) && $editable_page['editable_page_theme_config']['back_image']}style="display:none"
+                                        {/if}>
+                                        <div class="uploader-icon iconfont">&#xe6bf;</div>
+                                        <div class="uploader-text">点击上传</div>
+                                        <div class="uploader-notice">1242×2688</div>
+                                        <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+                                    <input type='hidden' name='back_image'
+                                        value='{$editable_page.editable_page_theme_config.back_image|default=""}'>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">底部导航</label>
+                            <div class="layui-input-block">
+                                <div class="onoff">
+                                    <label for="if_show_footer1"
+                                        class="cb-enable{if !isset($editable_page['editable_page_theme_config']['if_show_footer']) || $editable_page['editable_page_theme_config']['if_show_footer']==1} selected{/if}">{$Think.lang.ds_open}</label>
+                                    <label for="if_show_footer0"
+                                        class="cb-disable{if isset($editable_page['editable_page_theme_config']['if_show_footer']) && $editable_page['editable_page_theme_config']['if_show_footer']==0} selected{/if}">{$Think.lang.ds_close}</label>
+                                    <input id="if_show_footer1" name="if_show_footer" value="1"
+                                        type="radio"{if !isset($editable_page['editable_page_theme_config']['if_show_footer']) || $editable_page['editable_page_theme_config']['if_show_footer']==1} checked="checked"{/if}>
+                                    <input id="if_show_footer0" name="if_show_footer" value="0"
+                                        type="radio"{if isset($editable_page['editable_page_theme_config']['if_show_footer']) && $editable_page['editable_page_theme_config']['if_show_footer']==0} checked="checked"{/if}>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </form>
+                    </div>
+                    <!-- 弹出广告 -->
+                    <div data-type="config" style="display:none" data-id="jump">
+                        <form onchange="changeForm($(this))">
+                            <input type="hidden" name="model_id" value="jump" />
+                        <h2 class="attr-title">弹出广告</h2>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">弹出广告</label>
+                            <div class="layui-input-block">
+                                <div class="onoff">
+                                    <label for="if_show_jump1"
+                                        class="cb-enable{if isset($editable_page['editable_page_theme_config']['if_show_jump']) && $editable_page['editable_page_theme_config']['if_show_jump']==1} selected{/if}">{$Think.lang.ds_open}</label>
+                                    <label for="if_show_jump0"
+                                        class="cb-disable{if !isset($editable_page['editable_page_theme_config']['if_show_jump']) || $editable_page['editable_page_theme_config']['if_show_jump']==0} selected{/if}">{$Think.lang.ds_close}</label>
+                                    <input id="if_show_jump1" name="if_show_jump" value="1"
+                                        type="radio"{if isset($editable_page['editable_page_theme_config']['if_show_jump']) && $editable_page['editable_page_theme_config']['if_show_jump']==1} checked="checked"{/if}>
+                                    <input id="if_show_jump0" name="if_show_jump" value="0"
+                                        type="radio"{if !isset($editable_page['editable_page_theme_config']['if_show_jump']) || $editable_page['editable_page_theme_config']['if_show_jump']==0} checked="checked"{/if}>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">广告图片</label>
+                            <div class="layui-input-block">
+                                <div class="uploader-wrapper">
+                                    <div class="uploader-image-wrapper" {if !isset($editable_page['editable_page_theme_config']['jump_image']) || !$editable_page['editable_page_theme_config']['jump_image']}style="display:none" {/if}>
+                                        <img class='uploader-image' src='{if isset($editable_page['editable_page_theme_config']['jump_image']) && $editable_page['editable_page_theme_config']['jump_image']}{$editable_page['editable_page_theme_config']['jump_image']}{/if}' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+                                    <div class='uploader-content' {if isset($editable_page['editable_page_theme_config']['jump_image']) && $editable_page['editable_page_theme_config']['jump_image']}style="display:none"
+                                        {/if}>
+                                        <div class="uploader-icon iconfont">&#xe6bf;</div>
+                                        <div class="uploader-text">点击上传</div>
+                                        <div class="uploader-notice">1242×1242</div>
+                                        <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+                                    <input type='hidden' name='jump_image'
+                                        value='{$editable_page.editable_page_theme_config.jump_image|default=""}'>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">跳转页面</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="jump_link" value="{$editable_page.editable_page_theme_config.jump_link|default=''}" placeholder="请输入跳转页面" class="layui-input">
+                            </div>
+                        </div>
+                        
+                    </form>
+                    </div>
+
+                    <!-- 浮动按钮 -->
+                    <div data-type="config" style="display:none" data-id="button">
+                        <form onchange="changeForm($(this))">
+                            <input type="hidden" name="model_id" value="button" />
+                        <h2 class="attr-title">浮动按钮</h2>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">浮动按钮</label>
+                            <div class="layui-input-block">
+                                <div class="onoff">
+                                    <label for="if_show_button1"
+                                        class="cb-enable{if isset($editable_page['editable_page_theme_config']['if_show_button']) && $editable_page['editable_page_theme_config']['if_show_button']==1} selected{/if}">{$Think.lang.ds_open}</label>
+                                    <label for="if_show_button0"
+                                        class="cb-disable{if !isset($editable_page['editable_page_theme_config']['if_show_button']) || $editable_page['editable_page_theme_config']['if_show_button']==0} selected{/if}">{$Think.lang.ds_close}</label>
+                                    <input id="if_show_button1" name="if_show_button" value="1"
+                                        type="radio"{if isset($editable_page['editable_page_theme_config']['if_show_button']) && $editable_page['editable_page_theme_config']['if_show_button']==1} checked="checked"{/if}>
+                                    <input id="if_show_button0" name="if_show_button" value="0"
+                                        type="radio"{if !isset($editable_page['editable_page_theme_config']['if_show_button']) || $editable_page['editable_page_theme_config']['if_show_button']==0} checked="checked"{/if}>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">按钮位置</label>
+                            <div class="layui-input-block">
+                                <div class="ds-icon-radio">
+                                    <input type="hidden" name="button_position" value="{$editable_page.editable_page_theme_config.button_position|default='1'}" />
+                                    <ul class="ds-icon">
+                                        <li{if !isset($editable_page['editable_page_theme_config']['button_position']) || $editable_page['editable_page_theme_config']['button_position']==1} class="ds-icon-active"{/if} data-val="1" onclick="setRadio($(this))">
+                                            <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/left_top.png">
+                                            <div class="text">左上</div>
+                                        </li>
+                                        <li{if isset($editable_page['editable_page_theme_config']['button_position']) && $editable_page['editable_page_theme_config']['button_position']==2} class="ds-icon-active"{/if} data-val="2" onclick="setRadio($(this))">
+                                            <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/right_top.png">
+                                            <div class="text">右上</div>
+                                        </li>
+                                        <li{if isset($editable_page['editable_page_theme_config']['button_position']) && $editable_page['editable_page_theme_config']['button_position']==3} class="ds-icon-active"{/if} data-val="3" onclick="setRadio($(this))">
+                                            <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/left_bottom.png">
+                                            <div class="text">左下</div>
+                                        </li>
+                                        <li{if isset($editable_page['editable_page_theme_config']['button_position']) && $editable_page['editable_page_theme_config']['button_position']==4} class="ds-icon-active"{/if} data-val="4" onclick="setRadio($(this))">
+                                            <img src="{$Think.HOME_SITE_ROOT}/images/editable_page/right_bottom.png">
+                                            <div class="text">右下</div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">上下边距</label>
+                            <div class="layui-input-block">
+                                <div class="range-wrapper">
+                                    <input type="range" name="button_margin" id="button_margin" value="{$editable_page.editable_page_theme_config.button_margin|default='0'}"
+                                        onchange="$(this).next().text($(this).val())">
+                                    <span>{$editable_page.editable_page_theme_config.button_margin|default='0'}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">按钮图片</label>
+                            <div class="layui-input-block">
+                                <div class="uploader-wrapper">
+                                    <div class="uploader-image-wrapper" {if !isset($editable_page['editable_page_theme_config']['button_image']) || !$editable_page['editable_page_theme_config']['button_image']}style="display:none" {/if}>
+                                        <img class='uploader-image' src='{if isset($editable_page['editable_page_theme_config']['button_image']) && $editable_page['editable_page_theme_config']['button_image']}{$editable_page['editable_page_theme_config']['button_image']}{/if}' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+                                    <div class='uploader-content' {if isset($editable_page['editable_page_theme_config']['button_image']) && $editable_page['editable_page_theme_config']['button_image']}style="display:none"
+                                        {/if}>
+                                        <div class="uploader-icon iconfont">&#xe6bf;</div>
+                                        <div class="uploader-text">点击上传</div>
+                                        <div class="uploader-notice">40×40</div>
+                                        <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+                                    <input type='hidden' name='button_image'
+                                        value='{$editable_page.editable_page_theme_config.button_image|default=""}'>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label sm">跳转页面</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="button_link" value="{$editable_page.editable_page_theme_config.button_link|default=''}" placeholder="请输入跳转页面" class="layui-input">
+                            </div>
+                        </div>
+                        
+                    </form>
+                    </div>
+                    <div data-type="load">
+                        {if isset($config_list)}
+                        {foreach name='config_list' item='item' key="key"}
+                        <div data-type="config" data-id="{$key+1}" style="display:none">{$item.config|raw}</div>
+                        {/foreach}
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-btn">
+            <input class="btn" type="button" value="{$Think.lang.ds_common_button_save}" onclick="saveForm()" />
+            <a href="{$Think.config.ds_config.h5_site_url}/home/special?special_id={$Request.param.editable_page_id}" target="_blank"><input class="btn btn-red" type="button" value="预览"/></a>
+        </div>
+    </div>
+
+    
+</div>
+<script>
+    
+    
+    var ue={}
+    EDITABLE_PAGE_URL='{$Think.ADMIN_SITE_URL}/editable_page'
+    window.UEDITOR_HOME_URL='{$Think.PLUGINS_SITE_ROOT}/ueditor/'
+    var goods_class={}
+
+function loadGoodsClass(level,id,obj){
+    id=parseInt(id)
+    if(goods_class['i_'+id]){
+        addGoodsClass(level,id,obj)
+    }else if(level==4){
+        $('#'+obj).find('*[data-input]').val(id)
+    }else if(level==1 || id>0){
+        $.getJSON(EDITABLE_PAGE_URL+'/goods_class?parent_id='+id,function(data){
+        if(data.code!=10000){
+            layer.msg(data.message)
+        }else if(data.result.length){
+            goods_class['i_'+id]=data.result
+            addGoodsClass(level,id,obj)
+        }
+    })
+    }
+}
+function getGoodsClass(id,obj){
+    $.getJSON(EDITABLE_PAGE_URL+'/goods_class?id='+id,function(data){
+        if(data.code!=10000){
+            layer.msg(data.message)
+        }else{
+            if(data.result.id.length){
+                var temp=''
+                for(var i in data.result.id){
+                    if(i==0){
+                        goods_class['i_0']=data.result.list[i]
+                    }else{
+                        goods_class['i_'+data.result.id[i-1]]=data.result.list[i]
+                    }
+                    i=parseInt(i)
+                    temp+='<select data-level="'+(i+1)+'" onchange="loadGoodsClass('+(i+2)+',$(this).val(),\''+obj+'\')">'
+                    temp+='<option value="0">{$Think.lang.ds_please_choose}</option>'
+                    for(var j in data.result.list[i]){
+                        temp+='<option value="'+data.result.list[i][j]['gc_id']+'" '+(data.result.list[i][j]['gc_id']==data.result.id[i]?'selected=""':'')+'>'+data.result.list[i][j]['gc_name']+'</option>'
+                    }
+                    temp+='</select>'
+                }
+                $('#'+obj+' [data-select]').append(temp)
+                if($('#'+obj+' tbody').length){
+                    var temp=''
+                    var json
+                    var v=$('#'+obj+' *[data-type="template"]').attr('data-value')
+                    if(v){
+                        json=JSON.parse(v)
+                    }
+                    for(var i in data.result.list[data.result.list.length-1]){
+                        temp+='<tr><td class="tl"><label class="checkbox-label"><i class="checkbox-common"><input type="checkbox" onchange="checkboxChange($(this))" /></i><span>'+data.result.list[data.result.list.length-1][i].gc_name+'</span></label></td><td><input type="text" size="1" name="'+$('#'+obj+' *[data-type="template"]').attr('data-name')+'['+data.result.list[data.result.list.length-1][i].gc_id+'][sort]" value="'+((json && json[data.result.list[data.result.list.length-1][i].gc_id])?json[data.result.list[data.result.list.length-1][i].gc_id].sort:"255")+'" '+((json && json[data.result.list[data.result.list.length-1][i].gc_id])?"disabled=''":"")+' /></td></tr>'
+                    }
+                    $('#'+obj+' tbody').html(temp)
+                }
+            }
+        }
+    })
+}
+function checkboxChange(obj){
+    if(obj.is(':checked')){
+        obj.parents('tr').find('input[type="text"]').removeAttr('disabled');
+        obj.parent().addClass('selected');
+    }else{
+        obj.parents('tr').find('input[type="text"]').attr('disabled','');
+        obj.parent().removeClass('selected');
+    }
+}
+function addGoodsClass(level,id,obj){
+    if(level==1 || id>0){
+        $('#'+obj).find('*[data-input]').val(id)
+        if(goods_class['i_'+id]){
+            var temp='<option value="0">{$Think.lang.ds_please_choose}</option>'
+            for(var i in goods_class['i_'+id]){
+                    temp+='<option value="'+goods_class['i_'+id][i]['gc_id']+'">'+goods_class['i_'+id][i]['gc_name']+'</option>'
+                }
+            if($('#'+obj).find('select[data-level='+level+']').length){
+                $('#'+obj).find('select[data-level='+level+']').html(temp)
+                $('#'+obj).find('select[data-level]:gt('+($('#'+obj).find('select[data-level='+level+']').index()-1)+')').remove()
+            }else{
+                $('#'+obj+' [data-select]').append('<select data-level="'+level+'" onchange="loadGoodsClass('+(level+1)+',$(this).val(),\''+obj+'\')">'+temp+'</select>')
+            }
+        }
+    }else{
+        if(level>2){
+            $('#'+obj).find('*[data-input]').val($('#'+obj).find('select[data-level='+(level-2)+']').val())
+        }else{
+            $('#'+obj).find('*[data-input]').val(0)
+        }
+        $('#'+obj).find('select[data-level]:gt('+($('#'+obj).find('select[data-level='+(level-1)+']').index()-1)+')').remove()
+    }
+    if($('#'+obj+' tbody').length){
+        var temp=''
+        $('#'+obj+' select:last-child').find('option').each(function(){
+            if($(this).val()>0){
+                temp+='<tr><td class="tl"><label class="checkbox-label"><i class="checkbox-common"><input type="checkbox" onchange="checkboxChange($(this))" /></i><span>'+$(this).text()+'</span></label></td><td><input type="text" size="1" name="'+$('#'+obj+' *[data-type="template"]').attr('data-name')+'['+$(this).val()+'][sort]" value="255" disabled="" /></td></tr>'
+            }
+        })
+        $('#'+obj+' tbody').html(temp)
+    }
+}
+var id={if isset($config_list)}{:count($config_list)}{else}0{/if};
+
+$(function(){
+    {if isset($config_list)}
+    {foreach name='config_list' item='item' key='key'}
+    if(typeof(window['loadHtml{$item.val.editable_page_model_id}'])!='undefined'){
+        window['loadHtml{$item.val.editable_page_model_id}']($('*[data-type="html"][data-id={$key+1}]'))
+    }
+    if(typeof(window['loadConfig{$item.val.editable_page_model_id}'])!='undefined'){
+        window['loadConfig{$item.val.editable_page_model_id}']($('*[data-type="config"][data-id={$key+1}]'))
+    }
+    {/foreach}
+    {/if}
+    $('#page_content').sortable();
+    $('#page_content').disableSelection();
+    $('#back_color').colorpicker({showOn: 'both'});
+    $('.component-list li').click(function(){
+        $('*[data-type="config"]').hide()
+        var config=$(this).attr('data-config')
+        
+        if(!isNaN(config)){
+            $.getJSON(EDITABLE_PAGE_URL+'/config_load?if_h5=1&model_id='+config,function(data){
+                if(data.code!=10000) {
+                    layer.msg(data.message);
+                }else{
+                    id++
+                    var obj=$('.active[data-type="html"]')
+                    $('*[data-type="html"]').removeClass('active');
+                    var temp='<div onclick="setConfig('+id+')" class="active" data-type="html" data-id="'+id+'"><div class="model-del iconfont" onclick="delConfig('+id+')">&#xe6e6;</div>'+data.result.html+'</div>'
+                    if(obj.length){
+                        obj.after(temp)
+                    }else{
+                        $('#page_content').append(temp)
+                    }
+                    $('#page_content').animate({scrollTop:($('*[data-type="html"][data-id='+id+']').offset().top-$('#page_content').offset().top+$('#page_content').scrollTop()) + "px"}, 500);
+                    $('*[data-type="load"]').prepend('<div data-type="config" data-id="'+id+'">'+data.result.config+'</div>')
+            
+                    
+                    if(typeof(window['loadHtml'+config])!='undefined'){
+                        window['loadHtml'+config]($('*[data-type="html"][data-id='+id+']'))
+                    }
+                    
+                    if(typeof(window['loadConfig'+config])!='undefined'){
+                        window['loadConfig'+config]($('*[data-type="config"][data-id='+id+']'))
+                    }
+                }
+            })
+        }else{
+            $('*[data-type="config"][data-id='+config+']').show()
+            
+        }
+        if(config=='jump' && $('*[data-type="config"][data-id="jump"] [name="if_show_jump"]:checked').val()==1){
+            $('#jump_adv').show()
+        }else{
+            $('#jump_adv').hide()
+        }
+    })
+})
+// 图片上传ajax
+function uploadFile(obj,callback) {
+    if(!event.target.files[0]){
+        return false;
+    }
+    var formData = new FormData();
+    formData.append('config_id',0);
+    formData.append('name','file');
+    formData.append('file', event.target.files[0]);
+
+    $.ajax({
+        type: "POST",
+        url : EDITABLE_PAGE_URL+'/image_upload',
+        dataType : 'json',
+        data : formData,
+        contentType: false,
+        processData: false,
+        success : function (data, status) {
+                    if (data.code!=10000) {
+                        layer.msg(data.message);
+                    } else {
+                        obj.parents('.uploader-wrapper').find('input[type="hidden"]').val(data.result.file_path);
+                        obj.parents('.uploader-wrapper').find('.uploader-content').hide();
+                        obj.parents('.uploader-wrapper').find('.uploader-image').attr('src', data.result.file_path);
+                        obj.parents('.uploader-wrapper').find('.uploader-image-wrapper').show();
+                        var temp=obj.parents('form')
+                        temp.change()
+                        if(callback){
+                            callback(data.result.file_path,obj)
+                        }
+                    }
+                }
+    });
+    return false;
+
+}
+function delFile(obj){
+    obj.parents('.uploader-wrapper').find('input[type="hidden"]').val('');
+    obj.parents('.uploader-wrapper').find('.uploader-content').show();
+    obj.parents('.uploader-wrapper').find('.uploader-image').attr('src', '');
+    obj.parents('.uploader-wrapper').find('.uploader-image-wrapper').hide();
+    var temp=obj.parents('form')
+    temp.change()
+}
+function setRadio(obj,callback){
+    obj.parents('.ds-icon-radio').find('li').removeClass('ds-icon-active')
+    obj.addClass('ds-icon-active')
+    obj.parents('.ds-icon-radio').find('input[type="hidden"]').val(obj.attr('data-val'))
+    var temp=obj.parents('form')
+    temp.change()
+    if(callback){
+        callback()
+    }
+}
+function setConfig(id){
+    $('*[data-type="html"].active').removeClass('active')
+    $('*[data-type="html"][data-id='+id+']').addClass('active')
+    $('*[data-type="config"]').hide()
+    $('*[data-type="config"][data-id='+id+']').show()
+}
+function delConfig(id){
+    var nid=$('*[data-type="html"][data-id='+id+']').next().attr('data-id')
+    if(!nid){
+        nid=$('*[data-type="html"][data-id='+id+']').prev().attr('data-id')
+    }
+    if(nid){
+        setConfig(nid)
+    }else{
+        $('*[data-config="page"]').click()
+    }
+    $('*[data-type="html"][data-id='+id+']').remove()
+    $('*[data-type="config"][data-id='+id+']').remove()
+    event.stopPropagation()
+}
+var index={}
+var html={}
+function addModel(obj,id){
+        index['i_'+id]++
+        obj.before('<div class="model-item">'+html['i_'+id].replace(/\[i_\d+\]/g,'[i_'+index['i_'+id]+']')+'<div class="model-del iconfont" onclick="delModel($(this))">&#xe696;</div>'+'</div>')
+        if(typeof(window['loadConfig'+id])!='undefined'){
+            window['loadConfig'+id](obj.parents('*[data-type="config"]'))
+        }
+    }
+function delModel(obj){
+    obj.parents('.model-item').remove()
+}
+function saveForm(){
+    var data=[]
+    data.push(formartForm($('*[data-type="config"][data-id="page"]').find('form').serializeArray()))
+    data.push(formartForm($('*[data-type="config"][data-id="jump"]').find('form').serializeArray()))
+    data.push(formartForm($('*[data-type="config"][data-id="button"]').find('form').serializeArray()))
+    $('*[data-type="html"]').each(function(){
+        data.push(formartForm($('*[data-type="config"][data-id='+$(this).attr('data-id')+']').find('form').serializeArray()))
+    })
+    $.ajax({
+            type: "POST",
+            url : EDITABLE_PAGE_URL+'/config_edit?if_h5=1&page_id={$Request.param.editable_page_id}',
+            dataType : 'json',
+            data : {config_list:data},
+            success : function (data, status) {
+                layer.msg(data.message)
+                }
+        })
+}
+function formartForm(temp){
+    var formData={}
+    var m_s=[]
+    var m_i=[]
+    var r={}
+    for(var i in temp){
+        var m=temp[i]['name'].match(/(\[([^\[\]]+)\])+?/g)
+        if(m){
+            var w={}
+            for(var j=m.length-1;j>=0;j--){
+                var o=m[j].match(/\[(.+)\]/)
+                var t=(j==m.length-1)?temp[i]['value']:w
+                w={}
+                if(o[1].match(/^i_\d+$/)){
+                    if(m_s[j]!=o[1]){
+                        if(!m_s[j] || parseInt(o[1].substr(2))<parseInt(m_s[j].substr(2))){
+                            m_i[j]=0
+                        }else{
+                            m_i[j]++
+                        }
+                        m_s[j]=o[1]
+                    }
+                    w[m_i[j]]=t
+                }else if(o[1].match(/^\d+$/)){
+                    w[o[1].toString()]=t
+                }else{
+                    w[o[1]]=t
+                }
+            }
+            var n=temp[i]['name'].match(/^([^\[\]]+)/)
+            r={}
+            r[n[1]]=w
+
+            formData=setAttr(formData,r)
+
+        }else{
+            formData[temp[i]['name']]=temp[i]['value']
+        }
+    }
+                
+    function setAttr(obj,val){
+                for(var j in val){
+                    if(obj[j]){
+                        obj[j]=setAttr(obj[j],val[j])
+                        return obj
+                    }else{
+                        return Object.assign(obj,val)
+                    }
+                }
+            }
+    return formData
+}
+function changeForm(obj){
+    var id=obj.find('input[name="model_id"]').val()
+    var temp=obj.serializeArray()
+    var formData=formartForm(temp)
+    if(!isNaN(id)){
+        $.ajax({
+            type: "POST",
+            url : EDITABLE_PAGE_URL+'/config_load?if_h5=1&model_id='+id,
+            dataType : 'json',
+            data : {config_info:formData},
+            success : function (data, status) {
+                    if (data.code!=10000) {
+                        layer.msg(data.message);
+                    } else {
+                        $('*[data-type="html"][data-id='+obj.parents('*[data-type="config"]').attr('data-id')+']').html('<div class="model-del iconfont" onclick="delConfig('+obj.parents('*[data-type="config"]').attr('data-id')+')">&#xe6e6;</div>'+data.result.html)
+                        if(typeof(window['loadHtml'+id])!='undefined'){
+                            window['loadHtml'+id]($('*[data-type="html"][data-id='+obj.parents('*[data-type="config"]').attr('data-id')+']'))
+                        }
+                    }
+                }
+        })
+    }else{
+        switch(id){
+            case 'page':
+                $('#page_head').text(formData['page_title']?formData['page_title']:'{$Think.config.ds_config.site_name}')
+                $('#page_content').css('background-color',formData['back_color']?formData['back_color']:'#f5f5f5')
+                $('#page_content').css('padding-left',(formData['page_margin']?formData['page_margin']:'0')+'px')
+                $('#page_content').css('padding-right',(formData['page_margin']?formData['page_margin']:'0')+'px')
+                $('#float_button').css('padding-left',(formData['page_margin']?formData['page_margin']:'0')+'px')
+                $('#float_button').css('padding-right',(formData['page_margin']?formData['page_margin']:'0')+'px')
+                $('#page_content').css('background-image',formData['back_image']?('url('+formData['back_image']+')'):'unset')
+                if(formData['if_show_footer']==1){
+                    $('#page_foot').show()
+                    $('#page_content').css('padding-bottom','60px')
+                }else{
+                    $('#page_foot').hide()
+                    $('#page_content').css('padding-bottom','0')
+                }
+                break
+            case 'jump':
+                if(formData['if_show_jump']==1){
+                    $('#jump_adv').show()
+                }else{
+                    $('#jump_adv').hide()
+                }
+                $('#jump_adv img').attr('src',formData['jump_image']?formData['jump_image']:'')
+                break
+            case 'button':
+                if(formData['if_show_button']==1){
+                    $('#float_button').show()
+                }else{
+                    $('#float_button').hide()
+                }
+                $('#float_button').css('top','auto').css('bottom','auto').css('left','auto').css('right','auto')
+                $('#float_button img').attr('src',formData['button_image']?formData['button_image']:'')
+                switch(formData['button_position']){
+                    case '1':
+                        $('#float_button').css('top',(formData['button_margin']?formData['button_margin']:'0')+'px').css('left',0)
+                        break
+                    case '2':
+                        $('#float_button').css('top',(formData['button_margin']?formData['button_margin']:'0')+'px').css('right',0)
+                        break  
+                    case '3':
+                        $('#float_button').css('bottom',(formData['button_margin']?formData['button_margin']:'0')+'px').css('left',0)
+                        break  
+                    case '4':
+                        $('#float_button').css('bottom',(formData['button_margin']?formData['button_margin']:'0')+'px').css('right',0)
+                        break
+                }
+                break        
+        }
+    }
+    
+}
+</script>

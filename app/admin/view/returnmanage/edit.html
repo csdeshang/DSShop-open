@@ -1,0 +1,121 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form id="post_form" method="post" action="{:url('Returnmanage/edit',['refund_id'=>$return.refund_id])}">
+        <table class="ds-default-table">
+            <tbody>
+                <tr>
+                    <td colspan="2" class="required">{$Think.lang.refund_order_refund}{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{:ds_price_format($return.refund_amount)}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required">商品名称{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{$return.goods_name}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required">{$Think.lang.refund_buyer_message}{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{$return.reason_info}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required">退货说明{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{$return.buyer_message}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required">凭证上传{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        {notempty name="pic_list"}
+                        {foreach name="pic_list" item="val"}
+                        <a href="{:ds_get_pic(ATTACH_PATH.'/refund',$val)}" data-lightbox="lightbox-image">
+                            <img width="64" height="64" class="show_image" src="{:ds_get_pic(ATTACH_PATH.'/refund',$val)}"></a>
+                       {/foreach}
+                      {/notempty}
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required">处理意见{$Think.lang.ds_colon}</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="onoff">
+                            <label for="sina_isuse_show1" class="cb-enable selected" >同意</label>
+                            <label for="sina_isuse_show0" class="cb-disable selected">拒绝</label>
+                            <input id="sina_isuse_show1" name="examine_type" value="2" type="radio" checked="checked">
+                            <input id="sina_isuse_show0" name="examine_type" value="3" type="radio">
+                        </div>
+                        <div>
+                            <input name="return_type" class="checked" type="checkbox" value="1" />弃货
+                        </div>
+                        <p class="hint">如果选择弃货，买家将不用退回原商品，提交后直接确认退款。</p>
+                    </td>
+                </tr>
+                <tr class="noborder" dstype="state1" style="display: none"> 
+                        <td class="required w120">{$Think.lang.trade_no}</td>
+                        <td class="vatop rowform"><input type="text" class="txt2" name="trade_no" id="trade_no" value="{$trade_no}"></td>
+			<td class="vatop tips">{$Think.lang.trade_no_tip}</td>
+                    </tr>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label class="validation">{$Think.lang.refund_message}{$Think.lang.ds_colon}</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <textarea id="admin_message" name="admin_message" class="tarea"></textarea></td>
+                    <td class="vatop tips"></td>
+                </tr>
+
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15" >{:token_field()}<input class="btn" onclick="submitForm()" type='button' value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script type="text/javascript">
+    function submitForm(){
+        $('#post_form').submit()
+    }
+    $(function() {
+        $('input[name="refund_state"]').change(function(){
+            if($(this).val()==3){
+                $('*[dstype="state1"]').show()
+            }else{
+                $('*[dstype="state1"]').hide()
+            }
+        })
+        $('#post_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules: {
+                admin_message: {
+                    required: true
+                }
+            },
+            messages: {
+                admin_message: {
+                    required   : '{$Think.lang.refund_message_null}'
+                }
+            }
+        });
+    });
+</script>

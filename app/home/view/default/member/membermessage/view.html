@@ -1,0 +1,76 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+
+
+<div class="dsm-default-form">
+    {notempty name="message_list"}
+    {foreach name="message_list" item="v"}
+    <dl>
+      <dt>
+        {$v.from_member_name}
+        {$Think.lang.ds_colon}
+       </dt>
+      <dd>
+        <p>{if $v.message_type==1}{:htmlspecialchars_decode($v.message_body)}{else}{:parsesmiles($v.message_body)}{/if}</p>
+        <p class="hint">({:date('Y-m-d H:i',$v.message_time)})</p>
+      </dd>
+    </dl>
+    {/foreach}
+    {/notempty}
+    {if $drop_type == 'msg_list'&& $isallowsend}
+
+    <form id="replyform" method="post" action="{:url('Membermessage/savereply')}">
+      <input type="hidden" name="message_id" value="{$message_id}" />
+      <dl class="bottom">
+        <dt>{$Think.lang.home_message_reply}{$Think.lang.ds_colon}</dt>
+        <dd>
+          <p>
+            <textarea name="msg_content" rows="3" class="textarea w500"></textarea>
+          </p>
+          <p> </p>
+        </dd>
+      </dl>
+      <dl class="bottom">
+          <dt>&nbsp;</dt>
+          <dd>
+              <input type="submit" class="submit" value="{$Think.lang.ds_submit}" />
+          </dd>
+      </dl>
+    </form>
+    {/if}
+
+  </div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#replyform').validate({
+            errorPlacement: function(error, element){
+                $(element).parent().next('p').html(error);
+            },
+            submitHandler: function (form) {
+                ds_ajaxpost('replyform','url',"{:url('Membermessage/message')}");
+            },
+            rules : {
+                msg_content : {
+                    required   : true
+                }
+            },
+            messages : {
+                msg_content : {
+                    required   : '{$Think.lang.home_message_reply_content_null}'
+                }
+            }
+        });
+    });
+    </script>
+
+
+{/block}
+
+
+ 

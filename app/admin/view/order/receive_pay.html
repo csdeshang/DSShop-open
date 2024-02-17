@@ -1,0 +1,121 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.order_manage}</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+
+    <form method="post" name="form1" id="form1" action="">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label for="order_sn">订单编号</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{$order_info.order_sn}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label for="pay_sn">支付单号</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{$order_info.pay_sn}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label for="order_amount">订单总金额 </label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">{$order_info.order_amount}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label for="payment_time">付款时间</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input readonly id="payment_time" class="" name="payment_time" value="" type="text" /></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td colspan="2" class="required"><label for="payment_code">付款方式 </label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <select name="payment_code" class="querySelect">
+                            <option value="">{$Think.lang.ds_please_choose}</option>
+                            {foreach name="payment_list" item="val"}
+                            <option value="{$val.payment_code}">{$val.payment_name}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr>
+                    <td colspan="2" class="required"><label for="trade_no">第三方支付平台交易号</label></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform"><input type="text" class="txt2" name="trade_no" id="trade_no" maxlength="40"></td>
+                    <td class="vatop tips"><span class="vatop rowform">支付宝等第三方支付平台交易号</span></td>
+                </tr>
+            </tbody>
+            <tfoot id="submit-holder">
+                <tr class="tfoot">
+                    <td colspan="2" ><a href="javascript:void(0)" id="dssubmit" class="btn">{$Think.lang.ds_submit}</a></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function(){
+        $('#payment_time').datepicker({dateFormat: "yy-mm-dd",maxDate: "{$Think.TIMESTAMP|date='Y-m-d'}"});
+        $('#dssubmit').click(function(){
+            if($("#form1").valid()){
+                layer.confirm("操作提醒：\n该操作不可撤销\n提交前请务必确认是否已收到付款\n继续操作吗?", {
+                    btn: ['确定', '取消'],
+                    title: false,
+                }, function () {
+                    $('#form1').submit();
+                });
+            }
+        });
+        $("#form1").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                payment_time : {
+                    required : true
+                },
+                payment_code : {
+                    required : true
+                },
+                trade_no    :{
+                    required : true
+                }
+            },
+            messages : {
+                payment_time : {
+                    required : '请填写付款准确时间'
+                },
+                payment_code : {
+                    required : '请选择付款方式'
+                },
+                trade_no : {
+                    required : '请填写第三方支付平台交易号'
+                }
+            }
+        });
+    });
+</script>

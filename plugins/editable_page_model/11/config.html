@@ -1,0 +1,241 @@
+<!-- 分类切换商品列表 -->
+<form>
+    <input type="hidden" name="model_id" value="11" />
+<h2 class="attr-title">分类切换商品列表</h2>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">背景颜色</label>
+    <div class="layui-input-block">
+        <div class="color-wrapper">
+            <input data-js="color" type="text" name="back_color" value="{$config_info.back_color|default=''}" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">上边距</label>
+    <div class="layui-input-block">
+        <div class="range-wrapper">
+            <input type="range" name="padding_top" value="{$config_info.padding_top|default='0'}" onchange="$(this).next().text($(this).val())">
+            <span>{$config_info.padding_top|default='0'}</span>
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">下边距</label>
+    <div class="layui-input-block">
+        <div class="range-wrapper">
+            <input type="range" name="padding_bottom" value="{$config_info.padding_bottom|default='0'}" onchange="$(this).next().text($(this).val())">
+            <span>{$config_info.padding_bottom|default='0'}</span>
+        </div>
+    </div>
+</div>
+{if isset($config_info['adv']) && !empty($config_info['adv'])}
+{foreach name='config_info.adv' item='item' key='key'}
+<div class="model-item"{if $key==0} id="adv_item"{/if}>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">切换图标</label>
+        <div class="layui-input-block">
+            <div class="uploader-wrapper">
+                <div class="uploader-image-wrapper" {if !$item.image}style="display:none" {/if}>
+                                        <img class='uploader-image' src='{$item.image|default=''}' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+                <div class='uploader-content' {if $item.image}style="display:none" {/if}>
+                    <div class="uploader-icon iconfont">&#xe6bf;</div>
+                    <div class="uploader-text">点击上传</div>
+                    <div class="uploader-notice">90×90</div>
+                    <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+                <input type='hidden' name='adv[i_{$key}][image]' value="{$item.image|default=''}">
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">固定商品</label>
+        <div class="layui-input-block">
+            <div class="onoff">
+                <label for="if_fixed_goods_11_{$key}_1" class="cb-enable{if !isset($item.if_fixed_goods) || $item.if_fixed_goods==1} selected{/if}" onclick="$(this).parents('form').find('[data-fixed=0]').hide();$(this).parents('form').find('[data-fixed=1]').show()">{$Think.lang.ds_yes}</label>
+                <label for="if_fixed_goods_11_{$key}_0" class="cb-disable{if isset($item.if_fixed_goods) && $item.if_fixed_goods==0} selected{/if}" onclick="$(this).parents('form').find('[data-fixed=0]').show();$(this).parents('form').find('[data-fixed=1]').hide()">{$Think.lang.ds_no}</label>
+                <input id="if_fixed_goods_11_{$key}_1"{if !isset($item.if_fixed_goods) || $item.if_fixed_goods==1} checked="checked"{/if} name="adv[i_{$key}][if_fixed_goods]" value="1" type="radio">
+                <input id="if_fixed_goods_11_{$key}_0"{if isset($item.if_fixed_goods) && $item.if_fixed_goods==0} checked="checked"{/if} name="adv[i_{$key}][if_fixed_goods]" value="0" type="radio">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" data-fixed="1"{if isset($item.if_fixed_goods) && $item.if_fixed_goods==0} style="display:none"{/if}>
+        <label class="layui-form-label sm">选择商品</label>
+        <div class="layui-input-block">
+            <div class="select-wrapper" data-select="goods" data-name="adv[i_{$key}][goods_id]">
+                <span class="text" data-count>请选择</span>
+                <span class="icon iconfont">&#xe687;</span>
+            </div>
+            <div data-content="goods_ids" style="display:none">
+                {if isset($item['goods_id']) && !empty($item['goods_id'])}
+                {foreach name='item.goods_id' item='v' key='k'}
+                <input data-goods="{$k}" type="number" min="0" max="255" size="1" name="adv[i_{$key}][goods_id][{$k}][sort]" value="{$v.sort}" />
+                {/foreach}
+                {/if}
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" data-fixed="0"{if !isset($item.if_fixed_goods) || $item.if_fixed_goods==1} style="display:none"{/if}>
+        <label class="layui-form-label sm">商品数量</label>
+        <div class="layui-input-block">
+            <div class="range-wrapper">
+                <input type="range" name="adv[i_{$key}][goods_count]" value="{$item.goods_count|default='1'}" min="1" onchange="$(this).next().text($(this).val())">
+                <span>{$item.goods_count|default='1'}</span>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" data-fixed="0"{if !isset($item.if_fixed_goods) || $item.if_fixed_goods==1} style="display:none"{/if}>
+        <label class="layui-form-label sm">商品分类</label>
+        <div class="layui-input-block">
+            <div data-js="goods_class"><div data-select></div><input type="hidden" name="adv[i_{$key}][goods_class]" data-input value="{$item.goods_class|default='0'}" /></div>
+        </div>
+    </div>
+    <div class="layui-form-item" data-fixed="0"{if !isset($item.if_fixed_goods) || $item.if_fixed_goods==1} style="display:none"{/if}>
+        <label class="layui-form-label sm">商品排序</label>
+        <div class="layui-input-block">
+            <select name="adv[i_{$key}][goods_sort]">
+                <option value="1"{if !isset($item.goods_sort) || $item.goods_sort==1} selected="selected"{/if}>按新品</option>
+                <option value="2"{if isset($item.goods_sort) && $item.goods_sort==2} selected="selected"{/if}>按热销</option>
+                <option value="3"{if isset($item.goods_sort) && $item.goods_sort==3} selected="selected"{/if}>按好评</option>
+            </select>
+        </div>
+    </div>
+</div>
+{/foreach}
+{else}
+<div class="model-item" id="adv_item">
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">切换图标</label>
+        <div class="layui-input-block">
+            <div class="uploader-wrapper">
+                <div class="uploader-image-wrapper" style="display:none">
+                                        <img class='uploader-image' src='' />
+                                        <div class="iconfont uploader-image-btn" onclick="delFile($(this))">&#xe696;</div>
+                                    </div>
+                <div class='uploader-content'>
+                    <div class="uploader-icon iconfont">&#xe6bf;</div>
+                    <div class="uploader-text">点击上传</div>
+                    <div class="uploader-notice">90×90</div>
+                    <input type='file' class='uploader-file' onchange='uploadFile($(this))'>
+                <input type='hidden' name='adv[i_0][image]' value="">
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label sm">固定商品</label>
+        <div class="layui-input-block">
+            <div class="onoff">
+                <label for="if_fixed_goods_11_0_1" class="cb-enable selected" onclick="$(this).parents('form').find('[data-fixed=0]').hide();$(this).parents('form').find('[data-fixed=1]').show()">{$Think.lang.ds_yes}</label>
+                <label for="if_fixed_goods_11_0_0" class="cb-disable" onclick="$(this).parents('form').find('[data-fixed=0]').show();$(this).parents('form').find('[data-fixed=1]').hide()">{$Think.lang.ds_no}</label>
+                <input id="if_fixed_goods_11_0_1" checked="checked" name="adv[i_0][if_fixed_goods]" value="1" type="radio">
+                <input id="if_fixed_goods_11_0_0" name="adv[i_0][if_fixed_goods]" value="0" type="radio">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" data-fixed="1">
+        <label class="layui-form-label sm">选择商品</label>
+        <div class="layui-input-block">
+            <div class="select-wrapper" data-select="goods" data-name="adv[i_0][goods_id]">
+                <span class="text" data-count>请选择</span>
+                <span class="icon iconfont">&#xe687;</span>
+            </div>
+            <div data-content="goods_ids" style="display:none">
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" data-fixed="0" style="display:none">
+        <label class="layui-form-label sm">商品数量</label>
+        <div class="layui-input-block">
+            <div class="range-wrapper">
+                <input type="range" name="adv[i_0][goods_count]" value="1" min="1" onchange="$(this).next().text($(this).val())">
+                <span>1</span>
+            </div>
+        </div>
+    </div>
+    <div class="layui-form-item" data-fixed="0" style="display:none">
+        <label class="layui-form-label sm">商品分类</label>
+        <div class="layui-input-block">
+            <div data-js="goods_class"><div data-select></div><input type="hidden" name="adv[i_0][goods_class]" data-input value="0" /></div>
+        </div>
+    </div>
+    <div class="layui-form-item" data-fixed="0" style="display:none">
+        <label class="layui-form-label sm">商品排序</label>
+        <div class="layui-input-block">
+            <select name="adv[i_0][goods_sort]">
+                <option value="1" selected="selected">按新品</option>
+                <option value="2">按热销</option>
+                <option value="3">按好评</option>
+            </select>
+        </div>
+    </div>
+</div>
+{/if}
+<div class="model-btn" onclick="addModel($(this),11)">
+    <span>+</span>
+    <span>添加一个切换商品</span>
+</div>
+
+</form>
+<script>
+    if(typeof(loadConfig11)=='undefined'){
+        function loadConfig11(obj){
+            obj.find('[data-js="color"]').colorpicker({showOn: 'both'});
+            var id=obj.attr('data-id')
+            var i=0
+            obj.find('[data-js="goods_class"]').each(function(){
+                $(this).attr('id','goods_class_'+i+'_'+id)
+            
+                var gc_id=parseInt($('#goods_class_'+i+'_'+id).find('*[data-input]').val())
+                if(gc_id){
+                    getGoodsClass(gc_id,'goods_class_'+i+'_'+id)
+                }else{
+                    loadGoodsClass(1,0,'goods_class_'+i+'_'+id)
+                }
+                i++
+            })
+            var i=0
+            obj.find('[data-select="goods"]').each(function(){
+                $(this).attr('id','select_goods_'+i+'_'+id)
+                i++
+            })
+            obj.find('*[data-select="goods"]').click(function(){
+                var goods_id=''
+                $(this).parent().find('*[data-content="goods_ids"] input').each(function(){
+                    goods_id+='&goods_id['+$(this).attr('data-goods')+'][sort]='+$(this).val()
+                })
+                dsLayerOpen('{:url(request()->controller()."/search_goods")}?id='+$(this).attr('id')+goods_id+'&name='+$(this).attr('data-name'),'选择商品')
+            })
+            obj.find('.onoff').each(function(){
+                        $(this).find(".cb-enable").click(function() {
+                            var parent = $(this).parents('.onoff');
+                            $('.cb-disable', parent).removeClass('selected');
+                            $(this).addClass('selected');
+                            $('.checkbox', parent).prop('checked', true);
+                        });
+                        $(this).find(".cb-disable").click(function() {
+                            var parent = $(this).parents('.onoff');
+                            $('.cb-enable', parent).removeClass('selected');
+                            $(this).addClass('selected');
+                            $('.checkbox', parent).prop('checked', false);
+                        });
+                    })
+        }
+    }
+    $(function(){
+        if(typeof(index['i_11'])=='undefined'){
+            index['i_11']={if isset($config_info['adv'])}{:count($config_info['adv'])}{else}0{/if};
+            html['i_11']=$('#adv_item').html()
+        }
+    })
+    if(typeof(saveGoods)=='undefined'){
+        function saveGoods(html,id,count){
+            $('#'+id).parent().find('[data-content="goods_ids"]').html(html)
+            $('#'+id).parent().find('[data-count]').text(count?('已选择'+count+'个'):'请选择')
+            $('#'+id).parents('form').change()
+        }
+    }
+</script>

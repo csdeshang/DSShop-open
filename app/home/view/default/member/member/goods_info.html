@@ -1,0 +1,26 @@
+<div class="pt20">
+        <div class="mc-title">
+            <h3>{$Think.lang.ds_merchandise_collection}</h3>
+        </div>
+        <div class="mc-list">
+            {notempty name="favorites_list"}
+            {foreach name="favorites_list" item="favorites" }
+            <div class="mc-item">
+                <a href='{:url('Goods/index',['goods_id'=>$favorites.goods.goods_id])}' target='_blank' title="{$favorites.goods.goods_name}">
+                <img src="{:goods_thumb($favorites['goods'], 240)}">
+                </a>
+            </div>
+            {/foreach}
+            {else /}
+            <dl class="null-tip pb10">
+                <dt class="iconfont">&#xe732;</dt>
+              <dd>
+                <h4>{$Think.lang.have_no_collections_yet}</h4>
+                <h5>{$Think.lang.new_promotions_price_cuts}</h5>
+              </dd>
+            </dl>
+            {/notempty}
+        </div>
+    </div>
+   
+

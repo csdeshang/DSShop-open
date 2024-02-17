@@ -1,0 +1,79 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>平台客服</h3>
+                <h5></h5>
+            </div>
+
+        </div>
+    </div>
+
+    <form id="reply_form" method="post" name="reply_form">
+        <input type="hidden" name="mallconsult_id" value="{$consult_info.mallconsult_id}" />
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td colspan="2" class="required">咨询人:</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$consult_info.member_name}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td colspan="2" class="required">咨询内容:</td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{$consult_info.mallconsult_content}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">咨询时间: </td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform">{:date('Y-m-d H:i:s',$consult_info.mallconsult_addtime)}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required">回复: </td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><textarea name="reply_content" class="tarea" rows="6">{$consult_info.mallconsult_reply_content}</textarea></td>
+                <td class="vatop tips">不能超过255个字符。</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="15" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>
+
+<script>
+    $(function(){
+        $("#reply_form").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                reply_content : {
+                    required : true,
+                    maxlength : 255
+                }
+            },
+            messages : {
+                reply_content : {
+                    required : '请填写咨询内容',
+                    maxlength : '咨询内容不能超过255个字符'
+                }
+            }
+        });
+    });
+</script>

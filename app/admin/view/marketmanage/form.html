@@ -1,0 +1,182 @@
+{include file="public/header" /}
+<div class="page">
+    <form method="post" id="marketmanage_form">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.marketmanage_name}</td>
+                    <td class="vatop rowform"><input id="marketmanage_name" name="marketmanage_name" value="{$marketmanage.marketmanage_name|default=''}" class="input-txt" type="text"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.marketmanage_detail}</td>
+                    <td class="vatop rowform"><textarea name="marketmanage_detail">{$marketmanage.marketmanage_detail|default=''}</textarea></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.marketmanage_begintime}</td>
+                    <td class="vatop rowform"><input id="marketmanage_begintime" name="marketmanage_begintime" value="{$marketmanage.marketmanage_begintime|date='Y-m-d H:i'}" class="input-txt" type="text"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.marketmanage_endtime}</td>
+                    <td class="vatop rowform"><input id="marketmanage_endtime" name="marketmanage_endtime" value="{$marketmanage.marketmanage_endtime|date='Y-m-d H:i'}" class="input-txt" type="text"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.marketmanage_joincount}</td>
+                    <td class="vatop rowform" id="marketmanage_jointype">
+                            <input name="marketmanage_jointype" value="0" type="radio" {if $marketmanage.marketmanage_jointype eq '0'}checked{/if}>{$Think.lang.ds_total}
+                            <input id="marketmanage_joincount_0" name="marketmanage_joincount" value="{$marketmanage.marketmanage_joincount|default=''}" class="input-txt w36" type="text" {if $marketmanage.marketmanage_jointype neq '0'}disabled{/if}>
+                            次
+                            <input name="marketmanage_jointype" value="1" type="radio" {if $marketmanage.marketmanage_jointype eq '1'}checked{/if}>一天
+                            <input id="marketmanage_joincount_1" name="marketmanage_joincount" value="{$marketmanage.marketmanage_joincount|default=''}" class="input-txt w36" type="text" {if $marketmanage.marketmanage_jointype neq '1'}disabled{/if}>
+                            次
+                            <input name="marketmanage_jointype" value="2" type="radio" {if $marketmanage.marketmanage_jointype eq '2'}checked{/if}>无限制
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.marketmanage_point}</td>
+                    <td class="vatop rowform">
+                            <input id="marketmanage_point_type" name="marketmanage_point_type" value="0" type="radio" {if $marketmanage.marketmanage_point eq '0'}checked{/if}>不消耗积分
+                            <input id="marketmanage_point_type" name="marketmanage_point_type" value="1" type="radio" {if $marketmanage.marketmanage_point neq '0'}checked{/if}>消耗积分
+                            <input id="marketmanage_point" name="marketmanage_point" value="{$marketmanage.marketmanage_point|default=''}" class="input-txt w36" type="text">
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.marketmanage_failed}</td>
+                    <td class="vatop rowform"><textarea name="marketmanage_failed">{$marketmanage.marketmanage_failed|default='姿势不对不给中奖'}</textarea></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">奖品设置</td>
+                    <td class="vatop rowform" style="width:500px;">
+                        <div class="marketmanage_award_list" dstype="marketmanage_award_list">
+                            <ul class="tab-menu">
+                                <li class="current">一等奖</li>
+                                <li>二等奖</li>
+                                <li>三等奖</li>
+                                <li>四等奖</li>
+                            </ul>
+                            {foreach name="marketmanageaward_list" item="award"}
+                            <div class="marketmanage_award" {if $award.marketmanageaward_level neq '1'}style="display:none"{/if}> 
+				{if $Request.action eq 'edit'}
+                                 <input name="id_{$award.marketmanageaward_level}" type="hidden" value="{$award.marketmanageaward_id|default='0'}"/>
+				{/if}
+                                 <dl>
+                                    <dt>选择奖品</dt>
+                                    <dd>
+                                        <label><input name="type_{$award.marketmanageaward_level}" type="radio" value="1" {if $award.marketmanageaward_type eq '1'}checked{/if}>积分</label>
+                                        <label><input name="type_{$award.marketmanageaward_level}" type="radio" value="2" {if $award.marketmanageaward_type eq '2'}checked{/if}>红包</label>
+                                        <label><input name="type_{$award.marketmanageaward_level}" type="radio" value="3" {if $award.marketmanageaward_type eq '3'}checked{/if}>优惠券</label>
+                                    </dd>
+                                </dl>
+                                <dl class="award_type_show" id="award_type_show_1" {if $award.marketmanageaward_type neq '1'}style="display:none"{/if}>
+                                    <dt>赠送积分:</dt>
+                                    <dd>
+                                        <input name="point_{$award.marketmanageaward_level}" value="{$award.marketmanageaward_point}" class="input-txt w36" type="text">
+                                    </dd>
+                                </dl>
+                                <dl class="award_type_show" id="award_type_show_2" {if $award.marketmanageaward_type neq '2'}style="display:none"{/if}>
+                                    <dt>选择红包:</dt>
+                                    <dd>
+                                        <select name="bonus_id_{$award.marketmanageaward_level}">
+                                            {foreach name="bonus_list" item="bonus"}
+                                            <option value="{$bonus.bonus_id}" {if $award.bonus_id eq $bonus.bonus_id}selected{/if}>{$bonus.bonus_name}</option>
+                                            {/foreach}
+                                        </select>
+                                    </dd>
+                                </dl>
+                                <dl class="award_type_show" id="award_type_show_3" {if $award.marketmanageaward_type neq '3'}style="display:none"{/if}>
+                                    <dt>选择优惠券:</dt>
+                                    <dd>
+                                        <select name="vouchertemplate_id_{$award.marketmanageaward_level}">
+                                            {foreach name="vouchertemplate_list" item="vouchertemplate"}
+                                            <option value="{$vouchertemplate.vouchertemplate_id}" {if $award.vouchertemplate_id eq $vouchertemplate.vouchertemplate_id}selected{/if}>{$vouchertemplate.vouchertemplate_title}</option>
+                                            {/foreach}
+                                        </select>
+                                    </dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$Think.lang.marketmanageaward_count}:</dt>
+                                    <dd><input name="count_{$award.marketmanageaward_level}" value="{$award.marketmanageaward_count}" class="input-txt w36" type="text"><em>{$Think.lang.marketmanageaward_send}：{$award.marketmanageaward_send|default='0'}</em></dd>
+                                </dl>
+                                <dl>
+                                    <dt>{$Think.lang.marketmanageaward_probability}:</dt>
+                                    <dd><input name="probability_{$award.marketmanageaward_level}" value="{$award.marketmanageaward_probability}" class="input-txt w36" type="text">%<em>{$Think.lang.marketmanageaward_probability_tips}</em></dd>
+                                </dl>
+                            </div>
+                            {/foreach}
+                        </div>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input type="submit" value="{$Think.lang.ds_confirm_submit}" class="btn" /></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/i18n/jquery-ui-timepicker-zh-CN.js"></script>
+<script>
+    $(function () {
+        $('#marketmanage_begintime').datetimepicker({dateFormat: 'yy-mm-dd'});
+        $('#marketmanage_endtime').datetimepicker({dateFormat: 'yy-mm-dd'});
+        $('div[dstype="marketmanage_award_list"] > ul').find('li').click(function () {
+            $(this).addClass('current').siblings().removeClass('current');
+            var _index = $(this).index();
+            var _div = $('div[dstype="marketmanage_award_list"]').find('.marketmanage_award');
+            _div.hide();
+            _div.eq(_index).show();
+        });
+
+        $('.marketmanage_award').find(':radio').click(function () {
+            var _value = $(this).val();
+            $(this).parents('.marketmanage_award').find('.award_type_show').hide();
+            $(this).parents('.marketmanage_award').find('#award_type_show_' + _value).show();
+        });
+        $('#marketmanage_jointype').find(':radio').click(function () {
+            var _value = $(this).val();
+            var _text = $('#marketmanage_jointype').find(':text');
+            _text.attr("disabled",true);
+            $('#marketmanage_joincount_'+_value).attr("disabled",false);
+        });
+        $('#marketmanage_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                marketmanage_name : {
+                    required: true
+                }
+            },
+            messages: {
+                marketmanage_name : {
+                    required   : '{$Think.lang.marketmanage_name_error}'
+                }
+            }
+        });
+    });
+</script>
+
+<style>
+    .marketmanage_award_list{border: 1px solid #ccc;background:#f2f2f2;}
+    .marketmanage_award_list .tab-menu{display: flex;margin:0;width:auto;}
+    .marketmanage_award_list .tab-menu li{background:#fff;margin:0;flex:1;height:40px;text-align:center;line-height:40px;padding:0;border: 1px solid #ccc;border-left-color: transparent;border-top-color: transparent;cursor: pointer;}
+    .marketmanage_award_list .tab-menu li.current {background: #f2f2f2;border-bottom-color: transparent;}
+    .marketmanage_award_list .tab-menu li:last-child {border-right-color: transparent;}
+    .marketmanage_award{margin-bottom:10px;padding:30px 50px;}
+    .marketmanage_award dl{margin:15px 0;height:30px;line-height:30px;}
+    .marketmanage_award dt{float:left;width:80px;height:30px;}
+    .marketmanage_award dd{height:30px;float:left;}
+    .marketmanage_award dd {height:30px;float:left;}
+    .marketmanage_award dd em{font-size:12px;margin-left:10px;color: #999;}
+    .marketmanage_award select{width:100px;}
+</style>

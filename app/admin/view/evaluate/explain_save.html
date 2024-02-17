@@ -1,0 +1,56 @@
+{include file="public/header" /}
+<div class="page">
+    <form id="explain_form" enctype="multipart/form-data" method="post">
+
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="required w120"><label>{$Think.lang.member_evaluation_content}:</label></td>
+                <td class="vatop rowform" id="geval_content">{$evaluategoods.geval_content}</td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label>{$Think.lang.explain_contents}:</label></td>
+                <td class="vatop rowform">
+                    <textarea id="geval_explain" name="geval_explain"></textarea>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="15">
+                    <input class="btn btn-small" type="submit" value="{$Think.lang.ds_ok}"/>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#explain_form').validate({
+            errorLabelContainer: $('#warning'),
+            invalidHandler: function (form, validator) {
+                var errors = validator.numberOfInvalids();
+                if (errors)
+                {
+                    $('#warning').show();
+                } else
+                {
+                    $('#warning').hide();
+                }
+            },
+            rules: {
+                geval_explain: {
+                    required: true
+                }
+            },
+            messages: {
+                geval_explain: {
+                    required: '<i class="iconfont">&#xe64c;</i>'
+                }
+            }
+        });
+
+    });
+</script>    

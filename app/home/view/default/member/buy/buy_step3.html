@@ -1,0 +1,44 @@
+{include file="default/base/mall_top" /} 
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+    <ul class="dsc-flow">
+        <li class=""><i class="iconfont">&#xe69a;</i>
+            <p>{$Think.lang.ds_my_shopping_cart}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe731;</i>
+            <p>{$Think.lang.cart_index_ensure_info}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe64f;</i>
+            <p>{$Think.lang.cart_index_payment}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class="current"><i class="iconfont">&#xe67e;</i>
+            <p>{$Think.lang.cart_index_buy_finish}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+    </ul>
+</div>
+<div class="dsc-line"></div>
+<div class="dsc-main">
+    <div class="dsc-title">
+        <h3>{$Think.lang.cart_index_buy_finish}</h3>
+        <h5>{$Think.lang.order_has_been_paid}</h5>
+    </div>
+    <div class="dsc-receipt-info mb30">
+        <div class="dsc-finish-a"><i></i>{$Think.lang.order_payment_success}<em>￥{$Request.param.pay_amount}</em>。</div>
+        <div class="dsc-finish-b">{$Think.lang.available_through_user_center}<a href="{:url('Memberorder/index')}">{$Think.lang.ds_buying_goods}</a>{$Think.lang.view_order_status}</div>
+        <div class="dsc-finish-c mb30"><a href="{:url('Index/index')}" class="dsc-btn-mini dsc-btn-green mr15"><i class="iconfont">&#xe69a;</i>{$Think.lang.cart_index_continue_shopping}</a><a href="{:url('Memberorder/index')}" class="dsc-btn-mini dsc-btn-acidblue"><i class="iconfont">&#xe71f;</i>{$Think.lang.view_order}</a></div>
+    </div>
+</div>
+{include file="default/base/mall_footer" /}

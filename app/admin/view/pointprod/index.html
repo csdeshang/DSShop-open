@@ -1,0 +1,116 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>礼品管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.admin_pointprod_goods_name}</dt>
+                <dd><input type="text" name="pg_name" id="pg_name" class="txt" value='{$Request.get.pg_name}'></dd>
+                <dd>
+                    <select name="pg_state">
+                        <option value="" >{$Think.lang.ds_state}</option>
+                        <option value="show" {eq name="Request.get.pg_state" value="show"}selected=selected{/eq}>{$Think.lang.admin_pointprod_show_up}</option>
+                        <option value="nshow" {eq name="Request.get.pg_state" value="nshow"}selected=selected{/eq}>{$Think.lang.admin_pointprod_show_down}</option>
+                        <option value="commend" {eq name="Request.get.pg_state" value="commend"}selected=selected{/eq}>{$Think.lang.ds_recommend}</option>
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                 <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                 <a href="{:url('Pointprod/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.pointprod_help1}</li>
+        </ul>
+    </div>
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="w24">&nbsp;</th>
+                <th class="w48">&nbsp;</th>
+                <th class="w300">{$Think.lang.admin_pointprod_goods_name}</th>
+                <th class="w60">{$Think.lang.admin_pointprod_goods_points}</th>
+                <th class="w60">{$Think.lang.admin_pointprod_goods_price}</th>
+                <th class="w60">{$Think.lang.admin_pointprod_goods_storage}</th>
+                <th class="w60">{$Think.lang.admin_pointprod_goods_view}</th>
+                <th class="w60">{$Think.lang.admin_pointprod_salenum}</th>
+                <th class="w60">{$Think.lang.admin_pointprod_show_up}</th>
+                <th class="w60">{$Think.lang.ds_recommend}</th>
+                <th>{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="prod_list"}
+            {foreach name="prod_list" item="v"}
+            <tr class="hover">
+                <td><input type="checkbox" name="pg_id[]" value="{$v.pgoods_id}" class="checkitem"></td>
+                <td class="picture"><div class="size-44x44"><span class="thumb size-44x44"><i></i><img src="{$v.pgoods_image_small}" onload="javascript:ResizeImage(this,44,44);"/></span></div></td>
+                <td><a href="{:url('home/Pointprod/pinfo',['id'=>$v.pgoods_id])}" target="_blank" >{$v.pgoods_name}</a></td>
+                <td class="align-center">{$v.pgoods_points}</td>
+                <td class="align-center">{$v.pgoods_price}</td>
+                <td class="align-center">{$v.pgoods_storage}</td>
+                <td class="align-center">{$v.pgoods_view}</td>
+                <td class="align-center">{$v.pgoods_salenum}</td>
+                <td class="align-center power-onoff">
+                    {eq name="v.pgoods_show" value="0"}
+                    <a href="JavaScript:void(0);" class=" disabled" ajax_branch='pgoods_show' ds_type="inline_edit" fieldname="pgoods_show" fieldid="{$v.pgoods_id}" fieldvalue="0" title="{$Think.lang.ds_editable}"><img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif"></a>
+                    {else /}
+                    <a href="JavaScript:void(0);" class=" enabled" ajax_branch='pgoods_show' ds_type="inline_edit" fieldname="pgoods_show" fieldid="{$v.pgoods_id}" fieldvalue="1" title="{$Think.lang.ds_editable}"><img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif"></a>
+                    {/eq}
+                <td class="align-center yes-onoff">
+                {eq name="v.pgoods_commend" value="0"}
+                    <a href="JavaScript:void(0);" class=" disabled" ajax_branch='pgoods_commend' ds_type="inline_edit" fieldname="pgoods_commend" fieldid="{$v.pgoods_id}" fieldvalue="0" title="{$Think.lang.ds_editable}"><img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif"></a>
+                    {else /}
+                    <a href="JavaScript:void(0);" class=" enabled" ajax_branch='pgoods_commend' ds_type="inline_edit" fieldname="pgoods_commend" fieldid="{$v.pgoods_id}" fieldvalue="1" title="{$Think.lang.ds_editable}"><img src="{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif"></a>
+                    {/eq}</td>
+                <td class="w72 align-center">
+                    <a href="{:url('Pointprod/prod_edit',['pg_id'=>$v.pgoods_id])}" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:submit_delete({$v.pgoods_id})" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="11">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="prod_list"}
+            <tr>
+                <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                <td colspan="16" id="dataFuncs"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                    &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+        {$show_page|raw}
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>
+<script type="text/javascript">
+    function submit_delete(ids_str) {
+        _uri = ADMINSITEURL + "/Pointprod/prod_drop.html?pg_id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+</script>

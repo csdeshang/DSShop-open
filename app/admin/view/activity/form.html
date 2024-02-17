@@ -1,0 +1,163 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form id="add_form" method="post" enctype="multipart/form-data">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="required w120"><label class="validation" for="activity_title">{$Think.lang.activity_index_title}:</label></td>
+                <td class="vatop rowform"><input type="text" id="activity_title" name="activity_title" class="txt" value="{$activity.activity_title|default=''}"></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <td class="required" style="display:none;"><label for="activity_type">{$Think.lang.activity_index_type}:</label></td>
+            <tr class="noborder" style="display:none;">
+                <td class="vatop rowform">
+                    <select name="activity_type" id="activity_type">
+                    <option value="1" {eq name="activity.activity_type" value="1" }selected{/eq}>{$Think.lang.ds_goods}</option>
+                    <option value="2" {eq name="activity.activity_type" value="2" }selected{/eq}>{$Think.lang.activity_index_group}</option>
+                    </select>
+                </td>
+                <td class="vatop tips">{$Think.lang.activity_new_type_tip}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label class="validation" for="activity_startdate">{$Think.lang.start_time}:</label></td>
+                <td class="vatop rowform"><input type="text" id="activity_startdate" class="txt date" name="activity_startdate" value="{$activity.activity_startdate|date='Y-m-d'}"/></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label class="validation" for="activity_enddate">{$Think.lang.end_time}:</label></td>
+                <td class="vatop rowform"><input type="text" id="activity_enddate" class="txt date" name="activity_enddate" value="{$activity.activity_enddate|date='Y-m-d'}"/></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label class="validation" for="activity_banner">{$Think.lang.activity_index_banner}:</label></td>
+                <td class="vatop rowform">
+                    {notempty name="$activity.activity_banner"}
+                    <span class="type-file-show">
+                        <img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png"/>
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_ACTIVITY,$activity.activity_banner)}" onload="javascript:ResizeImage(this,500,500);"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box">
+                        <input name="activity_banner" type="file" class="type-file-file" id="activity_banner" size="30" hidefocus="true">
+                        <input type='text' name='textfield' id='textfield1' class='type-file-text' />
+                        <input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                    </span>
+                </td>
+                <td class="vatop tips">{$Think.lang.activity_new_banner_tip}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label class="validation" for="activity_banner_mobile">{$Think.lang.activity_index_banner_mobile}:</label></td>
+                <td class="vatop rowform">
+                    {notempty name="$activity.activity_banner_mobile"}
+                    <span class="type-file-show">
+                        <img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png"/>
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_ACTIVITY,$activity.activity_banner_mobile)}" onload="javascript:ResizeImage(this,500,500);"></div>
+                    </span>
+                    {/notempty}
+                    <span class="type-file-box">
+                        <input name="activity_banner_mobile" type="file" class="type-file-file" id="activity_banner_mobile" size="30" hidefocus="true">
+                        <input type='text' name='textfield' id='textfield2' class='type-file-text' />
+                        <input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                    </span>
+                </td>
+                <td class="vatop tips">{$Think.lang.activity_new_banner_mobile_tip}</td>
+            </tr>
+            <tr class="noborder" style="display:none;">
+                <td class="required"><label for="activity_style">{$Think.lang.activity_new_style}:</label></td>
+                <td class="vatop rowform">
+                    <select id="activity_style" name="activity_style">
+                    <option value="default_style" {if $activity.activity_style == 'default_style'}selected{/if}>{$Think.lang.activity_index_default}</option>
+                    </select>
+                </td>
+                <td class="vatop tips">{$Think.lang.activity_new_style_tip}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label for="activity_desc">{$Think.lang.activity_new_desc}:</label></td>
+                <td class="vatop rowform"><textarea name="activity_desc" rows="6" class="tarea" id="activity_desc">{:nl2br($activity.activity_desc)}</textarea></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label class="validation" for="activity_sort">{$Think.lang.ds_sort}:</label></td>
+                <td class="vatop rowform">
+                    <input type="text" id="activity_sort" name="activity_sort" class="txt" value="{$activity.activity_sort|default=0}">
+                </td>
+                <td class="vatop tips">{$Think.lang.activity_new_sort_tip1}</td>
+            </tr>
+            <tr class="noborder">
+                <td class="required"><label for="activity_sort">{$Think.lang.ds_state}:</label></td>
+                <td class="vatop rowform onoff">
+                    <label for="activity_state1" class="cb-enable {eq name='activity.activity_state' value='1'}selected{/eq}"><span>{$Think.lang.ds_open}</span></label>
+                    <label for="activity_state0" class="cb-disable {eq name='activity.activity_state' value='0'}selected{/eq}"><span>{$Think.lang.ds_close}</span></label>
+                    <input id="activity_state1" name="activity_state" checked="checked" value="1" type="radio">
+                    <input id="activity_state0" name="activity_state" value="0" type="radio">
+                </td>
+                <td class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="2"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("#activity_startdate").datepicker({dateFormat: 'yy-mm-dd'});
+        $("#activity_enddate").datepicker({dateFormat: 'yy-mm-dd'});
+        $("#add_form").validate({
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                activity_title: {
+                    required: true
+                },
+                activity_startdate: {
+                    required: true,
+                    date: false
+                },
+                activity_enddate: {
+                    required: true,
+                    date: false
+                },
+                activity_sort: {
+                    required: true,
+                    min: 0,
+                    max: 255
+                }
+            },
+            messages: {
+                activity_title: {
+                    required: '{$Think.lang.activity_new_title_null}'
+                },
+                activity_startdate: {
+                    required: '{$Think.lang.activity_new_startdate_null}'
+                },
+                activity_enddate: {
+                    required: '{$Think.lang.activity_new_enddate_null}'
+                },
+                activity_sort: {
+                    required: '{$Think.lang.activity_new_sort_null}',
+                    min: '{$Think.lang.activity_new_sort_minerror}',
+                    max: '{$Think.lang.activity_new_sort_maxerror}'
+                }
+            }
+        });
+    });
+
+    $(function () {
+        $("#activity_banner").change(function () {
+            $("#textfield1").val($("#activity_banner").val());
+        });
+        $("#activity_banner_mobile").change(function () {
+            $("#textfield2").val($("#activity_banner_mobile").val());
+        });
+    });
+</script>

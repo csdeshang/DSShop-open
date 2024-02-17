@@ -1,0 +1,17 @@
+{include file="public/header" /}
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <h3>{$Think.lang.download_lang}</h3>
+            <ul class="tab-base">
+                <li><a href="JavaScript:void(0);" class="current"><span>{$Think.lang.ds_export}</span></a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="ds-search-form">
+    {foreach name='export_list' item='v' key='k'}
+    <a href="{$Request.url}&page={$k}" class="btn btn-small" style="margin-bottom:10px">{$Think.lang.ds_download}{$k} ({$v})</a>
+    {/foreach}
+</div>
+

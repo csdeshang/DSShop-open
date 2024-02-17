@@ -1,0 +1,70 @@
+<div class="eject_con">
+  <div id="warning"></div>
+    <form id="mallconsult_form" method="post" action="{:url('Membermallconsult/save_mallconsult')}">
+      <dl>
+        <dt>{$Think.lang.type_consultation}{$Think.lang.ds_colon}</dt>
+        <dd>
+          <div><select name="type_id" id="type_id">
+            <option value="0">{$Think.lang.ds_please_choose}</option>
+            {notempty name="type_list"}
+            {foreach name="type_list" item="val"}
+            <option value="{$val.mallconsulttype_id}">{$val.mallconsulttype_name}</option>
+            {/foreach}
+            {/notempty}
+            </select>
+            <p class="hint">{$Think.lang.customer_service_consultation_type}</p></div>
+          <div>
+            <div></div>
+            {notempty name="type_list"}
+            {foreach name="type_list" item="val"}
+            <div style="display:none;">{:htmlspecialchars_decode($val.mallconsulttype_introduce)}</div>
+           {/foreach}
+            {/notempty}
+          </div>
+        </dd>
+      </dl>
+      <dl>
+        <dt>{$Think.lang.content_consultation}{$Think.lang.ds_colon}</dt>
+        <dd>
+          <textarea id="consult_content" name="consult_content" class="textarea w400 h100" ></textarea>
+          <p class="hint">{$Think.lang.question_content}<br />{$Think.lang.order_type_consultation_should}<br/>
+          {$Think.lang.word_limit_consultation_content}</p>
+        </dd>
+      </dl>
+        <div class="bottom">
+            <input type="submit" class="submit" value="{$Think.lang.ds_submit}"/>
+        </div>
+    </form>
+</div>
+<script>
+$(function(){
+    $('#mallconsult_form').validate({
+        errorLabelContainer: $('#warning'),
+        invalidHandler: function(form, validator) {
+            $('#warning').show();
+        },
+        submitHandler:function(form){
+            ds_ajaxpost('mallconsult_form');
+        },
+        rules : {
+            type_id : {
+                required : true,
+                min : 1
+            },
+            consult_content : {
+                required : true
+            }
+        },
+        messages : {
+            type_id  : {
+                required  : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_type_consultation}',
+                min : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_type_consultation}'
+            },
+            consult_content : {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_fill_information}'
+            }
+        }
+    });
+});
+
+</script>

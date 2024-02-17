@@ -1,0 +1,61 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>会员通知</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <table class="ds-default-table">
+        <colgroup>
+            <col class="w24">
+            <col/>
+            <col class="w96">
+            <col class="w96">
+            <col class="w200">
+            <col class="w200">
+        </colgroup>
+        <thead>
+            <tr class="thead">
+                <th></th>
+                <th>{$Think.lang.message_body}</th>
+                <th>{$Think.lang.to_member_id}</th>
+                <th>{$Think.lang.message_type}</th>
+                <th>{$Think.lang.message_time}</th>
+                <th>{$Think.lang.message_update_time}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="message_list"}
+            {foreach name="message_list" item="v"}
+            <tr class="hover">
+                <td class="w24">
+                    <input name="del_id[]" type="checkbox" class="checkitem" value="{$v.message_id}">
+                </td>
+                <td>{:htmlspecialchars_decode($v.message_body)}</td>
+                <td>{$v.to_member_id}</td>
+                <td>{$v.message_type}</td>
+                <td>{$v.message_time|date="Y-m-d H:i:s"}</td>
+                <td>{$v.message_update_time|date="Y-m-d H:i:s"}</td>
+            </tr>
+            {/foreach}
+            {else}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+    
+    
+    
+        
+</div>

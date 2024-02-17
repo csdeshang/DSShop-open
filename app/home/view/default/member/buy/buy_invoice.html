@@ -1,0 +1,28 @@
+<div class="dsc-receipt-info"><div class="dsc-receipt-info-title">
+        <h3>{$Think.lang.invoice_information}</h3>
+        <a href="javascript:void(0)" ds_type="buy_edit" id="edit_invoice">[{$Think.lang.modification}]</a></div>
+    <div id="invoice_list" class="dsc-candidate-items">
+        <ul>
+            <li>{$inv_info.content}</li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+//隐藏发票列表
+    function hideInvList(content) {
+        $('#edit_invoice').show();
+        $("#invoice_list").html('<ul><li>' + content + '</li></ul>');
+        $('.current_box').removeClass('current_box');
+        ableOtherEdit();
+        //重新定位到顶部
+        $("html, body").animate({scrollTop: 0}, 0);
+    }
+//加载发票列表
+    $('#edit_invoice').on('click', function() {
+        $(this).hide();
+        disableOtherEdit('{$Think.lang.save_invoice_information}');
+        $(this).parent().parent().addClass('current_box');
+        var url = HOMESITEURL + '/Buy/load_inv.html';
+        $('#invoice_list').load(url);
+    });
+</script>

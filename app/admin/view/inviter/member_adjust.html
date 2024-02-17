@@ -1,0 +1,23 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <form id="membertag_form" method="post" enctype="multipart/form-data">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td class="required w120"><label class="validation" for="member_name">{$Think.lang.inviter_name}:</label></td>
+                <td class="vatop rowform"><input type="text" value="" name="member_name" id="member_name" class="txt"></td>
+                <td class="vatop tips"></td>
+            </tr>
+
+            
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="2"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>

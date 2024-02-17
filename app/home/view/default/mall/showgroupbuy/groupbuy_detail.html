@@ -1,0 +1,189 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_group.css">
+<div class="w1200">
+  <div class="dsh-breadcrumb-layout" style="display: block;">
+  <div class="dsh-breadcrumb wrapper"> <i class="iconfont">&#xe6ff;</i> <span> <a href="{:url('Index/index')}">{$Think.lang.ds_index}</a> </span> <span class="arrow">></span>
+    {if $groupbuy_info['groupbuy_is_vr']}
+    <span><a href="{:url('Showgroupbuy/vr_groupbuy_list')}">{$Think.lang.virtual_grab}</a></span>
+    {else/}
+    <span><a href="{:url('Showgroupbuy/groupbuy_list')}">{$Think.lang.online_grab}</a></span>
+    {/if}
+    <span class="arrow">></span> <span>{$groupbuy_info.groupbuy_name}</span> </div>
+</div>
+<div class="dsg-container wrapper">
+    <div class="dsg-main {$groupbuy_info.state_flag}">
+      <div class="dsg-group">
+        
+        <div class="dsg-item">
+          <div class="pic"><img src="{:groupbuy_thumb($groupbuy_info['groupbuy_image'],'max')}" alt=""></div>
+          <div class="info" id="main-nav-holder">
+            <h2>{$groupbuy_info.groupbuy_name}</h2>
+            <h3>{$groupbuy_info.groupbuy_remark}</h3>
+            <div class="button"><span><em>{$Think.lang.currency}{$groupbuy_info.groupbuy_price}</em><del>{$Think.lang.currency}{$groupbuy_info.goods_price}</del></span><a href="{$groupbuy_info.goods_url}" target="_blank">{$groupbuy_info.button_text}&nbsp;&nbsp;&nbsp;&nbsp;<i class="iconfont">&#xe687;</i></a></div>
+
+            <div class="require">
+              <h4>{gt name='buy_limit' value='0'}{$Think.lang.maximum_purchase_per_person}<em>{$buy_limit}</em>{$Think.lang.piece}，{else/}{$Think.lang.limited_quantity}{/gt}<em>{php}echo $groupbuy_info['virtual_quantity']+$groupbuy_info['groupbuy_buy_quantity'];{/php}</em>{$Think.lang.people_have_been_robbed}</h4>
+            </div>
+            <div class="time">
+              {notempty name="groupbuy_info.count_down"}
+              <!-- 倒计时 距离本期结束 -->
+              <i class="iconfont">&#xe736;</i>{$Think.lang.remaining_time}：<span id="d1">0</span><strong>{$Think.lang.ds_day}</strong><span id="h1">0</span><strong>{$Think.lang.ds_hour}</strong><span id="m1">0</span><strong>{$Think.lang.ds_minute}</strong><span id="s1">0</span><strong>{$Think.lang.ds_second}</strong>
+              <script type="text/javascript">
+                    var tms = [];
+                    var day = [];
+                    var hour = [];
+                    var minute = [];
+                    var second = [];
+
+                    tms[tms.length] = "{$groupbuy_info.count_down}";
+                    day[day.length] = "d1";
+                    hour[hour.length] = "h1";
+                    minute[minute.length] = "m1";
+                    second[second.length] = "s1";
+                    function groupbuyTakeCount() {
+                        for (var i = 0, j = tms.length; i < j; i++) {
+                            tms[i] -= 1;
+                            //计算天、时、分、秒、
+                            var days = Math.floor(tms[i] / (1 * 60 * 60 * 24));
+                            var hours = Math.floor(tms[i] / (1 * 60 * 60)) % 24;
+                            var minutes = Math.floor(tms[i] / (1 * 60)) % 60;
+                            var seconds = Math.floor(tms[i] / 1) % 60;
+                            if (days < 0)
+                                days = 0;
+                            if (hours < 0)
+                                hours = 0;
+                            if (minutes < 0)
+                                minutes = 0;
+                            if (seconds < 0)
+                                seconds = 0;
+                            //将天、时、分、秒插入到html中
+                            document.getElementById(day[i]).innerHTML = days;
+                            document.getElementById(hour[i]).innerHTML = hours;
+                            document.getElementById(minute[i]).innerHTML = minutes;
+                            document.getElementById(second[i]).innerHTML = seconds;
+                        }
+                    }
+                    setInterval(groupbuyTakeCount, 1000);
+              </script>
+              {/notempty}
+            </div>
+          </div>
+          <div class="clear"></div>
+        </div>
+        
+      </div>
+    </div>
+  <div class="dsg-layout-l">
+    
+    <div class="dsg-title-bar">
+      <ul class="tabs-nav">
+        <li class="tabs-selected"><a href="javascript:void(0);">{$Think.lang.goods_info}</a></li>
+        <li><a href="javascript:void(0);">{$Think.lang.buyer_list}</a></li>
+        <li><a href="javascript:void(0);">{$Think.lang.product_evaluation}({$evaluate_info.all})</a></li>
+      </ul>
+    </div>
+      <div class="dsg-detail-content">
+          {if $groupbuy_info['groupbuy_is_vr']}
+          <div class="dsg-instructions">
+              <h4>{$Think.lang.use_statement}</h4>
+              <ul>
+                  <li>
+                      {$Think.lang.explanatory_text1}
+                      <time>{$groupbuy_info.groupbuy_endtime|date="Y-m-d H:i"}</time>
+                      {if $goods_info['virtual_indate'] > 0}
+                      {$Think.lang.explanatory_text2}<time>{$goods_info.virtual_indate|date="Y-m-d H:i"}</time>
+                      {$Think.lang.explanatory_text3}
+                      {/if}
+                      。
+                  </li>
+                  <li>{$Think.lang.explanatory_text4}</li>
+                  {if $buy_limit > 0}
+                  <li>{$Think.lang.explanatory_text5}<strong>{$buy_limit}</strong>{$Think.lang.explanatory_text6}</li>
+                  {/if}
+              </ul>
+          </div>
+          {/if}
+          <div class="dsg-intro">{:htmlspecialchars_decode($groupbuy_info.groupbuy_intro)}</div>
+      </div>
+    <div id="groupbuy_order" class="dsg-detail-content hide"></div>
+    <div class="dsg-detail-content hide">
+      <div class="dsg-evaluate">
+        <div class="top">
+          <div class="rate">
+            <p><strong>{$evaluate_info.good_percent}</strong><sub>%</sub>{$Think.lang.praise}</p>
+            <span>{$Think.lang.common}{$evaluate_info.all}{$Think.lang.people_participation_score}</span></div>
+          <div class="percent">
+            <dl>
+              <dt>{$Think.lang.praise}<em>({$evaluate_info.good_percent}%)</em></dt>
+              <dd><i style="width: {$evaluate_info.good_percent}%"></i></dd>
+            </dl>
+            <dl>
+              <dt>{$Think.lang.medium_rating}<em>({$evaluate_info.normal_percent}%)</em></dt>
+              <dd><i style="width: {$evaluate_info.normal_percent}%"></i></dd>
+            </dl>
+            <dl>
+              <dt>{$Think.lang.poor_rating}<em>({$evaluate_info.bad_percent}%)</em></dt>
+              <dd><i style="width: {$evaluate_info.bad_percent}%"></i></dd>
+            </dl>
+          </div>
+          <div class="btns"><span>{$Think.lang.goods_evaluated}</span>
+            <p><a href="{if $groupbuy_info['groupbuy_is_vr']}{:url('Membervrorder/index')}{else/}{:url('Memberorder/index')}{/if}" class="dsg-btn dsg-btn-orange" target="_blank"><i class="iconfont">&#xe71b;</i>{$Think.lang.evaluation_goods}</a></p>
+          </div>
+        </div>
+        <!-- 商品评价内容部分 -->
+        <div id="groupbuy_evaluate" class="dsg-evaluate-main"></div>
+      </div>
+    </div>
+  </div>
+  <div class="dsg-layout-r">
+
+    <div class="dsg-module-sidebar">
+      <div class="title">{$Think.lang.current_hot}</div>
+      <div class="content">
+        <div class="dsg-group-command">
+          {php}$hot_groupbuy_count = 1;{/php}
+          {notempty name="commended_groupbuy_list"}
+          {foreach name="commended_groupbuy_list" item="hot_groupbuy" }
+          <dl {if $hot_groupbuy_count === 1}style="border:none"{/if}{php}$hot_groupbuy_count++;{/php} >
+            <dt class="name"><a href="{$hot_groupbuy.groupbuy_url}" target="_blank">{$hot_groupbuy.groupbuy_name}</a></dt>
+            <dd class="pic-thumb"><a href="{$hot_groupbuy.groupbuy_url}" target="_blank"><img src="{:groupbuy_thumb($hot_groupbuy['groupbuy_image1'],'max')}"></a></dd>
+            <dd class="item"><a href="{$hot_groupbuy.groupbuy_url}" target="_blank">{$Think.lang.to_see}</a> <span class="price">{$Think.lang.currency}{$hot_groupbuy.groupbuy_price}</span>  </dd>
+          </dl>
+          {/foreach}
+          {/notempty}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js" type="text/javascript"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<script>
+$(function(){
+    
+    //首页Tab标签卡滑门切换
+    $(".tabs-nav > li > a").on('mouseover', (function(e) {
+        if (e.target == this) {
+            var tabs = $(this).parent().parent().children("li");
+            var panels = $(this).parent().parent().parent().parent().children(".dsg-detail-content");
+            var index = $.inArray(this, $(this).parent().parent().find("a"));
+            if (panels.eq(index)[0]) {
+                tabs.removeClass("tabs-selected").eq(index).addClass("tabs-selected");
+                panels.addClass("hide").eq(index).removeClass("hide");
+            }
+        }
+    }));
+
+    $("#groupbuy_order").load("{:url('Showgroupbuy/groupbuy_order',['group_id'=>$groupbuy_info.groupbuy_id,'is_vr'=>$groupbuy_info.groupbuy_is_vr])}");
+    $("#groupbuy_evaluate").load("{:url('Showgroupbuy/groupbuy_evaluate',['commonid'=>$groupbuy_info.goods_commonid])}");
+});
+</script>
+</div>
+
+
+
+{/block}
+

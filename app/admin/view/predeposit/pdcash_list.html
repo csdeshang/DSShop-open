@@ -1,0 +1,125 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>预存款</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>未支付的提现单可以点击查看选项更改提现单的支付状态</li>
+            <li>点击删除可以删除未支付的提现单</li>
+        </ul>
+    </div>
+    
+    <form method="get" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.admin_predeposit_membername}</dt>
+                <dd><input type="text" name="mname" class="txt" value='{$Request.param.mname}' /></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.refund_buyer_add_time}</dt>
+                <dd>
+                    <input type="text" id="stime" name="stime" class="txt date" value="{$Request.param.stime}">
+                    ~
+                    <input type="text" id="etime" name="etime" class="txt date" value="{$Request.param.etime}">
+                </dd>
+            </dl>
+            <dl> 
+                <dt>{$Think.lang.admin_predeposit_cash_shoukuanname}</dt>
+                <dd><input type="text" name="pdc_bank_user" class="txt" value='{$Request.param.pdc_bank_user}'></dd> 
+            </dl>
+            <dl>
+                <dt>{$Think.lang.admin_predeposit_paystate}</dt>
+                <dd>
+                    <select id="paystate_search" name="paystate_search">
+                        <option value="">{$Think.lang.ds_please_choose}</option>
+                        <option value="0" {if condition="$Request.param.paystate_search eq '0'"}selected="selected"{/if}>未支付</option>
+                        <option value="1" {if condition="$Request.param.paystate_search eq '1'"}selected="selected"{/if}>已支付</option>
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.getElementById('formSearch').submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Predeposit/pdcash_list')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+                <a class="btn btn-mini" href="javascript:export_xls('{:url('Predeposit/export_cash_step1')}')"><span>{$Think.lang.ds_export}Excel</span></a>
+            </div>
+        </div>
+        
+    </form>
+    
+    
+    <table class="ds-default-table">
+        <thead>
+            <tr class="thead">
+                <th>&nbsp;</th>
+                <th>{$Think.lang.admin_predeposit_cs_sn}</th>
+                <th>{$Think.lang.admin_predeposit_cash_shoukuantype}</th>
+                <th>{$Think.lang.admin_predeposit_membername}</th>
+                <th class="align-center">{$Think.lang.refund_buyer_add_time}</th>
+                <th class="align-center">{$Think.lang.admin_predeposit_cash_price}({$Think.lang.ds_yuan})</th>
+                <th class="align-center">{$Think.lang.admin_predeposit_paystate}</th>
+                <th class="align-center">支付时间</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="predeposit_list"}
+            {foreach name="predeposit_list" item="v" key="k" }
+            <tr class="hover">
+                <td class="w12">&nbsp;</td>
+                <td>{$v.pdc_sn}</td>
+                <td>{$Think.lang.pay_method_text[$v.pdc_bank_type]}</td>
+                <td>{$v.pdc_member_name}</td>
+                <td class="nowrap align-center">{notempty name="$v.pdc_addtime"}{$v.pdc_addtime|date='Y-m-d H:i:s'}{/notempty}</td>
+                <td class="align-center">{$v.pdc_amount}</td>
+                <td class="align-center"><?php echo str_replace(array('0','1'), array('未支付','已支付'), $v['pdc_payment_state']); ?></td>
+                <td>{notempty name="$v.pdc_payment_time"}{$v.pdc_payment_time|date='Y-m-d H:i:s'}{/notempty}</td>
+                <td class="w90 align-center">
+                    {if $v.pdc_payment_state == '0'}
+                    <a href="javascript:void(0)" onclick="submit_delete('{$v.pdc_id}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a> 
+                    {/if}
+                    <a href="javascript:dsLayerOpen('{:url('Predeposit/pdcash_view',['id'=>$v.pdc_id])}','查看')" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_view}</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>
+
+<script language="javascript">
+$(function(){
+	$('#stime').datepicker({dateFormat: 'yy-mm-dd'});
+	$('#etime').datepicker({dateFormat: 'yy-mm-dd'});
+});
+</script>
+    
+<script type="text/javascript">
+    function submit_delete(ids_str) {
+        _uri = ADMINSITEURL + "/Predeposit/pdcash_del.html?pdc_id=" + ids_str;
+        dsLayerConfirm(_uri, '{$Think.lang.ds_ensure_del}');
+    }
+</script>

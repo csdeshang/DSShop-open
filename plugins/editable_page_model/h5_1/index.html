@@ -1,0 +1,45 @@
+<div class="model-1">
+  <div class="adv-wrapper" data-type="{$config_info.show_format|default='0'}" style="background-color:{$config_info.back_color|default='unset'};">
+    {if isset($config_info['adv']) && !empty($config_info['adv'])}
+    <div class="bd">
+            {foreach name="config_info.adv" item="v"}
+            <img src="{$v.image}" style="width:100%;" data-width="{:floatval(isset($config_info['image_width'])?$config_info['image_width']:0)}" data-height="{:floatval(isset($config_info['image_height'])?$config_info['image_height']:0)}" />
+            {/foreach}
+    </div>
+    {if count($config_info['adv'])>1}
+    <div class="hd">
+            {foreach name="config_info.adv" item="v"}
+            <div class="li"></div>
+            {/foreach}
+    </div>
+    {/if}
+    {else}
+    <div class="bd">
+        <img src="{:goods_thumb()}" style="width:100%;" data-width="{:floatval(isset($config_info['image_width'])?$config_info['image_width']:0)}" data-height="{:floatval(isset($config_info['image_height'])?$config_info['image_height']:0)}" />
+    </div>
+    {/if}
+  </div>
+</div>
+  <script>
+    if(typeof(loadHtml1)=='undefined'){
+      function loadHtml1(obj){
+          var w=parseFloat(obj.find('img').eq(0).attr('data-width'));
+          var h=parseFloat(obj.find('img').eq(0).attr('data-height'));
+          if(isNaN(w) || w<=0){
+            w=750
+          }
+          if(isNaN(h) || h<=0){
+            h=376
+          }
+         
+          obj.find('img').css('height',(h/w*obj.width())+'px')
+          if(obj.find('img').length>1){
+            if(obj.find('.adv-wrapper').attr('data-type')=='1'){
+              obj.find('.adv-wrapper').slide({titCell:".hd",mainCell: ".bd",autoPage:true, autoPlay: true,effect:"topLoop"})
+            }else{
+              obj.find('.adv-wrapper').slide({titCell:".hd",mainCell: ".bd",autoPage:true, autoPlay: true,effect:"leftLoop"})
+            }
+          }
+      }
+    }
+  </script>

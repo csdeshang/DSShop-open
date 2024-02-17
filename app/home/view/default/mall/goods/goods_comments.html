@@ -1,0 +1,62 @@
+{notempty name="goodsevallist"}
+{foreach name="goodsevallist" item="v" key="k" }
+<div id="t" class="dss-commend-floor">
+    <div class="user-avatar">
+        <a href="javascript:void(0)"> <img src="{:get_member_avatar_for_id($v['geval_frommemberid'])}"></a>
+    </div>
+  <dl class="detail">
+      <dt>
+      <span class="user-name">
+      {if $v.geval_isanonymous == 1}
+      {:str_cut($v['geval_frommembername'],2)}***
+      {else/}
+      <a  href="javascript:void(0)">{$v.geval_frommembername}</a>
+      {/if}
+      </span>
+      <time pubdate="pubdate">[<?php echo @date('Y-m-d',$v['geval_addtime']);?>]</time>
+    </dt>
+    <dd>{$Think.lang.user_rating}：<span class="raty" data-score="{$v.geval_scores}"></span></dd>
+    <dd class="content">{$Think.lang.evaluation_details}：<span>{$v.geval_content}</span></dd>
+    {notempty name="v.geval_explain"}
+    <dd class="explain">{$Think.lang.ds_credit_explain}：<span>{$v.geval_explain}</span></dd>
+    {/notempty}
+    {notempty name="v.geval_image"}
+    <dd>
+    {$Think.lang.print_pictures}：
+    <ul class="photos-thumb"><?php $image_array = explode(',', $v['geval_image']);?>
+        {foreach name="image_array" item="value"}
+        <li>
+            <a data-lightbox="lightbox-image"  href="{:sns_thumb($value, 1024)}"><img src="{:sns_thumb($value)}"></a>
+        </li>
+        {/foreach}
+    </ul>
+    </dd>
+    {/notempty}
+  </dl>
+</div>
+{/foreach}
+<div class="tr pr5 pb5 pr">
+  <a href="{:url('Goods/comments_list',['goods_id'=>$Request.param.goods_id])}" target="_blank" class="more-commend">{$Think.lang.see_all_reviews}>></a><div class="pagination"></div>
+</div>
+{else /}
+<div class="dss-norecord">{$Think.lang.no_record}</div>
+{/notempty}
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+   $('.raty').raty({
+        path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+        readOnly: true,
+        score: function() {
+          return $(this).attr('data-score');
+        }
+    });
+
+    $('#goodseval').find('.demo').ajaxContent({
+        event:'click', //mouseover
+        target:'#goodseval'
+    });
+});
+</script> 

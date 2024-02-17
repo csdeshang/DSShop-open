@@ -1,0 +1,11 @@
+<div class="editable-page-model editable-page-model-2" style="background-color:{$config_info.back_color|default=''};">
+    <div class="editable-page-content" style="width:{$config_info.model_width|default=''};height:{$config_info.model_height|default=''};padding-top:{$config_info.padding_top|default=''};padding-bottom:{$config_info.padding_bottom|default=''};">
+        <div class="content-wrapper">
+            {if isset($config_info['editor_content'])}
+            {:htmlspecialchars_decode($config_info['editor_content'])}
+            {else}
+            <div style="padding:40px 0;text-align:center">富文本编辑</div>
+            {/if}
+        </div>
+    </div>
+</div>

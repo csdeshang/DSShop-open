@@ -1,0 +1,19 @@
+<div class="eject_con">
+    <form id="post_form" method="post" action="{:url('Memberreturn/delay',['return_id'=>$return.refund_id])}">
+        <div style="padding: 20px 40px;"> {$Think.lang.receiving_prompt_message}
+        </div>
+        <div class="bottom">
+            <input type="submit" class="submit" id="confirm_button" value="{$Think.lang.ds_ok}" />
+            <a class="dsm-btn ml5" href="javascript:DialogManager.close('return_delay');">{$Think.lang.ds_cancel}</a>
+        </div>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#post_form').validate({
+            submitHandler: function (form) {
+                ds_ajaxpost('post_form');
+            },
+        });
+    });
+</script>

@@ -1,0 +1,31 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.ds_member_name}</th>
+                <th>{$Think.lang.marketmanagelog_time}</th>
+                <th>{$Think.lang.marketmanagelog_win}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="marketmanagelog_list"}
+            {foreach name="marketmanagelog_list" item="marketmanagelog"}
+            <tr>
+                <td>{$marketmanagelog.member_name|default=''}</td>
+                <td>{$marketmanagelog.marketmanagelog_time|date="Y-m-d H:i:s"}</td>
+                <td>{if $marketmanagelog.marketmanagelog_win}{$Think.lang.ds_yes}{else/}{$Think.lang.ds_no}{/if}</td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>

@@ -1,0 +1,143 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+<div class="dsm-flow-layout">
+            <div class="dsm-flow-container">
+                <div class="title"><a href="javascript:history.go(-1);" class="dsm-btn-mini fr"><i class="iconfont">&#xe74e;</i>{$Think.lang.return_space}</a>
+                    <h3>{$Think.lang.member_evaluation_toevaluategoods}</h3>
+                </div>
+                {if $Request.action != 'add_vr'}
+                <form id="evalform" method="post" enctype="multipart/form-data" action="{:url('Memberevaluate/add',['order_id'=>$order_info.order_id])}">
+                {else/}
+                <form id="evalvrform" method="post" enctype="multipart/form-data" action="{:url('Memberevaluate/add_vr',['order_id'=>$order_info.order_id])}">
+                {/if}
+                    <div class="alert alert-block">
+                        <h4>{$Think.lang.operating_hints}：</h4>
+                        <ul>
+                            <li>{$Think.lang.member_evaluation_rule_3}</li>
+                            <li>{$ruleexplain}</li>
+                            <li>{$Think.lang.member_evaluation_rule_4|raw}</li>
+                        </ul>
+                    </div>
+                    <div class="tabmenu">
+                        <ul class="tab">
+                            <li class="active"><a href="javascript:void(0);">{$Think.lang.evaluate_purchased_goods}</a></li>
+                        </ul>
+                    </div>
+                    <table class="dsm-default-table deliver mb30">
+                        <thead>
+                            <tr>
+                                <th colspan="2">{$Think.lang.member_evaluation_order_desc}</th>
+                                <th>{$Think.lang.commodity_rating}</th>
+                                <th>{$Think.lang.comment_details}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th colspan="20" class="tr">
+                                    <span class="mr10"><input type="checkbox" class="checkbox vm" name="anony">&nbsp;{$Think.lang.member_evaluation_modtoanonymous}</span>
+                                </th>
+                            </tr>
+                            {if $order_goods}
+                            {foreach name="order_goods" item="goods"}
+                            <tr class="bd-line">
+                                <td valign="top" class="w40"><div class="pic-thumb"><a href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}" target="_blank"><img src="{:goods_thumb($goods)}"/></a></span></div></td>
+                                <td valign="top" class="tl w200"><dl class="goods-name">
+                                        <dt style="width: auto!important"><a href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}" target="_blank">{$goods.goods_name}</a></dt>
+                                        <dd><span class="rmb-price">￥{$goods.goods_price}</span>&nbsp;*&nbsp;{$goods.goods_num}&nbsp;{$Think.lang.piece}</dd>
+                                    </dl></td>
+                                <td valign="top" class="w100"><div class="dsgeval mb10">
+                                        <div class="raty">
+                                            <input dstype="score" name="goods[{$goods.goods_id}][score]" type="hidden">
+                                        </div>
+                                    </div></td>
+                                <td valign="top" class="tr"><textarea name="goods[{$goods.goods_id}][comment]" cols="150" style="width: 280px;"></textarea></td>
+                            </tr>
+                            {/foreach}
+                            {/if}
+                        </tbody>
+                    </table>
+                    {if $Request.action != 'add_vr'}
+                    <div class="tabmenu">
+                        <ul class="tab">
+                            <li class="active"><a href="javascript:void(0);">{$Think.lang.shop_service_score}</a></li>
+                        </ul>
+                    </div>
+                    {/if}
+                    <div class="dsm-default-form">
+                        {if $Request.action != 'add_vr'}
+                        <dl>
+                            <dt>{$Think.lang.member_evaluation_eval_type_1}{$Think.lang.ds_colon}</dt>
+                            <dd>
+                                <div class="raty-x2">
+                                    <input dstype="score" name="store_desccredit" type="hidden">
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.member_evaluation_eval_type_2}{$Think.lang.ds_colon}</dt>
+                            <dd>
+                                <div class="raty-x2">
+                                    <input dstype="score" name="store_servicecredit" type="hidden">
+                                </div>
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.member_evaluation_eval_type_3}{$Think.lang.ds_colon}</dt>
+                            <dd>
+                                <div class="raty-x2">
+                                    <input dstype="score" name="store_deliverycredit" type="hidden">
+                                </div>
+                            </dd>
+                        </dl>
+                        {/if}
+                        <div class="bottom">
+                            <input type="submit" class="submit" value="{$Think.lang.ds_submit}"/>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/jquery.raty.min.js"></script>
+<script type="text/javascript">
+$(function () {
+    $('#evalvrform').validate({
+        submitHandler:function(form){
+            ds_ajaxpost('evalvrform', 'url', '{:url('Membervrorder/index')}')
+        }
+    });
+    $('#evalform').validate({
+        submitHandler:function(form){
+            ds_ajaxpost('evalform', 'url', '{:url('Memberorder/index')}')
+        }
+    });
+
+    $('.raty').raty({
+        path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+        click: function(score) {
+            $(this).find('[dstype="score"]').val(score);
+        }
+    });
+
+    $('.raty-x2').raty({
+        path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+        starOff: 'star-off-x2.png',
+        starOn: 'star-on-x2.png',
+        width: 150,
+        click: function(score) {
+            $(this).find('[dstype="score"]').val(score);
+        }
+    });
+})
+</script>
+
+
+
+
+{/block}

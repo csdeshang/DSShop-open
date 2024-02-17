@@ -1,0 +1,80 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    
+        <form id="region_form" method="post">
+            <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.area_name}</td>
+                        <td class="vatop rowform"><input type="text" class="input-txt" name="area_name" id="area_name" value="{$area.area_name|default=''}" /></td>
+                        <td></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.area_parentid}</td>
+                        <td class="vatop rowform">
+                            <select name="area_parentid">
+                                <option value="0">请选择</option>
+                                {foreach name="parents" item="parent" key="k" }
+                                <option value="{$k}" {if condition="$k == $area.area_parent_id"}selected{/if}>{$parent|raw}</option>
+                                {/foreach}
+                            </select>
+                        </td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.area_region}</td>
+                        <td class="vatop rowform"><input type="text" class="input-txt" name="area_region" id="area_region" value="{$area.area_region|default=''}" /></td>
+                        <td></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.area_sort}</td>
+                        <td class="vatop rowform"><input type="text" class="input-txt" name="area_sort" id="area_sort" value="{$area.area_sort|default='255'}" /></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>					
+                </tfoot>
+            </table>
+        </form>
+    </div>
+
+<script>
+    //按钮先执行验证再提交表单
+    $(function(){
+        $('#region_form').validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules : {
+                area_name : {
+                    required : true
+                },
+                area_region : {
+                    maxlength : 3
+                },
+                area_sort : {
+                    digits : true,
+                    range : [0,255]
+                }
+            },
+            messages : {
+                area_name : {
+                    required : '{$Think.lang.area_name_error}'
+                },
+                area_region : {
+                    maxlength : '{$Think.lang.area_region_error}'
+                },
+                area_sort : {
+                    digits : '请输入整数',
+                    range : '{$Think.lang.area_sort_error}'
+                }
+
+            }
+        });
+    });
+</script>

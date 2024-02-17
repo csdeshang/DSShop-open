@@ -1,0 +1,206 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>销量分析</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+   <div class="fixed-empty"></div>
+
+<form method="get"  name="formSearch" id="formSearch">
+    <div class="ds-search-form">
+        <dl>
+            <dd>
+                <input type="hidden" name="stat_type" id="stat_type" value="ordernum" />
+                <input type="hidden" name="exporttype" id="exporttype" value="" />
+            </dd>
+            <dd>
+                <select name="search_type" id="search_type" class="querySelect">
+                    <option value="day" {if isset($search_arr.search_type) && $search_arr.search_type == 'day'}selected{/if}>按照天统计</option>
+                    <option value="week" {if isset($search_arr.search_type) && $search_arr.search_type == 'week'}selected{/if}>按照周统计</option>
+                    <option value="month" {if isset($search_arr.search_type) && $search_arr.search_type == 'month'}selected{/if}>按照月统计</option>
+                </select>
+            </dd>
+            <dd id="searchtype_day" style="display:none;">
+                <input class="txt date" type="text" value="{:date('Y-m-d',$search_arr.day.search_time)}" id="search_time" name="search_time">
+            </dd>
+            <dd id="searchtype_week" style="display:none;">
+              	<select name="searchweek_year" class="querySelect">
+                  {foreach name="year_arr" item="v"}
+              		<option value="{$key}" {$search_arr.week.current_year == $key ?'selected':''}>{$v}</option>
+                  {/foreach}
+                </select>
+                <select name="searchweek_month" class="querySelect">
+                  {foreach name="month_arr" item="v"}
+              		<option value="{$key}" {$search_arr.week.current_month == $key ?'selected':''}>{$v}</option>
+                  {/foreach}
+                </select>
+                <select name="searchweek_week" class="querySelect">
+                  {foreach name="week_arr" item="v"}
+              		<option value="{$v.key}" {$search_arr.week.current_week == $v.key ?'selected':''}>{$v.val}</option>
+                  {/foreach}
+                </select>
+              </dd>
+              <dd id="searchtype_month" style="display:none;">
+              	<select name="searchmonth_year" class="querySelect">
+                  {foreach name="year_arr" item="v"}
+              		<option value="{$key}" {$search_arr.month.current_year == $key ?'selected':''}>{$v}</option>
+                  {/foreach}
+                </select>
+                <select name="searchmonth_month" class="querySelect">
+                  {foreach name="month_arr" item="v"}
+              		<option value="{$key}" {$search_arr.month.current_month == $key ?'selected':''}>{$v}</option>
+                  {/foreach}
+                </select>
+              </dd>
+               <dd>
+              	<select name="order_type" id="order_type" class="querySelect">
+                  <option value="" {$Request.param.order_type == '' ?'selected':''}>{$Think.lang.ds_please_choose}</option>
+                  <option value="{$Think.ORDER_STATE_NEW}" {$Request.param.order_type !='' && $Request.param.order_type == ORDER_STATE_NEW ? 'selected':''}>待付款</option>
+                  <option value="{$Think.ORDER_STATE_PAY}" {$Request.param.order_type !='' && $Request.param.order_type == ORDER_STATE_PAY ? 'selected':''}>待发货</option>
+                  <option value="{$Think.ORDER_STATE_SEND}" {$Request.param.order_type !='' && $Request.param.order_type == ORDER_STATE_SEND ? 'selected':''}>待收货</option>
+                  <option value="{$Think.ORDER_STATE_SUCCESS}" {$Request.param.order_type !='' && $Request.param.order_type == ORDER_STATE_SUCCESS ? 'selected':''}>交易完成</option>
+                  <option value="{$Think.ORDER_STATE_CANCEL}" {$Request.param.order_type !='' && $Request.param.order_type == ORDER_STATE_CANCEL ? 'selected':''}>已取消</option>
+                </select>
+              </dd>
+        </dl>
+            <div class="btn_group">
+                <a href="javascript:void(0);" id="dssubmit" class="btn tooltip">{$Think.lang.ds_query}</a>
+                <a href="{:url('Stattrade/sale')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+  </form>
+
+   
+   <div class="explanation" id="explanation">
+       <div class="title" id="checkZoom">
+           <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+           <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+       </div>
+       <ul>
+           <li>{$Think.lang.stat_validorder_explain}</li>
+           <li>统计图展示了符合搜索条件的有效订单中的下单总金额和下单数量在时间段内的走势情况及与前一个时间段的趋势对比</li>
+           <li>统计表显示了符合搜索条件的全部有效订单记录并可以点击“导出Excel”将订单记录导出为Excel文件</li>
+       </ul>
+   </div>
+   
+   
+
+  <div class="stat-info">
+      <span>总销售额：
+        <strong>{$statcount_arr.orderamount|default="0.00"}</strong>元</span>
+    <span>总订单量：<strong>{:intval($statcount_arr.ordernum)}</strong></span>
+  </div>
+
+  <div id="stat_tabs" class="w100pre close_float ui-tabs" style="min-height:500px">
+      <div class="close_float tabmenu">
+      	<ul class="tab pngFix">
+      		<li><a href="#orderamount_div" ds_type="showdata" data-param='{"type":"orderamount"}'>下单金额</a></li>
+        	<li><a href="#ordernum_div" ds_type="showdata" data-param='{"type":"ordernum"}'>下单量</a></li>
+        </ul>
+      </div>
+    <!-- 下单金额 -->
+      <div id="orderamount_div" class="close_float" style="text-align:center;"></div>
+    <!-- 下单量 -->
+      <div id="ordernum_div" class="close_float" style="text-align:center;"></div>
+  </div>
+
+  <div style="text-align:right;"><a class="btn btn-mini" href="javascript:void(0);" id="export_btn"><span>导出Excel</span></a></div>
+  <table class="ds-default-table nobdb">
+    <thead>
+      <tr class="thead">
+        {foreach name="statlist.headertitle" item="v"}
+        <th class="align-center">{$v}</th>
+        {/foreach}
+      </tr>
+    </thead>
+    <tbody id="datatable">
+    {notempty name="statlist.data"}
+    {foreach name="statlist.data" item="v"}
+      <tr class="hover">
+        <td class="align-center">{$v.order_sn}</td>
+        <td class="align-center">{$v.buyer_name}</td>
+        <td class="align-center">{:date('Y-m-d H:i:s',$v.order_add_time)}</td>
+        <td class="align-center">{:number_format($v.order_amount,2)}</td>
+        <td class="align-center">{$v.order_statetext}</td>
+      </tr>
+   {/foreach}
+    {else /}
+    <tr class="no_data">
+      <td colspan="15">{$Think.lang.ds_no_record}</td>
+    </tr>
+    {/notempty}
+    </tbody>
+  </table>
+  {$show_page|raw}
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/highcharts/highcharts.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/statistics.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js" type="text/javascript"></script>
+<script>
+//展示搜索时间框
+function show_searchtime(){
+    s_type = $("#search_type").val();
+    $("[id^='searchtype_']").hide();
+    $("#searchtype_"+s_type).show();
+}
+
+$(function () {
+    //切换登录卡
+    $('#stat_tabs').tabs();
+
+    //统计数据类型
+    var s_type = $("#search_type").val();
+    $('#search_time').datepicker({dateFormat: 'yy-mm-dd'});
+
+    show_searchtime();
+    $("#search_type").change(function(){
+        show_searchtime();
+    });
+
+    //更新周数组
+    $("[name='searchweek_month']").change(function(){
+        var year = $("[name='searchweek_year']").val();
+        var month = $("[name='searchweek_month']").val();
+        $("[name='searchweek_week']").html('');
+        $.getJSON(ADMINSITEURL+'/Common/getweekofmonth',{y:year,m:month},function(data){
+            if(data != null){
+                for(var i = 0; i < data.length; i++) {
+                    $("[name='searchweek_week']").append('<option value="'+data[i].key+'">'+data[i].val+'</option>');
+                }
+            }
+        });
+    });
+
+    $('#dssubmit').click(function(){
+        $("#exporttype").val('');
+        $('#formSearch').submit();
+    });
+
+    //导出图表
+    $("#export_btn").click(function(){
+        $("#exporttype").val('excel');
+        $('#formSearch').submit();
+    });
+
+    //加载统计数据
+    getStatdata('orderamount');
+    $("[ds_type='showdata']").click(function(){
+        var data_str = $(this).attr('data-param');
+        eval('data_str = '+data_str);
+        getStatdata(data_str.type);
+    });
+});
+//加载统计地图
+function getStatdata(type){
+    var search_type = $("#search_type").val();
+    var order_type = $("#order_type").val();
+    $('#'+type+'_div').load(ADMINSITEURL+'/Stattrade/sale_trend.html?search_type='+search_type+'&type='+type+'&order_type='+order_type+'&t={$searchtime}');
+}
+</script>

@@ -1,0 +1,103 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_exppoints}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch" id="formSearch" action="">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.explog_membername}</dt>
+                <dd><input type="text" name="mname" class="txt" value='{$Request.param.mname}'></dd>
+            </dl>
+            <dl>
+                <dt>添加时间</dt>
+                <dd>
+                    <input type="text" id="stime" name="stime" class="txt date" value="{$Request.param.stime}">
+                    <label>~</label>
+                    <input type="text" id="etime" name="etime" class="txt date" value="{$Request.param.etime}">
+                </dd>
+            </dl>
+            <dl>
+                <dd>
+                    <select name="stage">
+                        <option value="" {notempty name="$Request.param.stage"}selected=selected{/notempty}>操作阶段</option>
+                        {foreach name="stage_arr" item="v" key="k" }
+                        <option value="{$k}" {if condition="$Request.param.stage eq $k"}selected=selected{/if}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>描述</dt>
+                <dd><input type="text" id="description" name="description" class="txt2" value="{$Request.param.description}" ></dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="{$Think.lang.ds_query}"/>
+                <a href="{:url('Exppoints/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                <a class="btn btn-default" href="javascript:export_xls('{:url('Exppoints/export_step1')}')">{$Think.lang.ds_export}Excel</a>
+            </div>
+        </div>
+    </form>
+
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>经验值明细，展示了会员经验值增减情况的详细情况记录，经验值前有符号“-”表示减少，无符号表示增加</li>
+        </ul>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th>{$Think.lang.explog_membername}</th>
+                <th>{$Think.lang.exp_value}</th>
+                <th>{$Think.lang.explog_addtime}</th>
+                <th>{$Think.lang.explog_stage}</th>
+                <th>{$Think.lang.explog_desc}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="list_log"}
+            {foreach name="list_log" item="log"}
+            <tr>
+                <td>{$log.explog_membername}</td>
+                <td>{$log.explog_points}</td>
+                <td>{$log.explog_addtime|date="Y-m-d H:i:s"}</td>
+                <td>{$stage_arr[$log.explog_stage]}</td>
+                <td>{$log.explog_desc}</td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="15">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>
+
+<script language="javascript">
+    $(function () {
+        $('#stime').datepicker({dateFormat: 'yy-mm-dd',onSelect:function(dateText,inst){
+            var year2 = dateText.split('-') ;
+            $('#etime').datepicker( "option", "minDate", new Date(parseInt(year2[0]),parseInt(year2[1])-1,parseInt(year2[2])+1) );
+        }});
+        $('#etime').datepicker({dateFormat: 'yy-mm-dd',onSelect:function(dateText,inst){
+            var year1 = dateText.split('-') ;
+            $('#stime').datepicker( "option", "maxDate", new Date(parseInt(year1[0]),parseInt(year1[1])-1,parseInt(year1[2])-1) );
+        }});
+    });
+</script>

@@ -1,0 +1,69 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>免运费额度</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="dssc-form-default">
+        <form method="post" action="{:url('Deliverset/free_freight')}" id="my_form">
+            <dl>
+                <dt>{$Think.lang.free_freight}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input class="text w60" name="free_price" maxlength="10" type="text" id="free_price" value="{$free_price}"/><em
+                        class="add-on">
+                    <i class="iconfont">&#xe65c;</i>
+                </em>
+                    <p class="hint"> {$Think.lang.notes_free_freight_amount}</p>
+                </dd>
+                <dt>{$Think.lang.estimated_delivery_time}{$Think.lang.ds_colon}</dt>
+                <dd>
+                    <input class="text w60" name="free_time" maxlength="10" type="text" id="free_time" value="{$free_time}"/><em
+                        class="add-on">
+                    天</em>
+                    <p class="hint">{$Think.lang.notice_estimated_delivery_time}</p>
+                </dd>
+            </dl>
+            <div class="bottom">
+                <input type="submit" class="btn" value="{$Think.lang.ds_common_button_save}"/>
+            </div>
+        </form>
+    </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#my_form').validate({
+            submitHandler: function (form) {
+                ds_ajaxpost('my_form');
+            },
+            rules: {
+                free_price: {
+                    required: true,
+                    number: true
+                },
+                free_time: {
+                    required: true,
+                    digits: true
+                }
+            },
+            messages: {
+                free_price: {
+                    required: '{$Think.lang.please_fill_amount}',
+                    number: '{$Think.lang.please_fill_correctly}'
+                },
+                free_time: {
+                    required: '{$Think.lang.please_fill_days}',
+                    digits: '{$Think.lang.please_fill_correctly}'
+                }
+            }
+        });
+
+    });
+</script>
+
+

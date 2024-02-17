@@ -1,0 +1,44 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>关键字回复</h3>
+            </div>
+            <a href="javascript:dsLayerOpen('{:url('Wechat/text_form')}','添加关键字')"  class="btn btn-small" style="float: right">添加关键字</a>
+        </div>
+    </div>
+    <table class="ds-default-table">
+        <thead>
+            <tr>
+                <th style="width: 30%">{$Think.lang.keywords}</th>
+                <th style="width: 60%">{$Think.lang.k_value}</th>
+                <th style="width: 10%">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        {notempty name="lists"}
+        <tbody>
+            {foreach name="lists" item="list"}
+            <tr>
+                <td>{$list.keyword}</td>
+                <td>{$list.text}</td>
+                <td>
+                    <a href="javascript:dsLayerOpen('{:url('Wechat/text_form',['id'=>$list.id])}','{$Think.lang.ds_edit}-{$list.keyword}')"  class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Wechat/del_text',['id'=>$list.id])}','{$Think.lang.ds_ensure_del}')"  class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+        </tbody>
+        {else /}
+        <tbody>
+            <tr class="no_data">
+                <td colspan="20">{$Think.lang.no_record}</td>
+            </tr>
+        </tbody>
+        {/notempty}
+    </table>
+    {$show_page|raw}
+</div>

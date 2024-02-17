@@ -1,0 +1,110 @@
+<div class="div-goods-select">
+    <table class="search-form">
+        <tbody>
+        <tr>
+            <td>&nbsp;</td>
+            <th>{$Think.lang.ds_goods_name}</th>
+            <td class="w160"><input type="text" name="b_search_keyword" class="text" value="{$Request.get.keyword}" /></td>
+            <td class="tc w70"><a href="{:url('Promotionbundling/bundling_add_goods')}" dstype="search_a" class="dss-btn"><i class="iconfont">&#xe718;</i>{$Think.lang.ds_search}</a></td>
+            <td class="w10"></td>
+        </tr>
+        </tbody>
+    </table>
+    <div class="search-result" style="width:739px;">
+        {notempty name="goods_list"}
+        <ul class="goods-list" dstype="bundling_goods_add_tbody" style=" width:760px;">
+            {foreach name="goods_list" item="val"}
+            <li dstype="{$val.goods_id}">
+                <div class="goods-thumb"><img src="{:goods_cthumb($val.goods_image,240)}" dstype="{$val.goods_image}" /></div>
+                <dl class="goods-info">
+                    <dt><a href="#" target="_blank" title="{$Think.lang.ds_goods_name}'/'{$Think.lang.bundling_goods_code}{$val.goods_name}
+                    {if $val.goods_serial != ''}{$val.goods_serial}{/if}">{$val.goods_name}</a></dt>
+                    <dd>{$Think.lang.bundling_goods_price}¥{$val.goods_price}</dd>
+                    <dd>{$Think.lang.bundling_goods_storage}{$val.goods_storage}{$Think.lang.piece}</dd>
+                </dl>
+                <div data-param="{gid:{$val.goods_id},image:'{$val.goods_image}',src:'{:goods_cthumb($val.goods_image,240)}',gname:'{$val.goods_name}',gprice:'{$val.goods_price}',gstorang:'{$val.goods_storage}'}"><a href="JavaScript:void(0);" class="dssc-btn-mini dssc-btn-green" onclick="bundling_goods_add($(this))"><i class="iconfont">&#xe6db;</i>{$Think.lang.bundling_goods_add_bundling}</a></div>
+            </li>
+            {/foreach}
+        </ul>
+        {else /}
+        <div class="norecord">
+            <div class="warning-option"><i class="iconfont">&#xe64c;</i><span>{$Think.lang.no_record}</span></div>
+        </div>
+        {/notempty}
+        {notempty name="goods_list"}
+        <div class="pagination">{$show_page|raw}</div>
+        {/notempty}
+    </div>
+</div>
+
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery-2.1.4.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js"></script>
+<script>
+    $(function(){
+        /* ajax添加商品  */
+        $('.demo').unbind().ajaxContent({
+            event:'click', //mouseover
+            loaderType:"img",
+            loadingMsg:"{$Think.HOME_SITE_ROOT}/images/loading.gif",
+            target:'#bundling_add_goods_ajaxContent'
+        });
+
+        $('a[dstype="search_a"]').click(function(){
+            $(this).attr('href', $(this).attr('href')+'?' +$.param({'keyword':$('input[name="b_search_keyword"]').val()}));
+            $('a[dstype="search_a"]').ajaxContent({
+                event:'dblclick', //mouseover
+                loaderType:'img',
+                loadingMsg:'{$Think.HOME_SITE_ROOT}/images/loading.gif',
+                target:'#bundling_add_goods_ajaxContent'
+            });
+            $(this).dblclick();
+            return false;
+        });
+
+
+        // 验证商品是否已经被选择。
+        O = $('input[dstype="goods_id"]');
+        A = new Array();
+        if(typeof(O) != 'undefined'){
+            O.each(function(){
+                A[$(this).val()] = $(this).val();
+            });
+        }
+        T = $('ul[dstype="bundling_goods_add_tbody"] li');
+        if(typeof(T) != 'undefined'){
+            T.each(function(){
+                if(typeof(A[$(this).attr('dstype')]) != 'undefined'){
+                    $(this).children(':last').html('<a href="JavaScript:void(0);" onclick="bundling_operate_delete($(\'#bundling_tr_'+$(this).attr('dstype')+'\'), '+$(this).attr('dstype')+')" class="dssc-btn-mini dssc-btn-orange"><i class="iconfont">&#xe754;</i>{$Think.lang.bundling_goods_add_bundling_exit}</a>');
+                }
+            });
+        }
+    });
+
+    /* 添加商品 */
+    function bundling_goods_add(o){
+        // 验证商品是否已经添加。
+        var _bundlingtr = $('tbody[dstype="bundling_data"] tr:not(:first)');
+        eval('var _data = ' + o.parent().attr('data-param'));
+        if (_data.gstrong == 0) {
+            alert('{$Think.lang.bundling_goods_storage_not_enough}');
+            return false;
+        }
+        // 隐藏第一个tr
+        $('tbody[dstype="bundling_data"]').children(':first').hide();
+        // 插入数据
+        $('<tr id="bundling_tr_' + _data.gid + '"></tr>')
+            .append('<input type="hidden" dstype="goods_id" name="goods[g_' + _data.gid + '][gid]" value="' + _data.gid + '">')
+            .append('<td class="w70"><input type="checkbox" name="goods[g_' + _data.gid + '][appoint]" value="1" checked="checked"></td>')
+            .append('<td class="w50 "><div class="pic-thumb"><img dstype="bundling_data_img" ncname="' + _data.image + '" src="' + _data.src + '" onload="javascript:ResizeImage(this,60,60)"></span></div></td>')
+            .append('<td class="tl"><dl class="goods-name"><dt style="width: 300px;">' + _data.gname + '</dt></dl></td>')
+            .append('<td class="w90 goods-price" dstype="bundling_data_price">' + _data.gprice + '</td>')
+            .append('<td class="w90"><input type="text" dstype="price" name="goods[g_' + _data.gid + '][price]" value="' + _data.gprice + '" class="text w70"></td>')
+            .append('<td class="w90"><span><a href="javascript:void(0);" onclick="bundling_operate_delete($(\'#bundling_tr_' + _data.gid + '\'), ' + _data.gid + ')" class="btn-orange"><i class="iconfont">&#xe754;</i><p>{$Think.lang.bundling_goods_remove}</p></a></span></td>')
+    .fadeIn().appendTo('tbody[dstype="bundling_data"]');
+
+        $('li[dstype="' + _data.gid + '"]').children(':last').html('<a href="JavaScript:void(0);" class="dssc-btn-mini dssc-btn-orange" onclick="bundling_operate_delete($(\'#bundling_tr_' + _data.gid + '\'), ' + _data.gid + ')"><i class="iconfont">&#xe754;</i>{$Think.lang.bundling_goods_add_bundling_exit}</a>');
+        count_cost_price_sum();
+        count_price_sum();
+    }
+
+</script> 

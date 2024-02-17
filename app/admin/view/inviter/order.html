@@ -1,0 +1,74 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_inviter_set}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dd>
+                    <select name="search_field_name" >
+                        <option {if $search_field_name == 'orderinviter_member_name'}selected='selected'{/if} value="orderinviter_member_name">{$Think.lang.inviter_name}</option>
+                        <option {if $search_field_name == 'orderinviter_order_sn'}selected='selected'{/if} value="orderinviter_order_sn">{$Think.lang.order_number}</option>
+                    </select>
+                </dd>
+                <dd>
+                    <input type="text" value="{$search_field_value}" name="search_field_value" class="txt">
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="搜索">
+                {if $filtered}
+                <a href="{:url('Inviter/order')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+
+
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th class="align-center">{$Think.lang.inviter_name}</th>
+          <th class="align-center">{$Think.lang.money}</th>
+          <th class="align-center">{$Think.lang.remark}</th>
+          <th class="align-center">{$Think.lang.order_number}</th>
+          <th class="align-center">{$Think.lang.valid}</th>
+          <th class="align-center">{$Think.lang.addtime}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {notempty name="orderinviter_list"}
+        {foreach name="orderinviter_list" item="v" key="k" }
+        <tr class="hover member">
+ 
+          <td class="align-center">{$v.orderinviter_member_name}</td>
+              <td class="align-center">{$Think.lang.currency}{$v.orderinviter_money}</td>
+          <td class="align-center">{$v.orderinviter_remark}</td>
+          <td class="align-center">{$v.orderinviter_order_sn}</td>
+          <td class="align-center">{$v.orderinviter_valid_text}</td>
+          <td class="align-center">{$v.orderinviter_addtime|date='Y-m-d'}</td>
+          
+        </tr>
+        {/foreach}
+        {else /}
+        <tr class="no_data">
+          <td colspan="11">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+      </tbody>
+      
+    </table>
+    {$show_page|raw}
+
+</div>

@@ -1,0 +1,175 @@
+{include file="default/base/mall_top" /}
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+
+<script src="{$Think.HOME_SITE_ROOT}/js/goods_cart.js"></script>
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+    <ul class="dsc-flow">
+        <li class="current"><i class="iconfont">&#xe69a;</i>
+            <p>{$Think.lang.ds_my_shopping_cart}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe731;</i>
+            <p>{$Think.lang.cart_index_ensure_info}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe64f;</i>
+            <p>{$Think.lang.cart_index_payment}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe67e;</i>
+            <p>{$Think.lang.cart_index_buy_finish}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+    </ul>
+</div>
+<div class="dsc-line"></div>
+
+
+<div class="dsc-main">
+    <div class="dsc-title">
+        <h3>{$Think.lang.ds_my_shopping_cart}</h3>
+        <h5>{$Think.lang.look_shopping_cart_list}</h5>
+    </div>
+    <form action="{:url('Buy/buy_step1')}" method="POST" id="form_buy" name="form_buy">
+    <input type="hidden" value="1" name="ifcart">
+    <table class="dsc-table-style" ds_type="table_cart">
+      <thead>
+        <tr>
+          <th class="w50"><label>
+              <input type="checkbox" checked value="1" id="selectAll">
+              {$Think.lang.ds_select_all}</label></th>
+          <th></th>
+          <th>{$Think.lang.ds_goods}</th>
+          <th class="w120">{$Think.lang.ds_unit_price}({$Think.lang.ds_yuan})</th>
+          <th class="w120">{$Think.lang.ds_quantity}</th>
+          <th class="w120">{$Think.lang.cart_index_sum}({$Think.lang.ds_yuan})</th>
+          <th class="w80">{$Think.lang.ds_handle}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- S one  list -->
+        <?php foreach($cart_list as $cart_info) {?>
+        <tr id="cart_item_{$cart_info.cart_id}" ds_group="{$cart_info.cart_id}" class="shop-list {if $cart_info.state}{else/}item_disabled{/if}">
+          <td><input type="checkbox" {if $cart_info.state}checked{else/}disabled{/if} ds_type="eachGoodsCheckBox" value="{$cart_info.cart_id}|{$cart_info.goods_num}" id="cart_id{$cart_info.cart_id}" name="cart_id[]"></td>
+          {if $cart_info.bl_id == '0'}
+          <td class="w60"><a href="{:url('Goods/index',['goods_id'=>$cart_info.goods_id])}" target="_blank" class="dsc-goods-thumb"><img class="lazyload" data-original="{:goods_thumb($cart_info,240)}" alt="{$cart_info.goods_name}" /></a></td>
+          {/if}
+          <td class="tl" {if $cart_info.bl_id != '0'}colspan="2"{/if}><dl class="dsc-goods-info">
+              <dt><a href="{:url('Goods/index',['goods_id'=>$cart_info.goods_id])}" target="_blank">{$cart_info.goods_name}</a></dt>
+              {notempty name="$cart_info.ifxianshi"}
+              <dd> <span class="xianshi">{$Think.lang.ds_mansong_flag}<strong>{$cart_info['xianshi_info']['xianshigoods_lower_limit']}</strong>{$Think.lang.unit_price_down}<em>￥{$cart_info['xianshi_info']['down_price']}</em></span> </dd>
+              {/notempty}
+              {if isset($cart_info.ifgroupbuy)}
+              <dd> <span class="groupbuy">{$Think.lang.ds_groupbuy}{if $cart_info.upper_limit}，{$Think.lang.maximum_limit_purchase}<strong>{$cart_info.upper_limit}</strong>{$Think.lang.piece}{/if}</span></dd>
+              {/if}
+              {if $cart_info.bl_id != '0'}
+              <dd><span class="buldling">{$Think.lang.single_set_drop}<em>￥{$cart_info.down_price}</em></span></dd>
+              {/if}
+              {notempty name="$cart_info.ifmgdiscount"}
+              <dd><span class="mgdiscount">{$cart_info.mgdiscount_desc}</span></dd>
+              {/notempty}
+              
+              <!-- S gift list -->
+              {notempty name="$cart_info.gift_list"}
+              <dd><span class="dsc-goods-gift">{$Think.lang.gift}</span>
+                <ul class="dsc-goods-gift-list">
+                  {foreach name="$cart_info.gift_list" item="goods_info"}
+                  <li ds_group="{$cart_info.cart_id}"><a href="{:url('Goods/index',['goods_id'=>$goods_info.gift_goodsid])}" target="_blank" class="thumb" ><img src="{:goods_cthumb($goods_info['gift_goodsimage'],240)}" alt="{$goods_info.gift_goodsname}" /></a>
+                    {/foreach}
+                  </li>
+                </ul>
+              </dd>
+              {/notempty}
+              <!-- E gift list -->
+            </dl></td>
+          <td class="w120"><em id="item{$cart_info.cart_id}_price">{$cart_info.goods_price}</em></td>
+          {if $cart_info.state}
+          <td class="w120 ws0"><a href="JavaScript:void(0);" onclick="decrease_quantity({$cart_info.cart_id});" title="{$Think.lang.cart_index_reduse}" class="add-substract-key tip">-</a>
+            <input id="input_item_{$cart_info.cart_id}" value="{$cart_info.goods_num}" orig="{$cart_info.goods_num}" changed="{$cart_info.goods_num}" onkeyup="change_quantity({$cart_info.cart_id}, this);" type="text" class="text w20"/>
+            <a href="JavaScript:void(0);" onclick="add_quantity({$cart_info.cart_id});" title="{$Think.lang.cart_index_increase}" class="add-substract-key tip" >+</a></td>
+          {else/}
+          <td class="w120">{$Think.lang.invalid}
+            <input type="hidden" value="{$cart_info.cart_id}" name="invalid_cart[]"></td>
+          {/if}
+          <td class="w120">
+              {if $cart_info.state}
+              <em id="item{$cart_info.cart_id}_subtotal" ds_type="eachGoodsTotal">{$cart_info.goods_total}</em>
+              {/if}
+          </td>
+          <td class="w80">
+              {if $cart_info.bl_id == '0'}
+              <a href="javascript:void(0)" onclick="collect_goods('{$cart_info.goods_id}');">{$Think.lang.cart_index_favorite}</a><br/>
+              {/if}
+            <a href="javascript:void(0)" onclick="drop_cart_item({$cart_info.cart_id});">{$Think.lang.ds_delete}</a></td>
+        </tr>
+
+        <!-- S bundling goods list -->
+        {notempty name="$cart_info.bl_goods_list"}
+        {foreach name="$cart_info.bl_goods_list" item="goods_info" }
+        <tr class="shop-list {if !$cart_info['state']}item_disabled{/if}" ds_group="{$cart_info.cart_id}">
+          <td></td>
+          <td class="w60"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank" class="dsc-goods-thumb"><img src="{:goods_cthumb($goods_info['goods_image'],240)}" alt="{$goods_info.goods_name}" /></a></td>
+          <td class="tl"><dl class="dsc-goods-info">
+              <dt><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank">{$goods_info.goods_name}</a> </dt>
+            </dl></td>
+          <td><em>{$goods_info.blgoods_price}</em></td>
+          <td>{if !$cart_info['state']}{$Think.lang.invalid}{/if}</td>
+          <td></td>
+          <td><a href="javascript:void(0)" onclick="collect_goods('{$goods_info.goods_id}');">{$Think.lang.cart_index_favorite}</a><br/></td>
+        </tr>
+        {/foreach}
+        {/notempty}
+        <!-- E bundling goods list -->
+
+        <?php } ?>
+        <!-- E one  list -->
+
+        <!-- S mansong list -->
+        {notempty name="$mansong_rule_list"}
+        <tr ds_group="{$cart_info.cart_id}">
+          <td></td>
+          <td class="tl" colspan="10"><div class="store-sale"><em> <i class="iconfont">&#xe753;</i> {$Think.lang.ds_mansong} </em>{:implode('<br/>', $mansong_rule_list)}</div></td>
+        </tr>
+        {/notempty}
+        <!-- E mansong list -->
+
+        <tr>
+          <td class="tr" colspan="7"><div class="dsc-account">
+              <dl>
+                <dt>{$Think.lang.total_store}：</dt>
+                <dd><em ds_type="eachStoreTotal"></em>{$Think.lang.ds_yuan}</dd>
+              </dl>
+            </div></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="7"><div class="dsc-all-account">{$Think.lang.cart_index_goods_sumary}<em id="cartTotal">{$cart_totals|default=0}</em>{$Think.lang.ds_yuan}</div></td>
+        </tr>
+      </tfoot>
+    </table>
+  </form>
+    <div class="dsc-bottom"><a id="next_submit" href="javascript:void(0)" class="dsc-btn dsc-btn-acidblue fr"><i class="iconfont">&#xe731;</i>{$Think.lang.next_fillcheck_shopping_information}</a></div>
+  <!-- 猜你喜欢 -->
+  <div id="guesslike_div"></div>
+  
+  
+</div>
+<script src="{$Think.HOME_SITE_ROOT}/js/goods_cart.js"></script>
+
+<script type="text/javascript">
+$(function(){
+	//猜你喜欢
+	$('#guesslike_div').load("{:url('Search/get_guesslike')}", function(){
+        $(this).show();
+    });
+});
+</script>
+{include file="default/base/mall_footer" /}

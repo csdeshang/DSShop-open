@@ -1,0 +1,59 @@
+<ul>
+    {foreach name="address_list" item="val" key="k" }
+    <li class="receive_add address_item {if $k == 0}dsc-selected-item{/if}">
+        <input address="{$val.area_info}&nbsp;{$val.address_detail}" true_name="{$val.address_realname}" id="addr_{$val.address_id}" ds_type="addr" type="radio" class="radio" city_id="{$val.city_id}" area_id={$val.area_id} name="addr" value="{$val.address_id}" phone="{if $val.address_mob_phone}{$val.address_mob_phone}{else/}{$val.address_tel_phone}{/if}" {if $val.address_is_default == '1'}checked{/if} />
+               <label for="addr_{$val.address_id}"><span class="true-name">{$val.address_realname}</span><span class="address">{$val.area_info}&nbsp;{$val.address_detail}</span><span class="phone"><i class="iconfont">&#xe60e;</i>{$val.address_mob_phone}</span></label>
+        <a href="javascript:void(0);" onclick="delAddr({$val.address_id});" class="del">[ {$Think.lang.ds_delete} ]</a>
+    </li>
+    {/foreach}
+    <li class="receive_add addr_item">
+        <input value="0" ds_type="addr" id="add_addr" type="radio" name="addr">
+        <label for="add_addr">{$Think.lang.cart_step1_new_address}</label>
+    </li>
+    <div id="add_addr_box"><!-- 存放新增地址表单 --></div>
+</ul>
+<div class="hr16"> <a id="hide_addr_list" class="dsc-btn dsc-btn-red" href="javascript:void(0);">{$Think.lang.save_shipping_address}</a></div>
+<script type="text/javascript">
+        function delAddr(id) {
+            var url = HOMESITEURL +'/Buy/load_addr/id/'+id+'.html';
+            $('#addr_list').load(url);
+        }
+        $(function() {
+            function addAddr() {
+                var url = HOMESITEURL+'/Buy/add_addr.html';
+                $('#add_addr_box').load(url);
+            }
+            $('input[ds_type="addr"]').on('click', function() {
+                if ($(this).val() == '0') {
+                    $('.address_item').removeClass('dsc-selected-item');
+                    var url = HOMESITEURL+'/Buy/add_addr.html';
+                    $('#add_addr_box').load(url);
+                } else {
+                    $('.address_item').removeClass('dsc-selected-item');
+                    $(this).parent().addClass('dsc-selected-item');
+                    $('#add_addr_box').html('');
+                }
+            });
+            $('#hide_addr_list').on('click', function() {
+                if ($('input[ds_type="addr"]:checked').val() == '0') {
+                    submitAddAddr();
+                } else {
+                    if ($('input[ds_type="addr"]:checked').size() == 0) {
+                        return false;
+                    }
+                    var city_id = $('input[name="addr"]:checked').attr('city_id');
+                    var area_id = $('input[name="addr"]:checked').attr('area_id');
+                    var addr_id = $('input[name="addr"]:checked').val();
+                    var true_name = $('input[name="addr"]:checked').attr('true_name');
+                    var address = $('input[name="addr"]:checked').attr('address');
+                    var phone = $('input[name="addr"]:checked').attr('phone');
+                    showShippingPrice(city_id, area_id);
+                    hideAddrList(addr_id, true_name, address, phone);
+                }
+            });
+            if ($('input[ds_type="addr"]').size() == 1) {
+                $('#add_addr').prop('checked', true);
+                addAddr();
+            }
+        });
+</script>

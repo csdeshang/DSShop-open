@@ -1,0 +1,151 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>系统平台全局设置,包括基础设置、购物、短信、邮件、水印和分销等相关模块。</li>
+        </ul>
+    </div>
+
+
+    <form id="user_form" enctype="multipart/form-data" method="post">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation" for="member_name">{$Think.lang.ds_member}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="" name="member_name" id="member_name" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="validation" for="member_password">{$Think.lang.member_password}:</label></td>
+                    <td class="vatop rowform"><input type="text" id="member_password" name="member_password" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label for="member_email">{$Think.lang.member_email}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="" id="member_email" name="member_email" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label for="member_truename">{$Think.lang.member_truename}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="" id="member_truename" name="member_truename" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label> {$Think.lang.member_edit_sex}:</label></td>
+                    <td class="vatop rowform">
+                        <label class="radio-label">
+                            <i  class="radio-common selected">
+                                <input type="radio" value="0" name="member_sex" checked="checked">
+                            </i>
+                            <span>{$Think.lang.member_edit_secret}</span>
+                        </label>
+                        <label class="radio-label">
+                            <i  class="radio-common">
+                                <input type="radio" value="1" name="member_sex">
+                            </i>
+                            <span>{$Think.lang.member_edit_male}</span>
+                        </label>
+                        <label class="radio-label">
+                            <i  class="radio-common">
+                                <input type="radio" value="2" name="member_sex">
+                            </i>
+                            <span>{$Think.lang.member_edit_female}</span>
+                        </label>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label for="member_qq">QQ:</label></td>
+                    <td class="vatop rowform"><input type="text" value="" id="member_qq" name="member_qq" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="member_ww">{$Think.lang.member_ww}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="" id="member_ww" name="member_ww" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function() {
+        $('#user_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                member_name: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 15,
+                    remote: {
+                        url: "{:url('Member/ajax',['branch'=>'check_user_name'])}",
+                        type: 'get',
+                        data: {
+                            user_name: function() {
+                                return $('#member_name').val();
+                            },
+                            member_id:'{$member_array.member_id|default=0}'
+                        }
+                    }
+                },
+                member_password: {
+                    required: true,
+                    maxlength: 20,
+                    minlength: 6
+                },
+                member_email: {
+                    email: true,
+                    remote: {
+                        url: "{:url('Member/ajax',['branch'=>'check_email'])}",
+                        type: 'get',
+                        data: {
+                            user_name: function() {
+                                return $('#member_email').val();
+                            },
+                            member_id: '{$member_array.member_id|default=0}'
+                        }
+                    }
+                },
+                member_qq: {
+                    digits: true,
+                    minlength: 5,
+                    maxlength: 11
+                }
+            },
+            messages: {
+                member_name: {
+                    required: '{$Think.lang.member_add_name_null}',
+                    maxlength: '{$Think.lang.member_add_name_length}',
+                    minlength: '{$Think.lang.member_add_name_length}',
+                    remote: '{$Think.lang.member_add_name_exists}'
+                },
+                member_password: {
+                    required: '密码不能为空',
+                    maxlength: '{$Think.lang.member_edit_password_tip}',
+                    minlength: '{$Think.lang.member_edit_password_tip}'
+                },
+                member_email: {
+                    email: '{$Think.lang.member_edit_valid_email}',
+                    remote: '{$Think.lang.member_edit_email_exists}'
+                },
+                member_qq: {
+                    digits: '{$Think.lang.member_edit_qq_wrong}',
+                    minlength: '{$Think.lang.member_edit_qq_wrong}',
+                    maxlength: '{$Think.lang.member_edit_qq_wrong}'
+                }
+            }
+        });
+    });
+</script>

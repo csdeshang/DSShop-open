@@ -1,0 +1,81 @@
+<div class="w100pre close_float" style="text-align:right;">
+    <input type="hidden" id="export_type" data-url="{:url(request()->controller().'/'.request()->action())}/exporttype/excel" name="export_type" data-param='{"url":"$actionurl}&orderby={$orderby}&exporttype=excel"}' value="excel"/>
+    <a class="btn btn-mini" href="javascript:void(0);" id="export_btn"><span>导出Excel</span></a>
+</div>
+  <input type="hidden" id="orderby" name="orderby" value="{$orderby}"/>
+
+  <table class="ds-default-table">
+    <thead>
+      <tr class="thead sortbar-array">
+        {foreach name="statheader" item="v"}
+        {if isset($v.isorder) && $v.isorder == 1}
+        <th class="align-center">
+         <?php if($orderby == $v['key'].' desc'){?>
+          <a ds_type="orderitem" href="{$actionurl}&orderby={$v.key} asc" class="selected desc">{$v.text}<i></i></a></th>
+        <?php } elseif ($orderby == $v['key'].' asc'){?>
+        <a ds_type="orderitem" href="{$actionurl}&orderby={$v.key} desc" class="selected asc">{$v.text}<i></i></a></th>
+        <?php } else {?>
+        <a ds_type="orderitem" href="{$actionurl}&orderby={$v.key} desc">{$v.text}<i></i></a></th>
+        <?php }?>
+       {else /}
+        <th class="align-center">{$v.text}</th>
+       {/if}
+       {/foreach}
+      </tr>
+    </thead>
+    <tbody id="datatable">
+    {notempty name="statlist"}
+    {foreach name="statlist" item="v"}
+          <tr class="hover">
+            {foreach name="statheader" item="h_v" key=>'h_k'}
+          	<td align="left" class="{$h_v.class ?$h_v.class :'align-center'}">{$v[$h_v['key']]}</td>
+            {/foreach}
+          </tr>
+   {/foreach}
+   {else /}
+    <tr class="no_data">
+        	<td colspan="11">{$Think.lang.no_record}</td>
+        </tr>
+   {/notempty}
+    </tbody>
+  </table>
+  {$show_page|raw}
+<script>
+    jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+</script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.poshytip.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js" type="text/javascript"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    //Ajax提示
+    $('.tip').poshytip({
+        className: 'tip-yellowsimple',
+        showTimeout: 1,
+        alignTo: 'target',
+        alignX: 'center',
+        alignY: 'top',
+        offsetY: 5,
+        allowTipHover: false
+    });
+
+    $('#statlist').on('click', '.pagination li a', function() {
+            $('#statlist').load($(this).attr('href'));
+            return false;
+        });
+    $("[ds_type='orderitem']").ajaxContent({
+        event:'click',
+        loaderType:"img",
+        loadingMsg:"{$Think.ADMIN_SITE_ROOT}/images/treetable/transparent.gif",
+        target:'#statlist'
+    });
+
+    //导出图表
+    $("#export_btn").click(function(){
+        var item = $("#export_type");
+        var type = $(item).val();
+        if(type == 'excel'){
+            export_xls(item.attr('data-url').replace('.html',''));
+        }
+    });
+});
+</script>

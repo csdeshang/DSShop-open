@@ -1,0 +1,82 @@
+{include file="public/header" /}
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_account}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form id="qq_form" method="post">
+        <div class="ncap-form-default">
+            <table class="ds-default-table">
+                <tbody>
+                    <tr class="noborder"> 
+                        <td class="required w120">{$Think.lang.qq_isuse}</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                <label for="qq_isuse_show1" class="cb-enable {if condition="$list_config.qq_isuse eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                <label for="qq_isuse_show0" class="cb-disable {if condition="$list_config.qq_isuse eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                <input id="qq_isuse_show1" name="qq_isuse" value="1" type="radio" {if condition="$list_config.qq_isuse eq 1"} checked="checked"{/if}>
+                                <input id="qq_isuse_show0" name="qq_isuse" value="0" type="radio" {if condition="$list_config.qq_isuse eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+                        <td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required">{$Think.lang.qq_appid}</td>
+                        <td class="vatop rowform"><input type="text" name="qq_appid" id="qq_appid" value="{$list_config.qq_appid}" class="w300" /></td>
+			<td class="vatop tips"></td>
+                    </tr>	
+                    <tr class="noborder"> 
+                        <td class="required">{$Think.lang.qq_appkey}</td>
+                        <td class="vatop rowform">
+                            <input type="text" name="qq_appkey" id="qq_appkey" value="{$list_config.qq_appkey}" class="w300" />
+                        </td>
+                        <td class="vatop tips"><a href="https://connect.qq.com" target="_blank">{$Think.lang.ds_apply}</a></td>
+                    </tr>
+                </tbody> 
+                <tfoot>
+                    <tr class="tfoot">
+                        <td></td>
+                        <td colspan="15"><input id="submitBtn" class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                    </tr>					
+                </tfoot>
+            </table>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $('#qq_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                qq_appid : {
+                    required: true,
+                },
+                qq_appkey : {
+                    required: true,
+                },
+            },
+            messages: {
+                qq_appid : {
+                    required: '{$Think.lang.qq_appid_error}',
+                },
+                qq_appkey : {
+                    required: '{$Think.lang.qq_appkey_error}',
+                },
+
+            }
+        });
+    });
+</script>

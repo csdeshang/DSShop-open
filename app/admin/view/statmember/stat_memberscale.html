@@ -1,0 +1,194 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>会员统计</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="get" action="" name="formSearch" id="formSearch">
+
+        <div class="ds-search-form">
+            <dl>
+                <dd>
+                    <select name="search_type" id="search_type" class="querySelect">
+                        <option value="day" {if isset($search_arr.search_type) && $search_arr.search_type == 'day'}selected{/if}>按照天统计</option>
+                        <option value="week" {if isset($search_arr.search_type) && $search_arr.search_type == 'week'}selected{/if}>按照周统计</option>
+                        <option value="month" {if isset($search_arr.search_type) && $search_arr.search_type == 'month'}selected{/if}>按照月统计</option>
+                    </select>
+                </dd>
+                <dd id="searchtype_day" style="display:none;">
+                    <input class="txt date" type="text" value="{:date('Y-m-d',$search_arr.day.search_time)}" id="search_time"  name="search_time">
+                </dd>
+                <dd id="searchtype_week" style="display:none;">
+                    <select name="searchweek_year" class="querySelect">
+                        {foreach name="year_arr" item="v"}
+                        <option value="{$key}" {$search_arr.week.current_year== $key ? 'selected': ''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchweek_month" class="querySelect">
+                        {foreach name="month_arr" item="v"}
+                        <option value="{$key}" {$search_arr.week.current_month== $key ? 'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchweek_week" class="querySelect">
+                        {foreach name="week_arr" item="v"}
+                        <option value="{$v.key}"
+                                {$search_arr.week.current_week==$v['key'] ? 'selected' :''}>{$v.val}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+                <dd id="searchtype_month" style="display:none;">
+                    <select name="searchmonth_year" class="querySelect">
+                        {foreach name="year_arr" item="v"}
+                        <option value="{$key}" {$search_arr.month.current_year== $key?'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchmonth_month" class="querySelect">
+                        {foreach name="month_arr" item="v"}
+                        <option value="{$key}" {$search_arr.month.current_month== $key?'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>会员名称</dt>
+                <dd><input type="text" name="membername" value="{$Request.param.membername}"/></dd>
+            </dl>
+            <div class="btn_group">
+                <input type='hidden' name='exporttype' id='exporttype'>
+                <a href="javascript:void(0);" id="dssubmit" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Statmember/scale')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+ <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.stat_validorder_explain}</li>
+            <li>列表展示了会员在搜索时间段内的有效订单总金额、预存款和积分增减情况，并可以点击列表上方的“导出Excel”将列表数据导出为Excel文件</li>
+            <li>点击每列旁边的箭头对列表进行排序，默认按照“下单金额”降序排列</li>
+        </ul>
+    </div>
+
+     <div class="w100pre close_float" style="text-align:right;">
+  	<a class="btn btn-mini" href="javascript:void(0);" id="export_btn"><span>导出Excel</span></a>
+  </div>
+  <table class="ds-default-table">
+    <thead>
+      <tr class="thead sortbar-array">
+        <th class="align-center">会员名称</th>
+        <th class="align-center">
+            <a ds_type="orderitem" data-param='{"orderby":"orderamount"}' class="{!$orderby || $orderby == 'orderamount desc' ? 'selected desc' :''}{$orderby == 'orderamount asc' ? 'selected asc' :''}">下单金额
+                <i></i>
+            </a>
+        </th>
+        <th class="align-center">
+            <a ds_type="orderitem" data-param='{"orderby":"predincrease"}' class="{$orderby == 'predincrease desc'?'selected desc':''}{$orderby == 'predincrease asc'?'selected asc':''}">增预存款
+                <i></i>
+            </a>
+        </th>
+        <th class="align-center">
+            <a ds_type="orderitem" data-param='{"orderby":"predreduce"}' class="{$orderby == 'predreduce desc' ?'selected desc':''}{$orderby == 'predreduce asc' ?'selected asc':''}">减预存款
+                <i></i>
+            </a>
+        </th>
+        <th class="align-center">
+            <a ds_type="orderitem" data-param='{"orderby":"pointsincrease"}' class="{$orderby == 'pointsincrease desc' ?'selected desc':''}{$orderby == 'pointsincrease asc' ?'selected asc':''}">增积分
+                <i></i>
+            </a>
+        </th>
+        <th class="align-center">
+            <a ds_type="orderitem" data-param='{"orderby":"pointsreduce"}' class="{$orderby == 'pointsreduce desc' ?'selected desc':''}{$orderby == 'pointsreduce asc' ?'selected asc':''}">减积分
+                <i></i>
+            </a>
+        </th>
+      </tr>
+    </thead>
+    <tbody id="datatable">
+    {notempty name="statlist"}
+   {foreach name="statlist" item="v"}
+          <tr class="hover">
+            <td class="align-center">{$v.statm_membername}</td>
+            <td class="align-center">{$v.orderamount}</td>
+            <td class="align-center">{$v.predincrease}</td>
+            <td class="align-center">{$v.predreduce}</td>
+            <td class="align-center">{$v.pointsincrease}</td>
+            <td class="align-center">{$v.pointsreduce}</td>
+          </tr>
+    {/foreach}
+   {else /}
+    <tr class="no_data">
+        	<td colspan="11">{$Think.lang.no_record}</td>
+        </tr>
+   {/notempty}
+    </tbody>
+  </table>
+    {$show_page|raw}
+</div>
+
+<script>
+//展示搜索时间框
+function show_searchtime(){
+    s_type = $("#search_type").val();
+    $("[id^='searchtype_']").hide();
+    $("#searchtype_"+s_type).show();
+}
+$(function () {
+    //统计数据类型
+    var s_type = $("#search_type").val();
+    $('#search_time').datepicker({dateFormat: 'yy-mm-dd'});
+
+    show_searchtime();
+    $("#search_type").change(function(){
+        show_searchtime();
+    });
+
+    //更新周数组
+    $("[name='searchweek_month']").change(function(){
+        var year = $("[name='searchweek_year']").val();
+        var month = $("[name='searchweek_month']").val();
+        $("[name='searchweek_week']").html('');
+        $.getJSON(ADMINSITEURL+'/Common/getweekofmonth',{y:year,m:month},function(data){
+            if(data != null){
+                for(var i = 0; i < data.length; i++) {
+                    $("[name='searchweek_week']").append('<option value="'+data[i].key+'">'+data[i].val+'</option>');
+                }
+            }
+        });
+    });
+
+    $('#dssubmit').click(function(){
+        $("#exporttype").val('');
+        $("#orderby").val('');
+        $('#formSearch').submit();
+    });
+
+    //导出图表
+    $("#export_btn").click(function(){
+        $("#exporttype").val('excel');
+        $('#formSearch').submit();
+    });
+
+    $("[ds_type='orderitem']").click(function(){
+        $("#exporttype").val('');
+        var data_str = $(this).attr('data-param');
+        eval( "data_str = "+data_str);
+        if($(this).hasClass('desc')){
+            $("#orderby").val(data_str.orderby + ' asc');
+        } else {
+            $("#orderby").val(data_str.orderby + ' desc');
+        }
+        $('#formSearch').submit();
+    });
+});
+</script>

@@ -1,0 +1,209 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_operation}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="operation-tool">
+        <div class="mt">
+            促销工具
+        </div>
+        <div class="mc">
+            <a href="{:url('Promotionxianshi/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-E9BB5F">&#xe741;</i></dt>
+                    <dd>
+                        <h5>秒杀</h5>
+                        <p>设置商品折扣</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Promotionmansong/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-79BAD0">&#xe704;</i></dt>
+                    <dd>
+                        <h5>满即送</h5>
+                        <p>满减送赠品</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Promotionbundling/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-EC7E7F">&#xe732;</i></dt>
+                    <dd>
+                        <h5>优惠套装</h5>
+                        <p>组合商品优惠购买</p>
+                    </dd>
+                </dl>    
+            </a>
+
+            <a href="{:url('Groupbuy/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-6C93CD">&#xe70e;</i></dt>
+                    <dd>
+                        <h5>抢购</h5>
+                        <p>发布低价处理商品</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Vrgroupbuy/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-E9BB5F">&#xe70e;</i></dt>
+                    <dd>
+                        <h5>虚拟抢购</h5>
+                        <p>发布低价处理虚拟商品</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Voucher/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-6CCDA5">&#xe727;</i></dt>
+                    <dd>
+                        <h5>代金券</h5>
+                        <p>给客户发放代金券</p>
+                    </dd>
+                </dl>    
+            </a>
+
+            <a href="{:url('Inviter/setting')}">
+                <dl>
+                    <dt><i class="iconfont bg-9C6CCD">&#xe6ed;</i></dt>
+                    <dd>
+                        <h5>分销</h5>
+                        <p>设置商品分销</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Promotionpintuan/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-EC7E7F">&#xe73f;</i></dt>
+                    <dd>
+                        <h5>拼团</h5>
+                        <p>邀请朋友组图购买</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Promotionmgdiscount/mgdiscount_store')}">
+                <dl>
+                    <dt><i class="iconfont bg-6CCDA5">&#xe703;</i></dt>
+                    <dd>
+                        <h5>会员折扣</h5>
+                        <p>会员等级享受不同的会员折扣</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Activity/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-79BAD0">&#xe713;</i></dt>
+                    <dd>
+                        <h5>专题活动</h5>
+                        <p>设置商城专题活动</p>
+                    </dd>
+                </dl>    
+            </a>
+        </div>
+    </div>
+    <div class="operation-tool ">
+        <div class="mt">
+            平台互动营销
+        </div>
+        <div class="mc">
+            <a href="{:url('Bonus/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-79BAD0">&#xe6c1;</i></dt>
+                    <dd>
+                        <h5>吸粉红包</h5>
+                        <p>帮助平台快速积累粉丝，可提现</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Marketmanage/index',['type'=>1])}">
+                <dl>
+                    <dt><i class="iconfont bg-EC7E7F">&#xe6f6;</i></dt>
+                    <dd>
+                        <h5>刮刮卡</h5>
+                        <p>通过刮开卡片进行抽奖的玩法</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Marketmanage/index',['type'=>2])}">
+                <dl>
+                    <dt><i class="iconfont bg-86CE86">&#xe6f7;</i></dt>
+                    <dd>
+                        <h5>幸运大抽奖</h5>
+                        <p>常见的转盘式抽奖玩法</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Marketmanage/index',['type'=>3])}">
+                <dl>
+                    <dt><i class="iconfont bg-E9BB5F">&#xe68c;</i></dt>
+                    <dd>
+                        <h5>幸运砸金蛋</h5>
+                        <p>好运砸出来</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Marketmanage/index',['type'=>4])}">
+                <dl>
+                    <dt><i class="iconfont bg-6CCDA5">&#xe68c;</i></dt>
+                    <dd>
+                        <h5>生肖翻翻看</h5>
+                        <p>通过翻卡片进行抽奖的玩法</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Pointprod/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-6C93CD">&#xe704;</i></dt>
+                    <dd>
+                        <h5>礼品管理</h5>
+                        <p>管理积分商城的礼品</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Pointorder/pointorder_list')}">
+                <dl>
+                    <dt><i class="iconfont bg-6CCDA5">&#xe704;</i></dt>
+                    <dd>
+                        <h5>礼品兑换列表</h5>
+                        <p>管理礼品兑换</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('points/setting')}">
+                <dl>
+                    <dt><i class="iconfont bg-EC7E7F">&#xe726;</i></dt>
+                    <dd>
+                        <h5>积分奖励</h5>
+                        <p>登录购物等奖励积分</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Operation/point_signin')}">
+                <dl>
+                    <dt><i class="iconfont bg-86CE86">&#xe731;</i></dt>
+                    <dd>
+                        <h5>签到</h5>
+                        <p>签到送积分</p>
+                    </dd>
+                </dl>    
+            </a>
+            <a href="{:url('Rechargecard/index')}">
+                <dl>
+                    <dt><i class="iconfont bg-6CCDA5">&#xe6f4;</i></dt>
+                    <dd>
+                        <h5>充值卡</h5>
+                        <p>使用充值卡购物</p>
+                    </dd>
+                </dl>    
+            </a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+<div class="dsh-module dsh-module-style01">
+    <div class="title">
+        <h3>{$Think.lang.hot_recommendations}</h3>
+    </div>
+    <div class="content">
+        {notempty name="goods_list"}
+        <ul class="v_module_recommend">
+            {foreach name="goods_list" item="value"}
+            <li>
+                <div class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$value.goods_id])}" target="_blank"><img alt="{$value.goods_name}"  src="{:goods_thumb($value)}"></a> </div>
+                <dl class="goods-info">
+                    <dt>
+                    <a href="{:url('Goods/index',['goods_id'=>$value.goods_id])}" title="{$value.goods_name}" target="_blank">
+                        {if config('ds_config.groupbuy_allow') && $value['goods_promotion_type'] == 1}
+                        <span>{$Think.lang.snap_up_goods}</span>
+                        {elseif config('ds_config.promotion_allow') && $value['goods_promotion_type'] == 2 /}
+                        <span>{$Think.lang.ds_xianshi}</span>
+                        {/if}
+
+                        {$value.goods_name}
+                    </a>
+                    </dt>
+                    <dd class="goods-price">{$Think.lang.goods_class_index_goods_price}：<em>{$Think.lang.currency}{$value.goods_promotion_price}</em></dd>
+                    <dd class="buy-btn"><a href="{:url('Goods/index',['goods_id'=>$value.goods_id])}" target="_blank">{$Think.lang.snap_up_immediately}</a></dd>
+                </dl>
+            </li>
+            {/foreach}
+        </ul>
+        {/notempty}
+    </div>
+</div>

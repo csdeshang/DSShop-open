@@ -1,0 +1,68 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+<div class="dsm-default-form">
+    <form method="post" id="password_form" name="password_form" action="{:url('Membersecurity/modify_pwd')}">
+      <dl>
+        <dt><i class="required">*</i>{$Think.lang.set_new_password}：</dt>
+        <dd>
+          <input type="password"  maxlength="40" class="password" name="password" id="password"/>
+          <label for="password" generated="true" class="error"></label>
+          <p class="hint">{$Think.lang.payment_password_instructions3}</p></dd>
+      </dl>
+      <dl>
+        <dt><i class="required">*</i>{$Think.lang.confirm_new_password}：</dt>
+        <dd>
+          <input type="password" maxlength="40" class="password" name="confirm_password" id="confirm_password" />
+          <label for="confirm_password" generated="true" class="error"></label>
+        </dd>
+      </dl>
+      <dl class="bottom">
+        <dt>&nbsp;</dt>
+        <dd>
+            <input type="submit" class="submit" value="{$Think.lang.ds_ok}" />
+        </dd>
+      </dl>
+    </form>
+  </div>
+
+<script type="text/javascript">
+$(function(){
+    $('#password_form').validate({
+         submitHandler:function(form){
+            ds_ajaxpost('password_form', 'url', '{:url('Membersecurity/index')}')
+        },
+        rules : {
+            password : {
+                required   : true,
+                minlength  : 6,
+                maxlength  : 20
+            },
+            confirm_password : {
+                required   : true,
+                equalTo    : '#password'
+            }
+        },
+        messages : {
+            password  : {
+                required  : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_enter_password_correctly}',
+                minlength : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_enter_password_correctly}',
+                maxlength : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_enter_password_correctly}'
+            },
+            confirm_password : {
+                required   : '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_enter_password_correctly}',
+                equalTo    : '<i class="iconfont">&#xe64c;</i>{$Think.lang.two_password_inconsistencies}'
+            }
+        }
+    });
+});
+</script> 
+
+
+
+
+
+{/block}

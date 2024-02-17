@@ -1,0 +1,95 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+<table class="dsm-default-table order">
+            <thead>
+            <tr>
+                <th class="w10"></th>
+                <th colspan="2">{$Think.lang.member_pointorder_info_prodinfo}</th>
+                <th class="w100">{$Think.lang.points_unit}</th>
+                <th class="w40">{$Think.lang.ds_quantity}</th>
+                <th class="w150">{$Think.lang.member_pointorder_exchangepoints_shippingfee}</th>
+                <th class="w100">{$Think.lang.transaction_status}</th>
+                <th class="w100">{$Think.lang.member_pointorder_orderstate_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="order_list"}
+            {foreach name="order_list" item="val"}
+            <tr>
+                <td colspan="19" class="sep-row"></td>
+            </tr>
+            <tr>
+                <th colspan="20"><span class="ml10">{$Think.lang.member_pointorder_ordersn}{$Think.lang.ds_colon}{$val.point_ordersn}</span><span>{$Think.lang.member_pointorder_addtime}{$Think.lang.ds_colon}{$val.point_addtime|date="Y-m-d H:i:s"}</span>
+                </th>
+            </tr>
+            {foreach name="val.prodlist" item="v"}
+            <tr>
+                <td class="bdl"></td>
+                <td class="w50">
+                    <div class="pic-thumb"><a href="{:url('Pointprod/pinfo',['id'=>$v.pointog_goodsid])}" target="_blank"><img  src="{$v.point_goodsimage_small}" /></a></div>
+                </td>
+                <td class="tl">
+                    <dl class="goods-name">
+                        <dt><a href="{:url('Pointprod/pinfo',['id'=>$v.pointog_goodsid])}" target="_blank">{$v.pointog_goodsname}</a>
+                        </dt>
+                    </dl>
+                </td>
+                <td>{$v.pointog_goodspoints}</td>
+                <td>{$v.pointog_goodsnum}</td>
+                {if (isset($val.prodlist) && count($val.prodlist) >1 && $key == 0) || (isset($val.prodlist) && count($val.prodlist) ==1)}
+                <td class="bdl" rowspan="{$val.prodlist|count}">
+                    <p class="price"><strong>{$val.point_allpoint}</strong></p>
+                </td>
+                <td rowspan="{$val.prodlist|count}" class="bdl">
+                    <p>{$val.point_orderstatetext}</p>
+                    <p>
+                        <a href="{:url('Memberpointorder/order_info',['order_id'=>$val.point_orderid])}"
+                           target="_blank">{$Think.lang.member_pointorder_viewinfo}</a>
+                    </p>
+                </td>
+                <td class="bdl bdr w100" rowspan="{$val.prodlist|count}"><p></p>
+                    {if $val.point_orderallowreceiving}
+                    <p>
+                        <a href="javascript:void(0)" class="dsm-btn" onclick="ds_ajaxget_confirm('{:url('Memberpointorder/receiving_order',['order_id'=>$val.point_orderid])}','{$Think.lang.member_pointorder_confirmreceivingtip}')">{$Think.lang.member_pointorder_confirmreceiving}</a>
+                    </p>
+                    {/if}
+                    {if $val.point_orderallowcancel}
+                    <p>
+                        <a href="javascript:void(0)" class="dsm-btn dsm-btn-orange" onclick="ds_ajaxget_confirm('{:url('Memberpointorder/cancel_order',['order_id'=>$val.point_orderid])}','{$Think.lang.member_pointorder_cancel_confirmtip}');">{$Think.lang.member_pointorder_cancel_title}</a>
+                    </p>
+                    {/if}
+                </td>
+                {/if}
+            </tr>
+            {/foreach}
+            {/foreach}
+            {else /}
+            <tr>
+                <td colspan="20" class="norecord">
+                    <div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div>
+                </td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="order_list"}
+            <tr>
+                <td colspan="20">
+                    <div class="pagination">{$show_page|raw}</div>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+
+
+
+
+
+
+{/block}

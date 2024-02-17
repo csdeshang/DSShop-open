@@ -1,0 +1,189 @@
+{include file="public/header" /}
+
+
+<style>
+    .type-file-preview{z-index: 99999}
+</style>
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_article}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    <form id="article_form" method="post" enctype="multipart/form-data">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.article_title}</td>
+                    <td class="vatop rowform"><input type="text" name="article_title" id="article_title" value="{$article.article_title}" class="w200"/></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.article_cate}</td>
+                    <td class="vatop rowform">
+                        <select name="ac_id">
+                            <option value="">{$Think.lang.ds_please_choose}</option>
+                            {foreach name="ac_list" item="cate"}
+                            <option value="{$cate.ac_id}" {if $cate.ac_id === $article.ac_id }selected{/if}>{if $cate.ac_parent_id > 0}&nbsp&nbsp{/if}{$cate.ac_name}</option>
+                            {/foreach}
+                        </select>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.article_url}</td>
+                    <td class="vatop rowform"><input type="text" name="article_url" id="article_url" value="{$article.article_url}" class="w200"/></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.article_pic}: </td>
+                    <td class="vatop rowform">
+                        {notempty name="$article.article_pic"}
+                        <span class="type-file-show"> <img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                            <div class="type-file-preview" style="display: none;"><img id="view_img" src="{:ds_get_pic(ATTACH_ARTICLE,$article.article_pic)}"></div>
+                        </span>
+                        {/notempty}
+                        <span class="type-file-box">
+                            <input type='text' name='article_pic' id='article_pic' class='type-file-text' />
+                            <input type='button' name='button' id='button' value='上传' class='type-file-button' />
+                            <input name="_pic" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
+                        </span>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.article_add_img_wrong}</td>
+                </tr>
+                
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.article_show}</td>
+                    <td class="vatop rowform onoff">
+                        <label for="article_show1" class="cb-enable {if $article.article_show == '1'}selected{/if}" ><span>{$Think.lang.ds_yes}</span></label>
+                        <label for="article_show2" class="cb-disable {if $article.article_show == '0'}selected{/if}" ><span>{$Think.lang.ds_no}</span></label>
+                        <input id="article_show1" name="article_show" {if $article.article_show == '1'}checked="checked"{/if}  value="1" type="radio">
+                        <input id="article_show2" name="article_show" {if $article.article_show == '0'}checked="checked"{/if} value="0" type="radio">
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.article_sort}</td>
+                    <td class="vatop rowform"><input type="text" name="article_sort" id="article_sort" value="{$article.article_sort}" class="w200"/></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required">{$Think.lang.article_content}</td>
+                    {:build_editor(['name'=>'article_content','content'=>htmlspecialchars_decode($article.article_content)])}
+                    <td class="vatop rowform" colspan="2"><textarea name="article_content" id="article_content" style="width:100%;"></textarea></td>
+                </tr>	
+                <tr>
+                <td class="required">{$Think.lang.article_index_pic_upload}:</td>
+                <td id="divComUploadContainer"><input type="file" multiple="multiple" id="fileupload" name="fileupload" /></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td class="required">{$Think.lang.article_index_uploaded_pic}:</td>
+                <td><div class="tdare">
+                    <table width="600px" cellspacing="0" class="dataTable">
+                        <tbody id="thumbnails">
+                        {notempty name="file_upload"}
+                        {foreach name="file_upload" item="v"}
+                        <tr id="{$v.upload_id}" class="tatr2">
+                            <input type="hidden" name="file_id[]" value="{$v.upload_id}" />
+                            <td><img width="40px" height="40px" src="{:ds_get_pic(ATTACH_ARTICLE,$v.file_name)}" /></td>
+                            <td>{$v.file_name}</td>
+                            <td><a href="javascript:insert_editor('{:ds_get_pic(ATTACH_ARTICLE,$v.file_name)}');">{$Think.lang.article_index_insert}</a> | <a href="javascript:del_file_upload('{$v.upload_id}');">{$Think.lang.ds_del}</a></td>
+                        </tr>
+                        {/foreach}
+                        {/notempty}
+                        </tbody>
+                    </table>
+                </div></td>
+                <td class="vatop tips"></td>
+            </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input id="submitBtn" class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>	
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-file-upload/jquery.fileupload.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $("#_pic").change(function () {
+            $("#article_pic").val($(this).val());
+        });
+        $('#article_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                article_title : {
+                    required: true
+                },
+                article_url :{
+                    url : true
+                },
+                article_sort :{
+                    number:true,
+                    range:[0,255]
+                }
+            },
+            messages: {
+                article_title : {
+                    required   : '{$Think.lang.article_title_error}'
+                },
+                article_url :{
+                    url : '{$Think.lang.ds_url_error}'
+                },
+                article_sort:{
+                    number: '{$Think.lang.article_sort_error}',
+                    range:'{$Think.lang.class_sort_explain}'
+                }
+            }
+        });
+        // 图片上传
+        $('#fileupload').each(function(){
+            $(this).fileupload({
+                dataType: 'json',
+                url: "{:url('Article/article_pic_upload',['item_id'=>$article.article_id])}",
+                done: function (e,data) {
+                    if(data != 'error'){
+                        add_uploadedfile(data.result);
+                    }
+                }
+            });
+        });
+    });
+    function add_uploadedfile(file_data)
+    {
+        var newImg = '<tr id="' + file_data.file_id + '" class="tatr2"><input type="hidden" name="file_id[]" value="' + file_data.file_id + '" /><td><img width="40px" height="40px" src="' + file_data.file_path + '" /></td><td>' + file_data.file_name + '</td><td><a href="javascript:insert_editor(\'' + file_data.file_path + '\');">{$Think.lang.article_index_insert}</a> | <a href="javascript:del_file_upload(' + file_data.file_id + ');">{$Think.lang.ds_del}</a></td></tr>';
+        $('#thumbnails').prepend(newImg);
+    }
+    function insert_editor(file_path){
+        ue.execCommand('insertimage', {src:file_path});
+    }
+    function del_file_upload(file_id)
+    {
+        layer.confirm('{$Think.lang.ds_ensure_del}', {
+            btn: ['确定', '取消'],
+            title: false,
+        }, function () {
+            $.getJSON("{:url('Article/ajax')}",{branch:'del_file_upload',file_id: + file_id}, function(result){
+                if(result){
+                    $('#' + file_id).remove();
+                    layer.msg('{$Think.lang.ds_common_del_succ}');
+                }else{
+                    layer.alert('{$Think.lang.article_index_del_fail}');
+                }
+            });
+        });
+    }
+</script>

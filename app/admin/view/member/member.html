@@ -1,0 +1,167 @@
+{include file="public/header" /}
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_member_manage}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dd>
+                    <select name="search_field_name" >
+                        <option {if $search_field_name == 'member_name'}selected='selected'{/if} value="member_name">{$Think.lang.ds_member}</option>
+                        <option {if $search_field_name == 'member_email'}selected='selected'{/if} value="member_email">{$Think.lang.member_email}</option>
+                        <option {if $search_field_name == 'member_mobile'}selected='selected'{/if} value="member_mobile">{$Think.lang.member_mobile}</option>
+                        <option {if $search_field_name == 'member_truename'}selected='selected'{/if} value="member_truename">{$Think.lang.member_truename}</option>
+                    </select>
+                </dd>
+                <dd>
+                    <input type="text" value="{$search_field_value}" name="search_field_value" class="txt">
+                </dd>
+                <dd>
+                    <select name="search_sort" >
+                        <option value="">{$Think.lang.ds_sort}</option>
+                        <option {if $search_sort == 'member_logintime desc'}selected='selected'{/if} value="member_logintime desc">{$Think.lang.member_logintime}</option>
+                        <option {if $search_sort == 'member_loginnum desc'}selected='selected'{/if} value="member_loginnum desc">{$Think.lang.member_loginnum}</option>
+                    </select>
+                </dd>
+                <dd>
+                    <select name="search_state" >
+                        <option {if condition='$Request.param.search_state'}selected='selected'{/if} value="">{$Think.lang.member_index_state}</option>
+                        <option {if condition='$Request.param.search_state eq "no_informallow"'}selected='selected'{/if} value="no_informallow">{$Think.lang.member_index_inform_deny}</option>
+                        <option {if condition='$Request.param.search_state eq "no_isbuy"'}selected='selected'{/if} value="no_isbuy">{$Think.lang.member_index_buy_deny}</option>
+                        <option {if condition='$Request.param.search_state eq "no_isallowtalk"'}selected='selected'{/if} value="no_isallowtalk">{$Think.lang.member_index_talk_deny}</option>
+                        <option {if condition='$Request.param.search_state eq "no_memberstate"'}selected='selected'{/if} value="no_memberstate">{$Think.lang.member_index_login_deny}</option>
+                    </select>
+                </dd>
+                <dd>
+                    <select name="search_grade" >
+                        <option value='-1'>会员级别</option>
+                        {notempty name="member_grade"}
+                        {foreach name="member_grade" item="v" key="k" }
+                        <option {if $Request.get.search_grade == $k}selected='selected'{/if} value="{$k}">{$v.level_name}</option>
+                        {/foreach}
+                        {/notempty}
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="搜索">
+                {if $filtered}
+                <a href="{:url('Member/member')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>系统平台全局设置,包括基础设置、购物、短信、邮件、水印和分销等相关模块。</li>
+        </ul>
+    </div>
+
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th>&nbsp;</th>
+          <th colspan="2">{$Think.lang.ds_member}</th>
+          <th class="align-center"><span fieldname="logins" ds_type="order_by">{$Think.lang.member_loginnum}</span></th>
+          <th class="align-center"><span fieldname="last_login" ds_type="order_by">{$Think.lang.member_logintime}</span></th>
+          <th class="align-center">{$Think.lang.ds_member_points}</th>
+          <th class="align-center">{$Think.lang.ds_predeposit}</th>
+          <th class="align-center">{$Think.lang.member_exppoints}</th>
+          <th class="align-center">{$Think.lang.ds_membergrade}</th>
+          <th class="align-center">{$Think.lang.member_index_login}</th>
+          <th class="align-center">{$Think.lang.ds_handle}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {notempty name="member_list"}
+        {foreach name="member_list" item="v" key="k" }
+        <tr class="hover member">
+          <td class="w24"><input type="checkbox" name='del_id[]' value="{$v.member_id}" class="checkitem"></td>
+          <td class="w48 picture">
+              <div class="size-44x44">
+              <span class="thumb"><i></i>
+                  <img src="{:get_member_avatar($v.member_avatar)}?{:microtime()}"  width="44" height="44"/>
+              </span>
+          </div>
+          </td>
+          <td><p class="name"><strong>{$v.member_name}</strong>({$Think.lang.member_truename}: {$v.member_truename})</p>
+            <p class="smallfont">{$Think.lang.member_addtime}:&nbsp;{$v.member_addtime}</p>
+
+              <div class="im"><span class="email" >
+                {if $v.member_email != ''}
+                <a href="mailto:{$v.member_email}" class=" yes" title="{$Think.lang.member_email}:{$v.member_email}">{$v.member_email}</a></span>
+                {else /}
+                <a href="JavaScript:void(0);" class="" title="{$Think.lang.member_index_null}" >{$v.member_email}</a></span>
+               {/if}
+                {if $v.member_ww != ''}
+                <a target="_blank" href="http://web.im.alisoft.com/msg.aw?v=2&uid={$v.member_ww}&site=cnalichn&s=11" class="" title="WangWang: {$v.member_ww}"><img border="0" src="http://web.im.alisoft.com/online.aw?v=2&uid={$v.member_ww}&site=cntaobao&s=2&charset=utf-8" /></a>
+                {/if}
+                {if $v.member_qq != ''}
+                <a target="_blank" href="{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$v.member_qq}&site=qq&menu=yes" class=""  title="QQ: {$v.member_qq}"><img border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$v.member_qq}:52"/></a>
+                {/if}
+               {if $v.member_mobile != ''}
+               <div style="font-size:13px; padding-left:10px">&nbsp;&nbsp;{:encrypt_show($v.member_mobile,4,4)}</div>
+               {/if}
+              </div></td>
+          <td class="align-center">{$v.member_loginnum}</td>
+          <td class="w150 align-center"><p>{$v.member_logintime}</p>
+            <p>{$v.member_login_ip}</p></td>
+          <td class="align-center">{$v.member_points}</td>
+          <td class="align-center"><p>{$Think.lang.member_index_available}:&nbsp;<strong class="red">{$v.available_predeposit}</strong>&nbsp;{$Think.lang.ds_yuan}</p>
+            <p>{$Think.lang.member_index_frozen}:&nbsp;<strong class="red">{$v.freeze_predeposit}</strong>&nbsp;{$Think.lang.ds_yuan}</p>
+          </td>
+          <td class="align-center">{$v.member_exppoints}</td>
+          <td class="align-center">{$v.member_grade}</td>
+          <td class="align-center">{if $v.member_state == 1}{$Think.lang.member_edit_allow}{else/}{$Think.lang.member_edit_deny}{/if}</td>
+          <td class="align-center">
+              <a href="javascript:dsLayerOpen('{:url('Member/edit',['member_id'=>$v.member_id])}','{$Think.lang.ds_edit}-{$v.member_name}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+              <a href="javascript:dsLayerOpen('{:url('Notice/notice',['member_name'=>$v.member_name])}','{$Think.lang.member_index_to_message}-{$v.member_name}')" class="dsui-btn-add"><i class="iconfont"></i>{$Think.lang.member_index_to_message}</a>
+              {if $v.member_state == 0}
+              <a href="javascript:dsLayerConfirm('{:url('Member/memberstate',['member_id'=>$v.member_id,'member_state'=>1])}','{$Think.lang.ds_ensure_enable}')" class="dsui-btn-add"><i class="iconfont"></i>{$Think.lang.member_edit_allowlogin}</a>
+              {else/}
+              <a href="javascript:dsLayerConfirm('{:url('Member/memberstate',['member_id'=>$v.member_id,'member_state'=>0])}','{$Think.lang.ds_ensure_disable}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.member_edit_denylogin}</a>
+              {/if}
+              <a href="javascript:dsLayerOpen('{:url('Predeposit/pd_add',['member_id'=>$v.member_id])}','调节预存款-{$v.member_name}')" class="dsui-btn-edit"><i class="iconfont"></i>调节预存款</a>
+          </td>
+        </tr>
+        {/foreach}
+        {else /}
+        <tr class="no_data">
+          <td colspan="11">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+      </tbody>
+      <tfoot class="tfoot">
+        {notempty name="member_list"}
+        <tr>
+        <td class="w24"><input type="checkbox" class="checkall" id="checkallBottom"></td>
+          <td colspan="16">
+          <label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+              &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.member_edit_denylogin}</span></a>
+          </td>
+        </tr>
+        {/notempty}
+      </tfoot>
+    </table>
+    {$show_page|raw}
+
+</div>
+<script type="text/javascript">
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Member/memberstate.html?member_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_disable}');
+    }
+</script>

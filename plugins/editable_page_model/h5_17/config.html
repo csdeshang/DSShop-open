@@ -1,0 +1,27 @@
+<!-- 视频 -->
+<form onchange="changeForm($(this),17)">
+    <input type="hidden" name="model_id" value="17" />
+<h2 class="attr-title">视频</h2>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">背景颜色</label>
+    <div class="layui-input-block">
+        <div class="color-wrapper">
+            <input data-js="color" type="text" name="back_color" value="{$config_info.back_color|default=''}" />
+        </div>
+    </div>
+</div>
+<div class="layui-form-item">
+    <label class="layui-form-label sm">视频链接</label>
+    <div class="layui-input-block">
+        <input type="text" name="video" value="{$config_info.video|default=''}" placeholder="请输入视频链接" class="layui-input">
+    </div>
+</div>
+
+</form>
+<script>
+    if(typeof(loadConfig17)=='undefined'){
+        function loadConfig17(obj){
+            obj.find('[data-js="color"]').colorpicker({showOn: 'both'});
+        }
+    }
+</script>

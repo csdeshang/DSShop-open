@@ -1,0 +1,62 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+
+<div class="dsm-default-form">
+            <form method="post" id="recharge_form" action="">
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.predeposit_recharge_price}{$Think.lang.ds_colon}</dt>
+                    <dd>
+                        <input name="pdr_amount" type="text" class="text w50" id="pdr_amount" maxlength="8"/>
+                        <em class="add-on">
+                            <i class="iconfont">&#xe65c;</i>
+                        </em>
+                        <span></span>
+                    </dd>
+                </dl>
+                <dl class="bottom">
+                    <dt>&nbsp; </dt>
+                    <dd>
+                        <input type="submit" class="submit" value="{$Think.lang.ds_submit}" />
+                    </dd>
+                </dl>
+            </form>
+        </div>
+
+
+<script type="text/javascript">
+$(function(){
+	$('#recharge_form').validate({
+        errorPlacement: function(error, element){
+            var error_td = element.parent('dd').children('span');
+            error_td.append(error);
+        },
+        rules : {
+        	pdr_amount      : {
+	        	required  : true,
+	            number    : true,
+	            min       : 0.01
+            }
+        },
+        messages : {
+        	pdr_amount: {
+            	required  :'<i class="iconfont">&#xe64c;</i>{$Think.lang.predeposit_recharge_add_pricenull_error}',
+            	number    :'<i class="iconfont">&#xe64c;</i>{$Think.lang.predeposit_recharge_add_pricemin_error}',
+                min    	  :'<i class="iconfont">&#xe64c;</i>{$Think.lang.predeposit_recharge_add_pricemin_error}'
+            }
+        }
+    });
+});
+</script>
+
+
+
+
+
+
+
+{/block}

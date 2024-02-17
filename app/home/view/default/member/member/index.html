@@ -1,0 +1,111 @@
+{extend name="default/base/base_member" /}
+
+{block name="member_main"}
+<style>
+    .dsm-container .right-layout{background: none;padding:0}
+    .tabmenu{display: none}
+</style>
+<div class="mc-left">
+    <div class='mc-user'>
+        <div class="mc-user-card fl">
+            <div class="circle-top"></div>
+            <div class="circle-bottom"></div>
+            <div class="user-head fl">
+                <div class="user-canvas "> 
+                    <a href="{:url('Pointgrade/index')}" class="level_name">{$home_member_info.level_name}</a>
+                    <div class="canvas-bg">
+                        <div class="canvas-left"><div></div></div><!--起始度数-121deg为0%，增加度数到0deg时半圈结束-->
+                        <div class="canvas-right"><div></div></div><!--起始度数为为-180deg，增加度数到-59deg时为100%半圈结束-->
+                    </div>
+                </div>
+                <p class="user-img">
+                    <img src="{:get_member_avatar($home_member_info.member_avatar)}?{$Think.TIMESTAMP}">
+                </p>
+            </div>
+            <div class="mc-user-info fl ">
+                <div class="name">{$home_member_info.member_name}</div>
+                <a href="{:url('membermessage/message')}" class="link">{$Think.lang.ds_view}{$Think.lang.ds_my_news}&nbsp;&gt;</a>
+                <a href="{:url('memberinformation/index')}" class="mc-user-btn">{$Think.lang.ds_account_information}</a>
+            </div>
+        </div>
+
+        <div class="mc-user-huaban fl">
+            <ul>
+                <li>
+                    <a href="{:url('memberpoints/index')}" class="p-icon bg-blue iconfont">&#xe6b7;</a>
+                    <p class="p-dec">{$Think.lang.points_unit}</p>
+                    <p class="p-price"><span class="">{$home_member_info.member_points}</span>{$Think.lang.credit_unit}</p>
+                </li>
+                <li>
+                    <a href="{:url('membervoucher/index')}" class="p-icon bg-green3 iconfont">&#xe668;</a>
+                    <p class="p-dec">{$Think.lang.ds_vouchers}</p>
+                    <p class="p-price"><span>{$home_member_info.voucher_count}</span>{$Think.lang.ds_zhang}</p>
+                </li>
+                <li>
+                    <a href="{:url('predeposit/pd_log_list')}" class="p-icon bg-red13 iconfont f20">&#xe64f;</a>
+                    <p class="p-dec">{$Think.lang.ds_predepositnum}</p>
+                    <p class="p-price"><span class="">{$home_member_info.available_predeposit}</span>{$Think.lang.ds_yuan}</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="mc-order-portal">
+        <ul>
+            <li class="portal-icon-1">
+                <a href="{:url('Memberorder/index',['state_type'=>'state_new'])}"><span class="iconfont">&#xe6a1;{if $home_order_info.order_nopay_count}<b>{$home_order_info.order_nopay_count}</b>{/if}</span>{$Think.lang.order_nopay}</a>
+            </li>
+            <li class="portal-icon-5">
+                <a href="{:url('Memberorder/index',['state_type'=>'state_pay'])}"><span class="iconfont">&#xe6ef;{if $home_order_info.order_noship_count}<b>{$home_order_info.order_noship_count}</b>{/if}</span>{$Think.lang.order_noship}</a>
+            </li>
+            <li class="portal-icon-2">
+                <a href="{:url('Memberorder/index',['state_type'=>'state_send'])}"><span class="iconfont">&#xe6f1;{if $home_order_info.order_noreceipt_count}<b>{$home_order_info.order_noreceipt_count}</b>{/if}</span>{$Think.lang.order_noreceipt}</a>
+            </li>
+            <li class="portal-icon-3">
+                <a href="{:url('Memberorder/index',['state_type'=>'state_noeval'])}"><span class="iconfont">&#xe730;{if $home_order_info.order_noeval_count}<b>{$home_order_info.order_noeval_count}</b>{/if}</span>{$Think.lang.order_noeval}</a>
+            </li>
+            <li class="portal-icon-4">
+                <a href="{:url('memberrefund/index')}"><span class="iconfont">&#xe717;{if $home_order_info.order_refund_count}<b>{$home_order_info.order_refund_count}</b>{/if}</span>{$Think.lang.order_refund}</a>
+            </li>
+            
+        </ul>
+    </div>
+</div>    
+<div class="mc-right">
+    <div class="mc-security">
+        <div class="title">{$Think.lang.account_security}</div>
+        <div class="content">{if $home_member_info.security_level>2}{$Think.lang.high}{elseif $home_member_info.security_level>1}{$Think.lang.medium}{else}{$Think.lang.low}{/if}</div>
+        <div class="detail"><span class="iconfont bg-orange2">&#xe60e;</span>{$Think.lang.bind_mobile_phone}<span class="state fr {if $home_member_info.member_mobilebind == 1}active{/if}">{if $home_member_info.member_mobilebind == 1}{$Think.lang.bound}{else}{$Think.lang.unbound}{/if}</span></div>
+        <div class="detail"><span class="iconfont bg-purple3 f14">&#xe75a;</span>{$Think.lang.bind_mailbox}<span class="state fr {if $home_member_info.member_emailbind == 1}active{/if}">{if $home_member_info.member_emailbind == 1}{$Think.lang.bound}{else}{$Think.lang.unbound}{/if}</span></div>
+    </div>
+</div>   
+<div class="mc-left append"></div>
+<div class="mc-right append"></div>
+<div class="right-layout">
+        <div id="member_center_box" class="dsm-index-container">
+        </div>
+        <script type="text/javascript">
+            $(function() {
+                var INFO_TYPE = ['goods_info', 'sns_info','order_info'/*, 'point_info'*/];
+                function _ajax_load(type) {
+                    $.ajax({
+                        url: HOMESITEURL+'/Member/ajax_load_' + type,
+                        success: function(html) {
+                            INFO_TYPE.shift();
+                            if (INFO_TYPE[0]) {
+                                _ajax_load(INFO_TYPE[0]);
+                            }
+                            var container='.mc-left.append';
+                            switch(type){
+                                case "goods_info":
+                                    container=".mc-right.append"
+                            }
+                            $(container).append(html);
+                        }
+                    });
+                }
+                _ajax_load(INFO_TYPE[0])
+            });
+        </script>
+    </div>
+{/block}

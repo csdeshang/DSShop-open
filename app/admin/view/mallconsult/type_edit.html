@@ -1,0 +1,80 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>平台客服</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" name="form_typeadd" id="form_typeadd">
+        <input type="hidden" name="mallconsulttype_id" value="{$mallconsulttype_info.mallconsulttype_id}" />
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td colspan="2" class="required"><label class="validation">类型名称:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input class="txt" type="text" id="mallconsulttype_name" name="mallconsulttype_name" value="{$mallconsulttype_info.mallconsulttype_name}" /></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label>类型备注:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td colspan="2">
+                    {:build_editor(['name'=>'content','content'=>htmlspecialchars_decode($mallconsulttype_info.mallconsulttype_introduce)])}
+                    <textarea name="mallconsulttype_introduce" id="content"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label class="validation">排序:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input class="txt" type="text" id="mallconsulttype_sort" name="mallconsulttype_sort" value="{$mallconsulttype_info.mallconsulttype_sort}" /></td>
+                <td class="vatop tips">类型按由小到大循序排列</td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td colspan="2" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>
+<script type="text/javascript">
+    $(function(){
+        $("#form_typeadd").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                mallconsulttype_name : {
+                    required : true,
+                    maxlength : 10
+                },
+                mallconsulttype_sort : {
+                    required : true,
+                    range : [0,255]
+                }
+            },
+            messages : {
+                mallconsulttype_name : {
+                    required : '请填写咨询类型名称',
+                    maxlength : '咨询类型名称长度不能超过10个字符'
+                },
+                mallconsulttype_sort : {
+                    required : '请填写0~255之间的数字',
+                    range : '请填写0~255之间的数字'
+                }
+            }
+        });
+    });
+</script>

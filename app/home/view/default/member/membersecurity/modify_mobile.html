@@ -1,0 +1,123 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+<div class="alert alert-success">
+    <h4>{$Think.lang.operating_hints}：</h4>
+    <ul>
+        <li>{$Think.lang.verify_mobile_prompt1}</li>
+        <li>{$Think.lang.verify_mobile_prompt2}</li>
+        <li>{$Think.lang.verify_mobile_prompt3}</li>
+    </ul>
+</div>
+<div class="dsm-default-form">
+    <form method="post" id="mobile_form" action="{:url('Membersecurity/modify_mobile')}">
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.bind_mobile_phone_number}：</dt>
+            <dd>
+                <p>
+                    <input type="text" class="text"  maxlength="11" value="" name="mobile" id="mobile" />
+                    <label generated="true" class="error"></label>
+                    <a href="javascript:void(0);" id="send_auth_code" class="dsm-btn ml5"><span id="sending" style="display:none">{$Think.lang.binding_validation_information1}</span><span class="send_success_tips"><strong id="show_times" class="red mr5"></strong>{$Think.lang.binding_validation_information2}</span>{$Think.lang.binding_validation_information3}</a></p>
+                <p class="send_success_tips hint mt10">{$Think.lang.binding_validation_information4}<strong>{$Think.lang.binding_validation_information5}</strong>{$Think.lang.binding_validation_information6}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.binding_validation_information7}：</dt>
+            <dd>
+                <input type="text" class="text"  maxlength="6" value="" name="vcode" id="vcode" />
+                <label generated="true" class="error"></label>
+            </dd>
+        </dl>
+        <dl class="bottom">
+            <dt>&nbsp;</dt>
+            <dd>
+                <input type="submit" class="submit" value="{$Think.lang.immediately_binding}" />
+            </dd>
+        </dl>
+    </form>
+</div>
+
+<script type="text/javascript">
+        $('.send_success_tips').hide();
+        var ALLOW_SEND = true;
+        $(function() {
+            function StepTimes() {
+                $num = parseInt($('#show_times').html());
+                $num = $num - 1;
+                $('#show_times').html($num);
+                if ($num <= 0) {
+                    ALLOW_SEND = !ALLOW_SEND;
+                    $('.send_success_tips').hide();
+                } else {
+                    setTimeout(StepTimes, 1000);
+                }
+            }
+            $('#send_auth_code').on('click', function() {
+
+                if ($('#mobile').val() == '')
+                {
+                    layer.alert('{$Think.lang.enter_mobile_phone_number}');
+                    return false;
+                }
+                if (!ALLOW_SEND)
+                    return;
+                ALLOW_SEND = !ALLOW_SEND;
+                $('#sending').show();
+                $.getJSON(HOMESITEURL + '/Membersecurity/send_modify_mobile.html', {mobile: $('#mobile').val()}, function(data) {
+                    if (data.state == 'true') {
+                        $('#sending').hide();
+                        $('.send_success_tips').show();
+                        $('#show_times').html(60);
+                        setTimeout(StepTimes, 1000);
+                    } else {
+                        ALLOW_SEND = !ALLOW_SEND;
+                        $('#sending').hide();
+                        $('.send_success_tips').hide();
+                        layer.alert(data.msg);
+                    }
+                });
+            });
+            $('#mobile_form').validate({
+                submitHandler: function(form) {
+                    ds_ajaxpost('mobile_form', 'url', '{:url('Membersecurity/index')}')
+                },
+                rules: {
+                    mobile: {
+                        required: true,
+                        maxlength: 11,
+                        minlength: 11,
+                        digits: true
+                    },
+                    vcode: {
+                        required: true,
+                        maxlength: 6,
+                        minlength: 6,
+                        digits: true
+                    }
+                },
+                messages: {
+                    mobile: {
+                        required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_mobile_verification_number}',
+                        maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_mobile_verification_number}',
+                        minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_mobile_verification_number}',
+                        digits: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_mobile_verification_number}'
+                    },
+                    vcode: {
+                        required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_mobile_verification_code}',
+                        maxlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_mobile_verification_code}',
+                        minlength: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_mobile_verification_code}',
+                        digits: '<i class="iconfont">&#xe64c;</i>{$Think.lang.input_mobile_verification_code}'
+                    }
+                }
+            });
+        });
+    </script> 
+
+
+
+
+{/block}

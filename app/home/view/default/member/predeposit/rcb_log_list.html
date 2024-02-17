@@ -1,0 +1,59 @@
+{extend name="default/base/base_member" /}
+{block name="member_btn"}
+<a class="dsm-btn dsm-btn-blue" href="{:url('Predeposit/rechargecard_add')}"><i class="iconfont">&#xe6f0;</i>{$Think.lang.predeposit_recharge_card_recharge}</a> 
+{/block}
+{block name="member_main"}
+
+<div class="alert">
+    <span class="mr30">{$Think.lang.predeposit_available_balance}：<strong class="mr5 red" style="font-size: 18px;">{$member_info.available_rc_balance}</strong>{$Think.lang.ds_yuan}</span>
+    <span class="mr30">{$Think.lang.predeposit_freeze_balance}：<strong class="mr5 blue" style="font-size: 18px;">{$member_info.freeze_rc_balance}</strong>{$Think.lang.ds_yuan}</span>
+</div>
+<table class="dsm-default-table">
+    <thead>
+        <tr>
+            <th class="w10"></th>
+            <th class="w150 tl">{$Think.lang.predeposit_addtime}</th>
+            <th class="w150 tl">{$Think.lang.predeposit_log_stage_income}({$Think.lang.ds_yuan})</th>
+            <th class="w150 tl">{$Think.lang.predeposit_spending}({$Think.lang.ds_yuan})</th>
+            <th class="w150 tl">{$Think.lang.predeposit_freeze}({$Think.lang.ds_yuan})</th>
+            <th class="tl">{$Think.lang.predeposit_log_desc}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {notempty name="rcblog_list"}
+        {foreach name="rcblog_list" item="v"  }
+        <tr class="bd-line">
+            <td></td>
+            <td class="goods-time tl"><?php echo @date('Y-m-d H:i:s',$v['rcblog_addtime']);?></td>
+            {php}$availableFloat = (float) $v['available_amount'];{/php}
+            {if $availableFloat > 0}
+            <td class="tl red">+{$v.available_amount}</td>
+            <td class="tl green"></td>
+            {elseif $availableFloat < 0 /}
+            <td class="tl red"></td>
+            <td class="tl green">{$v.available_amount}</td>
+            {else/}
+            <td class="tl red"></td>
+            <td class="tl green"></td>
+            {/if}
+            <td class="tl blue"><?php echo floatval($v['freeze_amount']) ? (floatval($v['freeze_amount']) > 0 ? '+' : null ).$v['freeze_amount'] : null;?></td>
+            <td class="tl">{$v.rcblog_description}</td>
+        </tr>
+        {/foreach}
+        {else/}
+        <tr>
+            <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+        </tr>
+        {/notempty}
+    </tbody>
+    <tfoot>
+        {notempty name="rcblog_list"}
+        <tr>
+            <td colspan="20"><div class="pagination"> {$show_page|raw}</div></td>
+        </tr>
+        {/notempty}
+    </tfoot>
+</table>
+
+
+{/block}

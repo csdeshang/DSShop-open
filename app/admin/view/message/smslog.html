@@ -1,0 +1,111 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>短信记录</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.ds_member_name}</dt>
+                <dd><input class="txt" name="member_name" value="{$Request.get.member_name}" type="text"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.smslog_phone}</dt>
+                <dd><input class="txt" name="smslog_phone" value="{$Request.get.smslog_phone}" type="text"></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.smslog_smstime}</dt>
+                <dd>
+                    <input class="txt date" type="text" value="{$Request.get.add_time_from}" id="add_time_from" name="add_time_from">
+                    ~
+                    <input class="txt date" type="text" value="{$Request.get.add_time_to}" id="add_time_to" name="add_time_to"/>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Message/smslog')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+
+
+    <table class="ds-default-table">
+        <thead>
+            <tr class="thead">
+                <th class="w24"></th>
+                <th class="w96">{$Think.lang.ds_member_name}</th>
+                <th class="w120">{$Think.lang.smslog_phone}</th>
+                <th class="w96">{$Think.lang.smslog_captcha}</th>
+                <th>{$Think.lang.smslog_msg}</th>
+                <th class="w96">{$Think.lang.smslog_type}</th>
+                <th class="w120">{$Think.lang.smslog_smstime}</th>
+                <th class="w120">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="smslog_list"}
+            {foreach name="smslog_list" item="v"}
+            <tr class="hover">
+                <td class="w48"><input type="checkbox" name="check_smslog_id[]" value="{$v.smslog_id}" class="checkitem">
+                <td>{$v.member_name}</td>
+                <td>{$v.smslog_phone}</td>
+                <td>{$v.smslog_captcha}</td>
+                <td>{$v.smslog_msg}</td>
+                <td>{$v.smslog_type}</td>
+                <td>{$v.smslog_smstime|date="Y-m-d H:i:s"}</td>
+                <td>
+                    <a href="javascript:dsLayerConfirm('{:url('message/smslog_del',['smslog_id'=>$v.smslog_id])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+            {/foreach}
+            {else}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+        <tfoot>
+        {notempty name="smslog_list"}
+        <tr class="tfoot">
+            <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+            <td colspan="16"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+            </td>
+        </tr>
+        {/notempty}
+        </tfoot>
+    </table>
+    {$show_page|raw}
+
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#add_time_from').datepicker({dateFormat: 'yy-mm-dd',onSelect:function(dateText,inst){
+            var year2 = dateText.split('-') ;
+            $('#add_time_to').datepicker( "option", "minDate", new Date(parseInt(year2[0]),parseInt(year2[1])-1,parseInt(year2[2])+1) );
+        }});
+        $('#add_time_to').datepicker({dateFormat: 'yy-mm-dd',onSelect:function(dateText,inst){
+            var year1 = dateText.split('-') ;
+            $('#add_time_from').datepicker( "option", "maxDate", new Date(parseInt(year1[0]),parseInt(year1[1])-1,parseInt(year1[2])-1) );
+        }});
+    });
+</script>
+<script type="text/javascript">
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/message/smslog_del.html?smslog_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+</script>

@@ -1,0 +1,64 @@
+<div class="eject_con">
+    <div id="warning"></div>
+    {if $order_info }
+    <form method="post" action="{:url('Memberorder/change_state',['state_type'=>'order_cancel','order_id'=>$order_info.order_id])}" id="order_cancel_form">
+        <dl>
+            <dt>{$Think.lang.member_order_sn}{$Think.lang.ds_colon}</dt>
+            <dd><span class="num">{$order_info.order_sn}</span></dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.member_change_cancel_reason}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <ul class="eject_con-list">
+                    <li>
+                        <input type="radio" class="radio" checked name="state_info" id="d1" value="{$Think.lang.member_change_other_goods}" />
+                        <label for="d1">{$Think.lang.member_change_other_goods}</label>
+                    </li>
+                    <li>
+                        <input type="radio" class="radio" name="state_info" id="d2" value="{$Think.lang.member_change_other_shipping}" />
+                        <label for="d2">{$Think.lang.member_change_other_shipping}</label>
+                    </li>
+                    <li>
+                        <input type="radio" class="radio" name="state_info" id="d3" value="{$Think.lang.member_change_other_platform}" />
+                        <label for="d3">{$Think.lang.member_change_other_platform}</label>
+                    </li>
+                    <li>
+                        <input type="radio" class="radio" name="state_info" flag="other_reason" id="d4" value="" />
+                        <label for="d4">{$Think.lang.member_change_other_reason}</label>
+                    </li>
+                    <li id="other_reason" style="display:none;">
+                        <textarea name="state_info1" class="textarea w300 h50" rows="2" id="other_reason_input"></textarea>
+                    </li>
+                </ul>
+            </dd>
+        </dl>
+        <div class="bottom">
+            <input type="submit" id="confirm_button" class="submit" value="{$Think.lang.ds_ok}{$Think.lang.ds_submit}" />
+            <a class="dsm-btn ml5" href="javascript:DialogManager.close('buyer_order_cancel_order');">{$Think.lang.ds_cancel}</a>
+        </div>
+    </form>
+    {else /}
+    <p style="line-height:80px;text-align:center">{$Think.lang.check_parameters_correct}</p>
+    {/if}
+</div>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#order_cancel_form').validate({
+            submitHandler:function(form){
+                ds_ajaxpost('order_cancel_form','url',"{:url('Memberorder/index')}");
+            }
+        });
+    });
+$(function(){
+       $("input[name='state_info']").click(function(){
+        if ($(this).attr('flag') == 'other_reason')
+        {
+            $('#other_reason').show();
+        }
+        else
+        {
+            $('#other_reason').hide();
+        }
+    });
+});
+</script>

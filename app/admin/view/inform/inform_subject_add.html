@@ -1,0 +1,73 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>举报管理</h3>
+                <h5></h5>
+            </div>
+        </div>
+    </div>
+
+    <form id="add_form" method="post" enctype="multipart/form-data" action="{:url('Inform/inform_subject_save')}">
+        <table class="ds-default-table">
+            <tbody>
+            <tr class="noborder">
+                <td colspan="2" class="required">{$Think.lang.inform_type}:</td>
+            </tr>
+            <tr>
+                <td colspan="2"><ul class="nofloat">
+                    {foreach name="informsubjecttype_list" item="inform_type"}
+                    <li>
+                        <p>
+                            <input type='radio' name="inform_subject_type" id="{$inform_type.informtype_id},{$inform_type.informtype_name}" value ="{$inform_type.informtype_id},{$inform_type.informtype_name}">
+                            <label for="{$inform_type.informtype_id},{$inform_type.informtype_name}">{$inform_type.informtype_name}:</label>
+                            </input>
+                            &nbsp;&nbsp;<span style="color:green" >{$inform_type.informtype_desc}</span></p>
+                    </li>
+                    {/foreach}
+                </ul></td>
+            </tr>
+            <tr>
+                <td colspan="2" class="required"><label class="validation"  for="informsubject_content">{$Think.lang.inform_subject}:</label></td>
+            </tr>
+            <tr class="noborder">
+                <td class="vatop rowform"><input type="text" id="informsubject_content" name="informsubject_content" class="txt"></td>
+                <td class="vatop tips"></td>
+            </tr>
+            <tfoot>
+            <tr class="tfoot"><td colspan="15" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+            </tr>
+            </tfoot>
+        </table>
+    </form>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function(){
+        //默认选中第一个radio
+        $(":radio").first().attr("checked",true);
+        //页面输入内容验证
+        $("#add_form").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules : {
+                informsubject_content: {
+                    required : true,
+                    maxlength : 100
+                }
+            },
+            messages : {
+                informsubject_content: {
+                    required : '{$Think.lang.inform_subject_add_null}',
+                    maxlength : '{$Think.lang.inform_subject_add_null}'
+                }
+            }
+        });
+    });
+</script>

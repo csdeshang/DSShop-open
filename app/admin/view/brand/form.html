@@ -1,0 +1,152 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+        <form id="brand_form" method="post" name="form1" enctype="multipart/form-data">
+            <input type="hidden" name="brand_id" value="{$brand_array.brand_id}" />
+            <table class="ds-default-table">
+                <tbody>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation">{$Think.lang.brand_index_name}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="{$brand_array.brand_name}" name="brand_name" id="brand_name" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="validation">{$Think.lang.brand_name_initial}:</label></td>
+                    <td class="vatop rowform"><input type="text" value="{$brand_array.brand_initial}" name="brand_initial" id="brand_initial" class="txt"></td>
+                    <td class="vatop tips">{$Think.lang.brand_name_initial_tips}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.brand_index_class}: </td>
+                    <td class="vatop rowform" id="gcategory"><input type="hidden" value="{$brand_array.gc_id}" name="class_id" class="mls_id">
+                        <input type="hidden" value="{$brand_array.brand_class}" name="brand_class" class="mls_name">
+                        <span class="mr10">{$brand_array.brand_class}</span>
+                        {notempty name="brand_array.class_id"}
+                        <input class="edit_gcategory" type="button" value="{$Think.lang.ds_edit}">
+                        {/notempty}
+                        <select {notempty name="brand_array.class_id"}style="display:none;"{/notempty} class="class-select">
+                        <option value="0">{$Think.lang.ds_please_choose}...</option>
+                        {notempty name="gc_list"}
+                        {foreach name="gc_list" item="v"}
+                       {if $v.gc_parent_id == '0'}
+                        <option value="{$v.gc_id}">{$v.gc_name}</option>
+                        {/if}
+                        {/foreach}
+                       {/notempty}
+                        </select>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.brand_index_class_tips}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.brand_index_pic_sign}: </td>
+                    <td class="vatop rowform">
+                        {notempty name="$brand_array.brand_pic"}
+                        <span class="type-file-show"> <img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                            <div class="type-file-preview" style="display: none;"><img id="view_img" src="{:ds_get_pic(ATTACH_BRAND,$brand_array.brand_pic)}"></div>
+                        </span>
+                        {/notempty}
+                        <span class="type-file-box">
+                            <input type='text' name='brand_pic' id='brand_pic' class='type-file-text' />
+                            <input type='button' name='button' id='button' value='上传' class='type-file-button' />
+                            <input name="_pic" type="file" class="type-file-file" id="_pic" size="30" hidefocus="true" />
+                        </span>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.brand_index_upload_tips}{$Think.lang.brand_add_support_type}gif,jpg,png</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.brand_showtype}: </td>
+                    <td class="vatop rowform">
+                        <input id="brand_showtype_0" type="radio" {if $brand_array.brand_showtype==0}checked{/if} value="0" style="margin-bottom:6px;" name="brand_showtype" />
+                        <label for="brand_showtype_0">{$Think.lang.brand_showtype_img}</label>
+                        <input id="brand_showtype_1" type="radio" {if $brand_array.brand_showtype==1}checked{/if} value="1" style="margin-bottom:6px;" name="brand_showtype" />
+                        <label for="brand_showtype_1">{$Think.lang.brand_showtype_text}</label>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.brand_showtype_tips}</td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.brand_add_if_recommend}: </td>
+                    <td class="vatop rowform onoff"><label for="brand_recommend1" class="cb-enable {if $brand_array.brand_recommend == '1'}selected{/if}" title="{$Think.lang.ds_yes}"><span>{$Think.lang.ds_yes}</span></label>
+                        <label for="brand_recommend0" class="cb-disable {if $brand_array.brand_recommend == '0'}selected{/if}" title="{$Think.lang.ds_no}"><span>{$Think.lang.ds_no}</span></label>
+                        <input id="brand_recommend1" name="brand_recommend" {if $brand_array.brand_recommend == '1'}checked="checked"{/if} value="1" type="radio">
+                        <input id="brand_recommend0" name="brand_recommend" {if $brand_array.brand_recommend == '0'}checked="checked"{/if} value="0" type="radio"></td>
+                    <td class="vatop tips">{$Think.lang.brand_index_recommend_tips}</td>
+                </tr>
+                <tr>
+                    
+                </tr>
+                <tr class="noborder">
+                    <td class="required">{$Think.lang.ds_sort}: </td>
+                    <td class="vatop rowform"><input type="text" value="{$brand_array.brand_sort}" name="brand_sort" id="brand_sort" class="txt"></td>
+                    <td class="vatop tips">{$Think.lang.brand_add_update_sort}</td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<script>
+    $("#_pic").change(function () {
+        $("#brand_pic").val($(this).val());
+    });
+    //按钮先执行验证再提交表单
+    $(function(){
+        // 编辑分类时清除分类信息
+        $('.edit_gcategory').click(function(){
+            $('input[name="class_id"]').val('');
+            $('input[name="brand_class"]').val('');
+        });
+        jQuery.validator.addMethod("initial", function(value, element) {
+            return /^[A-Za-z0-9]$/i.test(value);
+        }, "");
+        $("#brand_form").validate({
+            errorPlacement: function(error, element){
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules : {
+                brand_name : {
+                    required : true,
+                    remote   : {
+                        url :"{:url('Brand/ajax',['branch'=>'check_brand_name'])}",
+                        type:'get',
+                        data:{
+                            brand_name : function(){
+                                return $('#brand_name').val();
+                            },
+                            id  : '{$brand_array.brand_id}'
+                        }
+                    }
+                },
+                brand_initial : {
+                    initial  : true
+                },
+                brand_sort : {
+                    number   : true,
+                    range : [0,255]
+                }
+            },
+            messages : {
+                brand_name : {
+                    required : '{$Think.lang.brand_add_name_null}',
+                    remote   : '{$Think.lang.brand_add_name_exists}'
+                },
+                brand_initial : {
+                    initial : '{$Think.lang.brand_add_initial}'
+                },
+                brand_sort  : {
+                    number   : '{$Think.lang.brand_add_sort_int}',
+                    range : '{$Think.lang.class_sort_explain}'
+                }
+            }
+        });
+    });
+
+    gcategoryInit('gcategory');
+</script>

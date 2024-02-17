@@ -1,0 +1,46 @@
+{include file="public/header" /}
+
+<div class="page">
+    <form id="user_form" enctype="multipart/form-data" method="post">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td class="required w120">{$Think.lang.consult_list_consult_content}{$Think.lang.ds_colon}</td>
+                    <td class="vatop rowform">{:nl2br($consult.consult_content)}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="validation" for="member_password">{$Think.lang.consult_list_reply_consult}{$Think.lang.ds_colon}</label></td>
+                    <td class="vatop rowform"><textarea  name="content" rows="3" class="w300" maxlength="150">{:nl2br($consult.consult_reply)}</textarea></td>
+                    <td class="vatop tips"></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script type="text/javascript">
+    $(function() {
+        $('#user_form').validate({
+            errorPlacement: function(error, element) {
+                error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                content: {
+                    required: true,
+                    maxlength: 200
+                }
+            },
+            messages: {
+                member_name: {
+                    required: '{$Think.lang.consult_reply_input_content}',
+                    maxlength: '{$Think.lang.consult_reply_input_content_tip}'
+                }
+            }
+        });
+    });
+</script>

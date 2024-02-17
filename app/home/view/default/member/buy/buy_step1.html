@@ -1,0 +1,141 @@
+{include file="default/base/mall_top" /}
+
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js"></script>
+<!--{if $Think.config.ds_config.mapak_type eq '1'}-->
+<script type="text/javascript">
+        window._AMapSecurityConfig = {
+            securityJsCode:"{$Think.config.ds_config.gaode_jscode}",
+        }
+</script>
+<script type="text/javascript" src="//webapi.amap.com/maps?v=2.0&key={$Think.config.ds_config.gaode_ak}"></script>
+<!--{else}-->
+<script type="text/javascript" src="{$Think.HTTP_TYPE}api.map.baidu.com/api?v=2.0&ak={$Think.config.ds_config.baidu_ak}"></script>
+<!--{/if}-->
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+    <ul class="dsc-flow">
+        <li class=""><i class="iconfont">&#xe69a;</i>
+            <p>{$Think.lang.ds_my_shopping_cart}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class="current"><i class="iconfont">&#xe731;</i>
+            <p>{$Think.lang.cart_index_ensure_info}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe64f;</i>
+            <p>{$Think.lang.cart_index_payment}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe67e;</i>
+            <p>{$Think.lang.cart_index_buy_finish}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+    </ul>
+</div>
+<div class="dsc-line"></div>
+<form method="post" id="order_form" name="order_form" action="{:url('Buy/buy_step2')}">
+    {include file="default/member/buy/buy_fcode" /} 
+    <div class="dsc-main">
+        <div class="dsc-title">
+            <h3>{$Think.lang.cart_index_ensure_info}</h3>
+            <h5>{$Think.lang.check_information}</h5>
+        </div>
+        {include file="default/member/buy/buy_address" /}
+        {include file="default/member/buy/buy_payment" /}
+        {include file="default/member/buy/buy_invoice" /}
+        {include file="default/member/buy/buy_goods_list" /}
+        {include file="default/member/buy/buy_amount" /}
+        <!-- 订单来源1为PC 2为手机 -->
+        <input value="1" type="hidden" name="order_from">
+        <!-- 来源于购物车标志 -->
+        <input value="{$ifcart}" type="hidden" name="ifcart">
+        <!-- offline/online -->
+        <input value="online" name="pay_name" id="pay_name" type="hidden">
+        <!-- 是否保存增值税发票判断标志 -->
+        <input value="{$vat_hash}" name="vat_hash" type="hidden">
+        <!-- 收货地址ID -->
+        <input value="{$address_info.address_id}" name="address_id" id="address_id" type="hidden">
+        <!-- 城市ID(运费) -->
+        <input value="" name="buy_city_id" id="buy_city_id" type="hidden">
+        
+        <!-- 记录所选地区是否支持货到付款 第一个前端JS判断 第二个后端PHP判断 -->
+        <input value="" id="allow_offpay" name="allow_offpay" type="hidden">
+        <input value="" id="allow_offpay_batch" name="allow_offpay_batch" type="hidden">
+        <input value="" id="offpay_hash" name="offpay_hash" type="hidden">
+        <input value="" id="offpay_hash_batch" name="offpay_hash_batch" type="hidden">
+
+        <input value="{present name='inv_info.invoice_id'}{$inv_info.invoice_id}{/present}" name="invoice_id" id="invoice_id" type="hidden">
+    </div>
+</form>
+
+
+<script>
+var SUBMIT_FORM = true;
+//计算总运费小计
+function calcOrder() {
+    var allTotal = 0;
+    $('em[ds_type="eachStoreTotal"]').each(function(){
+        var eachTotal = 0;
+        if ($('#eachFreight_').length > 0) {
+        	eachTotal += parseFloat($('#eachFreight_').html());
+	    }
+        if ($('#eachGoodsTotal_').length > 0) {
+        	eachTotal += parseFloat($('#eachGoodsTotal_').html());
+	    }
+        if ($('#eachManSong_').length > 0) {
+        	eachTotal += parseFloat($('#eachManSong_').html());
+	    }
+        if ($('#eachVoucher_').length > 0) {
+        	eachTotal += parseFloat($('#eachVoucher_').html());
+        }
+        $(this).html(number_format(eachTotal,2));
+        allTotal += eachTotal;
+    });
+    $('#orderTotal').html(number_format(allTotal,2));
+}
+$(function(){
+    $.ajaxSetup({
+        async : false
+    });
+    $('select[dstype="voucher"]').on('change',function(){
+        if ($(this).val() == '') {
+        	$('#eachVoucher_').html('-0.00');
+        } else {
+            var items = $(this).val().split('|');
+            $('#eachVoucher_').html('-'+number_format(items[1],2));
+        }
+        calcOrder();
+    });
+    
+
+});
+    function disableOtherEdit(showText) {
+        $('a[ds_type="buy_edit"]').each(function() {
+            if ($(this).css('display') != 'none') {
+                $(this).after('<font color="#B0B0B0">' + showText + '</font>');
+                $(this).hide();
+            }
+        });
+        disableSubmitOrder();
+    }
+    function ableOtherEdit() {
+        $('a[ds_type="buy_edit"]').show().next('font').remove();
+        ableSubmitOrder();
+    }
+    function ableSubmitOrder() {
+        $('#submitOrder').on('click', function() {
+            submitNext()
+        }).css('cursor', '').addClass('dsc-btn-acidblue');
+    }
+    function disableSubmitOrder() {
+        $('#submitOrder').unbind('click').css('cursor', 'not-allowed').removeClass('dsc-btn-acidblue');
+    }
+</script>
+{include file="default/base/mall_footer" /}

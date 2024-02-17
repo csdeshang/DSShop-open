@@ -1,0 +1,92 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+<form method="get">
+            <table class="dsm-search-table">
+                <tr>
+                    <td>&nbsp;</td>
+                    <th>{$Think.lang.refund_buyer_add_time}</th>
+                    <td class="w240"><input type="text" class="text w70" name="add_time_from" id="add_time_from" value="{$Request.param.add_time_from}" /><label class="add-on"><i class="iconfont">&#xe8d6;</i></label>&nbsp;&#8211;&nbsp;<input id="add_time_to" type="text" class="text w70"  name="add_time_to" value="{$Request.param.add_time_to}" /><label class="add-on"><i class="iconfont">&#xe8d6;</i></label></td>
+                    <th><select name="type">
+                            <option value="order_sn" {if condition="$Request.param.type eq 'order_sn'"}selected{/if}>{$Think.lang.return_order_ordersn}</option>
+                            <option value="return_sn" {if condition="$Request.param.type eq 'return_sn'"}selected{/if}>{$Think.lang.return_order_returnsn}</option>
+                            <option value="goods_name" {if condition="$Request.param.type eq 'goods_name'"}selected{/if}>{$Think.lang.ds_goods_name}</option>
+                        </select></th>
+                    <td class="w160"><input type="text" class="text w150" name="key" value="{$Request.param.key}" /></td>
+                    <td class="w70 tc">
+                        <input type="submit" class="submit" value="{$Think.lang.ds_search}" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <table class="dsm-default-table order">
+            <thead>
+                <tr>
+                    <th class="w10"></th>
+                    <th colspan="2">{$Think.lang.ds_goods}</th>
+                    <th class="w100">{$Think.lang.refund_order_refund}（{$Think.lang.ds_yuan}）</th>
+                    <th class="w100">{$Think.lang.return_order_return}（{$Think.lang.piece}）</th>
+                    <th class="w100">{$Think.lang.return_state}</th>
+                    <th class="w100">{$Think.lang.platform_confirmation}</th>
+                    <th class="w100">{$Think.lang.ds_handle}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {notempty name="return_list"}
+                {foreach name="return_list" item="val" key="key" }
+                <tr>
+                    <td colspan="20" class="sep-row"></td>
+                </tr>
+                <tr>
+                    <th colspan="20"> <span class="fl ml10">{$Think.lang.return_order_returnsn}{$Think.lang.ds_colon}{$val.refund_sn}</span><span>{$Think.lang.refund_buyer_add_time}{$Think.lang.ds_colon}{$val.add_time|date="Y-m-d H:i:s"}</span>
+                    </th>
+                </tr>
+                <tr>
+                    <td class="bdl"></td>
+                    <td class="w50"><div class="pic-thumb"><a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}" target="_blank"><img src="{:goods_thumb($val,240)}"/></a></div></td>
+                    <td class="tl"><dl class="goods-name">
+                            <dt><a href="{:url('Goods/index',['goods_id'=>$val.goods_id])}" target="_blank">{$val.goods_name}</a></dt>
+                            <dd>{$Think.lang.refund_order_ordersn}{$Think.lang.ds_colon}<a href="{:url('Memberorder/show_order',['order_id'=>$val.order_id])}" target="_blank">{$val.order_sn}</a></dd>
+                        </dl></td>
+                    <td>{$val.refund_amount}</td>
+                    <td>{if $val.return_type == '2'}{$val.goods_num}{else/}{$Think.lang.ds_none}{/if}</td>
+                    <td>{$state_array[$val['examine_type']]}</td>
+                    <td>{if ($val['examine_type'] == 2 && $val['refund_state'] >= 2)}{$admin_array[$val['refund_state']]}{else/}已审核{/if}</td>
+                    <td class="bdr">
+                        {if ($val['examine_type'] == 2 && $val['return_type'] == 2 && $val['goods_state'] == 1)}
+                        <p><a href="{:url('Memberreturn/ship',['return_id'=>$val.refund_id])}" class="dsm-btn">{$Think.lang.return}</a></p>
+                        {else/}
+                        <a href="{:url('Memberreturn/view',['return_id'=>$val.refund_id])}" class="dsm-btn">{$Think.lang.ds_view}</a>
+                        {/if}
+                        {if ($val['examine_type'] == 2 && $val['return_type'] == 2 && $val['goods_state'] == 3)}
+                        <p><a href="javascript:void(0)" class="dsm-btn dsm-btn-orange" ds_type="dialog" dialog_title="{$Think.lang.delay_time}" dialog_id="return_delay" dialog_width="480" uri="{:url('Memberreturn/delay',['return_id'=>$val.refund_id])}"> {$Think.lang.delay} </a></p>
+                        {/if}
+                    </td>
+                </tr>
+                {/foreach}
+                {else /}
+                <tr>
+                    <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+                </tr>
+                {/notempty}
+            </tbody>
+            <tfoot>
+                {notempty name="return_list"}
+                <tr>
+                    <td colspan="20"><div class="pagination">{$show_page|raw}</div></td>
+                </tr>
+                {/notempty}
+            </tfoot>
+        </table>
+
+        <script type="text/javascript">
+                $(function(){
+                    $('#add_time_from').datepicker({dateFormat: 'yy-mm-dd'});
+                    $('#add_time_to').datepicker({dateFormat: 'yy-mm-dd'});
+                });
+        </script>
+
+
+
+
+
+{/block}

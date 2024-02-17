@@ -1,0 +1,65 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>上传设置</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" name="form1" action="">
+        <div class="ncap-form-default">
+            <dl>
+                <dt>{$Think.lang.default_goods_image}</dt>
+                <dd>
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_config.default_goods_image)}?{$Think.TIMESTAMP}"></div>
+                    </span>
+                    <span class="type-file-box"><input type='text' name='textfield' id='textfield1' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                        <input name="default_goods_image" type="file" class="type-file-file" id="default_goods_image" size="30" hidefocus="true" ds_type="change_default_goods_image">
+                    </span>
+                    <p class="notic">建议上传图片像素为 300px X 300px</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.default_user_portrait}</dt>
+                <dd>
+                    <span class="type-file-show"><img class="show_image" src="{$Think.ADMIN_SITE_ROOT}/images/preview.png">
+                        <div class="type-file-preview"><img src="{:ds_get_pic(ATTACH_COMMON,$list_config.default_user_portrait)}?{$Think.TIMESTAMP}"></div>
+                    </span>
+                    <span class="type-file-box"><input type='text' name='textfield' id='textfield4' class='type-file-text' /><input type='button' name='button' id='button1' value='上传' class='type-file-button' />
+                        <input name="default_user_portrait" type="file" class="type-file-file" id="default_user_portrait" size="30" hidefocus="true" ds_type="change_default_user_portrait">
+                    </span>
+                    <p class="notic">128px * 128px</p>
+                </dd>
+            </dl>
+            <dl>
+                <dt></dt>
+                <dd><a href="JavaScript:void(0);" class="btn" onclick="document.form1.submit()">确认提交</a></dd>
+            </dl>
+        </div>
+        
+
+    </form>
+
+
+
+
+</div>
+<script>
+    $(function(){
+        $("#default_goods_image").change(function () {
+            $("#textfield1").val($("#default_goods_image").val());
+        });
+        $("#default_user_portrait").change(function () {
+            $("#textfield4").val($("#default_user_portrait").val());
+        });
+
+       
+    })
+</script>

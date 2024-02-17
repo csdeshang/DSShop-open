@@ -1,0 +1,171 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>会员统计</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" action="" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dd>
+                    <select name="search_type" id="search_type" class="querySelect">
+                        <option value="day" {if isset($search_arr.search_type) && $search_arr.search_type == 'day'}selected{/if}>按照天统计</option>
+                        <option value="week" {if isset($search_arr.search_type) && $search_arr.search_type == 'week'}selected{/if}>按照周统计</option>
+                        <option value="month" {if isset($search_arr.search_type) && $search_arr.search_type == 'month'}selected{/if}>按照月统计</option>
+                    </select>
+                </dd>
+                <dd id="searchtype_day" style="display:none;">
+                    <input class="txt date" type="text" value="{:date('Y-m-d',$search_arr.day.search_time)}" id="search_time" name="search_time">
+                </dd>
+                <dd id="searchtype_week" style="display:none;">
+                    <select name="searchweek_year" class="querySelect">
+                        {foreach name="year_arr" item="v"}
+                        <option value="{$key}" {$search_arr.week.current_year == $key ? 'selected': ''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchweek_month" class="querySelect">
+                        {foreach name="month_arr" item="v"}
+                        <option value="{$key}" {$search_arr.week.current_month == $key ? 'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchweek_week" class="querySelect">
+                        {foreach name="week_arr" item="v"}
+                        <option value="{$v.key}" {$search_arr.week.current_week == $v['key'] ? 'selected' :''}>{$v.val}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+                <dd id="searchtype_month" style="display:none;">
+                    <select name="searchmonth_year" class="querySelect">
+                        {foreach name="year_arr" item="v"}
+                        <option value="{$key}" {$search_arr.month.current_year == $key?'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                    <select name="searchmonth_month" class="querySelect">
+                        {foreach name="month_arr" item="v"}
+                        <option value="{$key}" {$search_arr.month.current_month == $key?'selected':''}>{$v}</option>
+                        {/foreach}
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:void(0);" id="dssubmit" class="btn" title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                <a href="{:url('Statmember/newmember')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+
+   <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>统计图展示了时间段内新增会员数的走势和与前一时间段的对比</li>
+            <li>统计表展示了时间段内新增会员数值和与前一时间段的同比数值，点击每条记录后的“查看”，了解新增会员的详细信息</li>
+            <li>点击列表上方的“导出Excel”，将列表数据导出为Excel文件</li>
+        </ul>
+    </div>
+  <div id="container" class="w100pre close_float" style="height:400px"></div>
+
+  <div style="text-align:right;">
+  	<input type="hidden" id="export_type" data-url="{:url(request()->controller().'/'.request()->action())}/exporttype/excel" name="export_type" data-param='{"url":"{$actionurl}&exporttype=excel"}' value="excel"/>
+  	<a class="btn btn-mini" href="javascript:void(0);" id="export_btn"><span>导出Excel</span></a>
+  </div>
+  <table class="ds-default-table">
+    <thead>
+      <tr class="thead">
+        {foreach name="statlist.headertitle" item="v"}
+        <th class="align-center">{$v}</th>
+      {/foreach}
+        <th class="align-center">{$Think.lang.ds_handle}</th>
+      </tr>
+    </thead>
+    <tbody id="datatable">
+    {notempty name="statlist.data"}
+   {foreach name="statlist.data" item="v"}
+      <tr class="hover">
+        <td class="align-center">{$v.timetext}</td>
+        <td class="align-center">{$v.updata}</td>
+        <td class="align-center">{$v.currentdata}</td>
+        <td class="align-center">{$v.tbrate}</td>
+        <td class="align-center">
+        	<a href="{:url('Statmember/showmember',['type'=>'newbyday','t'=>$v.seartime])}>"  class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_view}</a>
+        </td>
+      </tr>
+   {/foreach}
+    <tr class="hover">
+        <td class="align-center"><b>总计</b></td>
+        <td class="align-center">{$count_arr.up}</td>
+        <td class="align-center">{$count_arr.curr}</td>
+        <td class="align-center">{$count_arr.tbrate}</td>
+        <td class="align-center">
+        	<a href="{:url('Statmember/showmember',['type'=>'newbyday','t'=>$count_arr.seartime])}"  class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_view}</a>
+        </td>
+      </tr>
+   {else /}
+    <tr class="no_data">
+      	<td colspan="15">{$Think.lang.no_record}</td>
+      </tr>
+    {/notempty}
+    </tbody>
+  </table>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/highcharts/highcharts.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/statistics.js"></script>
+
+<script>
+//展示搜索时间框
+function show_searchtime(){
+    s_type = $("#search_type").val();
+    $("[id^='searchtype_']").hide();
+    $("#searchtype_"+s_type).show();
+}
+$(function () {
+    //统计数据类型
+    var s_type = $("#search_type").val();
+    $('#search_time').datepicker({dateFormat: 'yy-mm-dd'});
+
+    show_searchtime();
+    $("#search_type").change(function(){
+        show_searchtime();
+    });
+
+    //更新周数组
+    $("[name='searchweek_month']").change(function(){
+        var year = $("[name='searchweek_year']").val();
+        var month = $("[name='searchweek_month']").val();
+        $("[name='searchweek_week']").html('');
+        $.getJSON(ADMINSITEURL+'/Common/getweekofmonth',{y:year,m:month},function(data){
+            if(data != null){
+                for(var i = 0; i < data.length; i++) {
+                    $("[name='searchweek_week']").append('<option value="'+data[i].key+'">'+data[i].val+'</option>');
+                }
+            }
+        });
+    });
+
+    $('#container').highcharts({$stat_json|raw});
+
+    $('#dssubmit').click(function(){
+        $('#formSearch').submit();
+    });
+
+    //导出图表
+    $("#export_btn").click(function(){
+        var item = $("#export_type");
+        var type = $(item).val();
+        if(type == 'excel'){
+            export_xls(item.attr('data-url').replace('.html',''));
+        }
+    });
+});
+</script>

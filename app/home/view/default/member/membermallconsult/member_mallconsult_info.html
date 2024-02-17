@@ -1,0 +1,83 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+<div class="dsm-flow-layout">
+            <div id="dsmInformFlow" class="dsm-flow-container">
+                <div class="title">
+                    <h3>{$Think.lang.consulting_platform_customer_service}</h3>
+                </div>
+                <div class="dsm-flow-step">
+                    <dl class="step-first current">
+                        <dt>{$Think.lang.filling_consulting_content}</dt>
+                        <dd class="bg"></dd>
+                    </dl>
+                    <dl class="{if $consult_info.mallconsult_isreply == 1}current{/if}">
+                        <dt>{$Think.lang.platform_customer_service_reply}</dt>
+                        <dd class="bg"> </dd>
+                    </dl>
+                    <dl class="{if $consult_info.mallconsult_isreply == 1}current{/if}">
+                        <dt>{$Think.lang.consultation_completed}</dt>
+                        <dd class="bg"> </dd>
+                    </dl>
+                </div>
+                <div class="dsm-default-form">
+                    <dl>
+                        <dt>{$Think.lang.type_consultation}{$Think.lang.ds_colon}</dt>
+                        <dd>
+                            {$type_list[$consult_info.mallconsulttype_id]['mallconsulttype_name']}
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>{$Think.lang.content_consultation}{$Think.lang.ds_colon}</dt>
+                        <dd>
+                            {$consult_info.mallconsult_content}
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>{$Think.lang.consultation_time}{$Think.lang.ds_colon}</dt>
+                        <dd>
+                            {:date('Y-m-d H:i:s',$consult_info.mallconsult_addtime)}
+                        </dd>
+                    </dl>
+                    <dl>
+                        <dt>{$Think.lang.reply_status}{$Think.lang.ds_colon}</dt>
+                        <dd>
+                            {$state[$consult_info.mallconsult_isreply]}
+                        </dd>
+                    </dl>
+                    {if $consult_info.mallconsult_isreply == 1}
+                    <dl>
+                        <dt>{$Think.lang.reply_content}{$Think.lang.ds_colon}</dt>
+                        <dd>
+                            {$consult_info.mallconsult_reply_content}
+                        </dd>
+                    </dl>
+                    {/if}
+                    <div class="bottom"><a href="javascript:history.go(-1);" class="dsm-btn ml10">{$Think.lang.return_list}</a></div>
+                </div>
+            </div>
+            <div class="dsm-flow-item">
+                <div class="title">{$Think.lang.warm_tips}</div>
+                <div class="content">
+                    <div class="alert">
+                        <ul>
+                            <li> {$Think.lang.goods_advice1}</li>
+                            <li> {$Think.lang.goods_advice2}</li>
+                            <li> {$Think.lang.goods_advice3}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+{/block}
+

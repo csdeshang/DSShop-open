@@ -1,0 +1,75 @@
+<div class="filter-detailc" id="addressDraw">
+  <dl class="location-hots">
+    <dt>{$Think.lang.common_areas}</dt>
+    {if isset($province_array[1])}<dd><a href="{:replaceParam(array('area_id' => '1'))}">{$province_array[1]}</a></dd>{/if}
+    {if isset($province_array[2])}<dd><a href="{:replaceParam(array('area_id' => '2'))}">{$province_array[2]}</a></dd>{/if}
+    {if isset($province_array[9])}<dd><a href="{:replaceParam(array('area_id' => '9'))}">{$province_array[9]}</a></dd>{/if}
+    {if isset($province_array[35])}<dd><a href="{:replaceParam(array('area_id' => '35'))}">{$province_array[35]}</a></dd>{/if}
+  </dl>
+  <dl class="location-all">
+    <dt>{$Think.lang.provinces}</dt>
+    <dd>
+      <ul>
+        <li>
+          <p class="lt">A</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '12'))}">{$province_array[12]}</a></span> <span><a href="{:replaceParam(array('area_id' => '34'))}">{$province_array[34]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">C</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '22'))}">{$province_array[22]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">F</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '13'))}">{$province_array[13]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">G</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '19'))}">{$province_array[19]}</a></span> <span><a href="{:replaceParam(array('area_id' => '28'))}">{$province_array[28]}</a></span> <span><a href="{:replaceParam(array('area_id' => '20'))}">{$province_array[20]}</a></span> <span><a href="{:replaceParam(array('area_id' => '24'))}">{$province_array[24]}</a></span> </p>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <p class="lt">H</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '21'))}">{$province_array[21]}</a></span> <span><a href="{:replaceParam(array('area_id' => '3'))}">{$province_array[3]}</a></span> <span><a href="{:replaceParam(array('area_id' => '16'))}">{$province_array[16]}</a></span> <span><a href="{:replaceParam(array('area_id' => '8'))}">{$province_array[8]}</a></span> <span><a href="{:replaceParam(array('area_id' => '17'))}">{$province_array[17]}</a></span> <span><a href="{:replaceParam(array('area_id' => '18'))}">{$province_array[18]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">J</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '10'))}">{$province_array[10]}</a></span> <span><a href="{:replaceParam(array('area_id' => '14'))}">{$province_array[14]}</a></span> <span><a href="{:replaceParam(array('area_id' => '7'))}">{$province_array[7]}</a></span> </p>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <p class="lt">N</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '6'))}">{$province_array[6]}</a></span> <span><a href="{:replaceParam(array('area_id' => '5'))}">{$province_array[5]}</a></span> <span><a href="{:replaceParam(array('area_id' => '30'))}">{$province_array[30]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">Q</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '29'))}">{$province_array[29]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">S</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '15'))}">{$province_array[15]}</a></span> <span><a href="{:replaceParam(array('area_id' => '4'))}">{$province_array[4]}</a></span> <span><a href="{:replaceParam(array('area_id' => '27'))}">{$province_array[27]}</a></span> <span><a href="{:replaceParam(array('area_id' => '23'))}">{$province_array[23]}</a></span> </p>
+        </li>
+      </ul>
+      <ul>
+        <li>
+          <p class="lt">T</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '32'))}">{$province_array[32]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">X</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '26'))}">{$province_array[26]}</a></span> <span><a href="{:replaceParam(array('area_id' => '31'))}">{$province_array[31]}</a></span> <span><a href="{:replaceParam(array('area_id' => '33'))}">{$province_array[33]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">Y</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '25'))}">{$province_array[25]}</a></span> </p>
+        </li>
+        <li>
+          <p class="lt">Z</p>
+          <p class="lc"> <span><a href="{:replaceParam(array('area_id' => '11'))}">{$province_array[11]}</a></span> </p>
+        </li>
+      </ul>
+    </dd>
+  </dl>
+  <p class="oreder-default"><a href="{:dropParam(array('area_id'))}">{$Think.lang.goods_class_index_area}</a></p>
+</div>

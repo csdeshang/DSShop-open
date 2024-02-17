@@ -1,0 +1,38 @@
+<div class="pt20">
+        <div class="mc-title">
+            <h3>{$Think.lang.shopping_cart}</h3>
+        </div>
+        <div class="goods-rolling relative" id="mc-rolling-history">
+            {notempty name="cart_list"}
+            <ul class="grid-list clearfix">
+                {foreach name="cart_list" item="cart_info" }
+                <li class="grid-items">
+                    <a class="thumb" target="_blank" href="{:url('Goods/index',['goods_id'=>$cart_info.goods_id])}" title="{$cart_info.goods_name}">
+                        <p class="grid-img">
+                            <img src="{:goods_thumb($cart_info,240)}" alt="{$cart_info.goods_name}"></p>
+                        <h3 class="grid-title"><span>{$cart_info.goods_name}</span></h3>
+                    </a>
+                </li>
+                {/foreach}
+            </ul>
+            <div class="grid-btn btn-prev"><span class="iconfont">&#xe686;</span></div>
+            <div class="grid-btn btn-next"><span class="iconfont">&#xe687;</span></div>
+            {else /}
+            <dl class="null-tip pt20 pb20">
+                <dt class="iconfont">&#xe69a;</dt>
+              <dd>
+                <h4>{$Think.lang.shopping_cart_still_empty}</h4>
+                <h5>{$Think.lang.with_settlement}</h5>
+              </dd>
+            </dl>
+            {/notempty}
+        </div>
+    </div>
+{notempty name="cart_list"}
+<script>
+//信息轮换
+    $.getScript("{$Think.PLUGINS_SITE_ROOT}/jquery.SuperSlide.2.1.1.js", function() {
+        jQuery('#mc-rolling-history').slide({mainCell:"ul",effect:"left",prevCell:".btn-prev",nextCell:".btn-next",autoPlay:true,vis:4});
+    });
+</script>
+{/notempty}

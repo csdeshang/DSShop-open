@@ -1,0 +1,45 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>邮箱短信</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="post" >
+        <input type="hidden" name="code" value="{$templates_array.mailmt_code}" />
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.ds_current_edit}</td>
+                    <td>{$templates_array.mailmt_name|raw}</td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.mailtemplates_edit_title}</td>
+                    <td class="vatop rowform"><input type="text" value="{$templates_array.mailmt_title}" name="title" id="title" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder"> 
+                    <td class="required w120">{$Think.lang.mailtemplates_edit_content}</td>
+                    <td><textarea style="width: 300px; height: 100px" name="content" id="content" >{$templates_array.mailmt_content}</textarea></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td></td>
+                    <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>					
+            </tfoot>
+        </table>
+    </form>
+</div>

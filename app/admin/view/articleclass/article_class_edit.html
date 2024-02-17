@@ -1,0 +1,102 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-empty"></div>
+    <form id="article_class_form" method="post" name="articleClassForm">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td colspan="2" class="required">
+                        <label class="validation" for="ac_name">{$Think.lang.ac_name}:</label>
+                    </td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <input type="text" value="{$class_array.ac_name|default=''}" name="ac_name" id="ac_name" class="txt">
+                    </td>
+                    <td class="vatop tips">{$Think.lang.ac_name_tips}</td>
+                </tr>
+                {empty name="class_array"}
+                <tr>
+                    <td colspan="2" class="required">
+                        <label for="parent_id">{$Think.lang.article_class_add_sup_class}:</label>
+                    </td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <select name="ac_parent_id" id="ac_parent_id">
+                            <option value="0">{$Think.lang.ds_please_choose}...</option>
+                            {notempty name="parent_list"}
+                            {foreach name="parent_list" item="v"}
+                            <option {if $ac_parent_id == $v.ac_id}selected='selected'{/if} value="{$v.ac_id}">{$v.ac_name|raw}</option>
+                            {/foreach}
+                            {/notempty}
+                        </select>
+                    </td>
+                    <td class="vatop tips">{$Think.lang.article_class_add_sup_class_notice}</td>
+                </tr>
+                {/empty}
+                <tr>
+                    <td colspan="2" class="required">
+                        <label for="ac_sort">{$Think.lang.ds_sort}:</label>
+                    </td>
+                </tr>
+                <tr class="noborder">
+                    <td class="vatop rowform">
+                        <input type="text" value="{$class_array.ac_sort|default=''}" name="ac_sort" id="ac_sort" class="txt"></td>
+                    <td class="vatop tips">{$Think.lang.article_class_add_update_sort}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="15" >
+                        <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </form>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#article_class_form').validate({
+            errorPlacement: function (error, element) {
+                error.appendTo(element.parent().parent().prev().find('td:first'));
+            },
+            rules: {
+                ac_name: {
+                    required: true,
+                    remote: {
+                        url: ADMINSITEURL + '/Articleclass/Ajax/branch/check_class_name',
+                        type: 'get',
+                        data: {
+                            ac_name: function () {
+                                return $('#ac_name').val();
+                            },
+                            ac_parent_id: function () {
+                                return $('#ac_parent_id').val();
+                            },
+                            ac_id: "{$class_array.ac_id|default=''}"
+                        }
+                    }
+                },
+                ac_sort: {
+                    number: true,
+                    range : [0,255]
+                }
+            },
+            messages: {
+                ac_name: {
+                    required: "{$Think.lang.article_class_add_name_null}",
+                    remote: "{$Think.lang.article_class_add_name_exists}"
+                },
+                ac_sort: {
+                    number: "{$Think.lang.article_class_add_sort_int}",
+                    range: '{$Think.lang.class_sort_explain}'
+                }
+            }
+        });
+    });
+</script>

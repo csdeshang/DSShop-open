@@ -1,0 +1,312 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>满即送</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    
+    
+    <div class="dssc-form-default">
+    <div class="alert alert-block">
+        <h4>{$Think.lang.ds_explain}{$Think.lang.ds_colon}</h4>
+        <ul>
+            <li>{$Think.lang.mansong_add_explain1}</li>
+            <li>{$Think.lang.mansong_add_explain2}</li>
+            <li>{$Think.lang.mansong_add_explain3}</li>
+        </ul>
+    </div>
+    <form id="add_form" action="" method="post">
+        <input id="level2_flag" type="hidden" value="false" />
+        <input id="level3_flag" type="hidden" value="false" />
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.mansong_name}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input id="mansong_name" name="mansong_name" type="text" maxlength="25" class="w400 text"/>
+                <span class="error-message"></span>
+                <p class="hint">{$Think.lang.mansong_name_explain}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.start_time}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input id="start_time" name="start_time" type="text" class="text w130"/><em class="add-on"><i class="iconfont">&#xe8d6;</i></em>
+                <span class="error-message"></span>
+                <p class="hint">{:sprintf(lang('mansong_add_start_time_explain'),date('Y-m-d H:i',$start_time))}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.end_time}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input id="end_time" name="end_time" type="text" class="text w130"/><em class="add-on"><i class="iconfont">&#xe8d6;</i></em>
+                <span class="error-message"></span>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.full_feed_rule}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input type="hidden" id="mansong_rule_count" name="rule_count">
+                <ul id="mansong_rule_list" class="dssc-mansong-rule-list">
+                </ul>
+                <a href="javascript:void(0);" id="btn_add_rule" class="dssc-btn dssc-btn-acidblue"><i class="iconfont">&#xe6db;</i>{$Think.lang.add_rules}</a>
+                <div id="div_add_rule" style="display:none;">
+                    <div class="dssc-mansong-error"><span id="mansong_price_error" style="display:none;"><i class="iconfont">&#xe64c;</i>{$Think.lang.rule_amount_cannot_empty}</span><span id="mansong_discount_error" style="display:none;"><i class="iconfont">&#xe64c;</i>{$Think.lang.full_minus_mustless_rule}</span></div>
+                    <div class="dssc-mansong-rule">
+                        <span>{$Think.lang.level_price}&nbsp;<input id="mansong_price" type="text" class="text w50"><em class="add-on"><i class="iconfont">&#xe65c;</i></em>，</span>
+                        <span>{$Think.lang.level_discount}&nbsp;<input id="mansong_discount" type="text" class="text w50"><em class="add-on"><i class="iconfont">&#xe65c;</i></em>，</span>
+                        <span>{$Think.lang.gift_name}&nbsp;<a href="javascript:void(0);" id="btn_show_search_goods" class="dssc-btn"><i class="iconfont">&#xe753;</i>{$Think.lang.choose_gifts}</a></span> <div id="mansong_goods_item" class="gift"></div>
+
+                        <div id="div_search_goods" class="div-goods-select mt10" style="display: none;">
+                            <table class="search-form">
+                                <tr>
+                                    <th class="w150">
+                                        <strong>{$Think.lang.search_items}</strong>
+                                    </th>
+                                    <td class="w160">
+                                        <input id="search_goods_name" type="text w150" class="text" name="goods_name" value=""/>
+                                    </td>
+                                    <td class="w70 tc">
+                                        <a href="javascript:void(0);" id="btn_search_goods" class="dssc-btn"/><i class="iconfont">&#xe718;</i>{$Think.lang.ds_search}</a>
+                                    </td>
+                                    <td class="w10"></td>
+                                    <td>
+                                        <p class="hint">{$Think.lang.show_all_goods_sold}</p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <a id="btn_hide_search_goods" class="close" href="javascript:void(0);">X</a>
+                            <div id="div_goods_search_result" class="search-result" style="width:739px;"></div>
+                        </div>
+                    </div>
+                    <div id="mansong_rule_error" style="display:none;">{$Think.lang.choose_least_one_promotion}</div>
+                    <div class="mt10">
+                        <a href="javascript:void(0);" id="btn_save_rule" class="dssc-btn dssc-btn-acidblue"><i class="iconfont">&#xe64d;</i>{$Think.lang.determine_rule_settings}</a>
+                        <a href="javascript:void(0);" id="btn_cancel_add_rule" class="dssc-btn dssc-btn-orange"><i class="iconfont">&#xe754;</i>{$Think.lang.ds_cancel}</a></div>
+                </div>
+                <span class="error-message"></span>
+                <p class="hint">{$Think.lang.single_order_meets_amount}<br/>{$Think.lang.system_supports_rank_rules}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.text_remark}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <textarea name="remark" rows="3" id="remark" maxlength="100" class="textarea w400"></textarea>
+                <p class="hint">{$Think.lang.mansong_remark_explain}</p>
+            </dd>
+        </dl>
+        <div class="bottom">
+            <input id="submit_button" type="submit" value="{$Think.lang.ds_submit}"  class="btn">
+        </div>
+    </form>
+</div>
+<script id="mansong_rule_template" type="text/html">
+    <li dstype="mansong_rule_item">
+        <span>{$Think.lang.level_price}<strong><%=price%></strong>{$Think.lang.ds_yuan}， </span>
+        <span>{$Think.lang.level_discount}<strong><%=discount%></strong>{$Think.lang.ds_yuan}， </span>
+        <%if(goods_id>0){%>
+        <span>{$Think.lang.gift_name} <%==goods%></span>
+        <%}%>
+        <input type="hidden" name="mansong_rule[]" value="<%=price%>,<%=discount%>,<%=goods_id%>">
+        <a dstype="btn_del_mansong_rule" href="javascript:void(0);" class="dssc-btn-mini dssc-btn-red"><i class="iconfont">&#xe725;</i>{$Think.lang.ds_del}</a>
+    </li>
+</script>
+<script id="mansong_goods_template" type="text/html">
+    <div dstype="mansong_goods" class="selected-mansong-goods">
+        <a href="<%=goods_url%>" title="<%=goods_name%>" class="goods-thumb" target="_blank">
+            <img src="<%=goods_image_url%>"/>
+        </a>
+        <input dstype="mansong_goods_id" type="hidden" value="<%=goods_id%>">
+    </div><a dstype="btn_del_mansong_goods" href="javascript:void(0);" class="dssc-btn-mini dssc-btn-red"><i class="iconfont">&#xe725;</i>{$Think.lang.delete_selected_gifts}</a>
+</script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/template.min.js"></script>
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/jquery-ui-timepicker-addon.min.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery-ui-timepicker/i18n/jquery-ui-timepicker-zh-CN.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+        $('#start_time').datetimepicker({dateFormat: 'yy-mm-dd'});
+        $('#end_time').datetimepicker({dateFormat: 'yy-mm-dd'});
+    
+        jQuery.validator.methods.greaterThanDate = function(value, element, param) {
+            var date1 = new Date(Date.parse(param.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 < date2;
+        };
+        jQuery.validator.methods.lessThanDate = function(value, element, param) {
+            var date1 = new Date(Date.parse(param.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 > date2;
+        };
+        jQuery.validator.methods.greaterThanStartDate = function(value, element) {
+            var start_date = $("#start_time").val();
+            var date1 = new Date(Date.parse(start_date.replace(/-/g, "/")));
+            var date2 = new Date(Date.parse(value.replace(/-/g, "/")));
+            return date1 < date2;
+        };
+
+        //页面输入内容验证
+        $("#add_form").validate({
+            errorPlacement: function(error, element){
+                var error_td = element.parent('dd').children('span.error-message');
+                error_td.append(error);
+            },
+            onfocusout: false,
+            submitHandler:function(form){
+                ds_ajaxpost('add_form', 'url', "{:url('Promotionmansong/index')}");
+            },
+            rules : {
+                mansong_name : {
+                    required : true
+                },
+                start_time : {
+                    required : true,
+                    greaterThanDate : '{$start_time|date='Y-m-d H:i'}'
+                },
+                end_time : {
+                    required : true,
+        greaterThanStartDate : true
+    },
+        rule_count: {
+            required: true,
+                min: 1
+        }
+    },
+        messages : {
+            mansong_name : {
+                required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.mansong_name_error}'
+            },
+            start_time : {
+                required : '<i class="iconfont">&#xe64c;</i>{:sprintf(lang("mansong_add_start_time_explain"),date("Y-m-d H:i",$start_time))}',
+                    greaterThanDate : '<i class="iconfont">&#xe64c;</i>{:sprintf(lang("mansong_add_start_time_explain"),date("Y-m-d H:i",$start_time))}'
+            },
+            end_time : {
+                required : '<i class="iconfont">&#xe64c;</i>{:sprintf(lang("mansong_add_end_time_explain"),date("Y-m-d H:i",$end_time))}',
+                greaterThanStartDate : '<i class="iconfont">&#xe64c;</i>{$Think.lang.greater_than_start_time}'
+            },
+            rule_count: {
+                required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.add_rule_determine}',
+                    min: '<i class="iconfont">&#xe64c;</i>{$Think.lang.add_rule_determine}'
+            }
+        }
+    });
+
+        // 秒杀添加规则窗口
+        $('#btn_add_rule').on('click', function() {
+            $('#mansong_price').val('');
+            $('#mansong_discount').val('');
+            $('#mansong_goods_item').html('');
+            $('#mansong_price_error').hide();
+            $('#mansong_rule_error').hide();
+            $('#div_add_rule').show();
+            $('#btn_add_rule').hide();
+        });
+
+        // 规则保存
+        $('#btn_save_rule').on('click', function() {
+            var mansong = {};
+            mansong.price = Number($('#mansong_price').val());
+            if(isNaN(mansong.price) || mansong.price <= 0) {
+                $('#mansong_price_error').show();
+                return false;
+            } else {
+                $('#mansong_price_error').hide();
+            }
+            mansong.discount = Number($('#mansong_discount').val());
+            if(isNaN(mansong.discount) || mansong.discount < 0 || mansong.discount > mansong.price) {
+                $('#mansong_discount_error').show();
+                return false;
+            } else {
+                $('#mansong_discount_error').hide();
+            }
+            mansong.goods = $('#mansong_goods_item').find('[dstype="mansong_goods"]').html();
+            mansong.goods_id = Number($('#mansong_goods_item').find('[dstype="mansong_goods_id"]').val());
+            if(isNaN(mansong.goods_id)) {
+                mansong.goods_id = 0;
+            }
+            if(mansong.discount == 0 && mansong.goods_id == 0) {
+                $('#mansong_rule_error').show();
+                return false;
+            } else {
+                $('#mansong_rule_error').hide();
+            }
+            var mansong_rule_item = template.render('mansong_rule_template', mansong);
+            $('#mansong_rule_list').append(mansong_rule_item);
+            close_div_add_rule();
+        });
+
+        // 删除已添加的规则
+        $('#mansong_rule_list').on('click', '[dstype="btn_del_mansong_rule"]', function() {
+            $(this).parents('[dstype="mansong_rule_item"]').remove();
+            close_div_add_rule();
+        });
+
+        // 取消添加规则
+        $('#btn_cancel_add_rule').on('click', function() {
+            close_div_add_rule();
+        });
+
+        // 关闭规则添加窗口
+        function close_div_add_rule() {
+            var rule_count = $('#mansong_rule_list').find('[dstype="mansong_rule_item"]').length;
+            if( rule_count >= 3) {
+                $('#btn_add_rule').hide();
+            } else {
+                $('#btn_add_rule').show();
+            }
+            $('#div_add_rule').hide();
+            $('#mansong_rule_count').val(rule_count);
+        }
+
+        // 秒杀商品选择窗口
+        $('#btn_show_search_goods').on('click', function() {
+            $('#div_search_goods').show();
+        });
+
+        // 搜索商品
+        $('#btn_search_goods').on('click', function() {
+            var url = "{:url('Promotionmansong/search_goods')}";
+            var datas = $.param({goods_name: $('#search_goods_name').val()});
+            $('#div_goods_search_result').load(url,datas);
+        });
+
+        // 搜索商品翻页
+        $('#div_goods_search_result').on('click', '.pagination li a', function() {
+            $('#div_goods_search_result').load($(this).attr('href'));
+            return false;
+        });
+
+        // 关闭商品选择窗口
+        $('#btn_hide_search_goods').on('click', function() {
+            $('#div_search_goods').hide();
+        });
+
+        // 选择商品
+        $('#div_goods_search_result').on('click', '[dstype="btn_add_mansong_goods"]', function() {
+            var goods = {};
+            goods.goods_id = $(this).attr('data-goods-id');
+            goods.goods_name = $(this).attr('data-goods-name');
+            goods.goods_image_url = $(this).attr('data-goods-image-url');
+            goods.goods_url = $(this).attr('data-goods-url');
+            var mansong_goods_item = template.render('mansong_goods_template', goods);
+            $('#mansong_goods_item').html(mansong_goods_item);
+            $('#div_search_goods').hide();
+        });
+
+        // 删除以选的商品
+        $('#mansong_goods_item').on('click', '[dstype="btn_del_mansong_goods"]', function() {
+            $('#mansong_goods_item').html('');
+        });
+
+    });
+</script>
+    
+    
+    
+</div>    

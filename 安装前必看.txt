@@ -1,0 +1,29 @@
+德尚网络基于ThinkPHP框架/Vue.js前端框架开发的标准系统产品
+DSMall（多店铺B2B2C）
+DSShop（单店铺B2C）
+DSO2O （外卖、上门服务、跑腿）
+DSKMS （内容付费系统）
+DSCMS （企业站）
+DSIM  （即时聊天）
+
+同时德尚网络还提供人工智能落地解决方案
+智能语音对话
+智能家电
+智能音箱及家居中控
+颜色检测
+计数识别
+物品分类
+人脸识别
+文字识别
+
+
+
+
+
+DSShop 安装部署方式
+http://www.csdeshang.com/home/help/article/id/538.html
+
+
+
+如果还有什么不懂的到DSShop官网（http:www.csdeshang.com）查看帮助手册
+欢迎加入DSMall官方群：549770277

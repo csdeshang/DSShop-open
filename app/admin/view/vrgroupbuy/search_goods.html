@@ -1,0 +1,28 @@
+{notempty name="goods_list"}
+<ul class="goods-list" style="width:760px;">
+    {foreach name="goods_list" item="val"}
+    <li>
+        <div class="goods-thumb"><img src="{:goods_thumb($val,240)}"/></div>
+        <dl class="goods-info">
+            <dt>{$val.goods_name}</dt>
+            <dd>销售价：{$Think.lang.currency}{$val.goods_price}</dd>
+        </dl>
+        <a dstype="btn_add_groupbuy_goods" data-goods-commonid="{$val.goods_commonid}" href="javascript:void(0);" class="dssc-btn-mini dssc-btn-green"><i class="iconfont">&#xe64d;</i>选择为抢购商品</a>
+    </li>
+    {/foreach}
+</ul>
+<div class="pagination">{$show_page|raw}</div>
+{else}
+<div>{$Think.lang.no_record}</div>
+{/notempty}
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#div_goods_search_result .pagination li a').ajaxContent({
+            event: 'click', //mouseover
+            loaderType: 'img',
+            loadingMsg: '{$Think.HOME_SITE_ROOT}/images/loading.gif',
+            target: '#div_goods_search_result'
+        });
+    });
+</script>

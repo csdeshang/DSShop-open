@@ -1,0 +1,95 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+
+<form id="voucher_list_form" method="get">
+    <table class="dsm-search-table">
+        <tr>
+            <td>&nbsp;</td>
+            <td class="w100 tr"><select name="select_detail_state">
+                    <option value="0" {notempty name="Request.param.select_detail_state" } selected=true {/notempty}> {$Think.lang.ds_state} </option>
+                    {notempty name="voucherstate_arr"}
+                    {foreach name="voucherstate_arr" item="v"}
+                    <option value="{$key}"{if $Request.param.select_detail_state == $key}  selected=true {/if}> {$v} </option>
+                    {/foreach}
+                    {/notempty}
+                </select>
+            </td>
+            <td class="w70 tc">
+                <input type="submit" class="submit" onclick="submit_search_form()" value="{$Think.lang.ds_search}" />
+            </td>
+        </tr>
+    </table>
+  </form>
+<table class="dsm-default-table">
+    <thead>
+        <tr>
+            <th class="w10"></th>
+            <th class="w70"></th>
+            <th class="tl">{$Think.lang.voucher_code}</th>
+            <th class="w80">{$Think.lang.voucher_template_price}（{$Think.lang.ds_yuan}）</th>
+            <th class="w200">{$Think.lang.voucher_voucher_indate}</th>
+            <th class="w100">{$Think.lang.ds_state}</th>
+            <th class="w70">{$Think.lang.ds_handle}</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {notempty name="voucher_list"}
+        {foreach name="voucher_list" item="val"}
+        <tr class="bd-line">
+            <td></td>
+            <td>
+                <div class="dsm-goods-thumb">
+                    <a href="javascript:void(0);">
+                        <img src="{$val.vouchertemplate_customimg}"/>
+                    </a>
+                </div>
+            </td>
+            <td class="tl">
+                <dl class="goods-name">
+                    <dt>{$val.voucher_code}</dt>
+                    <dd>
+                      （{$Think.lang.voucher_voucher_usecondition}：{$Think.lang.voucher_voucher_usecondition_desc}{$val.voucher_limit}{$Think.lang.ds_yuan}）</dd>
+                </dl>
+            </td>
+            <td class="goods-price">{$val.voucher_price}</td>
+            <td class="goods-time">{:date('Y-m-d',$val.voucher_startdate)}~{:date('Y-m-d',$val.voucher_enddate)}</td>
+            <td>{$val.voucher_state_text}</td>
+            <td class="dsm-table-handle">
+                {if $val.voucher_state == '1'}
+                <span>
+                    <a class="btn-green" ><i class="iconfont">&#xe69a;</i>
+                        <p>{$Think.lang.voucher_use}</p>
+                    </a>
+                </span>
+                {elseif $val.voucher_state=='2'}
+                <a href="{:url('Memberorder/show_order',['order_id'=>$val.voucher_order_id])}">{$Think.lang.voucher_voucher_vieworder}</a>
+                {/if}
+            </td>
+        </tr>
+        {/foreach}
+        {else /}
+        <tr>
+            <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+        </tr>
+        {/notempty}
+    </tbody>
+    {notempty name="voucher_list"}
+    <tfoot>
+        <tr>
+            <td colspan="20"><div class="pagination">{$show_page|raw}</div></td>
+        </tr>
+    </tfoot>
+    {/notempty}
+</table>
+
+
+
+
+
+
+{/block}

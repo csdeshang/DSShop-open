@@ -1,0 +1,60 @@
+{notempty name="goodsevallist"}
+{foreach name="goodsevallist" item="v" key="k" }
+<div id="t" class="dsg-evaluate-floor">
+  <div class="user-avatar"> <img src="{:get_member_avatar_for_id($v['geval_frommemberid'])}">  </div>
+  <dl class="detail">
+      <dt> 
+      <span class="user-name">
+          {if $v.geval_isanonymous == 1}
+          {:str_cut($v['geval_frommembername'],2)}***
+          {else /}
+          {$v.geval_frommembername}
+          {/if}
+      </span>
+      <time pubdate="pubdate">[<?php echo @date('Y-m-d',$v['geval_addtime']);?>]</time>
+    </dt>
+    <dd>{$Think.lang.user_rating}：<span class="raty" data-score="{$v.geval_scores}"></span></dd>
+    <dd class="content">{$Think.lang.evaluation_details}：<span>{$v.geval_content}</span></dd>
+      {notempty name="$v.geval_explain"}
+      <dd class="explain">{$Think.lang.explanation}：<span>{$v.geval_explain}</span></dd>
+      {/notempty}
+      {notempty name="$v.geval_image"}
+      <dd> {$Think.lang.photo_posting}：
+      <ul class="photos-thumb">
+          {php}$image_array = explode(',', $v['geval_image']);{/php}
+          {foreach name="image_array" item="value" }
+          <li><a data-lightbox="lightbox-image"  href="{:sns_thumb($value, 1024)}"> <img src="{:sns_thumb($value)}"> </a></li>
+          {/foreach}
+      </ul>
+    </dd>
+    {/notempty}
+  </dl>
+</div>
+{/foreach}
+<div class="tc pr5 pb5 pr">
+  <div class="pagination"> {$show_page|raw}</div>
+</div>
+{else /}
+<div class="no-buyer">{$Think.lang.no_record}</div>
+{/notempty}
+<link rel="stylesheet" href="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/css/lightbox.min.css">
+<script src="{$Think.PLUGINS_SITE_ROOT}/js/jquery.lightbox/js/lightbox.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+    $('.raty').raty({
+        path: "{$Think.PLUGINS_SITE_ROOT}/js/jquery.raty/img",
+        readOnly: true,
+        score: function() {
+            return $(this).attr('data-score');
+        }
+    });
+
+
+    $('#groupbuy_evaluate').find('.demo').ajaxContent({
+        event:'click', //mouseover
+        loaderType:"img",
+        loadingMsg:"{$Think.HOME_SITE_ROOT}/images/treetable/transparent.gif",
+        target:'#groupbuy_evaluate'
+    });
+});
+</script>

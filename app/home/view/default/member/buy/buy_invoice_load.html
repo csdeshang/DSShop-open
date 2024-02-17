@@ -1,0 +1,312 @@
+<ul>
+    {foreach name="inv_list" item="val" key="k" }
+    <li class="inv_item {if $k=='0'}dsc-selected-item{/if}">
+        <input content="{$val.content}" id="inv_{$val.invoice_id}" ds_type="inv" type="radio" name="inv" value="{$val.invoice_id}" {if $k=='0'}checked{/if}/>
+        <label for="inv_{$val.invoice_id}">&nbsp;&nbsp;{$val.content}</label>
+        &emsp;&emsp;&emsp;<a href="javascript:void(0);" onclick="delInv({$val.invoice_id});" class="del">[{$Think.lang.ds_delete}]</a>
+    </li>
+    {/foreach}
+    <li class="inv_item">
+        {if count($inv_list) < 10}
+        <input value="0" ds_type="inv" id="add_inv" type="radio" name="inv">
+        <label for="add_inv">&nbsp;&nbsp;{$Think.lang.new_invoice_information}</label>
+        {else/}
+        {$Think.lang.remove_unusual_invoice_additions}
+        {/if}
+    </li>
+    <div id="add_inv_box" style="display:none">
+        <form method="POST" id="inv_form" action="{:url('Buy/add_addr')}">
+            <div class="dsc-form-default">
+                <dl>
+                    <dt>{$Think.lang.invoice_type}：</dt>
+                    <dd>
+                        <label><input type="radio" checked name="invoice_type" value="1">{$Think.lang.commercial_invoice}</label>
+                        &emsp;&emsp;
+                        <label><input type="radio" name="invoice_type" value="2">{$Think.lang.vat_invoice}</label>
+                    </dd>
+                </dl>
+            </div>
+            <div id="invoice_panel" class="dsc-form-default">
+                <dl>
+                    <dt>{$Think.lang.invoice_title}：</dt>
+                    <dd>
+<!--                        <select name="invoice_title_select">
+                            <option value="person">{$Think.lang.individual}</option>
+                            <option value="company">{$Think.lang.unit}</option>
+                        </select>-->
+                        <input class="text w200" name="invoice_title" id="invoice_title" placeholder="{$Think.lang.company_name}" value="">
+                    </dd>
+                </dl>
+                <dl id="invoice_code_dl">
+                    <dt>{$Think.lang.taxpayer_identification_number}</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_code" id="invoice_code" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt>{$Think.lang.invoice_content}：</dt>
+                    <dd>
+<!--                        <select id="invoice_content" name="invoice_content">
+                            <option selected value="{$Think.lang.details}">{$Think.lang.details}<option>
+                            <option value="{$Think.lang.wine}">{$Think.lang.wine}</option>
+                            <option value="{$Think.lang.food}">{$Think.lang.food}</option>
+                            <option value="{$Think.lang.drink}">{$Think.lang.drink}</option>
+                            <option value="{$Think.lang.toys}">{$Think.lang.toys}</option>
+                            <option value="{$Think.lang.daily_necessities}">{$Think.lang.daily_necessities}</option>
+                            <option value="{$Think.lang.decoration_materials}">{$Think.lang.decoration_materials}</option>
+                            <option value="{$Think.lang.cosmetics}">{$Think.lang.cosmetics}</option>
+                            <option value="{$Think.lang.office_supplies}">{$Think.lang.office_supplies}</option>
+                            <option value="{$Think.lang.student_supplies}">{$Think.lang.student_supplies}</option>
+                            <option value="{$Think.lang.household_goods}">{$Think.lang.household_goods}</option>
+                            <option value="{$Think.lang.accessories}">{$Think.lang.accessories}</option>
+                            <option value="{$Think.lang.clothing}">{$Think.lang.clothing}</option>
+                            <option value="{$Think.lang.luggage}">{$Think.lang.luggage}</option>
+                            <option value="{$Think.lang.boutique}">{$Think.lang.boutique}</option>
+                            <option value="{$Think.lang.home_appliances}">{$Think.lang.home_appliances}</option>
+                            <option value="{$Think.lang.labor_protection_products}">{$Think.lang.labor_protection_products}</option>
+                            <option value="{$Think.lang.consumables}">{$Think.lang.consumables}</option>
+                            <option value="{$Think.lang.computer_accessories}">{$Think.lang.computer_accessories}</option>
+                        </select>-->
+                        <input type="text" class="text w200" maxlength="50" name="invoice_content" id="invoice_content" value="">
+                    </dd>
+                </dl>
+            </div>
+            <div id="vat_invoice_panel" class="dsc-form-default" style="display:none">
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.company_name}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_company" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.taxpayer_identification_number}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_company_code" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.registered_address}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_reg_addr" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.registered_phone}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_reg_phone" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.bank_account}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_reg_bname" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.bank_accounts}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_reg_baccount" value="">
+                    </dd>
+                </dl>
+<!--                <dl>
+                    <dt></dt>
+                    <dd>{$Think.lang.open_information}</dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.invoice_content}：</dt>
+                    <dd>{$Think.lang.details}</dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.name_of_bearer}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_rec_name" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.ticket_collector_number}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_rec_mobphone" value="">
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.drawee_province}：</dt>
+                    <dd id="region">
+                        <select>
+                        </select>
+                        <input type="hidden" value="" name="city_id" id="city_id">
+                        <input type="hidden" name="area_id" id="area_id" class="area_ids"/>
+                        <input type="hidden" name="area_info" id="area_info" class="area_names"/>
+                    </dd>
+                </dl>
+                <dl>
+                    <dt><i class="required">*</i>{$Think.lang.ticket_delivery_address}：</dt>
+                    <dd>
+                        <input type="text" class="text w200" maxlength="50" name="invoice_goto_addr" value="">
+                    </dd>
+                </dl>-->
+            </div>
+        </form>
+    </div>
+</ul>
+<div class="hr16"> <a id="hide_invoice_list" class="dsc-btn dsc-btn-red" href="javascript:void(0);">{$Think.lang.cart_step1_invoice_submit}</a> <a id="cancel_invoice" class="dsc-btn ml10" href="javascript:void(0);">{$Think.lang.no_invoice_required}</a></div>
+<script>
+    var postResult = false;
+    function delInv(id) {
+        var url = HOMESITEURL+'/Buy/load_inv/id/'+id+'.html';
+        $('#invoice_list').load(url);
+    }
+    $(function() {
+        $.ajaxSetup({async: false});
+        //不需要发票
+        $('#cancel_invoice').on('click', function() {
+            $('#invoice_id').val('');
+            hideInvList('{$Think.lang.no_invoice_required}');
+        });
+        //使用新的发票信息
+        $('input[ds_type="inv"]').on('click', function() {
+            regionInit("region");
+            if ($(this).val() == '0') {
+                $('.inv_item').removeClass('dsc-selected-item');
+                $('#add_inv_box').show();
+            } else {
+                $('.inv_item').removeClass('dsc-selected-item');
+                $(this).parent().addClass('dsc-selected-item');
+                $('#add_inv_box').hide();
+            }
+        });
+        //保存发票信息
+        $('#hide_invoice_list').on('click', function() {
+            var content = '';
+            if ($('input[name="inv"]:checked').size() == 0) {
+                $('#cancel_invoice').click();
+                return false;
+            }
+            if ($('input[name="inv"]:checked').val() != '0') {
+                //如果选择已保存过的发票信息
+                content = $('input[name="inv"]:checked').attr('content');
+                $('#invoice_id').val($('input[name="inv"]:checked').val());
+                hideInvList(content);
+                return false;
+            }
+            //如果是新增发票信息
+            if ($('input[name="invoice_type"]:checked').val() == 1) {
+                //如果选择普通发票
+                if ($('select[name="invoice_title_select"]').val() == 'person') {
+                    content = '{$Think.lang.ordinary_invoice_individual}' + $('select[name="invoice_content"]').val();
+                } else if ($.trim($('#invoice_title').val()) == '' || $.trim($('#invoice_title').val()) == '{$Think.lang.company_name}') {
+                    layer.alert('{$Think.lang.fill_in_company_name}');
+                    return false;
+                } else {
+                    content = '{$Think.lang.commercial_invoice} ' + $.trim($('#invoice_title').val()) + ' ' + $('#invoice_code').val() + ' ' + $('#invoice_content').val();
+                }
+            } else {
+                content = '{$Think.lang.vat_invoice} ' + $.trim($('input[name="invoice_company"]').val()) + ' ' + $.trim($('input[name="invoice_company_code"]').val()) + ' ' + $.trim($('input[name="invoice_reg_addr"]').val());
+                //验证增值税发票表单
+                if (!$('#inv_form').valid()) {
+                    return false;
+                }
+            }
+            var datas = $('#inv_form').serialize();
+
+            $.post("{:url('Buy/add_inv')}", datas, function(data) {
+                if (data.state == 'success') {
+                    $('#invoice_id').val(data.id);
+                    postResult = true;
+                } else {
+                    layer.alert(data.msg);
+                    postResult = false;
+                }
+            }, 'json');
+            if (postResult) {
+                hideInvList(content);
+            }
+        });
+        $('input[name="invoice_type"]').on('click', function() {
+            if ($(this).val() == 1) {
+                $('#invoice_panel').show();
+                $('#vat_invoice_panel').hide();
+            } else {
+                $('#invoice_panel').hide();
+                $('#vat_invoice_panel').show();
+            }
+        });
+        $('select[name="invoice_title_select"]').on('change', function() {
+            if ($(this).val() == 'company') {
+                $('#invoice_title').show();
+            } else {
+                $('#invoice_title').hide();
+            }
+        });
+
+        $('#inv_form').validate({
+            rules: {
+                invoice_company: {
+                    required: true
+                },
+                invoice_company_code: {
+                    required: true
+                },
+                invoice_reg_addr: {
+                    required: true
+                },
+                invoice_reg_phone: {
+                    required: true
+                },
+                invoice_reg_bname: {
+                    required: true
+                },
+                invoice_reg_baccount: {
+                    required: true
+                },
+                invoice_rec_name: {
+                    required: true
+                },
+                invoice_rec_mobphone: {
+                    required: true
+                },
+                area_id: {
+                    required: true,
+                    min: 1,
+                    checkarea: true
+                },
+                invoice_goto_addr: {
+                    required: true
+                }
+            },
+            messages: {
+                invoice_company: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.unit_name_cannot_empty}'
+                },
+                invoice_company_code: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.taxpayer_identification_number_cannot_empty}'
+                },
+                invoice_reg_addr: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.registered_address_cannot_empty}'
+                },
+                invoice_reg_phone: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.registered_phone_cannot_empty}'
+                },
+                invoice_reg_bname: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.opening_bank_cannot_empty}'
+                },
+                invoice_reg_baccount: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.bank_accounts_cannot_empty}'
+                },
+                invoice_rec_name: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.ticket_collector_name_empty}'
+                },
+                invoice_rec_mobphone: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.ticket_collector_phone_empty}'
+                },
+                area_id: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_region}',
+                    min: '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_region}',
+                    checkarea: '<i class="iconfont">&#xe64c;</i>{$Think.lang.please_select_region}'
+                },
+                invoice_goto_addr: {
+                    required: '<i class="iconfont">&#xe64c;</i>{$Think.lang.ticket_delivery_address_empty}'
+                }
+            }
+        });
+    });
+</script>

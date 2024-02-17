@@ -1,0 +1,138 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_vrorder}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <div class="fixed-empty"></div>
+    <form method="get" action="" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.order_number}</dt>
+                <dd><input class="txt2" type="text" name="order_sn" value="{$Request.param.order_sn}" /></dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.order_state}</dt>
+                <dd><select name="order_state" class="querySelect">
+                        <option value="">{$Think.lang.ds_please_choose}</option>
+                        <option value="10" {if condition="$Request.param.order_state eq '10'"}selected{/if}>{$Think.lang.order_state_new}</option>
+                        <option value="20" {if condition="$Request.param.order_state eq '20'"}selected{/if}>已付款</option>
+                        <option value="40" {if condition="$Request.param.order_state eq '40'"}selected{/if}>{$Think.lang.order_state_success}</option>
+                        <option value="0" {if condition="$Request.param.order_state eq '0'"}selected{/if}>{$Think.lang.order_state_cancel}</option>
+                    </select>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.order_time}</dt>
+                <dd><input class="txt date" type="text" value="{$Request.param.query_start_time}" id="query_start_time" name="query_start_time">
+                    ~
+                    <input class="txt date" type="text" value="{$Request.param.query_end_time}" id="query_end_time" name="query_end_time"/>
+
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.buyer_name}</dt>
+                <dd><input class="txt-short" type="text" name="buyer_name" value="{$Request.param.buyer_name}" /></dd>
+            </dl>
+            <dl>
+                <dt>付款方式</dt>
+                <dd>
+                    <select name="payment_code" class="w100">
+                        <option value="">{$Think.lang.ds_please_choose}</option>
+                        <?php foreach($payment_list as $val) { ?>
+                        <?php if ($val['payment_code'] == 'offline') continue;?>
+                        <option {if condition="$Request.param.payment_code eq $val.payment_code"}selected{/if} value="{$val.payment_code}">{$val.payment_name}</option>
+                        <?php } ?>
+                    </select>
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="{$Think.lang.ds_query}">
+                {if $filtered}
+                <a href="{:url('Vrorder/index')}" class="btn btn-default " title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+                <a class="btn btn-mini" href="javascript:export_xls('{:url('Vrorder/export_step1')}')"><span>{$Think.lang.ds_export}Excel</span></a>
+                <a class="btn btn-mini right" href="{:url('Vrorder/exchange')}"><span>核验兑换码</span></a>
+            </div>
+        </div>
+    </form>
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>点击查看操作将显示订单（包括电子兑换码）的详细信息</li>
+            <li>未付款的订单可以点击取消操作来取消订单</li>
+            <li>如果平台已确认收到买家的付款，但系统支付状态并未变更，可以点击收到货款操作，并填写相关信息后更改订单支付状态</li>
+        </ul>
+    </div>
+    <table class="ds-default-table">
+        <colgroup>
+            <col width="200">
+            <col width="100">
+            <col width="100">
+            <col width="200">
+            <col width="100">
+            <col width="100">
+            <col width="100">
+            <col>
+        </colgroup>
+        <thead>
+            <tr class="thead">
+                <th>{$Think.lang.order_number}</th>
+                <th>{$Think.lang.buyer_name}</th>
+                <th class="align-center">{$Think.lang.order_time}</th>
+                <th class="align-center">{$Think.lang.order_total_price}</th>
+                <th class="align-center">{$Think.lang.payment}</th>
+                <th class="align-center">{$Think.lang.order_state}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {notempty name="order_list"}
+            {foreach name="order_list" item="order"}
+            <tr class="hover">
+                <td>{$order.order_sn}</td>
+                <td>{$order.buyer_name}</td>
+                <td class="nowrap align-center">{$order.add_time|date="Y-m-d H:i:s"}</td>
+                <td class="align-center">{$order.order_amount}</td>
+                <td class="align-center">{:get_order_payment_name($order['payment_code'])}</td>
+                <td class="align-center">{$order.state_desc|raw}</td>
+                <td class="w144 align-center">
+                    
+                    <a href="javascript:dsLayerOpen('{:url('Vrorder/show_order',['order_id'=>$order.order_id])}','查看虚拟订单-{$order.order_sn}')" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_view}</a>
+                    <!-- 取消订单 -->
+                    {if $order.if_cancel}
+                    <a href="javascript:dsLayerConfirm('{:url('Vrorder/change_state',['state_type'=>'cancel','order_id'=>$order.order_id])}','{$Think.lang.order_confirm_cancel}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_cancel}</a>
+                    {/if}
+                    <!-- 收款 -->
+                    {if $order.if_system_receive_pay}
+                    <a href="{:url('Vrorder/change_state',['state_type'=>'receive_pay','order_id'=>$order.order_id])}" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.order_change_received}</a>
+                    {/if}
+                </td>
+            </tr>
+            {/foreach}
+            {else /}
+            <tr class="no_data">
+                <td colspan="15">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+        </tbody>
+    </table>
+    {$show_page|raw}
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('#query_start_time').datepicker({dateFormat: 'yy-mm-dd'});
+        $('#query_end_time').datepicker({dateFormat: 'yy-mm-dd'});
+    });
+</script> 

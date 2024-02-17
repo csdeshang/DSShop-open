@@ -1,0 +1,125 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>兑换礼品</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <table class="ds-default-table">
+        <tbody>
+        <tr class="space">
+            <th colspan="15">{$Think.lang.admin_pointorder_info_ordersimple}</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li><strong>{$Think.lang.admin_pointorder_ordersn}:</strong>{$order_info.point_ordersn}</li>
+                    <li><strong>{$Think.lang.ds_state}:</strong>{$order_info.point_orderstatetext};
+                    </li>
+                    <li><strong>{$Think.lang.admin_pointorder_exchangepoints}:</strong><span class="red_common">{$order_info.point_allpoint}</span></li>
+                    {if isset($order_info.point_shippingcharge) &&  $order_info.point_shippingcharge eq '1'}
+                    <li><strong>{$Think.lang.order_total_transport}:</strong>{$order_info.point_shippingfee}</li>
+                    {/if}
+                    <li><strong>{$Think.lang.admin_pointorder_addtime}:</strong>
+                        <span class="red_common">{$order_info.point_addtime|date="Y-m-d H:i:s"}</span>
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr class="space">
+            <th colspan="2">{$Think.lang.admin_pointorder_info_orderdetail}</th>
+        </tr>
+        <tr>
+            <th>{$Think.lang.admin_pointorder_info_memberinfo}</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li><strong>{$Think.lang.admin_pointorder_membername}:</strong>{$order_info.point_buyername}</li>
+                    <li><strong>{$Think.lang.admin_pointorder_info_memberemail}:</strong>{$order_info.point_buyeremail}
+                    </li>
+                    <li><strong>{$Think.lang.admin_pointorder_info_ordermessage}:</strong>{$order_info.point_ordermessage}
+                    </li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>{$Think.lang.consignee_ship_order_info}</th>
+        </tr>
+        <tr>
+            <td>
+                <ul>
+                    <li><strong>{$Think.lang.admin_pointorder_info_shipinfo_truename}:</strong>{$orderaddress_info.pointoa_truename}
+                    </li>
+                    <li><strong>{$Think.lang.admin_pointorder_info_shipinfo_areainfo}:</strong>{$orderaddress_info.pointoa_areainfo}
+                    </li>
+                    <li><strong>{$Think.lang.tel_phone}:</strong>{$orderaddress_info.pointoa_telphone}
+                    </li>
+                    <li><strong>{$Think.lang.mob_phone}:</strong>{$orderaddress_info.pointoa_mobphone}
+                    </li>
+                    <li><strong>{$Think.lang.admin_pointorder_info_shipinfo_address}:</strong>{$orderaddress_info.pointoa_areainfo} {$orderaddress_info.pointoa_address}
+                    </li>
+                    {if $order_info.point_shippingcode != ''}
+                    <li><strong>{$Think.lang.admin_pointorder_shipping_code}:</strong>{$order_info.point_shippingcode}
+                    </li>
+                   {/if}
+                    {if $order_info.point_shippingtime != ''}
+                    <li>
+                        <strong>{$Think.lang.ship_time}:</strong>{$order_info.point_shippingtime|date="Y-m-d"}
+                    </li>
+                   {/if}
+                    {if isset($order_info.point_shippingdesc) &&   $order_info.point_shippingdesc != ''}
+                    <li style="width:60%;"><strong>{$Think.lang.admin_pointorder_info_shipinfo_description}:</strong>{$order_info.point_shippingdesc}
+                    </li>
+                    {/if}
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <th>{$Think.lang.admin_pointorder_info_prodinfo}</th>
+        </tr>
+        <tr>
+            <td>
+                <table class="ds-default-table">
+                    <tbody>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>{$Think.lang.admin_pointorder_exchangepoints}</th>
+                        <th>{$Think.lang.admin_pointorder_info_prodinfo_exnum}</th>
+                    </tr>
+                    {foreach name="prod_list" item="v"}
+                    <tr>
+                        <td class="w60 picture">
+                            <div class="size-56x56">
+                                <span class="thumb size-56x56"><i></i><a  href="{:url('Pointprod/pinfo',['id'=>$v.pointog_goodsid])}" target="_blank" class="order_info_pic">
+                                        <img src="{$v.point_goodsimage_small}" onload="javascript:ResizeImage(this,56,56);"/></a>
+                                </span>
+                            </div>
+                        </td>
+                        <td class="w50pre"><a  href="{:url('home/Pointprod/pinfo',['id'=>$v.pointog_goodsid])}"  target="_blank">{$v.pointog_goodsname}</a></td>
+                        <td>{$v.pointog_goodspoints}</td>
+                        <td>{$v.pointog_goodsnum}</td>
+                    </tr>
+                    {/foreach}
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        </tbody>
+        <tfoot>
+        <tr class="tfoot">
+            <td><a href="{:url('Pointorder/pointorder_list')}" class="btn"><span>{$Think.lang.ds_backlist}</span></a></td>
+        </tr>
+        </tfoot>
+    </table>
+
+</div>

@@ -1,0 +1,65 @@
+{include file="public/header" /}
+<style>
+    body{background-image:url({$Think.ADMIN_SITE_ROOT}/images/wallpage/bg_{:rand(1,8)}.jpg););background-size: cover;}
+</style>
+<div class="login">
+    <div class="login_body">
+        <div class="login_header">
+            <img src="{$Think.ADMIN_SITE_ROOT}/images/logo.png"/>
+        </div>
+        <div class="login_content">
+            <form method="post" id="login_form">
+                <div class="form-group">
+                    <input type="text" name="admin_name" placeholder="用户名" required class="text">
+                </div>
+                <div class="form-group">
+                    <input type="password" name="admin_password" autocomplete="new-password" placeholder="密码" required  class="text">
+                </div>
+                <div class="form-group">
+                    <input type="text" name="captcha" placeholder="验证码" required  class="text" style="width:60%;float:left;">
+                    <img src="{:url('Login/makecode')}" style="width:30%;height:38px;" id="change_captcha"/>
+                </div>
+                <div class="form-group">
+                    <input type="button" class="btn" id="login_btn" value="登录" style="width:100%"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).keyup(function (event) {
+        if (event.keyCode == 13) {
+            login_form();
+        }
+    });
+    $('#login_btn').on('click', function () {
+        login_form();
+    });
+    function login_form()
+    {
+        var _form = $('#login_form');
+        $.ajax({
+            type: "POST",
+            url: "{:url('Login/index')}",
+            data: _form.serialize(),
+            dataType: 'json',
+            success: function (res) {
+                layer.msg(res.message, {time: 1500}, function () {
+                    if (res.code == 10000) {
+                        location.href = "{:url('Index/index')}";
+                    } else {
+                        $('#change_captcha').attr('src', '{:url("Login/makecode")}?' + (new Date().getTime()));
+                    }
+                });
+            }
+        });
+    }
+    $('#change_captcha').click(function () {
+        $(this).attr('src', '{:url("Login/makecode")}?' + (new Date().getTime()));
+    });
+</script>
+{include file="public/footer" /} 
+
+
+
+

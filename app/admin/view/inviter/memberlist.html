@@ -1,0 +1,80 @@
+<table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th>&nbsp;</th>
+          <th colspan="2">{$Think.lang.ds_member}</th>
+          <th class="align-center">{$Think.lang.inviter_class}</th>
+          <th class="align-center">{$Think.lang.inviter_total_amount}</th>
+          <th class="align-center">{$Think.lang.inviter_goods_quantity}</th>
+          <th class="align-center">{$Think.lang.inviter_goods_amount}</th>
+          <th class="align-center">{$Think.lang.inviter_parent_name}</th>
+          <th class="align-center">{$Think.lang.inviter_quantity}</th>
+          <th class="align-center">{$Think.lang.ds_state}</th>
+          <th class="align-center">{$Think.lang.refund_buyer_add_time}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {notempty name="member_list"}
+        {foreach name="member_list" item="v" key="k" }
+        <tr class="hover member">
+          <td class="w24"><input type="checkbox" name='del_id[]' value="{$v.inviter_id}" class="checkitem"></td>
+          <td class="w48 picture">
+              <div class="size-44x44">
+              <span class="thumb"><i></i>
+                  <img src="{:get_member_avatar($v.member_avatar)}?{:microtime()}"  width="44" height="44"/>
+              </span>
+          </div>
+          </td>
+          <td><p class="name"><strong>{$v.member_name}</strong>({$Think.lang.member_truename}: {$v.member_truename})</p>
+            <p class="smallfont">{$Think.lang.member_addtime}:&nbsp;{$v.member_addtime}</p>
+            
+              <div class="im"><span class="email" >
+                {if $v.member_email != ''}
+                <a href="mailto:{$v.member_email}" class=" yes" title="{$Think.lang.member_email}:{$v.member_email}">{$v.member_email}</a></span>
+                {else /}
+                <a href="JavaScript:void(0);" class="" title="{$Think.lang.member_index_null}" >{$v.member_email}</a></span>
+               {/if}
+                {if $v.member_ww != ''}
+                <a target="_blank" href="http://web.im.alisoft.com/msg.aw?v=2&uid={$v.member_ww}&site=cnalichn&s=11" class="" title="WangWang: {$v.member_ww}"><img border="0" src="http://web.im.alisoft.com/online.aw?v=2&uid={$v.member_ww}&site=cntaobao&s=2&charset=utf-8" /></a>
+                {/if}
+                {if $v.member_qq != ''}
+                <a target="_blank" href="{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$v.member_qq}&site=qq&menu=yes" class=""  title="QQ: {$v.member_qq}"><img border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$v.member_qq}:52"/></a>
+                {/if}
+               {if $v.member_mobile != ''}
+               <div style="font-size:13px; padding-left:10px">&nbsp;&nbsp;{:encrypt_show($v.member_mobile,4,4)}</div>
+               {/if}
+              </div></td>
+              <td class="align-center">{$v.inviter_class}</td>
+          <td class="align-center">{$Think.lang.currency}{$v.inviter_total_amount|default=0}</td>
+          <td class="align-center">{$v.inviter_goods_quantity|default=0}</td>
+          <td class="align-center">{$Think.lang.currency}{$v.inviter_goods_amount|default=0}</td>
+          <td class="align-center">{$v.inviter_parent_name}</td>
+          <td class="align-center">
+          <p>{$Think.lang.inviter_member_1}{$v.inviter_1_quantity|default=0}</p>
+          <p>{$Think.lang.inviter_member_2}{$v.inviter_2_quantity|default=0}</p>
+          <p>{$Think.lang.inviter_member_3}{$v.inviter_3_quantity|default=0}</p>
+          </td>
+          <td class="align-center">{if $v.inviter_state == '0'}{$Think.lang.ds_examine}{elseif $v.inviter_state == '1'}{$Think.lang.inviter_state_1}{elseif $v.inviter_state == '2'}{$Think.lang.inviter_state_2}{/if}</td>
+          <td class="align-center">{if $v.inviter_applytime}{$v.inviter_applytime|date='Y-m-d'}{/if}</td>
+          
+        </tr>
+        {/foreach}
+        {else /}
+        <tr class="no_data">
+          <td colspan="11">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+      </tbody>
+
+    </table>
+    {$show_page|raw}
+<script>
+    $(function(){
+        $('.pagination a').each(function(){
+            $(this).data('url',$(this).attr('href')).attr('href','javascript:void(0)')
+            $(this).click(function(){
+               $('#member_list_wrap').load($(this).data('url'));
+            })
+        })
+    })
+</script>

@@ -1,0 +1,52 @@
+{include file="public/header" /}
+
+    <form method="post" action="{:url('Deliver/batch_send')}" id="plate_form" class='batch_send_form'>
+        <input type="hidden" name="order_id" value="{$Request.param.order_id}" />
+        <table class="ds-default-table nobdb">
+            <tbody>
+        {if $order_list}
+        {foreach name='order_list' item="val"}
+        <tr class="noborder">
+            <td class="required w120">订单编号</td>
+            <td class="vatop rowform">{$val.order_sn}</td>
+        </tr>    
+        <tr class="noborder">
+                <td class="required w120">确认发货信息</td>
+                <td class="vatop rowform">
+                    <select name="send[{$val.order_id}][daddress_id]">
+                        <option>{$Think.lang.ds_please_choose}</option>
+                        {notempty name="daddress_list"}
+                       {foreach name="daddress_list" key="k" item="daddress_info"}
+                        <option value="{$daddress_info.daddress_id}" {if $k==0}selected{/if}>{$daddress_info.seller_name}&nbsp;{$daddress_info.daddress_telphone}&nbsp;{$daddress_info.area_info}&nbsp;{$daddress_info.daddress_detail}</option>
+                       {/foreach}
+                       {/notempty}
+                    </select>
+                </td>
+        </tr>    
+        <tr class="noborder">        
+                <td class="required w120">选择物流服务</td>
+                <td class="vatop rowform">
+                    <select name="send[{$val.order_id}][express_id]">
+                        <option>{$Think.lang.ds_please_choose}</option>
+                        {notempty name="val.my_express_list"}
+                       {foreach name="val.my_express_list" key="k" item="v"}
+                        <option value="{$v.express_id}" {if $k==0}selected{/if}>{$v.express_name}</option>
+                       {/foreach}
+                       {/notempty}
+                    </select>
+                    <input name="send[{$val.order_id}][shipping_code]" type="text" class="text w200 tip-r" />
+                </td>
+        </tr>
+        {/foreach}
+        </tbody>
+        <tfoot>
+            <tr class="tfoot">
+                <td colspan="2"><input type="submit" value="{$Think.lang.ds_submit}"  class="btn" /></td>
+            </tr>
+        </tfoot>
+        {else}
+        <tbody><tr><td>只有付款且未发货的订单可以设置发货</td></tr></tbody>
+        {/if}
+        </table>
+    </form>
+

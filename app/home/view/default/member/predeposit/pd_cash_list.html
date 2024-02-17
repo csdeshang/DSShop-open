@@ -1,0 +1,73 @@
+{extend name="default/base/base_member" /}
+{block name="member_btn"}
+<a class="dsm-btn dsm-btn-green" title="{$Think.lang.predeposit_application_withdrawal}" href="{:url('Membersecurity/auth',['type'=>'pd_cash'])}"> <i class="iconfont">&#xe6a1;</i>{$Think.lang.predeposit_application_withdrawal} </a>
+{/block}
+{block name="member_main"}
+
+
+
+
+<div class="alert"><span class="mr30">{$Think.lang.predeposit_pricetype_available}{$Think.lang.ds_colon}<strong class="mr5 red" style="font-size: 18px;">{$member_info.available_predeposit}</strong>{$Think.lang.ds_yuan}</span><span>{$Think.lang.predeposit_pricetype_freeze}{$Think.lang.ds_colon}<strong class="mr5 blue" style="font-size: 18px;">{$member_info.freeze_predeposit}</strong>{$Think.lang.ds_yuan}</span></div>
+<form method="post" action="">
+    <table class="dsm-search-table">
+        <tr>
+            <th></th><td></td>
+            <th>{$Think.lang.ds_state}{$Think.lang.ds_colon}</th>
+            <td class="w90">
+                <select id="paystate_search" name="paystate_search">
+                    <option value="0">{$Think.lang.ds_please_choose}</option>
+                    <option {if condition="$Request.param.paystate_search eq '0'"}selected{/if} value="0">{$Think.lang.predeposit_rechargewaitpaying}</option>
+                    <option {if condition="$Request.param.paystate_search eq '1'"}selected{/if} value="1">{$Think.lang.predeposit_rechargepaysuccess}</option>
+                </select>
+            </td>
+            <th>{$Think.lang.predeposit_cashsn}</th>
+            <td class="w160 tc"><input type="text" class="text w150" name="sn_search" value="{$Request.param.sn_search}"/></td>
+            <td class="w70 tc">
+                <input type="submit" class="submit" value="{$Think.lang.ds_search}" />
+            </td>
+        </tr>
+    </table>
+</form>
+<table class="dsm-default-table">
+    <thead>
+        <tr>
+            <th>{$Think.lang.predeposit_cashsn}</th>
+            <th>{$Think.lang.refund_buyer_add_time}</th>
+            <th>{$Think.lang.predeposit_cash_price}({$Think.lang.ds_yuan})</th>
+            <th class="w150">{$Think.lang.ds_state}</th>
+            <th class="w100">{$Think.lang.ds_handle}</th>
+        </tr>
+    </thead>
+    <tbody>
+        {notempty name="pdcash_list"}
+        {foreach name="pdcash_list" item="val"  }
+        <tr class="bd-line">
+            <td>{$val.pdc_sn}</td>
+            <td><?php echo @date('Y-m-d H:i:s',$val['pdc_addtime']);?></td>
+            <td>{$val.pdc_amount}</td>
+            <td><?php echo str_replace(array('0','1'),array(lang('predeposit_rechargewaitpaying'),lang('predeposit_rechargepaysuccess')),$val['pdc_payment_state']);?></td>
+            <td><p><a href="{:url('Predeposit/pd_cash_info',['id'=>$val.pdc_id])} ">{$Think.lang.ds_view}</a></p></td>
+        </tr>
+        {/foreach}
+        {else /}
+        <tr>
+            <td colspan="20" class="norecord"><div class="warning-option"><i>&nbsp;</i><span>{$Think.lang.no_record}</span></div></td>
+        </tr>
+        {/notempty}
+    </tbody>
+    <tfoot>
+        {notempty name="pdcash_list"}
+        <tr>
+            <td colspan="20"><div class="pagination">{$show_page|raw}</div></td>
+        </tr>
+        {/notempty}
+    </tfoot>
+</table>
+
+
+
+
+
+
+
+{/block}

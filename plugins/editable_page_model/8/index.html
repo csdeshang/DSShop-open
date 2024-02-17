@@ -1,0 +1,1150 @@
+<div class="editable-page-model editable-page-model-8" style="background-color:{$config_info.back_color|default=''};">
+    <div class="editable-page-content" style="padding-top:{$config_info.padding_top|default=''};padding-bottom:{$config_info.padding_bottom|default=''};">
+        <div class="content-wrapper">
+            <div class="category-list">
+
+                {if isset($config_info.gc_list[0])}
+                    <div class="category-item">
+                        <div class="tab_head_item">
+                            <div class="tab_head_item_inner">
+                                <i class="item_icon"{if isset($config_info['gc'][0])} style="background-image:url({$config_info['gc'][0]['image']})"{/if}></i>
+                                <a class="item_title" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.gc_id])}" target="_blank">{$config_info.gc_list.0.gc_name}</a>
+                                <div class="item_children">
+                                    {if isset($config_info.gc_list.0.children.0)}
+                                    <a class="item_children_item first" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.0.gc_id])}" target="_blank">{$config_info.gc_list.0.children.0.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item first">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.0.children.1)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.1.gc_id])}" target="_blank">{$config_info.gc_list.0.children.1.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.0.children.2)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.2.gc_id])}" target="_blank">{$config_info.gc_list.0.children.2.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab_body_item">
+                            <div class="fresh_fs_nav_cate cate">
+                                {if isset($config_info.gc_list.0.children.0)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.0.gc_id])}" target="_blank">{$config_info.gc_list.0.children.0.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.0.children.0.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.0.children.0.gc_id])}" target="_blank">{$config_info.gc_list.0.children.0.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.0.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.0.children.1.gc_id])}" target="_blank">{$config_info.gc_list.0.children.0.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.0.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.0.children.2.gc_id])}" target="_blank">{$config_info.gc_list.0.children.0.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.0.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.0.children.3.gc_id])}" target="_blank">{$config_info.gc_list.0.children.0.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.0.children.1)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.1.gc_id])}" target="_blank">{$config_info.gc_list.0.children.1.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.0.children.1.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.1.children.0.gc_id])}" target="_blank">{$config_info.gc_list.0.children.1.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.1.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.1.children.1.gc_id])}" target="_blank">{$config_info.gc_list.0.children.1.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.1.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.1.children.2.gc_id])}" target="_blank">{$config_info.gc_list.0.children.1.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.1.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.1.children.3.gc_id])}" target="_blank">{$config_info.gc_list.0.children.1.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.0.children.2)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.2.gc_id])}" target="_blank">{$config_info.gc_list.0.children.2.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.0.children.2.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.2.children.0.gc_id])}" target="_blank">{$config_info.gc_list.0.children.2.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.2.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.2.children.1.gc_id])}" target="_blank">{$config_info.gc_list.0.children.2.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.2.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.2.children.2.gc_id])}" target="_blank">{$config_info.gc_list.0.children.2.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.0.children.2.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.0.children.2.children.3.gc_id])}" target="_blank">{$config_info.gc_list.0.children.2.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                {else}
+                <div class="category-item">
+                    <div class="tab_head_item">
+                        <div class="tab_head_item_inner">
+                            <i class="item_icon" style="background:#e1e1e1;color:#fff;font-style:normal;"><span style="padding-left: 7px;padding-top: 5px;transform:scale(0.5,0.5);transform-origin:left;display: block;white-space: nowrap;">26×26</span></i>
+                            <a class="item_title">商品分类</a>
+                            <div class="item_children">
+                            <a class="item_children_item first">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab_body_item">
+                        <div class="fresh_fs_nav_cate cate">
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[1])}
+                    <div class="category-item">
+                        <div class="tab_head_item">
+                            <div class="tab_head_item_inner">
+                                <i class="item_icon"{if isset($config_info['gc'][1])} style="background-image:url({$config_info['gc'][1]['image']})"{/if}></i>
+                                <a class="item_title" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.gc_id])}" target="_blank">{$config_info.gc_list.1.gc_name}</a>
+                                <div class="item_children">
+                                    {if isset($config_info.gc_list.1.children.0)}
+                                    <a class="item_children_item first" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.0.gc_id])}" target="_blank">{$config_info.gc_list.1.children.0.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item first">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.1.children.1)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.1.gc_id])}" target="_blank">{$config_info.gc_list.1.children.1.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.1.children.2)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.2.gc_id])}" target="_blank">{$config_info.gc_list.1.children.2.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab_body_item">
+                            <div class="fresh_fs_nav_cate cate">
+                                {if isset($config_info.gc_list.1.children.0)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.0.gc_id])}" target="_blank">{$config_info.gc_list.1.children.0.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.1.children.0.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.0.children.0.gc_id])}" target="_blank">{$config_info.gc_list.1.children.0.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.0.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.0.children.1.gc_id])}" target="_blank">{$config_info.gc_list.1.children.0.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.0.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.0.children.2.gc_id])}" target="_blank">{$config_info.gc_list.1.children.0.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.0.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.0.children.3.gc_id])}" target="_blank">{$config_info.gc_list.1.children.0.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.1.children.1)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.1.gc_id])}" target="_blank">{$config_info.gc_list.1.children.1.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.1.children.1.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.1.children.0.gc_id])}" target="_blank">{$config_info.gc_list.1.children.1.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.1.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.1.children.1.gc_id])}" target="_blank">{$config_info.gc_list.1.children.1.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.1.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.1.children.2.gc_id])}" target="_blank">{$config_info.gc_list.1.children.1.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.1.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.1.children.3.gc_id])}" target="_blank">{$config_info.gc_list.1.children.1.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.1.children.2)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.2.gc_id])}" target="_blank">{$config_info.gc_list.1.children.2.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.1.children.2.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.2.children.0.gc_id])}" target="_blank">{$config_info.gc_list.1.children.2.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.2.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.2.children.1.gc_id])}" target="_blank">{$config_info.gc_list.1.children.2.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.2.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.2.children.2.gc_id])}" target="_blank">{$config_info.gc_list.1.children.2.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.1.children.2.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.1.children.2.children.3.gc_id])}" target="_blank">{$config_info.gc_list.1.children.2.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                {else}
+                <div class="category-item">
+                    <div class="tab_head_item">
+                        <div class="tab_head_item_inner">
+                            <i class="item_icon" style="background:#e1e1e1;color:#fff;font-style:normal;"><span style="padding-left: 7px;padding-top: 5px;transform:scale(0.5,0.5);transform-origin:left;display: block;white-space: nowrap;">26×26</span></i>
+                            <a class="item_title">商品分类</a>
+                            <div class="item_children">
+                            <a class="item_children_item first">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab_body_item">
+                        <div class="fresh_fs_nav_cate cate">
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[2])}
+                    <div class="category-item">
+                        <div class="tab_head_item">
+                            <div class="tab_head_item_inner">
+                                <i class="item_icon"{if isset($config_info['gc'][2])} style="background-image:url({$config_info['gc'][2]['image']})"{/if}></i>
+                                <a class="item_title" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.gc_id])}" target="_blank">{$config_info.gc_list.2.gc_name}</a>
+                                <div class="item_children">
+                                    {if isset($config_info.gc_list.2.children.0)}
+                                    <a class="item_children_item first" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.0.gc_id])}" target="_blank">{$config_info.gc_list.2.children.0.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item first">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.2.children.1)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.1.gc_id])}" target="_blank">{$config_info.gc_list.2.children.1.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.2.children.2)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.2.gc_id])}" target="_blank">{$config_info.gc_list.2.children.2.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab_body_item">
+                            <div class="fresh_fs_nav_cate cate">
+                                {if isset($config_info.gc_list.2.children.0)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.0.gc_id])}" target="_blank">{$config_info.gc_list.2.children.0.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.2.children.0.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.0.children.0.gc_id])}" target="_blank">{$config_info.gc_list.2.children.0.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.0.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.0.children.1.gc_id])}" target="_blank">{$config_info.gc_list.2.children.0.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.0.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.0.children.2.gc_id])}" target="_blank">{$config_info.gc_list.2.children.0.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.0.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.0.children.3.gc_id])}" target="_blank">{$config_info.gc_list.2.children.0.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.2.children.1)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.1.gc_id])}" target="_blank">{$config_info.gc_list.2.children.1.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.2.children.1.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.1.children.0.gc_id])}" target="_blank">{$config_info.gc_list.2.children.1.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.1.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.1.children.1.gc_id])}" target="_blank">{$config_info.gc_list.2.children.1.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.1.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.1.children.2.gc_id])}" target="_blank">{$config_info.gc_list.2.children.1.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.1.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.1.children.3.gc_id])}" target="_blank">{$config_info.gc_list.2.children.1.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.2.children.2)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.2.gc_id])}" target="_blank">{$config_info.gc_list.2.children.2.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.2.children.2.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.2.children.0.gc_id])}" target="_blank">{$config_info.gc_list.2.children.2.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.2.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.2.children.1.gc_id])}" target="_blank">{$config_info.gc_list.2.children.2.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.2.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.2.children.2.gc_id])}" target="_blank">{$config_info.gc_list.2.children.2.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.2.children.2.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.2.children.2.children.3.gc_id])}" target="_blank">{$config_info.gc_list.2.children.2.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                {else}
+                <div class="category-item">
+                    <div class="tab_head_item">
+                        <div class="tab_head_item_inner">
+                            <i class="item_icon" style="background:#e1e1e1;color:#fff;font-style:normal;"><span style="padding-left: 7px;padding-top: 5px;transform:scale(0.5,0.5);transform-origin:left;display: block;white-space: nowrap;">26×26</span></i>
+                            <a class="item_title">商品分类</a>
+                            <div class="item_children">
+                            <a class="item_children_item first">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab_body_item">
+                        <div class="fresh_fs_nav_cate cate">
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[3])}
+                    <div class="category-item">
+                        <div class="tab_head_item">
+                            <div class="tab_head_item_inner">
+                                <i class="item_icon"{if isset($config_info['gc'][3])} style="background-image:url({$config_info['gc'][3]['image']})"{/if}></i>
+                                <a class="item_title" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.gc_id])}" target="_blank">{$config_info.gc_list.3.gc_name}</a>
+                                <div class="item_children">
+                                    {if isset($config_info.gc_list.3.children.0)}
+                                    <a class="item_children_item first" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.0.gc_id])}" target="_blank">{$config_info.gc_list.3.children.0.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item first">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.3.children.1)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.1.gc_id])}" target="_blank">{$config_info.gc_list.3.children.1.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.3.children.2)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.2.gc_id])}" target="_blank">{$config_info.gc_list.3.children.2.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab_body_item">
+                            <div class="fresh_fs_nav_cate cate">
+                                {if isset($config_info.gc_list.3.children.0)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.0.gc_id])}" target="_blank">{$config_info.gc_list.3.children.0.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.3.children.0.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.0.children.0.gc_id])}" target="_blank">{$config_info.gc_list.3.children.0.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.0.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.0.children.1.gc_id])}" target="_blank">{$config_info.gc_list.3.children.0.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.0.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.0.children.2.gc_id])}" target="_blank">{$config_info.gc_list.3.children.0.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.0.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.0.children.3.gc_id])}" target="_blank">{$config_info.gc_list.3.children.0.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.3.children.1)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.1.gc_id])}" target="_blank">{$config_info.gc_list.3.children.1.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.3.children.1.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.1.children.0.gc_id])}" target="_blank">{$config_info.gc_list.3.children.1.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.1.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.1.children.1.gc_id])}" target="_blank">{$config_info.gc_list.3.children.1.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.1.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.1.children.2.gc_id])}" target="_blank">{$config_info.gc_list.3.children.1.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.1.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.1.children.3.gc_id])}" target="_blank">{$config_info.gc_list.3.children.1.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.3.children.2)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.2.gc_id])}" target="_blank">{$config_info.gc_list.3.children.2.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.3.children.2.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.2.children.0.gc_id])}" target="_blank">{$config_info.gc_list.3.children.2.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.2.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.2.children.1.gc_id])}" target="_blank">{$config_info.gc_list.3.children.2.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.2.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.2.children.2.gc_id])}" target="_blank">{$config_info.gc_list.3.children.2.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.3.children.2.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.3.children.2.children.3.gc_id])}" target="_blank">{$config_info.gc_list.3.children.2.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                {else}
+                <div class="category-item">
+                    <div class="tab_head_item">
+                        <div class="tab_head_item_inner">
+                            <i class="item_icon" style="background:#e1e1e1;color:#fff;font-style:normal;"><span style="padding-left: 7px;padding-top: 5px;transform:scale(0.5,0.5);transform-origin:left;display: block;white-space: nowrap;">26×26</span></i>
+                            <a class="item_title">商品分类</a>
+                            <div class="item_children">
+                            <a class="item_children_item first">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab_body_item">
+                        <div class="fresh_fs_nav_cate cate">
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+                {if isset($config_info.gc_list[5])}
+                    <div class="category-item">
+                        <div class="tab_head_item">
+                            <div class="tab_head_item_inner">
+                                <i class="item_icon"{if isset($config_info['gc'][4])} style="background-image:url({$config_info['gc'][4]['image']})"{/if}></i>
+                                <a class="item_title" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.gc_id])}" target="_blank">{$config_info.gc_list.4.gc_name}</a>
+                                <div class="item_children">
+                                    {if isset($config_info.gc_list.4.children.0)}
+                                    <a class="item_children_item first" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.0.gc_id])}" target="_blank">{$config_info.gc_list.4.children.0.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item first">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.4.children.1)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.1.gc_id])}" target="_blank">{$config_info.gc_list.4.children.1.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                    {if isset($config_info.gc_list.4.children.2)}
+                                    <a class="item_children_item" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.2.gc_id])}" target="_blank">{$config_info.gc_list.4.children.2.gc_name}</a>
+                                    {else}
+                                    <a class="item_children_item">商品分类</a>
+                                    {/if}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tab_body_item">
+                            <div class="fresh_fs_nav_cate cate">
+                                {if isset($config_info.gc_list.4.children.0)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.0.gc_id])}" target="_blank">{$config_info.gc_list.4.children.0.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.4.children.0.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.0.children.0.gc_id])}" target="_blank">{$config_info.gc_list.4.children.0.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.0.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.0.children.1.gc_id])}" target="_blank">{$config_info.gc_list.4.children.0.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.0.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.0.children.2.gc_id])}" target="_blank">{$config_info.gc_list.4.children.0.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.0.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.0.children.3.gc_id])}" target="_blank">{$config_info.gc_list.4.children.0.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.4.children.1)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.1.gc_id])}" target="_blank">{$config_info.gc_list.4.children.1.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.4.children.1.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.1.children.0.gc_id])}" target="_blank">{$config_info.gc_list.4.children.1.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.1.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.1.children.1.gc_id])}" target="_blank">{$config_info.gc_list.4.children.1.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.1.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.1.children.2.gc_id])}" target="_blank">{$config_info.gc_list.4.children.1.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.1.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.1.children.3.gc_id])}" target="_blank">{$config_info.gc_list.4.children.1.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                                {if isset($config_info.gc_list.4.children.2)}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.2.gc_id])}" target="_blank">{$config_info.gc_list.4.children.2.gc_name}<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            {if isset($config_info.gc_list.4.children.2.children.0)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.2.children.0.gc_id])}" target="_blank">{$config_info.gc_list.4.children.2.children.0.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.2.children.1)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.2.children.1.gc_id])}" target="_blank">{$config_info.gc_list.4.children.2.children.1.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.2.children.2)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.2.children.2.gc_id])}" target="_blank">{$config_info.gc_list.4.children.2.children.2.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                            {if isset($config_info.gc_list.4.children.2.children.3)}
+                                                <a class="cate_con_lk" href="{:url('Search/index',['cate_id'=>$config_info.gc_list.4.children.2.children.3.gc_id])}" target="_blank">{$config_info.gc_list.4.children.2.children.3.gc_name}</a>
+                                            {else}
+                                                <a class="cate_con_lk">商品分类</a>
+                                            {/if}
+                                        </dd>
+                                    </dl>
+                                {else}
+                                    <dl class="cate_item">
+                                        <dt class="cate_tit">
+                                            <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                        </dt>
+                                        <dd class="cate_con">
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                            <a class="cate_con_lk">商品分类</a>
+                                        </dd>
+                                    </dl>
+                                {/if}
+                            </div>
+                        </div>
+                    </div>
+                {else}
+                <div class="category-item">
+                    <div class="tab_head_item">
+                        <div class="tab_head_item_inner">
+                            <i class="item_icon" style="background:#e1e1e1;color:#fff;font-style:normal;"><span style="padding-left: 7px;padding-top: 5px;transform:scale(0.5,0.5);transform-origin:left;display: block;white-space: nowrap;">26×26</span></i>
+                            <a class="item_title">商品分类</a>
+                            <div class="item_children">
+                            <a class="item_children_item first">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            <a class="item_children_item">商品分类</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab_body_item">
+                        <div class="fresh_fs_nav_cate cate">
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                            <dl class="cate_item">
+                                <dt class="cate_tit">
+                                    <a class="cate_tit_lk">商品分类<i class="cate_tit_arrow">&gt;</i></a>
+                                </dt>
+                                <dd class="cate_con">
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                    <a class="cate_con_lk">商品分类</a>
+                                </dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+            </div>
+
+            <div class="slide-wrapper">
+                {if isset($config_info['adv_center']) && !empty($config_info['adv_center'])}
+                <div class="bd">
+                    <ul>
+                        {foreach name="config_info.adv_center" item="v"}
+                        <li style="background-image: url({$v.image})" >
+                            <a href="{$v.link}">&nbsp;</a>
+                        </li>
+                        {/foreach}
+                    </ul>
+                </div>
+                {if count($config_info['adv_center'])>1}
+                <div class="hd">
+                    <ul>
+                        {foreach name="config_info.adv_center" item="v"}
+                        <li class=""></li>
+                        {/foreach}
+                    </ul>
+                </div>
+                <a class="ctrl prev" href="javascript:void(0)">&lt;</a>
+                <a class="ctrl next" href="javascript:void(0)">&gt;</a>
+                {/if}
+                {else}
+                <div class="bd">
+                    <ul>
+                        <li>
+                            <div style="background:#e1e1e1;color:#fff;font-size: 30px;font-weight: bold;text-align: center;padding-top: 100px;height: 400px;box-sizing: border-box;">800×400</div>
+                        </li>
+                        <li>
+                            <div style="background:#e1e1e1;color:#fff;font-size: 30px;font-weight: bold;text-align: center;padding-top: 100px;height: 400px;box-sizing: border-box;">800×400</div>
+                        </li>
+                        <li>
+                            <div style="background:#e1e1e1;color:#fff;font-size: 30px;font-weight: bold;text-align: center;padding-top: 100px;height: 400px;box-sizing: border-box;">800×400</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="hd">
+                    <ul>
+                        <li class=""></li>
+                        <li class=""></li>
+                        <li class=""></li>
+                    </ul>
+                </div>
+                <a class="ctrl prev" href="javascript:void(0)">&lt;</a>
+                <a class="ctrl next" href="javascript:void(0)">&gt;</a>
+                {/if}
+            </div>
+
+            {if isset($config_info.article)}
+            <div class="fresh_fs_side">
+                <div class="fresh_fs_toutiao">
+                    <div class="fresh_fs_toutiao_title">
+                        <i class="fresh_fs_toutiao_title_l"></i>
+                        {if $config_info.article_title_1 != ''}
+                        <span class="fresh_fs_toutiao_title_text"><em>{$config_info.article_title_1|default=''}</em>{$config_info.article_title_2|default=''}</span>
+                        {else}
+                        <span class="fresh_fs_toutiao_title_text"><em>标1</em>标2</span>
+                        {/if}
+                        <i class="fresh_fs_toutiao_title_r"></i>
+                    </div>
+                    <div class="fresh_fs_toutiao_list">
+                        {if isset($config_info['article'][0]) && !empty($config_info['article'][0])}
+                        <a class="fresh_fs_toutiao_item" href="{$config_info['article'][0].link}" target="_blank">{$config_info['article'][0].title}</a>
+                        {else}
+                        <a class="fresh_fs_toutiao_item">文章标题</a>
+                        {/if}
+                        {if isset($config_info['article'][1]) && !empty($config_info['article'][01])}
+                        <a class="fresh_fs_toutiao_item" href="{$config_info['article'][1].link}" target="_blank">{$config_info['article'][1].title}</a>
+                        {else}
+                        <a class="fresh_fs_toutiao_item">文章标题</a>
+                        {/if}
+                        {if isset($config_info['article'][2]) && !empty($config_info['article'][2])}
+                        <a class="fresh_fs_toutiao_item" href="{$config_info['article'][2].link}" target="_blank">{$config_info['article'][2].title}</a>
+                        {else}
+                        <a class="fresh_fs_toutiao_item">文章标题</a>
+                        {/if}
+                        {if isset($config_info['article'][3]) && !empty($config_info['article'][3])}
+                        <a class="fresh_fs_toutiao_item" href="{$config_info['article'][3].link}" target="_blank">{$config_info['article'][3].title}</a>
+                        {else}
+                        <a class="fresh_fs_toutiao_item">文章标题</a>
+                        {/if}
+                    </div>
+                </div>
+                {if $config_info['adv_right'][0]['image'] != '' }
+                <a class="fresh_fs_act" href="{$config_info['adv_right'][0]['link']|default=''}" target="_blank"><img class="fresh_fs_act_img lazyload" data-original="{$config_info['adv_right'][0]['image']|default=''}" /></a>
+                {else}
+                <a class="fresh_fs_act"><div class="fresh_fs_act_img lazyload" style="background:#e1e1e1;color:#fff;font-size: 30px;font-weight: bold;text-align: center;padding-top: 100px;height: 100%;box-sizing: border-box;">188×245</div></a>
+                {/if}
+            </div>
+            {else}
+            <div class="fresh_fs_side">
+                <div class="fresh_fs_toutiao">
+                    <div class="fresh_fs_toutiao_title">
+                        <i class="fresh_fs_toutiao_title_l"></i>
+                        <span class="fresh_fs_toutiao_title_text"><em>标1</em>标2</span>
+                        <i class="fresh_fs_toutiao_title_r"></i>
+                    </div>
+                    <div class="fresh_fs_toutiao_list">
+                        <a class="fresh_fs_toutiao_item">文章标题</a>
+                        <a class="fresh_fs_toutiao_item">文章标题</a>
+                        <a class="fresh_fs_toutiao_item">文章标题</a>
+                    </div>
+                </div>
+                <a class="fresh_fs_act"><div class="fresh_fs_act_img lazyload" style="background:#e1e1e1;color:#fff;font-size: 30px;font-weight: bold;text-align: center;padding-top: 100px;height: 100%;box-sizing: border-box;">188×245</div></a>
+            </div>
+            {/if}
+            <div class="fresh_fs_shadow"></div>
+        </div>
+    </div>  
+</div>
+
+<script>
+    if(typeof(loadHtml8)=='undefined'){
+      function loadHtml8(obj){
+        obj.find('.slide-wrapper').slide({titCell:".hd ul",mainCell: ".bd ul",autoPage:true, autoPlay: true,effect:"leftLoop"})
+      }
+    }
+  </script>

@@ -1,0 +1,149 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>空间管理</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <div class="upload-con" id="uploader" style="display: none;">
+        <form method="post" action="" id="fileupload" enctype="multipart/form-data">
+            <div class="upload-con-div">{$Think.lang.album_class_list_sel_img_class}{$Think.lang.ds_colon}
+                <select name="category_id" id="category_id" class="select w80">
+                    {foreach name="aclass_info" item="v" }
+                    <option value='{$v.aclass_id}' class="w80">{$v.aclass_name}</option>
+                    {/foreach}
+                </select>
+            </div>
+            <div class="upload-con-div">{$Think.lang.select_file}：
+                <div class="dssc-upload-btn">
+                    <a href="javascript:void(0);">
+                        <span><input type="file" hidefocus="true" size="1" class="input-file" name="file" multiple="multiple"/></span>
+                        <p><i class="iconfont">&#xe733;</i>{$Think.lang.album_class_list_img_upload}</p>
+                    </a>
+                </div>
+            </div>
+            <div dstype="file_msg"></div>
+            <div class="upload-pmgressbar" dstype="file_loading"></div>
+            <div class="upload-txt"><span>{$Think.lang.album_batch_upload_description}{$Think.config.ds_config.image_max_filesize}KB{$Think.lang.album_batch_upload_description_1}</span> </div>
+        </form>
+    </div>
+    <form method="get" name="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt>{$Think.lang.g_album_keyword}</dt>
+                <dd><input class="txt" name="keyword" id="keyword" value="{$Request.get.keyword}" type="text"></dd>
+            </dl>
+            <div class="btn_group">
+                <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                {if $filtered}
+                <a href="{:url('Goodsalbum/index')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+                <a id="open_uploader" href="JavaScript:void(0);" class="btn fr"><i class="iconfont">&#xe733;</i>{$Think.lang.album_class_list_img_upload}</a>
+
+            </div>
+        </div>
+    </form>
+    
+  <div class="explanation" id="explanation">
+      <div class="title" id="checkZoom">
+          <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+          <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+      </div>
+      <ul>
+          <li>{$Think.lang.g_album_del_tips}</li>
+      </ul>
+  </div>
+    
+    
+    <form method='post' id="picForm" name="picForm">
+        <table class="ds-default-table">
+            <thead>
+            <tr class="thead">
+                <th class="w24"></th>
+                <th class="w270">{$Think.lang.g_album_one}</th>
+                <th class="w270">{$Think.lang.g_album_pic_count}</th>
+                <th class="align-center">{$Think.lang.ds_handle}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {notempty name="albumclass_list"}
+            {foreach name="albumclass_list" item="v"}
+            <tr class="hover edit">
+                <td><input value="{$v.aclass_id}" class="checkitem" type="checkbox" name="aclass_id[]"></td>
+                <td class="name">{$v.aclass_name}</td>
+                <td>{$pic_count[$v.aclass_id] ? $pic_count[$v.aclass_id] : 0}</td>
+                <td class="align-center">
+                    <a href="{:url('Goodsalbum/album_pic_list',['aclass_id'=>$v.aclass_id])}" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.g_album_pic_one}</a>
+                    <a href="javascript:dsLayerOpen('{:url('Goodsalbum/album_edit',['aclass_id'=>$v.aclass_id])}','修改-{$v.aclass_name}')" class="dsui-btn-edit"><i class="iconfont"></i>修改</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Goodsalbum/aclass_del',['aclass_id'=>$v.aclass_id])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                    
+                </td>
+            </tr>
+            {/foreach}
+            {else}
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            {/notempty}
+            </tbody>
+            <tfoot>
+            {notempty name="albumclass_list"}
+            <tr colspan="15" class="tfoot">
+                <td><input type="checkbox" class="checkall" id="checkallBottom"></td>
+                <td colspan="16"><label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+                    &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                </td>
+            </tr>
+            {/notempty}
+            </tfoot>
+        </table>
+        {$show_page|raw}
+    </form>
+</div>
+    <script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.iframe-transport.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.ui.widget.js" charset="utf-8"></script>
+    <script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/js/fileupload/jquery.fileupload.js" charset="utf-8"></script>
+<script type="text/javascript">
+    
+    // ajax 上传图片
+    var upload_num = 0; // 上传图片成功数量
+    $('#fileupload').fileupload({
+        dataType: 'json',
+        url: "{:url('Goodsalbum/image_upload')}",
+        add: function (e,data) {
+        	$.each(data.files, function (index, file) {
+                $('<div dstype=' + file.name.replace(/\./g, '_') + '><p>'+ file.name +'</p><p class="loading"></p></div>').appendTo('div[dstype="file_loading"]');
+            });
+            data.submit();
+        },
+        done: function (e,data) {
+            var param = data.result;
+            $this = $('div[dstype="' + param.origin_file_name.replace(/\./g, '_') + '"]');
+            $this.fadeOut(3000, function(){
+                $(this).remove();
+                if ($('div[dstype="file_loading"]').html() == '') {
+                    setTimeout("window.location.reload()", 1000);
+                }
+            });
+            if(param.state == 'true'){
+                upload_num++;
+                $('div[dstype="file_msg"]').html('<i class="iconfont">&#xe64d;'+'</i>'+'{$Think.lang.album_upload_complete_one}'+upload_num+'{$Think.lang.album_upload_complete_two}');
+
+            } else {
+                $this.find('.loading').html(param.message).removeClass('loading');
+            }
+        }
+    });
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Goodsalbum/aclass_del.html?aclass_id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+</script>

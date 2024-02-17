@@ -1,0 +1,111 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <form id="exppoints_form" method="post" name="form1">
+        <table class="ds-default-table">
+            <tbody>
+                <tr class="noborder">
+                    <td class="required w120"><label class="validation">{$Think.lang.admin_exppoints_membername}:</label></td>
+                    <td class="vatop rowform"><input type="text" name="member_name" id="member_name" class="txt" onchange="javascript:checkmember();">
+                        <input type="hidden" name="member_id" id="member_id" value=''/></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr id="tr_memberinfo">
+                    <td colspan="2" style="font-weight:bold;" id="td_memberinfo"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label>{$Think.lang.admin_exppoints_operatetype}:</label></td>
+                    <td class="vatop rowform">
+                        <select id="exppoints_type" name="exppoints_type">
+                            <option value="1">{$Think.lang.admin_exppoints_operatetype_add}</option>
+                            <option value="2">{$Think.lang.admin_exppoints_operatetype_reduce}</option>
+                        </select>
+                    </td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label class="validation">{$Think.lang.admin_exppoints_pointsnum}:</label></td>
+                    <td class="vatop rowform"><input type="text" id="exppoints_num" name="exppoints_num" class="txt"></td>
+                    <td class="vatop tips"></td>
+                </tr>
+                <tr class="noborder">
+                    <td class="required"><label>{$Think.lang.admin_exppoints_pointsdesc}:</label></td>
+                    <td class="vatop rowform"><textarea name="exppoints_desc" rows="6" class="tarea"></textarea></td>
+                    <td class="vatop tips">{$Think.lang.admin_exppoints_pointsdesc_notice}</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="tfoot">
+                    <td colspan="2" ><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                </tr>
+            </tfoot>
+        </table>
+    </form> 
+</div>
+
+
+
+
+<script type="text/javascript">
+    function checkmember() {
+        var membername = $.trim($("#member_name").val());
+        if (membername == '') {
+            $("#member_id").val('');
+            layer.alert('{$Think.lang.admin_exppoints_addmembername_error}');
+            return false;
+        }
+        $.getJSON("{:url('Exppoints/checkmember')}", {'member_name': membername}, function(data) {
+            if (data.member_id)
+            {
+                $("#tr_memberinfo").show();
+                var msg = "{$Think.lang.admin_exppoints_member_tip}" + data.member_name + "{$Think.lang.admin_exppoints_member_tip_2}" + data.member_exppoints;
+                $("#member_name").val(data.member_name);
+                $("#member_id").val(data.member_id);
+                $("#td_memberinfo").text(msg);
+            }
+            else
+            {
+                $("#member_name").val('');
+                $("#member_id").val('');
+                layer.alert("{$Think.lang.admin_exppoints_userrecord_error}");
+            }
+        });
+    }
+
+    
+    $(function() {
+        $("#tr_memberinfo").hide();
+        $('#exppoints_form').validate({
+            errorPlacement: function(error, element){
+            error.appendTo(element.parent().parent().find('td:last'));
+            },
+            rules: {
+                member_name: {
+                    required: true
+                },
+                member_id: {
+                    required: true,
+                    min: 1
+                },
+                exppoints_num: {
+                    required: true,
+                    min: 1
+                }
+            },
+            messages: {
+                member_name: {
+                    required: '{$Think.lang.admin_exppoints_addmembername_error}'
+                },
+                member_id: {
+                    required: '{$Think.lang.admin_exppoints_member_error_again}',
+                    required: '{$Think.lang.admin_exppoints_member_error_again}'
+                },
+                exppoints_num: {
+                    required: '{$Think.lang.admin_exppoints_null_error}',
+                    min: '{$Think.lang.admin_exppoints_min_error}'
+                }
+            }
+        });
+    });
+</script>

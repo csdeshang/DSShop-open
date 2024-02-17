@@ -1,0 +1,68 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_inviter_set}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+        <div class="ds-search-form">
+            <div class="btn_group">
+                <a href="javascript:dsLayerOpen('{:url('Inviter/memberclass_add')}','{$Think.lang.ds_add}')" class="btn" ><span>{$Think.lang.ds_add}</span></a>
+            </div>
+        </div>
+
+    
+        <table class="ds-default-table">
+            <thead>
+                <tr class="thead">
+                    <th></th>
+                    <th class="w60">{$Think.lang.inviter_class}</th>
+                    <th class="w200">{$Think.lang.inviterclass_amount}</th>
+                    <th class="w200 align-center">{$Think.lang.ds_handle}</th>
+                </tr>
+            </thead>
+            {notempty name="memberclass_list"}
+            <tbody>
+            {foreach name="memberclass_list" item="v"}
+            <tr class="hover edit">
+                <td class="w48"><input type="checkbox" name="id[]" value="{$v.inviterclass_id}" class="checkitem"></td>
+                <td class="w48 sort">{$v.inviterclass_name}</td>
+                <td class="w50pre name">{$v.inviterclass_amount}</td>
+                
+                <td class="w132 align-center">
+                    <a href="javascript:dsLayerOpen('{:url('Inviter/memberclass_edit',['id'=>$v.inviterclass_id])}','{$Think.lang.ds_edit}-{$v.inviterclass_name}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.ds_edit}</a>
+                    <a href="javascript:dsLayerConfirm('{:url('Inviter/memberclass_del',['id'=>$v.inviterclass_id])}','{$Think.lang.ds_ensure_del}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_del}</a>
+                </td>
+            </tr>
+           {/foreach}
+            </tbody>
+            <tfoot>
+            <tr class="tfoot">
+                <td><input type="checkbox" class="checkall" id="checkall_1"></td>
+                <td id="batchAction" colspan="15"><span class="all_checkbox">
+                        <label for="checkall_2">{$Think.lang.ds_select_all}</label>
+                    </span>&nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_delete_batch()"><span>{$Think.lang.ds_del}</span></a>
+                </td>
+            </tr>
+            </tfoot>
+            {else}
+            <tbody>
+            <tr class="no_data">
+                <td colspan="10">{$Think.lang.ds_no_record}</td>
+            </tr>
+            </tbody>
+            {/notempty}
+        </table>
+</div>
+<script type="text/javascript">
+    function submit_delete(ids_str){
+        _uri = ADMINSITEURL+"/Inviter/memberclass_del.html?id=" + ids_str;
+        dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_del}');
+    }
+</script>

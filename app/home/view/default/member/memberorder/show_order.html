@@ -1,0 +1,390 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+
+
+<div class="dsm-oredr-show">
+            <div class="dsm-order-info">
+                <div class="dsm-order-details">
+                    <div class="title">{$Think.lang.member_show_order_info}</div>
+                    <div class="content">
+                        <dl>
+                            <dt>{$Think.lang.member_show_order_receiver}{$Think.lang.ds_colon}</dt>
+                            <dd><span>{$order_info['extend_order_common']['reciver_name']}，</span><span>{$order_info['extend_order_common']['reciver_info']['phone']}，</span><span>{$order_info['extend_order_common']['reciver_info']['address']}</span></dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.invoice_spaces|raw}：</dt>
+                            <dd>
+                                {foreach name="$order_info.extend_order_common.invoice_info" item="value" key="key" }
+                                <span title="{$key}">{$value}</span>
+                                {/foreach}
+                            </dd>
+                        </dl>
+                        <dl>
+                            <dt>{$Think.lang.member_show_order_buyer_message}{$Think.lang.ds_colon}</dt>
+                            <dd>{$order_info['extend_order_common']['order_message']}</dd>
+                        </dl>
+                        <dl class="line">
+                            <dt>{$Think.lang.member_change_order_no}{$Think.lang.ds_colon}</dt>
+                            <dd>{$order_info.order_sn}<a href="javascript:void(0);">{$Think.lang.ds_more}<i class="iconfont">&#xe689;</i>
+                                    <div class="more"><span class="arrow"></span>
+                                        <ul>
+                                            {if $order_info.payment_name}
+                                            <li>{$Think.lang.ds_payment_method}{$Think.lang.ds_colon}<span>{$order_info.payment_name}
+                                                    <?php if($order_info['payment_code'] != 'offline' && !in_array($order_info['order_state'],array(ORDER_STATE_CANCEL,ORDER_STATE_NEW))) { ?>
+                                                    ({$Think.lang.order_number}{$Think.lang.ds_colon}{$order_info.pay_sn})
+                                                    <?php } ?>
+                                                </span> </li>
+                                            {/if}
+                                            <li>{$Think.lang.order_time}{$Think.lang.ds_colon}<span>{$order_info.add_time|date="Y-m-d H:i:s"}</span></li>
+                                            {if intval($order_info['payment_time'])}
+                                            <li>{$Think.lang.member_show_order_pay_time}{$Think.lang.ds_colon}<span>{$order_info.payment_time|date="Y-m-d H:i:s"}</span></li>
+                                            {/if}
+                                            {if $order_info['extend_order_common']['shipping_time']}
+                                            <li>{$Think.lang.member_show_order_send_time}{$Think.lang.ds_colon}<span>{$order_info.extend_order_common.shipping_time|date="Y-m-d H:i:s"}</span></li>
+                                            {/if}
+                                            {if intval($order_info['finnshed_time'])}
+                                            <li>{$Think.lang.member_show_order_finish_time}{$Think.lang.ds_colon}<span>{$order_info.finnshed_time|date="Y-m-d H:i:s"}</span></li>
+                                            {/if}
+                                        </ul>
+                                    </div>
+                                </a></dd>
+                        </dl>
+                    </div>
+                </div>
+                {if $order_info['order_state'] == ORDER_STATE_CANCEL}
+                <div class="dsm-order-condition">
+                    <dl>
+                        <dt><i class="iconfont orange">&#xe764;</i>{$Think.lang.member_order_state}：</dt>
+                        <dd>{$Think.lang.ransaction_closed}</dd>
+                    </dl>
+                    <ul>
+                        <li>{$order_info['close_info']['log_role']} {$Think.lang.member_show_order_at} {$order_info.close_info.log_time|date="Y-m-d H:i:s"} {$order_info.close_info.log_msg}</li>
+                    </ul>
+                </div>
+                {/if}
+                {if $order_info['order_state'] == ORDER_STATE_NEW}
+                <div class="dsm-order-condition">
+                    <dl>
+                        <dt><i class="iconfont green">&#xe64d;</i>{$Think.lang.member_order_state}：</dt>
+                        <dd>{$Think.lang.waiting_buyer_payment}</dd>
+                    </dl>
+                    <ul>
+                        <li>{$Think.lang.payment_prompt_1}<a href="{:url('Buy/pay',['pay_sn'=>$order_info.pay_sn])}" class="dsm-btn-mini dsm-btn-orange"><i></i>{$Think.lang.payment_prompt_2}</a>{$Think.lang.payment_prompt_3}</li>
+                        <li>{$Think.lang.payment_prompt_4}<a href="#order-step" class="dsm-btn-mini">{$Think.lang.member_order_cancel_order}</a>{$Think.lang.ds_handle}。</li>
+                        <li>{$Think.lang.payment_prompt_5}
+                            <time>{$order_info.order_cancel_day|date="Y-m-d H:i:s"}</time>
+                            {$Think.lang.payment_prompt_6}</li>
+                    </ul>
+                </div>
+                {/if}
+                {if $order_info['order_state'] == ORDER_STATE_PAY}
+                <div class="dsm-order-condition">
+                    <dl>
+                        <dt><i class="iconfont green">&#xe64d;</i>{$Think.lang.member_order_state}：</dt>
+                        <dd>
+                            {if $order_info['payment_code'] == 'offline'}{$Think.lang.wait_platform_shipment}{else/}{$Think.lang.paid_successfully}{/if}
+                        </dd>
+                    </dl>
+                    <ul>
+                        {if $order_info['payment_code'] == 'offline'}
+                        <li>{$Think.lang.payment_success_prompt1}</li>
+                        <li>{$Think.lang.payment_success_prompt2}</li>
+                        <li>{$Think.lang.payment_success_prompt3}<a href="#order-step" class="dsm-btn-mini">{$Think.lang.member_order_cancel_order}</a>{$Think.lang.ds_handle}。</li>
+                        {else/}
+                        <li>{$Think.lang.payment_success_prompt4}“{:get_order_payment_name($order_info['payment_code'])}”{$Think.lang.payment_success_prompt5}“{$order_info.pay_sn}”。</li>
+                        <li>{$Think.lang.payment_success_prompt6}</li>
+                        <li>{$Think.lang.payment_success_prompt7}<a class="dsm-btn-mini" href="#order-step">{$Think.lang.application_refund}</a>{$Think.lang.ds_handle}。</li>
+                        {/if}
+                    </ul>
+                </div>
+                {/if}
+                {if $order_info['order_state'] == ORDER_STATE_SEND}
+                <div class="dsm-order-condition">
+                    <dl>
+                        <dt><i class="iconfont green">&#xe64d;</i>{$Think.lang.member_order_state}：</dt>
+                        <dd>{$Think.lang.merchant_delivered}{if $order_info['extend_order_common']['dlyo_pickup_code'] != ''}， {$Think.lang.delivery_code}：{$order_info['extend_order_common']['dlyo_pickup_code']}{/if}</dd>
+                    </dl>
+                    <ul>
+                        <li>{$Think.lang.shipping_prompt_1}
+                            {if $order_info.shipping_code != ''}
+                            {$Think.lang.member_show_expre_company}：{$order_info['express_info']['express_name']}；{$Think.lang.single_number}：{$order_info.shipping_code}。
+                            {if $order_info.if_deliver}
+                            {$Think.lang.ds_view} <a href="#order-step" class="blue">“{$Think.lang.logistics_tracking}”</a> {$Think.lang.situation}。
+                            {/if}
+                            {else/}
+                            {$Think.lang.no_need_logistics}
+                            {/if}
+                        </li>
+                        <li>{$Think.lang.shipping_prompt_2}<a href="#order-step" class="dsm-btn-mini dsm-btn-green">{$Think.lang.member_order_ensure_order}</a>{$Think.lang.completion_transaction}</li>
+                        <li>{$Think.lang.shipping_prompt_3}
+                            <time>{$order_info.order_confirm_day|date="Y-m-d H:i:s"}</time>
+                            {$Think.lang.shipping_prompt_4}</li>
+                    </ul>
+                </div>
+                {/if}
+                {if $order_info['order_state'] == ORDER_STATE_SUCCESS}
+                {if $order_info['evaluation_state'] == 1}
+                <div class="dsm-order-condition">
+                    <dl>
+                        <dt><i class="iconfont green">&#xe64d;</i>{$Think.lang.member_order_state}：</dt>
+                        <dd>{$Think.lang.evaluation_complete}。</dd>
+                    </dl>
+                    <ul>
+                        <li>{$Think.lang.evaluation_prompt1}</li>
+                        <li>{$Think.lang.evaluation_prompt2}<a href="{:url('Memberfavorites/fglist')}" class="dsm-btn-mini">{$Think.lang.evaluation_prompt3}</a>{$Think.lang.evaluation_prompt4}</li>
+                    </ul>
+                </div>
+				{elseif $order_info['refund_state'] != 0}
+                <div class="dsm-order-condition">
+                    <dl>
+                        <dt><i class="iconfont green">&#xe64d;</i>{$Think.lang.member_order_state}：</dt>
+                        <dd>{$Think.lang.have_refund}</dd>
+                    </dl>
+                    <ul>
+                        <li>{$Think.lang.interested}<a href="{:url('Memberfavorites/fglist')}" class="dsm-btn-mini">{$Think.lang.evaluation_prompt3}</a>{$Think.lang.evaluation_prompt4}。</li>
+                    </ul>
+                </div>
+                {else/}
+                <div class="dsm-order-condition">
+                    <dl>
+                        <dt><i class="iconfont green">&#xe64d;</i>{$Think.lang.member_order_state}：</dt>
+                        <dd>{$Think.lang.have_goods}</dd>
+                    </dl>
+                    <ul>
+                        <li>{$Think.lang.after_information1}</li>
+                        <li>{$Think.lang.after_information2}<a href="#order-step" class="red">"{$Think.lang.complaints_rights}"</a>。</li>
+                        {if $order_info.if_evaluation}
+                        <li>{$Think.lang.after_information3}<a href="#order-step" class="dsm-btn-mini dsm-btn-acidblue">{$Think.lang.evaluation}</a>{$Think.lang.order_posting}。</li>
+                        {/if}
+                    </ul>
+                </div>
+                {/if}
+                {/if}
+                <div class="mall-msg">{$Think.lang.query}<a href="javascript:void(0);" onclick="ajax_form('mall_consult', '{$Think.lang.platform_customer_service}', '{:url('Membermallconsult/add_mallconsult',['inajax'=>'1'])}', 640);"><i class="iconfont">&#xe71b;</i>{$Think.lang.platform_customer_service}</a></div>
+            </div>
+            {if $order_info['order_state'] != ORDER_STATE_CANCEL}
+            <div id="order-step" class="dsm-order-step">
+                <dl class="step-first {if $order_info['order_state'] != ORDER_STATE_CANCEL}current{/if}">
+                    <dt>{$Think.lang.order_generation}</dt>
+                    <dd class="bg"></dd>
+                    <dd class="date" title="{$Think.lang.order_time}">{$order_info.add_time|date="Y-m-d H:i:s"}</dd>
+                </dl>
+                {if $order_info['payment_code'] != 'offline'}
+                <dl class="{if intval($order_info['payment_time'])}current{/if}">
+                    <dt>{$Think.lang.complete_payment}</dt>
+                    <dd class="bg"> </dd>
+                    <dd class="date" title="{$Think.lang.member_show_order_pay_time}">{$order_info.payment_time|date="Y-m-d H:i:s"}</dd>
+                </dl>
+                {/if}
+                <dl class="{if $order_info['extend_order_common']['shipping_time']}current{/if}">
+                    <dt>{$Think.lang.merchant_delivery}</dt>
+                    <dd class="bg"> </dd>
+                    <dd class="date" title="{$Think.lang.member_show_order_send_time}">{$order_info.extend_order_common.shipping_time|date="Y-m-d H:i:s"}</dd>
+                </dl>
+                <dl class="{if intval($order_info['finnshed_time'])}current{/if}">
+                    <dt>{$Think.lang.confirmation_receipt}</dt>
+                    <dd class="bg"> </dd>
+                    <dd class="date" title="{$Think.lang.member_show_order_finish_time}">{$order_info.finnshed_time|date="Y-m-d H:i:s"}</dd>
+                </dl>
+                <dl class="{if $order_info['evaluation_state'] == 1}current{/if}">
+                    <dt>{$Think.lang.evaluation}</dt>
+                    <dd class="bg"></dd>
+                    <dd class="date" title="{$Think.lang.evaluation_time}">{$order_info['extend_order_common']['evaluation_time']|date="Y-m-d H:i:s"}</dd>
+                </dl>
+            </div>
+            {/if}
+            <div class="dsm-order-contnet">
+                <table class="dsm-default-table order">
+                    <thead>
+                        <tr>
+                            <th class="w10"></th>
+                            <th colspan="2">{$Think.lang.ds_goods_name}</th>
+                            <th class="w20"></th>
+                            <th class="w120 tl">{$Think.lang.ds_unit_price}（{$Think.lang.ds_yuan}）</th>
+                            <th class="w60">{$Think.lang.ds_quantity}</th>
+                            <th class="w100">{$Think.lang.concessional_activity}</th>
+                            <th class="w100">{$Think.lang.after_sale_rights}</th>
+                            <th class="w100">{$Think.lang.transaction_status}</th>
+                            <th class="w100">{$Think.lang.transaction_action}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {notempty name="$order_info.shipping_code"}
+                        <tr>
+                            <th colspan="7" style="border-right: none;"> <div class="order-deliver"><span>{$Think.lang.member_show_expre_company}： <a target="_blank" href="{$order_info.express_info.express_url}">{$order_info.express_info.express_name}</a></span><span> {$Think.lang.member_show_order_shipping_no}{$Think.lang.ds_colon}{$order_info.shipping_code} </span><span><a href="javascript:void(0);" id="show_shipping">{$Think.lang.logistics_tracking}<i class="iconfont">&#xe689;</i>
+                                <div class="more"><span class="arrow"></span>
+                                    <ul id="shipping_ul">
+                                        <li>{$Think.lang.ds_common_loading}...</li>
+                                    </ul>
+                                </div>
+                            </a></span></div></th>
+                    <th colspan="3" style=" border-left: none;">
+                        {notempty name="daddress_info"}
+                    <dl class="daddress-info">
+                        <dt>{$Think.lang.shipper_space|raw}：</dt>
+                        <dd>{$daddress_info.seller_name}<a href="javascript:void(0);">{$Think.lang.ds_more}<i class="iconfont">&#xe689;</i>
+                                <div class="more"><span class="arrow"></span>
+                                    <ul>
+                                        <li>{$Think.lang.company_space}：<span>{$daddress_info.daddress_company}</span></li>
+                                        <li>{$Think.lang.contact_number}：<span>{$daddress_info.daddress_telphone}</span></li>
+                                        <li>{$Think.lang.shipping_address}：<span>{$daddress_info.area_info}&nbsp;{$daddress_info.daddress_detail}</span></li>
+                                    </ul>
+                                </div>
+                            </a></dd>
+                    </dl>
+                    {/notempty}
+                    </th>
+                    </tr>
+                    {/notempty}
+                    <?php $i = 0;?>
+                    <?php foreach($order_info['goods_list'] as $k => $goods) {?>
+                    <?php $i++;?>
+                    <tr class="bd-line">
+                        <td>&nbsp;</td>
+                        <td class="w70"><div class="dsm-goods-thumb"><a target="_blank" href="{:url('Goods/index',['goods_id'=>$goods.goods_id])}"><img src="{:goods_thumb($goods,240)}"/></a></div></td>
+                        <td class="tl">
+                            <dl class="goods-name">
+                                <dt><a target="_blank" href="{$goods.goods_url}">{$goods.goods_name}</a></dt>
+                                <dd>
+                                    <?php if (isset($refund_all)) {?>
+                                    <?php if (is_array($refund_all) && !empty($refund_all)) {?>
+                                    {$Think.lang.refund_number}：<a target="_blank" href="{:url('Memberrefund/view',['refund_id'=>$refund_all.refund_id])}">{$refund_all.refund_sn}</a>
+                                    <?php }else if($refund_all['refund_type'] == 1) {?>
+                                   {$Think.lang.refund_number}：<a target="_blank" href="{:url('Memberrefund/view',['refund_id'=>$refund_all.refund_id])}">{$goods['extend_refund']['refund_sn']}</a></dd>
+                                <?php }else if($refund_all['refund_type'] == 2) {?>
+                                {$Think.lang.returns_single_number}：<a target="_blank" href="{:url('Memberrefund/view',['refund_id'=>$refund_all.refund_id])}">{$goods['extend_refund']['refund_sn']}</a>
+                                <?php } ?>
+                                <?php } ?>
+                                </dd>
+                            </dl>
+                        </td>
+                        <td></td>
+                        <td class="tl refund">{$goods.goods_price}
+                            <p class="green">
+                                <?php if (isset($refund_all)) {?>
+                                <?php if (is_array($refund_all) && !empty($refund_all) && $refund_all['admin_time'] > 0) {?>
+                                {$goods.goods_pay_price}<span>{$Think.lang.return}</span>
+                                <?php } elseif ($refund_all['admin_time'] > 0) { ?>
+                                {$refund_all.refund_amount}<span>{$Think.lang.return}</span>
+                                <?php } ?>
+                                <?php } ?>
+                            </p></td>
+                        <td>{$goods.goods_num}</td>
+                        <td>{$goods.goods_type_cn}</td>
+                        <td><!-- 退款 -->
+                            {if isset($goods['refund']) && $goods['refund'] == 1 }
+                            <p><a href="{:url('Memberrefund/add_refund',['order_id'=>$order_info.order_id,'goods_id'=>$goods.rec_id])}">{$Think.lang.refund_return}</a></p>
+                            {/if}
+                        </td>
+
+                        <!-- S 合并TD -->
+                        <?php if (($order_info['goods_count'] > 1 && $k ==0) || ($order_info['goods_count'] == 1)){ ?>
+                        <td class="bdl bdr" rowspan="{$order_info.goods_count}">{$order_info.state_desc|raw}</td>
+                        <td rowspan="{$order_info.goods_count}">{if $order_info['if_lock']}<p>{$Think.lang.refund_in_returns}</p>{/if}
+                            <!-- 取消订单 -->
+                            {if $order_info.if_cancel}
+                            <p><a href="javascript:void(0)" style="color:#F30; text-decoration:underline;" ds_type="dialog" dialog_width="480" dialog_title="{$Think.lang.member_order_cancel_order}" dialog_id="buyer_order_cancel_order" uri="{:url('Memberorder/change_state',['state_type'=>'order_cancel','order_id'=>$order_info.order_id])}"  id="order_action_cancel">{$Think.lang.member_order_cancel_order}</a></p>
+                            {/if}
+
+                            <!-- 退款取消订单 -->
+                            {if $order_info.if_refund_cancel}
+                            <p><a href="{:url('Memberrefund/add_refund_all',['order_id'=>$order_info.order_id])}" class="dsm-btn">{$Think.lang.order_refund}</a></p>
+                            {/if}
+
+                            <!-- 收货 -->
+                            {if $order_info.if_receive}
+                            <p><a href="javascript:void(0)" class="dsm-btn" ds_type="dialog" dialog_id="buyer_order_confirm_order" dialog_width="480" dialog_title="{$Think.lang.member_order_ensure_order}" uri="{:url('Memberorder/change_state',['state_type'=>'order_receive','order_sn'=>$order_info.order_sn,'order_id'=>$order_info.order_id])}" id="order_action_confirm">{$Think.lang.member_order_ensure_order}</a></p>
+                            {/if}
+
+                            <!-- 评价 -->
+                            {if $order_info.if_evaluation}
+                            <p><a class="dsm-btn dsm-btn-acidblue" href="{:url('Memberevaluate/add',['order_id'=>$order_info.order_id])}">{$Think.lang.member_order_want_evaluate}</a></p>
+                            {/if}
+
+                            <!-- 已经评价 -->
+                            {if $order_info.evaluation_state == 1}{$Think.lang.order_state_eval|raw}{/if}
+                        </td>
+                        <?php } ?>
+                        <!-- E 合并TD --> 
+                    </tr>
+
+                    <!-- S 赠品列表 -->
+                    {if !empty($order_info['zengpin_list']) && $i == count($order_info['goods_list'])}
+                    <tr class="bd-line">
+                        <td>&nbsp;</td>
+                        <td colspan="7" class="tl"><div class="dsm-goods-gift">{$Think.lang.freebies}：
+                                <ul>
+                                    {foreach name="$order_info.zengpin_list" item="zengpin_info"  }
+                                    <li><a target="_blank" title="{$Think.lang.freebies}：{$zengpin_info.goods_name} * {$zengpin_info.goods_num}" href="{$zengpin_info.goods_url}"><img src="{:goods_thumb($zengpin_info,240)}" /></a></li>
+                                    {/foreach}
+                                </ul>
+                            </div></td>
+                    </tr>
+                    {/if}
+                    <!-- E 赠品列表 -->
+
+                    <?php } ?>
+                    </tbody>
+                    <tfoot>
+                        <?php if(!empty($order_info['extend_order_common']['promotion_info']) || !empty($order_info['extend_order_common']['voucher_code'])){ ?>
+                        <tr>
+                            <th colspan="20">
+                                <dl class="dsm-sales">
+                                    {if !empty($order_info['extend_order_common']['promotion_info'])}
+                                    <dd>{$order_info['extend_order_common']['promotion_info']|raw}</dd>
+                                    {/if}
+                                    {if !empty($order_info['extend_order_common']['voucher_code'])}
+                                    <dd>{$Think.lang.after_information4} <strong>{$order_info['extend_order_common']['voucher_price']}</strong> {$Think.lang.after_information5}{$order_info['extend_order_common']['voucher_code']}</span></dd>
+                                    {/if}
+                                </dl>
+                            </th>
+                        </tr>
+                    <?php } ?>
+                    <tr>
+                        <td colspan="20"><dl class="freight">
+                                <dd>
+                                    {if !empty($order_info['shipping_fee']) && $order_info['shipping_fee'] != '0.00'}
+                                    {$Think.lang.member_show_order_tp_fee}{$Think.lang.ds_colon}<span>{$Think.lang.currency}{$order_info.shipping_fee}</span>
+                                    {else/}
+                                    （{$Think.lang.ds_common_shipping_free}）
+                                    {/if}
+                                </dd>
+                            </dl>
+                            
+                            <dl class="sum">
+                                <dt>{$Think.lang.member_order_sum}{$Think.lang.ds_colon}</dt>
+                                <dd><em>{$order_info.order_amount}</em>{$Think.lang.ds_yuan}</dd>
+                            </dl></td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+
+
+<script type="text/javascript">
+{if isset($order_info.express_info)}       
+$(function(){
+    $('#show_shipping').on('hover',function(){
+        var_send = '{$order_info.extend_order_common.shipping_time|date="Y-m-d H:i:s"}&nbsp;&nbsp;{$Think.lang.member_show_platform_has_send}<br/>';
+    	$.getJSON(HOMESITEURL+'/Memberorder/get_express.html?express_code={$order_info.express_info.express_code}&shipping_code={$order_info.shipping_code}&t={:random(7)}',function(data){
+    		if(data){
+    			data = var_send+data.join('<br/>');
+    			$('#shipping_ul').html('<li>'+data+'</li>');
+    			$('#show_shipping').unbind('hover');
+    		}else{
+    			$('#shipping_ul').html(var_send);
+    			$('#show_shipping').unbind('hover');
+    		}
+    	});
+    });
+});
+{/if}
+</script>
+
+
+
+
+{/block}

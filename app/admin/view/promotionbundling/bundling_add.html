@@ -1,0 +1,301 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>优惠套餐</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    
+    
+    
+    <div class="alert"> <strong>{$Think.lang.ds_explain}{$Think.lang.ds_colon}</strong>
+    <ul>
+        <li>{$Think.lang.notice_concessionary_activities1}</li>
+        <li>{$Think.lang.notice_concessionary_activities2}</li>
+    </ul>
+</div>
+<div class="dssc-form-default">
+    <!-- 说明 -->
+
+    <form id="add_form" method="post" action="{:url('Promotionbundling/bundling_add')}">
+        {notempty name="bundling_info"}
+        <input type="hidden" name="bundling_id" value="{$bundling_info.bl_id}" />
+        {/notempty}
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.bundling_name}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <p>
+                    <input id="bundling_name" name="bundling_name" type="text" maxlength="25" class="w400 text" value="{present name="bundling_info"}{$bundling_info.bl_name}{/present}" />
+                           <span></span> </p>
+                <p class="hint">{$Think.lang.bundling_name_explain}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.bundling_add_price}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <input id="discount_price" name="discount_price" type="text" readonly style="background:#E7E7E7 none;" class="text w60 mr5" value="{present name="bundling_info"}{$bundling_info.bl_discount_price}{/present}"/>
+                       {$Think.lang.ds_yuan}
+                       <span></span>
+                <p class="hint mt10">{$Think.lang.bundling_cost_price}<span dstype="cost_price" class="price mr5 ml5">{present name="bundling_info"}{$bundling_info.bl_discount_price}{/present}</span>{$Think.lang.ds_yuan}{$Think.lang.bundling_cost_price_note}</p>
+            </dd>
+        </dl>
+        <dl>
+            <dt><i class="required">*</i>{$Think.lang.ds_goods}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <p class="bundling_goods_box">
+                    <input id="bundling_goods" type="text" value="" name="bundling_goods">
+                    <span></span></p>
+                <table class="dssc-default-table mb15">
+                    <thead>
+                        <tr>
+                            <th class="w70">{$Think.lang.designated_offer}</th>
+                            <th class="tl" colspan="2">{$Think.lang.ds_goods_name}</th>
+                            <th class="w90">{$Think.lang.bundling_cost_price}</th>
+                            <th class="w90">{$Think.lang.special_offer}</th>
+                            <th class="w90">{$Think.lang.ds_handle}</th>
+                        </tr>
+                    </thead>
+                    <tbody dstype="bundling_data"  class="bd-line tip" title="{$Think.lang.bundling_add_goods_explain|raw}">
+                        <tr style="display:none;">
+                            <td colspan="20" class="norecord"><div class="no-promotion"><i class="zh"></i><span>{$Think.lang.no_added_items_were_selected}</span></div></td>
+                        </tr>
+                        {notempty name="b_goods_list"}
+                        {foreach name="b_goods_list" item="val"}
+                        {present name="goods_list[$val.goods_id]"}
+                        <tr id="bundling_tr_{$val.goods_id}" class="off-shelf">
+                    <input type="hidden" value="{$val.blgoods_id}" name="goods[{$val.goods_id}][bundling_goods_id]" />
+                    <input type="hidden" value="{$val.goods_id}" name="goods[{$val.goods_id}][gid]" dstype="goods_id">
+                    <td class="w70"><input type="checkbox" name="goods[{$val.goods_id}][appoint]" value="1" {if $val.blgoods_appoint == 1}checked="checked"{/if}></td>
+                    <td class="w50"><div class="shelf-state"><div class="pic-thumb"><img src="{:goods_cthumb($goods_list[$val.goods_id]['goods_image'],240)}" ncname="{$goods_list[$val.goods_id]['goods_image']}" dstype="bundling_data_img">
+                            </div></div>
+                    </td>
+                    <td class="tl"><dl class="goods-name">
+                            <dt style="width: 300px;">{$goods_list[$val.goods_id]['goods_name']}</dt>
+                        </dl></td>
+                    <td class="goods-price w90" dstype="bundling_data_price">{$goods_list[$val.goods_id]['goods_price']}</td>
+                    <td class="w90">
+                        <input dstype="price" type="text" value="{$val.blgoods_price}" name="goods[{$val.goods_id}][price]" class="text w70"></td>
+                    <td class="nscs-table-handle w90"><span><a onclick="bundling_operate_delete($('#bundling_tr_{$val.goods_id}'), {$val.goods_id})" href="JavaScript:void(0);" class="btn-orange"><i class="iconfont">&#xe754;</i>
+                                <p>{$Think.lang.bundling_goods_remove}</p>
+                            </a></span></td>
+                    </tr>
+                    {/present}
+                    {/foreach}
+                    {/notempty}
+                    </tbody>
+                </table>
+                <a id="bundling_add_goods" href="{:url('Promotionbundling/bundling_add_goods')}" class="dssc-btn dssc-btn-acidblue">{$Think.lang.bundling_goods_add}</a>
+                <div class="div-goods-select-box">
+                    <div id="bundling_add_goods_ajaxContent"></div>
+                    <a id="bundling_add_goods_delete" class="close" href="javascript:void(0);" style="display: none; right: -10px;">X</a></div>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.bundling_add_freight_method}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <ul class="dssc-form-radio-list">
+                    <li><label for="whops_seller"><input id="whops_seller" type="radio" name="bundling_freight_choose" {if !isset($bundling_info) || $bundling_info['bl_freight_choose'] == '1'}checked="checked"{/if} value="1" />{$Think.lang.bundling_add_freight_method_platform}</label></li>
+                    <li><label for="whops_buyer"><input id="whops_buyer" type="radio" name="bundling_freight_choose" {if isset($bundling_info) && $bundling_info['bl_freight_choose'] == '0'}checked="checked"{/if} value="0" />{$Think.lang.bundling_add_freight_method_buyer}</label>
+                        <div id="whops_buyer_box" class="transport_tpl" style="{if !isset($bundling_info) || $bundling_info['bl_freight_choose'] == '1'}display:none;{/if}">
+                            <input class="w50 text" type="text" name="bundling_freight" value="{present name='bundling_info'}{$bundling_info.bl_freight}{/present}" /><em class="add-on"><i class="iconfont">&#xe65c;</i></em>
+                        </div>
+                    </li>
+                </ul>
+            </dd>
+        </dl>
+        <dl>
+            <dt>{$Think.lang.bundling_status}{$Think.lang.ds_colon}</dt>
+            <dd>
+                <ul class="dssc-form-radio-list">
+                    <li><label for="bundling_status_1">
+                            <input type="radio" name="state" value="1" id="bundling_status_1" {if !isset($bundling_info) || $bundling_info['bl_state'] == 1}checked="checked"{/if} />
+                                   {$Think.lang.ds_open}</label></li>
+                    <li><label for="bundling_status_0">
+                            <input type="radio" name="state" value="0" id="bundling_status_0" {if isset($bundling_info) && $bundling_info['bl_state'] == 0}checked="checked"{/if} />
+                                   {$Think.lang.ds_close}</label></li>
+                </ul>
+            </dd>
+        </dl>
+        <div class="bottom">
+            <input id="submit_button" type="submit" value="{$Think.lang.ds_submit}"  class="btn">
+        </div>
+    </form>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.ajaxContent.pack.js"></script>
+<script>
+    jQuery.browser={};(function(){jQuery.browser.msie=false; jQuery.browser.version=0;if(navigator.userAgent.match(/MSIE ([0-9]+)./)){ jQuery.browser.msie=true;jQuery.browser.version=RegExp.$1;}})();
+</script>
+<script>
+
+    $(document).ready(function(){
+        /* ajax添加商品  */
+        $('#bundling_add_goods').ajaxContent({
+            event:'click', //mouseover
+            loaderType:"img",
+            loadingMsg:"{$Think.HOME_SITE_ROOT}/images/loading.gif",
+            target:'#bundling_add_goods_ajaxContent'
+        }).click(function(){
+            $(this).hide();
+            $('#bundling_add_goods_delete').show();
+        });
+
+        $('#bundling_add_goods_delete').click(function(){
+            $(this).hide();
+            $('#bundling_add_goods_ajaxContent').html('');
+            $('#bundling_add_goods').show();
+        });
+        
+        $('#bundling_add_goods_ajaxContent').on('click', '.pagination li a', function() {
+            $('#bundling_add_goods_ajaxContent').load($(this).attr('href'));
+            return false;
+        });
+        
+        // 退拽效果
+        $('tbody[dstype="bundling_data"]').sortable({ items: 'tr' });
+        $('#goods_images').sortable({ items: 'li' });
+    });
+
+
+    /* 计算商品原价 */
+    function count_cost_price_sum(){
+        data_price = $('td[dstype="bundling_data_price"]');
+        if(typeof(data_price) != 'undefined'){
+            var S_price = 0;
+            data_price.each(function(){
+                S_price += parseFloat($(this).html());
+            });
+            $('span[dstype="cost_price"]').html(S_price.toFixed(2));
+        }else{
+            $('span[dstype="cost_price"]').html('');
+        }
+    }
+
+    /* 计算商品售价 */
+    function count_price_sum(){
+        data_price = $('input[dstype="price"]');
+        if(typeof(data_price) != 'undefined'){
+            var S_price = 0;
+            data_price.each(function(){
+                S_price += parseFloat($(this).val());
+            });
+            $('#discount_price').val(S_price.toFixed(2));
+        }else{
+            $('#discount_price').val('');
+        }
+    }
+</script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/jquery.poshytip.min.js"></script>
+<style>
+.pic_list .small_pic ul li{height:100px}
+.ui-sortable-helper{border:dashed 1px #F93;box-shadow:2px 2px 2px rgba(153,153,153,.25);filter:alpha(opacity=75);-moz-opacity:.75;opacity:.75;cursor:ns-resize}
+.ui-sortable-helper td{background-color:#FFC!important}
+.ajaxload{display:block;width:16px;height:16px;margin:100px 300px}
+</style>
+<script type="text/javascript">
+    var DEFAULT_GOODS_IMAGE = '{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.default_goods_image)}';
+    $(function(){
+        jQuery.validator.addMethod('bundling_goods', function(value, element){
+            return $('tbody[dstype="bundling_data"] > tr').length >2?true:false;
+        });
+        //Ajax提示
+        $('.tip').poshytip({
+            className: 'tip-yellowsimple',
+            showTimeout: 1,
+            alignTo: 'target',
+            alignX: 'left',
+            alignY: 'top',
+            offsetX: 5,
+            offsetY: -78,
+            allowTipHover: false
+        });
+        $('.tip2').poshytip({
+            className: 'tip-yellowsimple',
+            showTimeout: 1,
+            alignTo: 'target',
+            alignX: 'right',
+            alignY: 'center',
+            offsetX: 5,
+            offsetY: 0,
+            allowTipHover: false
+        });
+        //页面输入内容验证
+        $("#add_form").validate({
+            errorPlacement: function(error, element){
+                var error_td = element.nextAll('span:first');
+                error_td.append(error);
+            },
+            submitHandler:function(form){
+                ds_ajaxpost('add_form', 'url', "{:url('Promotionbundling/index')}");
+            },
+            rules : {
+                bundling_name : {
+                    required : true
+                },
+                bundling_goods : {
+                    bundling_goods : true
+                },
+                discount_price : {
+                    required : true,
+                    number : true
+                }
+            },
+            messages : {
+                bundling_name : {
+                    required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.bundling_add_name_error}'
+                },
+                bundling_goods : {
+                    bundling_goods : '<i class="iconfont">&#xe64c;</i>{$Think.lang.bundling_add_goods_error}'
+                },
+                discount_price : {
+                    required : '<i class="iconfont">&#xe64c;</i>{$Think.lang.bundling_add_price_error_null}',
+                    number : '<i class="iconfont">&#xe64c;</i>{$Think.lang.bundling_add_price_error_not_num}'
+                }
+
+            }
+        });
+
+        $('input[name="bundling_freight_choose"]').click(function(){
+            if($(this).val() == '0'){
+                $('#whops_buyer_box').show();
+            }else{
+                $('#whops_buyer_box').hide();
+            }
+        });
+
+        check_bundling_data_length();
+        {notempty name='bundling_info'}
+            count_cost_price_sum(); // 计算商品原价
+            count_price_sum();
+        {/notempty}
+
+        $('tbody[dstype="bundling_data"]').on('change', 'input[dstype="price"]', function(){
+            count_price_sum();
+        });
+    });
+
+
+    /* 删除商品 */
+    function bundling_operate_delete(o, id){
+        o.remove();
+        check_bundling_data_length();
+        $('li[dstype="'+id+'"]').children(':last').html('<a href="JavaScript:void(0);" onclick="bundling_goods_add($(this))" class="dssc-btn-mini dssc-btn-green"><i class="iconfont">&#xe6db;</i>{$Think.lang.bundling_goods_add_bundling}</a>');
+        count_cost_price_sum();
+        count_price_sum();
+    }
+
+    function check_bundling_data_length(){
+        if ($('tbody[dstype="bundling_data"] tr').length == 1) {
+            $('tbody[dstype="bundling_data"]').children(':first').show();
+        }
+    }
+</script>
+    
+    
+</div>    
+

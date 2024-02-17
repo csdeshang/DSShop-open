@@ -1,0 +1,117 @@
+{include file="default/base/mall_top" /}
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+</div>
+<div class="dsc-line"></div>
+<div class="dsc-main">
+ <div class="dsc-title">
+    <h3>{$Think.lang.purchase_exchange_code}</h3>
+    <h5>{$Think.lang.set_purchase_quantity}</h5>
+ </div>
+  <form action="{:url('Buyvirtual/buy_step2')}" method="POST" id="form_buy" name="form_buy">
+  <input type="hidden" name="goods_id" value="{$goods_info.goods_id}">
+    <table class="dsc-table-style" ds_type="table_cart">
+      <thead>
+        <tr>
+          <th colspan="3">{$Think.lang.ds_goods}</th>
+          <th class="w120">{$Think.lang.ds_unit_price}({$Think.lang.ds_yuan})</th>
+          <th class="w120">{$Think.lang.ds_quantity}</th>
+          <th class="w120">{$Think.lang.cart_index_sum}({$Think.lang.ds_yuan})</th>
+          <th class="w80">{$Think.lang.ds_handle}</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="shop-list">
+          <td class="w10"></td>
+          <td class="w60"><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank" class="dsc-goods-thumb"><img src="{:goods_thumb($goods_info)}" alt="{$goods_info.goods_name}" /></a></td>
+          <td class="tl"><dl class="dsc-goods-info">
+              <dt><a href="{:url('Goods/index',['goods_id'=>$goods_info.goods_id])}" target="_blank">
+                {$goods_info.goods_name}
+                </a></dt>
+              <dd>
+                {present name="goods_info.ifgroupbuy"}
+                <span class="groupbuy">{$Think.lang.ds_groupbuy}</span>
+                {/present}
+                {$Think.lang.buy_up}{$goods_info.virtual_limit}{$Think.lang.individuals}</dd>
+            </dl></td>
+          <td class="w120"><em id="item_price">{$goods_info.goods_price}</em></td>
+          <td class="w120 ws0"><a href="JavaScript:void(0);" onclick="decrease_quantity();" class="add-substract-key ">-</a>
+            <input id="quantity" name="quantity" value="{$goods_info.quantity}" maxvalue="{$goods_info.virtual_limit}" price="{$goods_info.goods_price}" onkeyup="change_quantity(this);" type="text" class="text w20"/>
+            <a href="JavaScript:void(0);" title="{$Think.lang.buy_up}{$goods_info.virtual_limit}{$Think.lang.individuals}" onclick="add_quantity();" class="add-substract-key tip" >+</a></td>
+          <td class="w120"><em id="item_subtotal">{$goods_info.goods_total}</em></td>
+          <td class="w80">
+            <a href="javascript:void(0)" onclick="collect_goods('{$goods_info.goods_id}');">{$Think.lang.cart_index_favorite}</a>
+          </td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="20"><div class="dsc-all-account">{$Think.lang.total_price}￥<em id="cartTotal">{$goods_info.goods_total}</em>{$Think.lang.ds_yuan}</div></td>
+        </tr>
+      </tfoot>
+    </table>
+  </form>
+  <div class="dsc-bottom"><a id="next_submit" href="javascript:void(0)" class="dsc-btn dsc-btn-acidblue fr">{$Think.lang.cart_index_input_next}</a></div>
+
+</div>
+<script>
+$(document).ready(function(){
+    $('#next_submit').on('click',function(){
+        $('#form_buy').submit();
+    });
+});
+/**
+ * 更改数量
+ */
+function change_quantity(input){
+    var value = Number($(input).val());
+    var maxvalue = Number($(input).attr('maxvalue'));
+    if (value > maxvalue) {
+        $(input).val($(input).attr('maxvalue'));
+    }else if (value <= 0) {
+        $(input).val(1);
+    }
+
+    calc_price();
+}
+
+/**
+ * 减少商品数量
+ */
+function decrease_quantity(){
+    var input = $('#quantity');
+    var orig = Number(input.val());
+    if(orig > 1){
+        input.val(orig - 1);
+        input.keyup();
+    }
+    calc_price();
+}
+
+/**
+ * 增加商品数量
+ */
+function add_quantity(){
+    var input = $('#quantity');
+    var orig = Number(input.val());
+    input.val(orig + 1);
+    input.keyup();
+    calc_price();
+}
+
+/**
+ * 价格计算
+ */
+function calc_price() {
+    var input = $('#quantity');
+    var total = $(input).val()*$(input).attr('price');
+    $('#item_subtotal').html(number_format(total,2));
+    $('#cartTotal').html(number_format(total,2));
+}
+</script>
+
+
+{include file="default/base/mall_footer" /}

@@ -1,0 +1,100 @@
+{include file="default/base/mall_top" /} 
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/home_cart.css">
+<div class="dsc-header">
+    <div class="logo">
+        <a href="{$Think.HOME_SITE_URL}"><img src="{:ds_get_pic(ATTACH_COMMON,$Think.config.ds_config.site_logo)}"/></a>
+    </div>
+    <ul class="dsc-flow dsc-point-flow">
+        <li class="current"><i class="iconfont">&#xe69a;</i>
+            <p>{$Think.lang.pointcart_ensure_order}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe731;</i>
+            <p>{$Think.lang.pointcart_ensure_info}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+        <li class=""><i class="iconfont">&#xe67e;</i>
+            <p>{$Think.lang.pointcart_exchange_finish}</p>
+            <sub></sub>
+            <div class="hr"></div>
+        </li>
+    </ul>
+</div>
+<div class="dsc-line"></div>
+
+
+<div class="dsc-main">
+    {notempty name="cart_array"}
+    <div class="dsc-title">
+        <h3>{$Think.lang.pointcart_cart_chooseprod_title}</h3>
+        <h5>{$Think.lang.notes_exchanging_gifts}</h5>
+    </div>
+    <table class="dsc-table-style">
+        <thead>
+            <tr>
+                <th class="w20"></th>
+                <th colspan="2">{$Think.lang.pointcart_goodsname} </th>
+                <th class="w120">{$Think.lang.pointcart_exchangepoint} </th>
+                <th class="w120">{$Think.lang.pointcart_exchangenum}</th>
+                <th class="w120">{$Think.lang.pointcart_pointoneall}</th>
+                <th class="w80">{$Think.lang.ds_handle}</th>
+            </tr>
+        </thead>
+        {foreach name="cart_array" item="v"}
+        <tr id="pcart_item_{$v.pcart_id}">
+            <td></td>
+            <td class="w60">
+                <a href="{:url('Pointprod/pinfo',['id'=>$v.pgoods_id])}" target="_blank" class="dsc-goods-thumb">
+                    <img src="{$v.pgoods_image_small}" alt="{$v.pgoods_name}"/>
+                </a>
+            </td>
+            <td class="tl">
+                <dl class="dsc-goods-info">
+                    <dt><a href="{:url('Pointprod/pinfo',['id'=>$v.pgoods_id])}" target="_blank">{$v.pgoods_name}</a></dt>
+                </dl>
+            </td>
+            <td><span class="price1">{$v.pgoods_points}</span></td>
+            <td>
+          <a href="JavaScript:void(0);" onclick="pcart_decrease_quantity({$v.pcart_id});" title="{$Think.lang.pointcart_cart_reduse}" class="add-substract-key tip">-</a>
+          <input id="input_item_{$v.pcart_id}" value="{$v.pgoods_choosenum}" changed="{$v.pgoods_choosenum}" onkeyup="pcart_change_quantity('{$v.pcart_id}', this);" class="text w30" type="text" style="text-align:center;"/>
+          <a  href="JavaScript:void(0);" onclick="pcart_add_quantity({$v.pcart_id});" title="{$Think.lang.pointcart_cart_increase}" class="add-substract-key tip">+</a></td>
+        <td>
+          <span id="item_{$v.pcart_id}_subtotal" class="cart-point mr5">{$v.pgoods_pointone}</span>
+          {$Think.lang.points_unit}
+        </td>
+        <td>
+            <a class="del" href="javascript:void(0)" onclick="drop_pcart_item({$v.pcart_id});">{$Think.lang.ds_delete}</a>
+        </td>
+        </tr>
+        {/foreach}
+        <tfoot>
+            <tr>
+                <td colspan="7">
+                    {$Think.lang.pointcart_cart_allpoints}{$Think.lang.ds_colon}
+                    <span class="cart-point-b mr5" id="pcart_amount">{$pgoods_pointall}</span>{$Think.lang.points_unit}
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+    <div class="dsc-bottom">
+        <a href="{:url('Pointcart/step1')}" class="dsc-btn dsc-btn-acidblue fr">{$Think.lang.pointcart_cart_submit}</a>
+    </div>
+    {else /}
+    <div class="dsc-null-shopping">
+        <i class="ico"></i>
+        <div class="fl">
+            <h4>{$Think.lang.pointcart_cart_null}</h4>
+            <p>
+                <a href="{:url('Pointprod/index')}" class="bg-blue"><i class="iconfont">&#xe74e;</i>{$Think.lang.pointcart_cart_exchangenow}</a>
+                <a href="{:url('Memberpointorder/index')}" class="bg-green10"><i class="iconfont">&#xe71f;</i>{$Think.lang.pointcart_cart_exchanged_list}</a>
+            </p>
+        </div>
+    </div>
+    {/notempty}
+</div>
+
+<script src="{$Think.HOME_SITE_ROOT}/js/pgoods_cart.js"></script>
+
+{include file="default/base/mall_footer" /}

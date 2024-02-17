@@ -1,0 +1,95 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <form class="" method="post">
+        <div class="ncap-form-default">
+            <dl>
+                <dt>{$Think.lang.type_add_attr_name}</dt>
+                <dd>
+                    <input type="hidden" name="attr_id" value="{$attribute.attr_id}" />
+                    <input type="hidden" name="type_id" value="{$attribute.type_id}" />
+                    <input type="text" name="attr_name" id="attr_name" value="{$attribute.attr_name}" />
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.ds_sort}</dt>
+                <dd>
+                    <input type="text" name="attr_sort" id="attr_sort" value="{$attribute.attr_sort}" />
+                    <span class="err"></span>
+                    <p class="notic"></p>
+                </dd>
+            </dl>
+            <dl>
+                <dt>{$Think.lang.type_edit_type_attr_is_show}</dt>
+                <dd class="onoff">
+                    <label for="attr_show1" class="cb-enable {if $attribute.attr_show == '1'}selected{/if}" ><span>{$Think.lang.ds_yes}</span></label>
+                    <label for="attr_show2" class="cb-disable {if $attribute.attr_show == '0'}selected{/if}" ><span>{$Think.lang.ds_no}</span></label>
+                    <input id="attr_show1" name="attr_show" {if $attribute.attr_show == '1'}checked="checked"{/if}  value="1" type="radio">
+                    <input id="attr_show2" name="attr_show" {if $attribute.attr_show == '0'}checked="checked"{/if} value="0" type="radio">
+                </dd>
+            </dl>
+        </div>
+        <table class="ds-default-table">
+            <thead>
+                <tr>
+                    <th width="200">{$Think.lang.ds_del}</th>
+                    <th width="100">{$Think.lang.ds_sort}</th>
+                    <th>{$Think.lang.type_add_attr_value}</th>
+                    <th width="100">{$Think.lang.ds_handle}</th>
+                </tr>
+            </thead>
+            <tbody id="tr_model">
+                <tr></tr>
+                {if $attributevalue_list}
+                {foreach name="attributevalue_list" item="val"}
+                <tr>
+                    <td>
+                        <input type="hidden" name='attr_value[{$val.attrvalue_id}][form_submit]' value='' />
+                        <input type="checkbox" name="attr_del[{$val.attrvalue_id}]" value="{$val.attrvalue_id}" />
+                    </td>
+                    <td><input type="text" class="form-control" name="attr_value[{$val.attrvalue_id}][sort]" value="{$val.attrvalue_sort}"/></td>
+                    <td><input type="text" class="form-control" name="attr_value[{$val.attrvalue_id}][name]" value="{$val.attrvalue_name}"/></td>
+                    <td></td>
+                </tr>
+                {/foreach}
+                {/if}
+            </tbody>
+            <tbody>
+                <tr>
+                    <td>
+                        <a id="add_type" class="btn-add-nofloat marginleft" href="JavaScript:void(0);"> <span>添加一个属性</span> </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <input class="btn" type="submit" value="{$Think.lang.ds_submit}"/>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        
+    </form>
+</div>
+<!--载入-->
+<script>
+    $(function() {
+        var i = 0;
+        var tr_model = '<tr><td></td>' +
+                '<td><input type="text" class="form-control" name="attr_value[key][sort]" value="0" /></td>' +
+                '<td><input type="text" class="form-control" name="attr_value[key][name]" value="" /></td>' +
+                '<td><a onclick="remove_tr($(this));" href="JavaScript:void(0);">删除</a></td>' +
+                '</tr>';
+        $("#add_type").click(function() {
+            $('#tr_model > tr:last').after(tr_model.replace(/key/g, 's_' + i));
+            i++;
+        });
+    });
+    function remove_tr(o) {
+        o.parents('tr:first').remove();
+    }
+</script>
+</body>

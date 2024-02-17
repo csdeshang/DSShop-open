@@ -1,0 +1,123 @@
+{include file="public/header" /}
+
+
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.goods_class_index_class}</h3>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dt><label>分类</label></dt>
+                <dd id="searchgc_td"></dd>
+                <input type="hidden" id="choose_gcid" name="choose_gcid" value="0"/>
+            </dl>
+            <div class="btn_group">
+                 <a href="javascript:document.formSearch.submit();" class="btn " title="{$Think.lang.ds_query}">{$Think.lang.ds_query}</a>
+                 <a href="{:url('Goodsclass/tag')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+    </form>
+  
+    
+    <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.goods_class_tag_prompts_two}</li>
+            <li>{$Think.lang.goods_class_tag_prompts_three}</li>
+        </ul>
+    </div>
+    
+    
+  <form method='post' id="form_tag">
+    <input type="hidden" value="" id="submit_type" name="submit_type" />
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th class="w24"></th>
+          <th class="w33pre">{$Think.lang.goods_class_tag_name}</th>
+          <th>{$Think.lang.goods_class_tag_value}</th>
+          <th class="w48">{$Think.lang.ds_handle}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {notempty name="tag_list"}
+        {foreach name="tag_list" item="v" key="k" }
+        <tr class="hover edit">
+          <td><input class="checkitem" type="checkbox" value="{$v.gctag_id}" name="tag_id[]"></td>
+          <td class="name">{$v.gctag_name|raw}</td>
+          <td class="tag"><span title="{$Think.lang.ds_editable}" required="1" fieldid="{$v.gctag_id}" ajax_branch="goods_class_tag_value" fieldname="gctag_value" ds_type="inline_edit" class=" editable">{$v.gctag_value}</span></td>
+          <td><a href="javascript:dsLayerConfirm('{:url('Goodsclass/tag_del',['tag_id'=>$v.gctag_id])}','{$Think.lang.goods_class_tag_del_confirm}')">{$Think.lang.ds_del}</a></td>
+        </tr>
+        {/foreach}
+        
+        {else /}
+        <tr class="no_data">
+          <td colspan="10">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+        <tfoot>
+        <tr class="tfoot">
+          <td><input id="checkallBottom" class="checkall" type="checkbox"></td>
+          <td colspan="18">
+              <span class="all_checkbox">
+            <label>{$Think.lang.ds_select_all}</label>
+            </span>&nbsp;&nbsp;
+              <a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_form('del')">
+                  <span>{$Think.lang.ds_del}</span>
+              </a>
+              <a href="JavaScript:void(0);" class="btn btn-small" onclick="layer.msg('{$Think.lang.goods_class_tag_update_prompt}');location.href='{:url('Goodsclass/tag_update')}'">
+                  <span>{$Think.lang.goods_class_tag_update}</span>
+              </a>
+              <a class="btn btn-small" href="JavaScript:void(0);" onclick="if(confirm('{$Think.lang.goods_class_tag_reset_confirm}')){location.href='{:url('Goodsclass/tag_reset')}'}">
+                  <span>{$Think.lang.goods_class_tag_reset}</span>
+              </a>
+              
+          </td>
+        </tr>
+      </tfoot>
+      </tbody>
+    </table>
+    {$show_page|raw}
+  </form>
+</div>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.edit.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.ADMIN_SITE_ROOT}/js/jquery.goods_class.js" charset="utf-8"></script>
+<script type="text/javascript" src="{$Think.PLUGINS_SITE_ROOT}/mlselection.js" charset="utf-8"></script>
+
+<script type="text/javascript">
+$(function(){
+	//商品分类
+	init_gcselect({$gc_choose_json|raw},{$gc_json|raw});
+});
+function submit_form(type){
+	var id='';
+	$('input[type=checkbox]:checked').each(function(){
+		if(!isNaN($(this).val())){
+			id += $(this).val();
+		}
+	});
+	if(id == ''){
+		layer.alert('{$Think.lang.goods_class_tag_choose_data}');
+		return false;
+	}
+	if(type == 'del'){
+		if(!confirm('{$Think.lang.goods_class_tag_del_confirm}')){
+			return false;
+		}
+	}
+	$('#submit_type').val(type);
+	$('#form_tag').submit();
+}
+</script>

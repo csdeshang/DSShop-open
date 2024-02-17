@@ -1,0 +1,57 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+<link rel="stylesheet" href="{$Think.HOME_SITE_ROOT}/css/point.css">
+  <div class="dsp-base-layout">
+    <div class="dsp-member-left">
+     {include file="default/member/pointprod/pointshop_minfo" /}
+    </div>
+    <div class="dsp-member-right w1200">
+      <table class="dsp-table-style">
+        <thead>
+          <tr>
+            <th class="w200">{$Think.lang.add_time}</th>
+            <th class="w100">{$Think.lang.gain_experience}</th>
+            <th class="w200">{$Think.lang.action_phase}</th>
+            <th class="tl">{$Think.lang.description}</th>
+          </tr>
+        </thead>
+        <tbody>
+        {notempty name="list_log"}
+         {foreach name="list_log" item="val"}
+          <tr class="">
+            <td class="">{:date('Y-m-d',$val.explog_addtime)}</td>
+            <td class="">{$val.explog_points>0 ?'':'-'}{$val.explog_points}</td>
+            <td>
+              {switch name="val.explog_stage"}
+              {case value="login"}{$Think.lang.member_login}{/case}
+              {case value="comments"}{$Think.lang.product_comment}{/case}
+              {case value="order"}{$Think.lang.order_consumption}{/case}
+              {/switch}
+             </td>
+            <td class="tl">{$val.explog_desc}</td>
+          </tr>
+          {/foreach}
+          {else /}
+          <tr>
+            <td colspan="20">
+              <div class="warning-option"><i>&nbsp;</i>
+              <span>{$Think.lang.no_record}</span>
+              </div>
+            </td>
+          </tr>
+          {/notempty}
+        </tbody>
+        <tfoot>
+        {notempty name="list_log"}
+          <tr>
+            <td colspan="20">
+              <div class="pagination">{$show_page|raw}</div>
+            </td>
+          </tr>
+         {/notempty}
+        </tfoot>
+      </table>
+    </div>
+  </div>
+{/block}
+

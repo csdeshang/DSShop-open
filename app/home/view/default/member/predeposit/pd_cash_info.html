@@ -1,0 +1,45 @@
+{extend name="default/base/base_member" /}
+{block name="member_main"}
+
+
+<div class="dsm-default-form">
+    <dl>
+        <dt>{$Think.lang.predeposit_cashsn}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdc_sn}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.predeposit_cash_price}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdc_amount} {$Think.lang.ds_yuan}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.predeposit_cash_shoukuanbank}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdc_bank_name}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.predeposit_cash_shoukuanaccount}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdc_bank_no}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.predeposit_cash_shoukuanname}{$Think.lang.ds_colon}</dt>
+        <dd>{$info.pdc_bank_user}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.predeposit_addtime}{$Think.lang.ds_colon}</dt>
+        <dd>{:date('Y-m-d',$info.pdc_addtime)}</dd>
+    </dl>
+    <dl>
+        <dt>{$Think.lang.ds_state}{$Think.lang.ds_colon}</dt>
+        <dd>{:str_replace(array('0','1','2'),array($Think.lang.predeposit_rechargestate_auditing,$Think.lang.predeposit_rechargestate_approved,$Think.lang.predeposit_rechargepaysuccess),$info['pdc_payment_state'])}</dd>
+    </dl>
+    {if intval($info.pdc_payment_time)}
+    <dl>
+        <dt>{$Think.lang.predeposit_paytime}{$Think.lang.ds_colon}</dt>
+        <dd>{:date('Y-m-d H:i:s',$info.pdc_payment_time)}</dd>
+    </dl>
+    {/if}
+</div>
+
+
+
+
+{/block}

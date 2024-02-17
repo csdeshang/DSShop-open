@@ -1,0 +1,203 @@
+{include file="public/header" /}
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>市场分析</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+   <div class="fixed-empty"></div>
+<form method="get"  name="formSearch" id="formSearch">
+    <div class="ds-search-form">
+        <dl>
+            <dd>
+                <select name="search_type" id="search_type" class="querySelect">
+                    <option value="day" {if isset($search_arr.search_type) && $search_arr.search_type == 'day'}selected{/if}>按照天统计</option>
+                    <option value="week" {if isset($search_arr.search_type) && $search_arr.search_type == 'week'}selected{/if}>按照周统计</option>
+                    <option value="month" {if isset($search_arr.search_type) && $search_arr.search_type == 'month'}selected{/if}>按照月统计</option>
+                </select>
+            </dd>
+            <dd id="searchtype_day" style="display:none;">
+                <input class="txt date" type="text" value="{:date('Y-m-d',$search_arr.day.search_time)}" id="search_time" name="search_time">
+            </dd>
+            <dd id="searchtype_week" style="display:none;">
+                <select name="searchweek_year" class="querySelect">
+                    {foreach name="year_arr" item="v"}
+                    <option value="{$key}" {$search_arr.week.current_year == $key ?'selected':''}>{$v}</option>
+                    {/foreach}
+                </select>
+                <select name="searchweek_month" class="querySelect">
+                    {foreach name="month_arr" item="v"}
+                    <option value="{$key}" {$search_arr.week.current_month == $key ?'selected':''}>{$v}</option>
+                    {/foreach}
+                </select>
+                <select name="searchweek_week" class="querySelect">
+                    {foreach name="week_arr" item="v"}
+                    <option value="{$v.key}" {$search_arr.week.current_week == $v.key ? 'selected':''}>{$v.val}</option>
+                    {/foreach}
+                </select>
+            </dd>
+            <dd id="searchtype_month" style="display:none;">
+                <select name="searchmonth_year" class="querySelect">
+                    {foreach name="year_arr" item="v"}
+                    <option value="{$key}" {$search_arr.month.current_year == $key ? 'selected':''}>{$v}</option>
+                    {/foreach}
+                </select>
+                <select name="searchmonth_month" class="querySelect">
+                    {foreach name="month_arr" item="v"}
+                    <option value="{$key}" {$search_arr.month.current_month == $key ?'selected':''}>{$v}</option>
+                    {/foreach}
+                </select>
+            </dd>
+        </dl>
+            <div class="btn_group">
+                <a href="javascript:void(0);" id="dssubmit" class="btn tooltip" >{$Think.lang.ds_query}</a>
+                <a href="{:url('Statmarketing/promotion')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+            </div>
+        </div>
+  </form>
+ <div class="explanation" id="explanation">
+        <div class="title" id="checkZoom">
+            <h4 title="{$Think.lang.ds_explanation_tip}">{$Think.lang.ds_explanation}</h4>
+            <span id="explanationZoom" title="{$Think.lang.ds_explanation_close}" class="arrow"></span>
+        </div>
+        <ul>
+            <li>{$Think.lang.stat_validorder_explain}</li>
+        	<li>走势图展现了各种促销活动时间段内有效订单的下单量、下单总金额、下单商品数走势对比</li>
+            <li>饼图则展现了各种促销活动时间段内有效订单的下单量、下单总金额、下单商品数占总数的比例</li>
+            <li>统计列表则清晰的展现了各种促销活动的下单量、下单总金额、下单商品数的总数值</li>
+        </ul>
+    </div>
+
+<div class="stat-info">
+    <span>下单量：
+    <strong>{:intval($statcount.ordernum)}</strong>
+    </span>
+    <span>下单商品数：
+    <strong>{:intval($statcount.goodsnum)}</strong>
+    </span>
+    <span>下单金额：
+    <strong>{:ds_price_format($statcount.orderamount)}</strong>
+    元 </span>
+</div>
+  <div id="stat_tabs" class="w100pre close_float ui-tabs">
+    <div class="close_float tabmenu">
+      <ul class="tab pngFix">
+        <li><a href="#ordernum_div" ds_type="showlinelabels" data-param='{"type":"ordernum"}'>下单量</a></li>
+        <li><a href="#goodsnum_div" ds_type="showlinelabels" data-param='{"type":"goodsnum"}'>下单商品数</a></li>
+        <li><a href="#orderamount_div" ds_type="showlinelabels" data-param='{"type":"orderamount"}'>下单金额</a></li>
+      </ul>
+    </div>
+      <!-- 下单量 -->
+    <div id="ordernum_div" class="close_float"></div>
+      <!-- 下单商品件数 -->
+    <div id="goodsnum_div"></div>
+      <!-- 下单金额 -->
+    <div id="orderamount_div"></div>
+  </div>
+
+    <!-- pie stat start -->
+  <div class="w100pre close_float" style="max-height:400px">
+    <div id="statpie_ordernum" class="w18pre" style="float:left; padding-left:50px;"></div>
+    <div id="statpie_goodsnum" class="w18pre" style="float:left; padding-left:50px;"></div>
+    <div id="statpie_orderamount" class="w18pre" style="float:left; padding-left:50px;"></div>
+  </div>
+    <!-- pie stat end -->
+
+    <!-- stat list start -->
+  <table class="ds-default-table">
+    <thead>
+      <tr class="thead">
+        <th>促销类型</th>
+        <th class="align-center">下单量</th>
+        <th class="align-center">下单商品数</th>
+        <th class="align-center">下单金额（元）</th>
+      </tr>
+    <tbody id="datatable">
+  {notempty name="statlist"}
+   {foreach name="statlist" item="v"}
+      <tr class="hover member">
+        <td>{$v.goodstype_text}</td>
+        <td class="align-center">{$v.ordernum}</td>
+        <td class="align-center">{$v.goodsnum}</td>
+        <td class="align-center">{$v.orderamount}</td>
+      </tr>
+    {/foreach}
+   {else /}
+    <tr class="no_data">
+        	<td colspan="11">{$Think.lang.no_record}</td>
+        </tr>
+   {/notempty}
+    </tbody>
+  </table>
+</div>
+<script src="{$Think.PLUGINS_SITE_ROOT}/highcharts/highcharts.js"></script>
+<script src="{$Think.PLUGINS_SITE_ROOT}/statistics.js"></script>
+<script>
+//切换登录卡
+$(function() {
+    $('#stat_tabs').tabs();
+});
+
+//展示搜索时间框
+function show_searchtime(){
+    s_type = $("#search_type").val();
+    $("[id^='searchtype_']").hide();
+    $("#searchtype_"+s_type).show();
+}
+
+$(function () {
+    //统计数据类型
+    var s_type = $("#search_type").val();
+    $('#search_time').datepicker({dateFormat: 'yy-mm-dd'});
+
+    show_searchtime();
+    $("#search_type").change(function(){
+        show_searchtime();
+    });
+
+    //更新周数组
+    $("[name='searchweek_month']").change(function(){
+        var year = $("[name='searchweek_year']").val();
+        var month = $("[name='searchweek_month']").val();
+        $("[name='searchweek_week']").html('');
+        $.getJSON(ADMINSITEURL+'/Common/getweekofmonth',{y:year,m:month},function(data){
+            if(data != null){
+                for(var i = 0; i < data.length; i++) {
+                    $("[name='searchweek_week']").append('<option value="'+data[i].key+'">'+data[i].val+'</option>');
+                }
+            }
+        });
+    });
+
+    //linelabels
+    getLineLabels('ordernum');
+    $("[ds_type='showlinelabels']").click(function(){
+        var data_str = $(this).attr('data-param');
+        eval('data_str = '+data_str);
+        getLineLabels(data_str.type);
+    });
+
+    $('#dssubmit').click(function(){
+        $('#formSearch').submit();
+    });
+
+    //pie
+    $('#statpie_ordernum').highcharts({$stat_json.ordernum|raw});
+    $('#statpie_goodsnum').highcharts({$stat_json.goodsnum|raw});
+    $('#statpie_orderamount').highcharts({$stat_json.orderamount|raw});
+});
+
+//load linelabels
+function getLineLabels(stattype){
+    var search_type = $("#search_type").val();
+    if(!$("#"+stattype+'_div').html()){
+        $("#"+stattype+'_div').load(ADMINSITEURL+'/Statmarketing/promotiontrend?search_type='+search_type+'&stattype='+stattype+'&t={$searchtime}');
+    }
+}
+</script>

@@ -1,0 +1,156 @@
+{include file="public/header" /}
+
+
+
+<div class="page">
+    <div class="fixed-bar">
+        <div class="item-title">
+            <div class="subject">
+                <h3>{$Think.lang.ds_inviter_set}</h3>
+                <h5></h5>
+            </div>
+            {include file="public/admin_items" /}
+        </div>
+    </div>
+
+    <form method="get" name="formSearch" id="formSearch">
+        <div class="ds-search-form">
+            <dl>
+                <dd>
+                    <select name="search_field_name" >
+                        <option {if $search_field_name == 'member_name'}selected='selected'{/if} value="member_name">{$Think.lang.ds_member}</option>
+                        <option {if $search_field_name == 'member_email'}selected='selected'{/if} value="member_email">{$Think.lang.member_email}</option>
+                        <option {if $search_field_name == 'member_mobile'}selected='selected'{/if} value="member_mobile">{$Think.lang.member_mobile}</option>
+                        <option {if $search_field_name == 'member_truename'}selected='selected'{/if} value="member_truename">{$Think.lang.member_truename}</option>
+                    </select>
+                </dd>
+                <dd>
+                    <input type="text" value="{$search_field_value}" name="search_field_value" class="txt">
+                </dd>
+            </dl>
+            <div class="btn_group">
+                <input type="submit" class="btn" value="搜索">
+                {if $filtered}
+                <a href="{:url('Inviter/member')}" class="btn btn-default" title="{$Think.lang.ds_cancel}">{$Think.lang.ds_cancel}</a>
+                {/if}
+            </div>
+        </div>
+    </form>
+
+
+    <table class="ds-default-table">
+      <thead>
+        <tr class="thead">
+          <th>&nbsp;</th>
+          <th colspan="2">{$Think.lang.ds_member}</th>
+          <th class="align-center">{$Think.lang.inviter_class}</th>
+          <th class="align-center">{$Think.lang.inviter_total_amount}</th>
+          <th class="align-center">{$Think.lang.inviter_goods_quantity}</th>
+          <th class="align-center">{$Think.lang.inviter_goods_amount}</th>
+          <th class="align-center">{$Think.lang.inviter_parent_name}</th>
+          <th class="align-center">{$Think.lang.inviter_quantity}</th>
+          <th class="align-center">{$Think.lang.ds_state}</th>
+          <th class="align-center">{$Think.lang.refund_buyer_add_time}</th>
+          <th class="align-center">{$Think.lang.ds_handle}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {notempty name="member_list"}
+        {foreach name="member_list" item="v" key="k" }
+        <tr class="hover member">
+          <td class="w24"><input type="checkbox" name='del_id[]' value="{$v.member_id}" class="checkitem"></td>
+          <td class="w48 picture">
+              <div class="size-44x44">
+              <span class="thumb"><i></i>
+                  <img src="{:get_member_avatar($v.member_avatar)}?{:microtime()}"  width="44" height="44"/>
+              </span>
+          </div>
+          </td>
+          <td><p class="name"><strong>{$v.member_name}</strong>({$Think.lang.member_truename}: {$v.member_truename})</p>
+            <p class="smallfont">{$Think.lang.member_addtime}:&nbsp;{$v.member_addtime|date='Y-m-d'}</p>
+            
+              <div class="im"><span class="email" >
+                {if $v.member_email != ''}
+                <a href="mailto:{$v.member_email}" class=" yes" title="{$Think.lang.member_email}:{$v.member_email}">{$v.member_email}</a></span>
+                {else /}
+                <a href="JavaScript:void(0);" class="" title="{$Think.lang.member_index_null}" >{$v.member_email}</a></span>
+               {/if}
+                {if $v.member_ww != ''}
+                <!--<a target="_blank" href="http://web.im.alisoft.com/msg.aw?v=2&uid={$v.member_ww}&site=cnalichn&s=11" class="" title="WangWang: {$v.member_ww}"><img border="0" src="http://web.im.alisoft.com/online.aw?v=2&uid={$v.member_ww}&site=cntaobao&s=2&charset=utf-8" /></a>-->
+                {/if}
+                {if $v.member_qq != ''}
+                <a target="_blank" href="{$Think.HTTP_TYPE}wpa.qq.com/msgrd?v=3&uin={$v.member_qq}&site=qq&menu=yes" class=""  title="QQ: {$v.member_qq}"><img border="0" src="{$Think.HTTP_TYPE}wpa.qq.com/pa?p=2:{$v.member_qq}:52"/></a>
+                {/if}
+               {if $v.member_mobile != ''}
+               <div style="font-size:13px; padding-left:10px">&nbsp;&nbsp;{:encrypt_show($v.member_mobile,4,4)}</div>
+               {/if}
+              </div></td>
+              <td class="align-center">{$v.inviter_class}</td>
+          <td class="align-center">{$Think.lang.currency}{$v.inviter_total_amount}</td>
+          <td class="align-center">{$v.inviter_goods_quantity}</td>
+          <td class="align-center">{$v.inviter_goods_amount}</td>
+          <td class="align-center">{$v.inviter_parent_name}</td>
+          <td class="align-center">
+          <p>{$Think.lang.inviter_member_1}{$v.inviter_1_quantity}</p>
+          <p>{$Think.lang.inviter_member_2}{$v.inviter_2_quantity}</p>
+          <p>{$Think.lang.inviter_member_3}{$v.inviter_3_quantity}</p>
+          </td>
+          <td class="align-center">{if $v.inviter_state == 0}{$Think.lang.ds_examine}{elseif $v.inviter_state == 1}{$Think.lang.inviter_state_1}{else/}{$Think.lang.inviter_state_2}{/if}</td>
+          <td class="align-center">{$v.inviter_applytime|date='Y-m-d'}</td>
+          <td class="align-center">
+              <a href="{:url('Inviter/memberinfo',['member_id'=>$v.member_id])}" class="dsui-btn-view"><i class="iconfont"></i>{$Think.lang.ds_view}</a>
+              {if $v.inviter_state == 1}
+              <a href="javascript:dsLayerConfirm('{:url('Inviter/memberstate',['member_id'=>$v.member_id,'member_state'=>2])}','{$Think.lang.ds_ensure_disable}')" class="dsui-btn-del"><i class="iconfont"></i>{$Think.lang.ds_disable}</a>
+              {else/}
+              <a href="javascript:dsLayerConfirm('{:url('Inviter/memberstate',['member_id'=>$v.member_id,'member_state'=>1])}','{$Think.lang.ds_ensure_enable}')" class="dsui-btn-add"><i class="iconfont"></i>{$Think.lang.ds_enable}</a>
+              {/if}
+              <a href="javascript:dsLayerOpen('{:url('Inviter/member_adjust',['member_id'=>$v.member_id])}','{$Think.lang.adjust_superior}-{$v.member_name}')" class="dsui-btn-edit"><i class="iconfont"></i>{$Think.lang.adjust_superior}</a>
+          </td>
+        </tr>
+        {/foreach}
+        {else /}
+        <tr class="no_data">
+          <td colspan="11">{$Think.lang.ds_no_record}</td>
+        </tr>
+        {/notempty}
+      </tbody>
+      <tfoot class="tfoot">
+        {notempty name="member_list"}
+        <tr>
+        <td class="w24"><input type="checkbox" class="checkall" id="checkallBottom"></td>
+          <td colspan="16">
+          <label for="checkallBottom">{$Think.lang.ds_select_all}</label>
+              &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_disable_batch()"><span>{$Think.lang.ds_disable}</span></a>
+              &nbsp;&nbsp;<a href="JavaScript:void(0);" class="btn btn-small" onclick="submit_enable_batch()"><span>{$Think.lang.ds_enable}</span></a>
+          </td>
+        </tr>
+        {/notempty}
+      </tfoot>
+    </table>
+    {$show_page|raw}
+
+</div>
+<script>
+function submit_disable_batch() {
+    var ids_str=batch_items();
+    _uri = ADMINSITEURL+"/Inviter/memberstate.html?member_state=2&member_id=" + ids_str;
+    dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_disable}');
+}
+function submit_enable_batch() {
+    var ids_str=batch_items();
+    _uri = ADMINSITEURL+"/Inviter/memberstate.html?member_state=1&member_id=" + ids_str;
+    dsLayerConfirm(_uri,'{$Think.lang.ds_ensure_enable}');
+}
+function batch_items(){
+    /* 获取选中的项 */
+    var items = '';
+    $('.checkitem:checked').each(function () {
+        items += this.value + ',';
+    });
+    if (items != '') {
+        items = items.substr(0, (items.length - 1));
+
+    }
+    return items;
+}
+</script>

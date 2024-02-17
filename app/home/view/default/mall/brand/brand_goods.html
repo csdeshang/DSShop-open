@@ -1,0 +1,117 @@
+{extend name="default/base/base_home" /}
+{block name="mall_main"}
+
+
+<script>
+var PURL = [{$purl|default=''}];
+</script>
+<script src="{$Think.HOME_SITE_ROOT}/js/search_goods.js"></script>
+
+<div class="dsh-container wrapper">
+  <div class="left">
+    <div class="dsh-module dsh-module-style01">
+      <div class="title">
+        <h3>{$Think.lang.brand_index_recommend_brand}</h3>
+      </div>
+      <div class="content">
+          {notempty name="brand_r"}
+          <ul class="dsh-sidebar-brand">
+              {foreach $brand_r as $brand} 
+              <li class="picture">
+                  <a href="{:url('Brand/brand_goods',['brand_id'=>$brand.brand_id])}" target="_blank">
+                      <span class="brand-logo"><img src="{:brand_image($brand.brand_pic)}" /></span> 
+                      <span class="brand-name">{$brand.brand_name}</span>
+                  </a>
+              </li>
+              {/foreach}
+          </ul>
+          {/notempty}
+      </div>
+    </div>
+    <!-- 浏览历史 -->
+    <div class="dsh-module dsh-module-style03">
+      <div class="title">
+        <h3>{$Think.lang.brand_index_viewed_goods}</h3>
+      </div>
+      <div class="content">
+        <div class="dsh-sidebar-viewed" id="dshSidebarViewed">
+          <ul>
+           {notempty name="viewed_goods"}
+           {foreach name="viewed_goods" item="v"}
+            <li>
+              <div class="goods-pic"><a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}"><img  class="lazyload"  data-original="{:goods_thumb($v,240);}" title="{$v.goods_name}" alt="{$v.goods_name}" ></a></div>
+              <dl>
+                <dt><a href="{:url('Goods/index',['goods_id'=>$v.goods_id])}">{$v.goods_name}</a></dt>
+                <dd>{$Think.lang.currency}{$v.goods_promotion_price}</dd>
+              </dl>
+            </li>
+            {/foreach}
+          {/notempty}
+          </ul>
+        </div>
+        <a href="{:url('Membergoodsbrowse/listinfo')}" class="dsh-sidebar-all-viewed">{$Think.lang.ds_full_history}</a> </div>
+    </div>
+  </div>
+  <div class="right">
+    <div class="shop_con_list" id="main-nav-holder">
+      <nav class="sort-bar" id="main-nav">
+        <div class="dsh-sortbar-array"> {$Think.lang.brand_sort_mode}
+            <ul>
+                <li {if $Request.param.key neq ''}class="selected"{/if}><a href="{:dropParam(array('order', 'key'))}"  class="nobg" title="{$Think.lang.brand_index_default_sort}">{$Think.lang.brand_index_default}</a></li>
+                <li {if $Request.param.key eq '1'}class="selected"{/if}><a href="{if $Request.param.order=='2' && $Request.param.key=='1'}{:replaceParam(array('key' => '1', 'order' => '1'))}{else/}{:replaceParam(array('key' => '1', 'order' => '2'))}{/if}" {if $Request.param.key=='1'}class="{if $Request.param.order==1}asc{else/}desc{/if}"{/if} >{$Think.lang.brand_index_sold}<i></i></a></li>
+                <li {if $Request.param.key eq '2'}class="selected"{/if}><a href="{if $Request.param.order=='2' && $Request.param.key=='2'}{:replaceParam(array('key' => '2', 'order' => '1'))}{else/}{:replaceParam(array('key' => '2', 'order' => '2'))}{/if}" {if $Request.param.key=='2'}class="{if $Request.param.order==1}asc{else/}desc{/if}"{/if} >{$Think.lang.brand_index_click}<i></i></a></li>
+                <li {if $Request.param.key eq '3'}class="selected"{/if}><a href="{if $Request.param.order=='2' && $Request.param.key=='3'}{:replaceParam(array('key' => '3', 'order' => '1'))}{else/}{:replaceParam(array('key' => '3', 'order' => '2'))}{/if}" {if $Request.param.key=='3'}class="{if $Request.param.order==1}asc{else/}desc{/if}"{/if} >{$Think.lang.ds_price}<i></i></a></li>
+            </ul>
+        </div>
+        <div class="dsh-sortbar-owner"><span><a href="{if $Request.param.gift == 1}{:dropParam(array('gift'))}{else/}{:replaceParam(array('gift' => '1'))}{/if}" {if $Request.param.gift ==1}class="selected"{/if}><i></i>{$Think.lang.ds_gift}</a></span></div>
+        <div class="dsh-sortbar-location">{$Think.lang.brand_commodity_location}
+            <div class="select-layer">
+                <div class="holder"><em ds_type="area_name">{$Think.lang.brand_index_area}<!-- 所在地 --></em></div>
+                <div class="selected"><a ds_type="area_name">{$Think.lang.brand_index_area}<!-- 所在地 --></a></div>
+                <i class="direction"></i>
+                <ul class="options">
+                    {include file="default/base/home/goods_class_area" /}
+                </ul>
+            </div>
+        </div>
+      </nav>
+        
+        
+      <!-- 商品列表循环  -->
+      {include file="default/base/home/goods_squares" /}
+      
+      
+      <div class="tc mt20 mb20">
+        <div class="pagination">{$show_page|raw}</div>
+      </div>
+    </div>
+
+    <!-- 猜你喜欢 -->
+    <div id="guesslike_div" style="width:980px;"></div>
+  </div>
+</div>
+<script src="{$Think.HOME_SITE_ROOT}/js/waypoints.js"></script>
+<script>
+$(function(){
+ //浮动导航  waypoints.js
+    $('#main-nav-holder').waypoint(function(event, direction) {
+        $(this).parent().toggleClass('sticky', direction === "down");
+        event.stopPropagation();
+    });
+    //浏览历史处滚条
+	$('#dshSidebarViewed').perfectScrollbar();
+  	//猜你喜欢
+	$('#guesslike_div').load("{:url('Search/get_guesslike')}", function(){
+        $(this).show();
+    });
+});
+<?php if(intval(input('get.area_id')) > 0){?>
+$(function(){
+    // 选择地区后的地区显示
+    $('[ds_type="area_name"]').html('<?php echo $province_array[intval(input('get.area_id'))]; ?>');
+});
+<?php }?>
+</script>
+
+
+{/block}
