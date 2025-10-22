@@ -2,7 +2,7 @@
 
 ### DSPlatform系统
 DSPlatform系统是一个集成的解决方案，基于Thinkphp8 + Vue3 + Element Plus + Uniapp 开发，系统支持多种商业模式，包括传统商城购物、外卖配送、上门服务、上门家政、短视频带货等，满足不同行业的业务需求。无论是电商平台、本地生活服务、家政服务还是内容电商，都能快速构建完整的业务体系。
-- [DSPlatform帮助手册](http://help.dsplatform.csdeshang.com/) http://help.dsplatform.csdeshang.com/
+- <a href="http://help.dsplatform.csdeshang.com/" target="_blank">DSPlatform帮助手册  http://help.dsplatform.csdeshang.com/</a>
 
 ### DSMall商城系统
 DSMall商城系统是基于ThinkPhp6.0和Uniapp开发的一套完善的B2B2C（多店铺商城）电商系统。它能够快速积累客户和会员数据，进行智能转化，提升销售和会员维护效率。主要功能包括拼团、砍价、秒杀、优惠券、积分、分销、刮刮卡等，适合企业进行二次开发。
