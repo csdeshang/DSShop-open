@@ -10,7 +10,6 @@ $lang['level_discount'] = '折扣率';
 /* 添加相关 */
 $lang['pintuan_goods'] = '选择商品';
 $lang['mgdiscount_goods_explain'] = '折扣商品解释';
-$lang['param_error'] = '参数错误';
 $lang['mgdiscount_add_success'] = '操作成功';
 $lang['mgdiscount_goods_add'] = '新增商品会员折扣';
 
@@ -36,7 +35,6 @@ $lang['mgdiscount_add_start_time_explain'] = '开始时间不能为空且不能�
 $lang['mgdiscount_add_end_time_explain'] = '结束时间不能为空且不能晚于%s';
 $lang['mgdiscount_discount_explain'] = '折扣必须为0.1-9.9之间的数字';
 $lang['time_error'] = '时间格式错误';
-$lang['param_error'] = '参数错误';
 
 $lang['text_month'] = '月';
 $lang['mgdiscount_quota_add'] = '购买套餐';

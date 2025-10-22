@@ -101,7 +101,7 @@
                   <select name="goods_state">
                       <option value="">{$Think.lang.ds_please_choose}...</option>
                       {foreach name="state" item="val" key="key" }
-                      <option value="{$key}" {if isset($search['goods_state']) &&  $search['goods_state'] == $key }selected{/if}>{$val}</option>
+                      <option value="{$key}" {if $Request.param.goods_state == $key }selected{/if}>{$val}</option>
                       {/foreach}
                   </select>
               </dd>
@@ -215,7 +215,7 @@
             {elseif $type == 'allgoods' /}
             <td><input type="checkbox" class="checkall" ></td>
             <td colspan="16"><label>{$Think.lang.ds_select_all}</label>
-                <a href="JavaScript:void(0);" class="btn btn-small" dstype="lockup_batch"><span>存入仓库</span></a>
+                <a href="JavaScript:void(0);" class="btn btn-small" dstype="lockup_batch"><span>下架商品</span></a>
             </td>
             {/if}
         </tr>
@@ -339,10 +339,10 @@ function getItems() {
 }
 
 
-// 商品存入仓库
+// 商品下架
 function goods_lockup(ids_str) {
     _uri = ADMINSITEURL+"/Goods/goods_lockup?commonid=" + ids_str;
-    dsLayerOpen(_uri,'存入仓库理由','400px','200px');
+    dsLayerOpen(_uri,'下架理由','400px','200px');
 }
 // 商品售卖
 function goods_reduction(ids_str) {

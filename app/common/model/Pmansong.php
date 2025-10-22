@@ -305,7 +305,7 @@ class Pmansong extends BaseModel
      */
     public function editExpireMansong()
     {
-        $updata = array();
+        $update = array();
         $update['mansong_state'] = self::MANSONG_STATE_CLOSE;
 
         $condition = array();

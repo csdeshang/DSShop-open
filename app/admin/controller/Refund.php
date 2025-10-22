@@ -128,8 +128,10 @@ class Refund extends AdminControl
         $refundreturn_model = model('refundreturn');
         $condition = array();
         $condition[] = array('refund_id','=',intval(input('param.refund_id')));
-        $refund_list = $refundreturn_model->getRefundList($condition);
-        $refund = $refund_list[0];
+        $refund = $refundreturn_model->getRefundreturnInfo($condition);
+        if(empty($refund)){
+            $this->error(lang('param_error'));
+        }
         //查询交易凭证
         $order_model = model('order');
         $order = $order_model->getOrderInfo(array('order_id' => $refund['order_id']));
@@ -163,8 +165,7 @@ class Refund extends AdminControl
                     $data['log_role'] = 'system';
                     $data['log_user'] = $this->admin_info['admin_name'];
                     $data['log_msg'] = '修改支付平台交易号 : ' . $trade_no;
-                    $data['log_orderstate'] = $order['order_state'];
-                    $order_model->addOrderlog($data);
+                    model('orderlog')->addOrderlog($data);
                 }
                 $res = $refundreturn_model->editOrderRefund($refund);
                 $state=$res['code'];
@@ -232,8 +233,10 @@ class Refund extends AdminControl
         $refundreturn_model = model('refundreturn');
         $condition = array();
         $condition[] = array('refund_id','=',intval(input('param.refund_id')));
-        $refund_list = $refundreturn_model->getRefundList($condition);
-        $refund = $refund_list[0];
+        $refund = $refundreturn_model->getRefundreturnInfo($condition);
+        if(empty($refund)){
+            $this->error(lang('param_error'));
+        }
         View::assign('refund', $refund);
         $info['buyer'] = array();
         if (!empty($refund['pic_info'])) {

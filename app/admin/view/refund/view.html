@@ -5,55 +5,31 @@
 
 
 <div class="page">
-    <div class="fixed-bar">
-        <div class="item-title">
-            <div class="subject">
-                <h3>{$Think.lang.ds_refund}</h3>
-            </div>
-        </div>
-    </div>
     <table class="ds-default-table">
         <tbody>
-            <tr class="noborder">
-                <td colspan="2" class="required">退款单号</td>
-            </tr>
-            <tr class="noborder">
-                <td class="vatop rowform">{$refund.refund_sn}</td>
-                <td class="vatop tips"></td>
+            <tr>
+                <td class="w120">退款单号</td>
+                <td>{$refund.refund_sn}</td>
             </tr>
             <tr>
-                <td colspan="2" class="required">商品名称{$Think.lang.ds_colon}</td>
-            </tr>
-            <tr class="noborder">
-                <td class="vatop rowform">{$refund.goods_name}</td>
-                <td class="vatop tips"></td>
+                <td>商品名称{$Think.lang.ds_colon}</td>
+                <td>{$refund.goods_name}</td>
             </tr>
             <tr>
-                <td colspan="2" class="required">{$Think.lang.refund_order_refund}{$Think.lang.ds_colon}</td>
-            </tr>
-            <tr class="noborder">
-                <td class="vatop rowform">{:ds_price_format($refund['refund_amount'])}</td>
-                <td class="vatop tips"></td>
+                <td>{$Think.lang.refund_order_refund}{$Think.lang.ds_colon}</td>
+                <td>{:ds_price_format($refund['refund_amount'])}</td>
             </tr>
             <tr>
-                <td colspan="2" class="required">{$Think.lang.refund_buyer_message}{$Think.lang.ds_colon}</td>
-            </tr>
-            <tr class="noborder">
-                <td class="vatop rowform">{$refund.reason_info}</td>
-                <td class="vatop tips"></td>
+                <td>{$Think.lang.refund_buyer_message}{$Think.lang.ds_colon}</td>
+                <td>{$refund.reason_info}</td>
             </tr>
             <tr>
-                <td colspan="2" class="required">退款说明{$Think.lang.ds_colon}</td>
-            </tr>
-            <tr class="noborder">
-                <td class="vatop rowform">{$refund.buyer_message}</td>
-                <td class="vatop tips"></td>
+                <td>退款说明{$Think.lang.ds_colon}</td>
+                <td>{$refund.buyer_message}</td>
             </tr>
             <tr>
-                <td colspan="2" class="required">凭证上传{$Think.lang.ds_colon}</td>
-            </tr>
-            <tr class="noborder">
-                <td class="vatop rowform">
+                <td>凭证上传{$Think.lang.ds_colon}</td>
+                <td>
                     {notempty name="pic_list"}
                     {foreach name="pic_list" item="val" key="key" }
                     {notempty name="val"}
@@ -64,21 +40,14 @@
                     {/foreach}
                     {/notempty}
                 </td>
-                <td class="vatop tips"></td>
             </tr>
             <tr>
-                <td colspan="2" class="required">平台确认{$Think.lang.ds_colon}</td>
-            </tr>
-            <tr class="noborder">
-                <td class="vatop rowform">{$admin_array[$refund['refund_state']]}</td>
-                <td class="vatop tips"></td>
+                <td>平台确认{$Think.lang.ds_colon}</td>
+                <td>{$admin_array[$refund['refund_state']]}</td>
             </tr>
             <tr>
-                <td colspan="2" class="required">{$Think.lang.refund_message}{$Think.lang.ds_colon}</td>
-            </tr>
-            <tr class="noborder">
-                <td class="vatop rowform">{$refund.admin_message}</td>
-                <td class="vatop tips"></td>
+                <td>{$Think.lang.refund_message}{$Think.lang.ds_colon}</td>
+                <td>{$refund.admin_message}</td>
             </tr>
         </tbody>
     </table>

@@ -80,7 +80,7 @@ class Predeposit extends AdminControl {
             $payment_list = model('payment')->getPaymentOpenList();
             //去掉预存款和货到付款
             foreach ($payment_list as $key => $value) {
-                if ($value['payment_code'] == 'predeposit' || $value['payment_code'] == 'offline') {
+                if ($value['payment_code'] == 'predeposit') {
                     unset($payment_list[$key]);
                 }
             }
@@ -94,7 +94,7 @@ class Predeposit extends AdminControl {
         $condition = array();
         $condition[] = array('payment_code','=',input('post.payment_code'));
         $payment_info = $payment_model->getPaymentOpenInfo($condition);
-        if (!$payment_info || $payment_info['payment_code'] == 'offline' || $payment_info['payment_code'] == 'offline') {
+        if (!$payment_info) {
             $this->error(lang('payment_index_sys_not_support'));
         }
 
@@ -109,8 +109,9 @@ class Predeposit extends AdminControl {
         $update['pdr_admin'] = $this->admin_info['admin_name'];
         $log_msg = lang('admin_predeposit_recharge_edit_state') . ',' . lang('admin_predeposit_sn') . ':' . $info['pdr_sn'];
 
+        Db::startTrans();
         try {
-            Db::startTrans();
+            
             //更改充值状态
             $state = $predeposit_model->editPdRecharge($update, $condition);
             if (!$state) {
@@ -127,7 +128,7 @@ class Predeposit extends AdminControl {
             Db::commit();
             $this->log($log_msg, 1);
             $this->success(lang('admin_predeposit_recharge_edit_success'), 'Predeposit/pdrecharge_list');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Db::rollback();
             $this->log($log_msg, 0);
             $this->error($e->getMessage(), 'Predeposit/pdrecharge_list');
@@ -315,7 +316,7 @@ class Predeposit extends AdminControl {
             $data['admin_name'] = $admininfo['admin_name'];
             $predeposit_model->changePd('cash_del', $data);
             ds_json_encode(10000, lang('admin_predeposit_cash_del_success'));
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ds_json_encode(10001, lang($e->getMessage()));
         }
     }
@@ -348,8 +349,9 @@ class Predeposit extends AdminControl {
         $update['pdc_trade_sn'] = input('param.pdc_trade_sn');
         $log_msg = lang('admin_predeposit_cash_edit_state') . ',' . lang('admin_predeposit_cs_sn') . ':' . $info['pdc_sn'];
 
+        Db::startTrans();
         try {
-            Db::startTrans();
+            
             $result = $predeposit_model->editPdcash($update, $condition);
             if (!$result) {
                 $this->error(lang('admin_predeposit_cash_edit_fail'));
@@ -517,8 +519,9 @@ class Predeposit extends AdminControl {
                     $this->error(lang('ds_common_op_fail'), 'Predeposit/pdlog_list');
                     break;
             }
+            Db::startTrans();
             try {
-                Db::startTrans();
+                
                 //扣除冻结的预存款
                 $data = array();
                 $data['member_id'] = $member_info['member_id'];
@@ -533,7 +536,7 @@ class Predeposit extends AdminControl {
                 $this->log($log_msg, 1);
                 dsLayerOpenSuccess(lang('ds_common_op_succ'));
 //                $this->success(lang('ds_common_op_succ'), 'Predeposit/pdlog_list');
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 Db::rollback();
                 $this->log($log_msg, 0);
                 $this->error($e->getMessage(), 'Predeposit/pdlog_list');

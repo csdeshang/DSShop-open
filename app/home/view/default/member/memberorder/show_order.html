@@ -32,7 +32,7 @@
                                         <ul>
                                             {if $order_info.payment_name}
                                             <li>{$Think.lang.ds_payment_method}{$Think.lang.ds_colon}<span>{$order_info.payment_name}
-                                                    <?php if($order_info['payment_code'] != 'offline' && !in_array($order_info['order_state'],array(ORDER_STATE_CANCEL,ORDER_STATE_NEW))) { ?>
+                                                    <?php if(!in_array($order_info['order_state'],array(ORDER_STATE_CANCEL,ORDER_STATE_NEW))) { ?>
                                                     ({$Think.lang.order_number}{$Think.lang.ds_colon}{$order_info.pay_sn})
                                                     <?php } ?>
                                                 </span> </li>
@@ -84,19 +84,13 @@
                     <dl>
                         <dt><i class="iconfont green">&#xe64d;</i>{$Think.lang.member_order_state}：</dt>
                         <dd>
-                            {if $order_info['payment_code'] == 'offline'}{$Think.lang.wait_platform_shipment}{else/}{$Think.lang.paid_successfully}{/if}
+                            {$Think.lang.paid_successfully}
                         </dd>
                     </dl>
                     <ul>
-                        {if $order_info['payment_code'] == 'offline'}
-                        <li>{$Think.lang.payment_success_prompt1}</li>
-                        <li>{$Think.lang.payment_success_prompt2}</li>
-                        <li>{$Think.lang.payment_success_prompt3}<a href="#order-step" class="dsm-btn-mini">{$Think.lang.member_order_cancel_order}</a>{$Think.lang.ds_handle}。</li>
-                        {else/}
                         <li>{$Think.lang.payment_success_prompt4}“{:get_order_payment_name($order_info['payment_code'])}”{$Think.lang.payment_success_prompt5}“{$order_info.pay_sn}”。</li>
                         <li>{$Think.lang.payment_success_prompt6}</li>
                         <li>{$Think.lang.payment_success_prompt7}<a class="dsm-btn-mini" href="#order-step">{$Think.lang.application_refund}</a>{$Think.lang.ds_handle}。</li>
-                        {/if}
                     </ul>
                 </div>
                 {/if}
@@ -171,13 +165,11 @@
                     <dd class="bg"></dd>
                     <dd class="date" title="{$Think.lang.order_time}">{$order_info.add_time|date="Y-m-d H:i:s"}</dd>
                 </dl>
-                {if $order_info['payment_code'] != 'offline'}
                 <dl class="{if intval($order_info['payment_time'])}current{/if}">
                     <dt>{$Think.lang.complete_payment}</dt>
                     <dd class="bg"> </dd>
                     <dd class="date" title="{$Think.lang.member_show_order_pay_time}">{$order_info.payment_time|date="Y-m-d H:i:s"}</dd>
                 </dl>
-                {/if}
                 <dl class="{if $order_info['extend_order_common']['shipping_time']}current{/if}">
                     <dt>{$Think.lang.merchant_delivery}</dt>
                     <dd class="bg"> </dd>

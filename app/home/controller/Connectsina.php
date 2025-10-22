@@ -31,7 +31,6 @@ class Connectsina extends BaseMall
         if (!session('slast_key')) {
             $this->error(lang('home_sconnect_error'));
         }
-        View::assign('hidden_nctoolbar', 1);
     }
 
     /**
@@ -63,74 +62,13 @@ class Connectsina extends BaseMall
             require_once(PLUGINS_PATH . '/login/sina/saetv2.ex.class.php');
             $c = new \SaeTClientV2(config('ds_config.sina_wb_akey'), config('ds_config.sina_wb_skey'), session('slast_key.access_token'));
             $sinauser_info = $c->show_user_by_id(session('slast_key.uid'));//根据ID获取用户等基本信息
-        if (request()->isPost()) {
-            $type=input('param.type');
-            $user=input('param.user');
-            $email=input('param.email');
-            $password=input('param.password');
-            $password2=input('param.password2');
-                $reg_info = array(
-                    'member_sinaopenid' => session('slast_key.uid'),
-                    'nickname' => isset($sinauser_info['screen_name'])?$sinauser_info['screen_name']:'',
-                    'headimgurl' => isset($sinauser_info['avatar_large'])?$sinauser_info['avatar_large']:'',
-                );
-                $data=array(
-                    'member_name'=>$user,
-                    'member_password'=>$password,
-                    'member_email'=>$email,
-                    'member_sinaopenid' => $reg_info['member_sinaopenid'],
-                    'member_sinainfo' =>  serialize($reg_info),
-                    'member_nickname'=>$reg_info['nickname'],
-                );
-            if($type==1){//注册
-
-
-                $login_validate = ds_validate('member');
-                if (!$login_validate->scene('register')->check($data)) {
-                    $this->error($login_validate->getError());
-                }
-                $member_info = $member_model->register($data);
-                if (!isset($member_info['error'])) {
-                    $member_model->createSession($member_info, true);
-                    $headimgurl = $reg_info['headimgurl'];
-                    $avatar = @copy($headimgurl, BASE_UPLOAD_PATH . '/' . ATTACH_AVATAR . "/avatar_".$member_info['member_id'].".jpg");
-                    if ($avatar) {
-                        $member_model->editMember(array('member_id' => $member_info['member_id']), array('member_avatar' => "avatar_".$member_info['member_id'].".jpg"),$member_info['member_id']);
-                    }
-                } else {
-                    $this->error($member_info['error']);
-                }
-            }else{//绑定
-       
-                $login_validate = ds_validate('member');
-                if (!$login_validate->scene('login')->check($data)) {
-                    ds_json_encode(10001, $login_validate->getError());
-                }
-                $map = array(
-                    'member_name' => $data['member_name'],
-                    'member_password' => md5($data['member_password']),
-                );
-                $member_info = $member_model->getMemberInfo($map);
-                if ($member_info) {
-                    $member_model->editMember(array('member_id' => $member_info['member_id']), array('member_sinaopenid' => $data['member_sinaopenid'],'member_sinainfo' => $data['member_sinainfo']),$member_info['member_id']);
-                }else{
-                    $this->error(lang('login_register_bind_fail'));
-                }
-                $member_model->createSession($member_info, true);
-            }
             
-            
-            $this->success(lang('ds_common_save_succ'), HOME_SITE_URL);
-        } else {
-            
-            
-
-            if(config('ds_config.auto_register')){//如果开启了自动注册
+                //自动注册
                 $logic_connect_api = model('connectapi', 'logic');
                 //注册会员信息 返回会员信息
                 $reg_info = array(
                     'member_sinaopenid' => session('slast_key.uid'),
-                    'nickname' => isset($sinauser_info['screen_name'])?$sinauser_info['screen_name']:'',
+                    'nickname' => isset($sinauser_info['screen_name'])?$sinauser_info['screen_name']:get_rand_nickname(),
                     'headimgurl' => isset($sinauser_info['avatar_large'])?$sinauser_info['avatar_large']:'',
                 );
                 $wx_member = $logic_connect_api->wx_register($reg_info, 'sina');
@@ -138,25 +76,19 @@ class Connectsina extends BaseMall
                     if (!$wx_member['member_state']) {
                         $this->error(lang('login_index_account_stop'), 'Index/index');
                     }
-                    $member_model->createSession($wx_member, true);
+                    $member_model->createSession($wx_member, 'register');
                     $success_message = lang('login_index_login_success');
                     $this->success($success_message, HOME_SITE_URL);
                 } else {
                     $this->error(lang('login_usersave_regist_fail'), 'login/register'); //"会员注册失败"
                 }
-            }else{
-                View::assign('sinauser_info', $sinauser_info);
-                View::assign('user_passwd', '');
-                echo View::fetch($this->template_dir . 'connect_register');
-            }
 
-        }
     }
 
     /**
      * 绑定新浪微博账号后自动登录
      */
-    public function autologin()
+    private function autologin()
     {
         //查询是否已经绑定该新浪微博账号,已经绑定则直接跳转
         $member_model = model('member');
@@ -167,7 +99,7 @@ class Connectsina extends BaseMall
             if (!$member_info['member_state']) {//1为启用 0 为禁用
                 $this->error(lang('login_index_account_stop'));
             }
-            $member_model->createSession($member_info);
+            $member_model->createSession($member_info,'login');
             $success_message = lang('login_index_login_success');
             $this->success($success_message, 'index/index');
         }

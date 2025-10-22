@@ -11,7 +11,6 @@ $lang['qq_interconnection']		= 'QQ 互联';
 $lang['sina_interconnection']		= '微博 互联';
 $lang['wx_login']		= '微信登录';
 $lang['account_setting']		= '设置';
-$lang['auto_register']		= '自动注册';
 return $lang;
 
 

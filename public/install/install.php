@@ -360,6 +360,10 @@ if($action == 'db') {
             $setup_date = date("Y-m-d H:i:s",time());
             mysqli_query($link,"update {$db['prefix']}config set value = '{$setup_date}' where code = 'setup_date'");
 
+            //更新系统唯一标识 32位
+            $site_uniqid = md5(bin2hex(random_bytes(64)));
+            mysqli_query($link,"update {$db['prefix']}config set value = '{$site_uniqid}' where code = 'site_uniqid'");
+            
             //添加用户管理员
             $password = md5($user['password']);
             $insert_error = mysqli_query($link,"INSERT INTO {$db['prefix']}admin (admin_name, admin_password, admin_is_super, admin_gid) 

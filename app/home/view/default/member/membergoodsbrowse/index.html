@@ -43,7 +43,7 @@
     <div class="dsm-browse-class" style="display: none">
         <div class="title"><a href="{:url('Membergoodsbrowse/listinfo')}" class="{$Request.param.gc_id ?'':'selected'}"> {$Think.lang.ds_full_history}</a></div>
         <ul id="sidebarMenu">
-            {foreach name="browseclass_arr" item="v"}
+            {foreach name="browseclass_arr" item="v" key="key"}
             <li class="side-menu"> <a href="{:url('Membergoodsbrowse/listinfo',['gc_id'=>$key])}" class="{if $Request.param.gc_id == $key}selected{/if}"><i></i>{$v.gc_name}</a>
                 <ul style="<?php echo in_array(input('param.gc_id'),array_keys($v['sonclass']))?'display: block;':'display: none;'; ?>">
                     {foreach name="v.sonclass" item="v_son" key="k_son"}

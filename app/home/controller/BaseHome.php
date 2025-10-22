@@ -320,7 +320,7 @@ class BaseHome extends BaseController
             return false;
         }
         $member_info = $member_model->getMemberInfoByID($member_id);
-        $member_model->createSession($member_info);
+        $member_model->createSession($member_info,'login');
     }
 
 }

@@ -209,7 +209,7 @@ class Activity extends AdminControl {
             foreach ($id_arr as $v) {
                 $this->delBanner(intval($v));
             }
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             ds_json_encode(10001, $e->getMessage());
         }
         if ($activity_model->delActivity(array(array('activity_id','in', $id_arr)))) {

@@ -292,7 +292,13 @@ function get_order_state($order_info)
             $order_state = lang('order_state_send');
             break;
         case ORDER_STATE_SUCCESS:
-            $order_state = lang('order_state_success');
+            if(isset($order_info['refund_state']) && $order_info['refund_state'] == 1){
+                $order_state = '部分退款成功';
+            }elseif(isset($order_info['refund_state']) && $order_info['refund_state'] == 2){
+                $order_state = '全额退款成功';
+            }else{
+                $order_state = lang('order_state_success');
+            }
             break;
     }
     return $order_state;
@@ -306,7 +312,7 @@ function get_order_state($order_info)
  */
 function get_order_payment_name($payment_code)
 {
-    return str_replace(array('offline', 'online', 'alipay', 'alipay_h5', 'alipay_app', 'wxpay_native', 'wxpay_jsapi', 'wxpay_h5', 'wxpay_app', 'wxpay_minipro', 'predeposit'), array('货到付款', '在线付款', '支付宝PC支付', '支付宝手机支付', '支付宝APP支付', '微信扫码支付', '微信公众号支付', '微信H5支付', '微信APP支付', '小程序支付', '站内余额支付'), $payment_code);
+    return str_replace(array('online', 'alipay', 'alipay_h5', 'alipay_app', 'wxpay_native', 'wxpay_jsapi', 'wxpay_h5', 'wxpay_app', 'wxpay_minipro', 'predeposit'), array('在线付款', '支付宝PC支付', '支付宝手机支付', '支付宝APP支付', '微信扫码支付', '微信公众号支付', '微信H5支付', '微信APP支付', '小程序支付', '站内余额支付'), $payment_code);
 }
 
 /**

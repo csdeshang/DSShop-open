@@ -159,10 +159,10 @@ class Refundreturn extends BaseModel {
             }
             $main_payment_info = $payment_info = $result['data'];
 
-            if($payment_code == 'alipay' && !isset($payment_info['payment_config']['alipay_trade_refund_state'])){
+            if ($payment_code == 'alipay' && !isset($payment_info['payment_config']['alipay_trade_refund_state'])) {
                 throw new \think\Exception($payment_code . '请配置支付宝支付', 10006);
             }
-            if($payment_code == 'wxpay_native' && !isset($payment_info['payment_config']['wx_trade_refund_state'])){
+            if ($payment_code == 'wxpay_native' && !isset($payment_info['payment_config']['wx_trade_refund_state'])) {
                 throw new \think\Exception($payment_code . '请配置微信支付', 10006);
             }
             //支付宝/微信 未开启原路返回
@@ -177,7 +177,7 @@ class Refundreturn extends BaseModel {
                 if ($refund_amount > $predeposit_amount) {
                     $trade_refund_amount = $predeposit_amount;
                 }
-                $payment_info['payment_config']=array_merge($main_payment_info['payment_config'],$payment_info['payment_config']);
+                $payment_info['payment_config'] = array_merge($main_payment_info['payment_config'], $payment_info['payment_config']);
                 $payment_api = new $payment_code($payment_info);
                 $result = $payment_api->trade_refund($order, $trade_refund_amount);
                 if (!$result['code']) {
@@ -232,15 +232,11 @@ class Refundreturn extends BaseModel {
             $field = 'order_id,buyer_id,buyer_name,order_sn,order_amount,payment_code,order_state,refund_amount,rcb_amount,pd_amount,trade_no';
             $order_model = model('order');
 
-
-
-
-
+            Db::startTrans();
             try {
-                Db::startTrans();
+
                 $order_model->lock = true;
                 $order = $order_model->getOrderInfo(array('order_id' => $order_id), array(), $field);
-
 
                 $state = 1;
                 $this->refundAmount($order, $refund['refund_amount']);
@@ -268,7 +264,7 @@ class Refundreturn extends BaseModel {
                 //拼团退团
                 if (!empty($pintuan_list)) {
                     foreach ($pintuan_list as $goods) {
-                        $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $goods['promotions_id'])->lock(true)->find();
+                        $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $goods['promotions_id'])->find();
                         if ($ppintuangroup_info && $ppintuangroup_info['pintuangroup_state'] == 1) {
                             if ($ppintuangroup_info['pintuangroup_joined'] > 0) {
                                 Db::name('ppintuangroup')->where('pintuangroup_id', $goods['promotions_id'])->dec('pintuangroup_joined')->update();
@@ -295,8 +291,7 @@ class Refundreturn extends BaseModel {
                     $data['log_role'] = 'system';
                     $data['log_msg'] = '平台审核退款,自动确认收货';
                     $data['log_user'] = '系统';
-                    $data['log_orderstate'] = ORDER_STATE_SUCCESS;
-                    $order_model->addOrderlog($data);
+                    model('orderlog')->addOrderlog($data);
                 }
 
 
@@ -313,24 +308,24 @@ class Refundreturn extends BaseModel {
                         throw new \think\Exception('订单修改失败', 10006);
                     }
                     //修改分销佣金
-                    $condition=array();
-                    $condition[]=array('orderinviter_order_id','=',$order_id);
-                    $condition[]=array('orderinviter_valid','=',0);
-                    $condition[]=array('orderinviter_order_type','=',0);
-                    if($refund['goods_id']){
-                        $condition[]=array('orderinviter_goods_id','=',$refund['goods_id']);
-                        $orderinviter_list=Db::name('orderinviter')->where($condition)->select()->toArray();
-                        foreach($orderinviter_list as $orderinviter_info){
-                            $orderinviter_goods_amount=round($orderinviter_info['orderinviter_goods_amount']-$refund['refund_amount'],2);
-                            $orderinviter_money=round($orderinviter_info['orderinviter_ratio']/100*$orderinviter_goods_amount,2);
-                            Db::name('orderinviter')->where(array(array('orderinviter_id','=',$orderinviter_info['orderinviter_id'])))->update(['orderinviter_goods_amount' => $orderinviter_goods_amount,'orderinviter_money'=>$orderinviter_money]);
+                    $condition = array();
+                    $condition[] = array('orderinviter_order_id', '=', $order_id);
+                    $condition[] = array('orderinviter_valid', '=', 0);
+                    $condition[] = array('orderinviter_order_type', '=', 0);
+                    if ($refund['goods_id']) {
+                        $condition[] = array('orderinviter_goods_id', '=', $refund['goods_id']);
+                        $orderinviter_list = Db::name('orderinviter')->where($condition)->select()->toArray();
+                        foreach ($orderinviter_list as $orderinviter_info) {
+                            $orderinviter_goods_amount = round($orderinviter_info['orderinviter_goods_amount'] - $refund['refund_amount'], 2);
+                            $orderinviter_money = round($orderinviter_info['orderinviter_ratio'] / 100 * $orderinviter_goods_amount, 2);
+                            Db::name('orderinviter')->where(array(array('orderinviter_id', '=', $orderinviter_info['orderinviter_id'])))->update(['orderinviter_goods_amount' => $orderinviter_goods_amount, 'orderinviter_money' => $orderinviter_money]);
                         }
-                    }else{
-                        $orderinviter_list=Db::name('orderinviter')->where($condition)->select()->toArray();
-                        foreach($orderinviter_list as $orderinviter_info){
-                            $orderinviter_goods_amount=round(($order_amount-$refund_amount)*$orderinviter_info['orderinviter_goods_amount']/$order_amount,2);
-                            $orderinviter_money=round($orderinviter_info['orderinviter_ratio']/100*$orderinviter_goods_amount,2);
-                            Db::name('orderinviter')->where(array(array('orderinviter_id','=',$orderinviter_info['orderinviter_id'])))->update(['orderinviter_goods_amount' => $orderinviter_goods_amount,'orderinviter_money'=>$orderinviter_money]);
+                    } else {
+                        $orderinviter_list = Db::name('orderinviter')->where($condition)->select()->toArray();
+                        foreach ($orderinviter_list as $orderinviter_info) {
+                            $orderinviter_goods_amount = round(($order_amount - $refund_amount) * $orderinviter_info['orderinviter_goods_amount'] / $order_amount, 2);
+                            $orderinviter_money = round($orderinviter_info['orderinviter_ratio'] / 100 * $orderinviter_goods_amount, 2);
+                            Db::name('orderinviter')->where(array(array('orderinviter_id', '=', $orderinviter_info['orderinviter_id'])))->update(['orderinviter_goods_amount' => $orderinviter_goods_amount, 'orderinviter_money' => $orderinviter_money]);
                         }
                     }
                 }
@@ -533,7 +528,7 @@ class Refundreturn extends BaseModel {
                 if (!empty($refund_goods[$order_id][0])) {
                     $order_list[$order_id]['extend_refund'] = $refund_goods[$order_id][0];
                 }
-                if ($order_state == $order_paid && $payment_code != 'offline') {//已付款未发货的非货到付款订单可以申请取消
+                if ($order_state == $order_paid) {//已付款未发货的非货到付款订单可以申请取消
                     $order_list[$order_id]['refund'] = '1';
                 } elseif ($order_state > $order_paid && !empty($goods_list) && is_array($goods_list)) {//已发货后对商品操作
                     $refund = $this->getRefundState($value); //根据订单状态判断是否可以退款退货
@@ -616,12 +611,7 @@ class Refundreturn extends BaseModel {
         $order_completed = $trade_model->getOrderState('order_completed'); //40:已收货
         switch ($order_state) {
             case $order_shipped:
-                $payment_code = $order['payment_code']; //支付方式
-                if ($payment_code != 'offline') {//货到付款订单在没确认收货前不能退款退货
-                    $refund = '1';
-                } else {
-                    $refund = '0';
-                }
+                $refund = '1';
                 break;
             case $order_completed:
                 $order_refund = $trade_model->getMaxDay('order_refund'); //15:收货完成后可以申请退款退货
@@ -674,7 +664,6 @@ class Refundreturn extends BaseModel {
         $condition[] = array('refund_type', '=', 2);
         return Db::name('refundreturn')->where($condition)->count();
     }
-
 }
 
 ?>

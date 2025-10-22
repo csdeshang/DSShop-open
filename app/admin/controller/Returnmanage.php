@@ -183,8 +183,7 @@ class Returnmanage extends AdminControl {
                     $data['log_role'] = 'system';
                     $data['log_user'] = $this->admin_info['admin_name'];
                     $data['log_msg'] = '修改支付平台交易号 : ' . $trade_no;
-                    $data['log_orderstate'] = $order['order_state'];
-                    $order_model->addOrderlog($data);
+                    model('orderlog')->addOrderlog($data);
                 }
                         $res=$refundreturn_model->editOrderRefund(array_merge($return,$refund_array));
                         $state=$res['code'];

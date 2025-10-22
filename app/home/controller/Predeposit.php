@@ -5,9 +5,11 @@
  */
 
 namespace app\home\controller;
+
 use think\facade\View;
 use think\facade\Db;
 use think\facade\Lang;
+
 /**
  * ============================================================================
  * DSShop单店铺商城
@@ -24,7 +26,7 @@ class Predeposit extends BaseMember {
 
     public function initialize() {
         parent::initialize();
-        Lang::load(base_path() . 'home/lang/'.config('lang.default_lang').'/predeposit.lang.php');
+        Lang::load(base_path() . 'home/lang/' . config('lang.default_lang') . '/predeposit.lang.php');
     }
 
     /**
@@ -76,11 +78,11 @@ class Predeposit extends BaseMember {
             }
 
             try {
-                $res=model('predeposit')->addRechargecard($sn, $this->member_info);
-                if($res['message']){
+                $res = model('predeposit')->addRechargecard($sn, $this->member_info);
+                if ($res['message']) {
                     $this->error($res['message']);
                 }
-            } catch (Exception $e) {
+            } catch (\Exception $e) {
                 $this->error($e->getMessage());
             }
             $this->success(lang('platform_recharge_card_successfully_used'), url('Predeposit/rcb_log_list'));
@@ -92,10 +94,10 @@ class Predeposit extends BaseMember {
      */
     public function index() {
         $condition = array();
-        $condition[] = array('pdr_member_id','=',session('member_id'));
+        $condition[] = array('pdr_member_id', '=', session('member_id'));
         $pdr_sn = input('pdr_sn');
         if (!empty($pdr_sn)) {
-            $condition[] = array('pdr_sn','=',$pdr_sn);
+            $condition[] = array('pdr_sn', '=', $pdr_sn);
         }
 
         $predeposit_model = model('predeposit');
@@ -123,9 +125,9 @@ class Predeposit extends BaseMember {
 
         $predeposit_model = model('predeposit');
         $condition = array();
-        $condition[] = array('pdr_member_id','=',session('member_id'));
-        $condition[] = array('pdr_id','=',$pdr_id);
-        $condition[] = array('pdr_payment_state','=',1);
+        $condition[] = array('pdr_member_id', '=', session('member_id'));
+        $condition[] = array('pdr_id', '=', $pdr_id);
+        $condition[] = array('pdr_payment_state', '=', 1);
         $info = $predeposit_model->getPdRechargeInfo($condition);
         if (!$info) {
             $this->error(lang('predeposit_record_error'));
@@ -145,19 +147,19 @@ class Predeposit extends BaseMember {
     public function recharge_del() {
         $pdr_id = intval(input('param.id'));
         if ($pdr_id <= 0) {
-            ds_json_encode(10001,lang('predeposit_parameter_error'));
+            ds_json_encode(10001, lang('predeposit_parameter_error'));
         }
 
         $predeposit_model = model('predeposit');
         $condition = array();
-        $condition[] = array('pdr_member_id','=',session('member_id'));
-        $condition[] = array('pdr_id','=',$pdr_id);
-        $condition[] = array('pdr_payment_state','=',0);
+        $condition[] = array('pdr_member_id', '=', session('member_id'));
+        $condition[] = array('pdr_id', '=', $pdr_id);
+        $condition[] = array('pdr_payment_state', '=', 0);
         $result = $predeposit_model->delPdRecharge($condition);
         if ($result) {
-            ds_json_encode(10000,lang('ds_common_del_succ'));
+            ds_json_encode(10000, lang('ds_common_del_succ'));
         } else {
-            ds_json_encode(10001,lang('ds_common_del_fail'));
+            ds_json_encode(10001, lang('ds_common_del_fail'));
         }
     }
 
@@ -166,7 +168,7 @@ class Predeposit extends BaseMember {
      */
     public function pd_log_list() {
         $condition = array();
-        $condition[] = array('lg_member_id','=',session('member_id'));
+        $condition[] = array('lg_member_id', '=', session('member_id'));
 
         $predeposit_model = model('predeposit');
         $predeposit_list = $predeposit_model->getPdLogList($condition, 10, '*', 'lg_id desc');
@@ -186,7 +188,7 @@ class Predeposit extends BaseMember {
     public function rcb_log_list() {
         $rcblog_model = model('rcblog');
         $rcblog_list = $rcblog_model->getRechargecardBalanceLogList(array('member_id' => session('member_id')), 10, 'rcblog_id desc');
-        
+
         /* 设置买家当前菜单 */
         $this->setMemberCurMenu('predeposit');
         /* 设置买家当前栏目 */
@@ -201,43 +203,42 @@ class Predeposit extends BaseMember {
      */
     public function pd_cash_add() {
         if (request()->isPost()) {
-            $pdc_amount=abs(floatval(input('post.pdc_amount')));
-            
+            $pdc_amount = abs(floatval(input('post.pdc_amount')));
+
             $memberbank_id = intval(input('param.memberbank_id'));
-            if($memberbank_id>0){
-            $memberbank = model('memberbank')->getMemberbankInfo(array('member_id' => session('member_id'), 'memberbank_id' => $memberbank_id));
-            if(empty($memberbank)){
-                ds_json_encode(10001,lang('param_error'));
-            }
-            $pdc_bank_type=$memberbank['memberbank_type'];
-            $pdc_bank_name  = $memberbank['memberbank_type']=='alipay'?lang('pay_method_alipay'):$memberbank['memberbank_name'];
-            $pdc_bank_no = $memberbank['memberbank_no'];
-            $pdc_bank_user = $memberbank['memberbank_truename'];
-            }elseif($memberbank_id==-1){//使用微信
-                $member_wxinfo= unserialize($this->member_info['member_wxinfo']);
-                if(!empty($member_wxinfo) && is_array($member_wxinfo) && isset($member_wxinfo['member_wxopenid']) && $member_wxinfo['member_wxopenid']){
+            if ($memberbank_id > 0) {
+                $memberbank = model('memberbank')->getMemberbankInfo(array('member_id' => session('member_id'), 'memberbank_id' => $memberbank_id));
+                if (empty($memberbank)) {
+                    ds_json_encode(10001, lang('param_error'));
+                }
+                $pdc_bank_type = $memberbank['memberbank_type'];
+                $pdc_bank_name = $memberbank['memberbank_type'] == 'alipay' ? lang('pay_method_alipay') : $memberbank['memberbank_name'];
+                $pdc_bank_no = $memberbank['memberbank_no'];
+                $pdc_bank_user = $memberbank['memberbank_truename'];
+            } elseif ($memberbank_id == -1) {//使用微信
+                if (!empty($this->member_info['member_h5_wxopenid'])) {
                     $pdc_bank_type = 'weixin';
                     $pdc_bank_name = lang('pay_method_wechat');
-                    $pdc_bank_no = $member_wxinfo['member_wxopenid'];
-                    $pdc_bank_user = $member_wxinfo['nickname'];
-                }else{
-                    ds_json_encode(10001,lang('param_error'));
+                    $pdc_bank_no = $this->member_info['member_h5_wxopenid'];
+                    $pdc_bank_user = $this->member_info['member_wxnickname'];
+                } else {
+                    ds_json_encode(10001, lang('param_error'));
                 }
-            }else{
-                ds_json_encode(10001,lang('param_error'));
+            } else {
+                ds_json_encode(10001, lang('param_error'));
             }
-            $data=[
-                'pdc_amount' =>$pdc_amount,
-                'pdc_bank_type' =>$pdc_bank_type,
-                'pdc_bank_name'  =>$pdc_bank_name,
-                'pdc_bank_no'  =>$pdc_bank_no,
-                'pdc_bank_user'  =>$pdc_bank_user,
-                'password'      =>input('post.password')
+            $data = [
+                'pdc_amount' => $pdc_amount,
+                'pdc_bank_type' => $pdc_bank_type,
+                'pdc_bank_name' => $pdc_bank_name,
+                'pdc_bank_no' => $pdc_bank_no,
+                'pdc_bank_user' => $pdc_bank_user,
+                'password' => input('post.password')
             ];
 
             $predeposit_validate = ds_validate('predeposit');
             if (!$predeposit_validate->scene('pd_cash_add')->check($data)) {
-                ds_json_encode(10001,$predeposit_validate->getError());
+                ds_json_encode(10001, $predeposit_validate->getError());
             }
 
             $predeposit_model = model('predeposit');
@@ -245,17 +246,17 @@ class Predeposit extends BaseMember {
             $member_info = $member_model->getMemberInfoByID(session('member_id'));
             //验证支付密码
             if (md5(input('post.password')) != $member_info['member_paypwd']) {
-                ds_json_encode(10001,lang('payment_password_error'));
+                ds_json_encode(10001, lang('payment_password_error'));
             }
             //验证金额是否足够
             if (floatval($member_info['available_predeposit']) < $pdc_amount) {
-                ds_json_encode(10001,lang('predeposit_cash_shortprice_error'));
+                ds_json_encode(10001, lang('predeposit_cash_shortprice_error'));
             }
             //是否超过提现周期
             $condition = array();
-            $condition[] = array('pdc_member_id','=',$this->member_info['member_id']);
-            $condition[] = array('pdc_payment_state','in',[0, 1]);
-            $condition[] = array('pdc_addtime','>',TIMESTAMP - intval(config('ds_config.member_withdraw_cycle')) * 86400);
+            $condition[] = array('pdc_member_id', '=', $this->member_info['member_id']);
+            $condition[] = array('pdc_payment_state', 'in', [0, 1]);
+            $condition[] = array('pdc_addtime', '>', TIMESTAMP - intval(config('ds_config.member_withdraw_cycle')) * 86400);
             $last_withdraw = $predeposit_model->getPdcashInfo($condition);
             if ($last_withdraw) {
                 ds_json_encode(10001, lang('predeposit_last_withdraw_time_error') . date('Y-m-d', $last_withdraw['pdc_addtime']));
@@ -268,8 +269,9 @@ class Predeposit extends BaseMember {
             if ($pdc_amount > floatval(config('ds_config.member_withdraw_max'))) {
                 ds_json_encode(10001, lang('predeposit_withdraw_max') . config('ds_config.store_withdraw_max') . lang('ds_yuan'));
             }
+            
+            Db::startTrans();
             try {
-                Db::startTrans();
                 $pdc_sn = makePaySn(session('member_id'));
                 $data = array();
                 $data['pdc_sn'] = $pdc_sn;
@@ -284,7 +286,7 @@ class Predeposit extends BaseMember {
                 $data['pdc_payment_state'] = 0;
                 $insert = $predeposit_model->addPdcash($data);
                 if (!$insert) {
-                    ds_json_encode(10001,lang('predeposit_cash_add_fail'));
+                    throw new \think\Exception(lang('predeposit_cash_add_fail'), 10001);
                 }
                 //冻结可用预存款
                 $data = array();
@@ -294,19 +296,18 @@ class Predeposit extends BaseMember {
                 $data['order_sn'] = $pdc_sn;
                 $predeposit_model->changePd('cash_apply', $data);
                 Db::commit();
-                ds_json_encode(10000,lang('predeposit_cash_add_success'));
-            } catch (Exception $e) {
+                ds_json_encode(10000, lang('predeposit_cash_add_success'));
+            } catch (\Exception $e) {
                 Db::rollback();
-                ds_json_encode(10001,$e->getMessage());
+                ds_json_encode(10001, $e->getMessage());
             }
-        }else{
+        } else {
             $memberbank_list = model('memberbank')->getMemberbankList(array('member_id' => session('member_id')));
-            $member_wxinfo = unserialize($this->member_info['member_wxinfo']);
-            if (!empty($member_wxinfo) && is_array($member_wxinfo) && isset($member_wxinfo['member_wxopenid']) && $member_wxinfo['member_wxopenid']) {
+            if (!empty($this->member_info['member_h5_wxopenid'])) {
                 if (empty($memberbank_list)) {
                     $memberbank_list = array();
                 }
-                $memberbank_list[] = array('memberbank_id' => -1, 'memberbank_type' => 'weixin', 'memberbank_no' => $member_wxinfo['nickname'], 'member_wxinfo' => $member_wxinfo);
+                $memberbank_list[] = array('memberbank_id' => -1, 'memberbank_type' => 'weixin', 'memberbank_no' => $this->member_info['member_wxnickname']);
             }
             View::assign('memberbank_list', $memberbank_list);
             /* 设置买家当前菜单 */
@@ -322,15 +323,15 @@ class Predeposit extends BaseMember {
      */
     public function pd_cash_list() {
         $condition = array();
-        $condition[] = array('pdc_member_id','=',session('member_id'));
+        $condition[] = array('pdc_member_id', '=', session('member_id'));
 
         $sn_search = input('post.sn_search');
         if (!empty($sn_search)) {
-            $condition[] = array('pdc_sn','=',$sn_search);
+            $condition[] = array('pdc_sn', '=', $sn_search);
         }
         $paystate_search = input('post.paystate_search');
         if (isset($paystate_search)) {
-            $condition[] = array('pdc_payment_state','=',intval($paystate_search));
+            $condition[] = array('pdc_payment_state', '=', intval($paystate_search));
         }
 
         $pdcash_list = Db::name('pdcash')->where($condition)->order('pdc_id desc')->paginate();
@@ -354,14 +355,14 @@ class Predeposit extends BaseMember {
         }
         $predeposit_model = model('predeposit');
         $condition = array();
-        $condition[] = array('pdc_member_id','=',session('member_id'));
-        $condition[] = array('pdc_id','=',$pdc_id);
+        $condition[] = array('pdc_member_id', '=', session('member_id'));
+        $condition[] = array('pdc_id', '=', $pdc_id);
         $info = $predeposit_model->getPdcashInfo($condition);
         if (empty($info)) {
             $this->error(lang('predeposit_record_error'), 'home/predeposit/pd_cash_list');
         }
 
-       $this->setMemberCurItem('cashinfo');
+        $this->setMemberCurItem('cashinfo');
         $this->setMemberCurMenu('predeposit');
         View::assign('info', $info);
         return View::fetch($this->template_dir . 'pd_cash_info');
@@ -437,11 +438,10 @@ class Predeposit extends BaseMember {
             $item_list[] = array(
                 'name' => 'pd_cash_add',
                 'text' => lang('predeposit_application_withdrawal'),
-                'url' => (string)url('Predeposit/pd_cash_add'),
+                'url' => (string) url('Predeposit/pd_cash_add'),
             );
         }
 
         return $item_list;
     }
-
 }

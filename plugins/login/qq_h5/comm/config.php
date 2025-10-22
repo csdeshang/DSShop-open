@@ -46,9 +46,9 @@ $callback = HTTP_TYPE.$_SERVER['HTTP_HOST']. "/api/Api/oa_qq_callback.html";
 $scope = "get_user_info";
 
 //用session保存调用
-session('appid', $qq_appid);
-session('appkey', $qq_appkey);
-session('callback', $callback);
-session('scope', $scope);
+session('qq_appid', $qq_appid);
+session('qq_appkey', $qq_appkey);
+session('qq_callback', $callback);
+session('qq_scope', $scope);
 
 ?>

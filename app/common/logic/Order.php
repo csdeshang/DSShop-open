@@ -39,18 +39,18 @@ class Order {
             $goods_list = $order_model->getOrdergoodsList(array('order_id' => $order_id));
             $data = array();
             $pintuan_list = array(); //需要后续处理的促销活动
-            $ppintuanorder_model=model('ppintuanorder');
+            $ppintuanorder_model = model('ppintuanorder');
             foreach ($goods_list as $goods) {
                 $data[$goods['goods_id']] = $goods['goods_num'];
                 //如果是拼团
                 if ($goods['goods_type'] == 6) {
                     $pintuan_list[] = $goods;
                 }
-                $condition=array();
-                $condition[]=array('order_id','=',$order_info['order_id']);
-                $condition[]=array('pintuanorder_type','=',0);
-                $condition[]=array('pintuanorder_state','=',1);
-                $ppintuanorder_model->editPpintuanorder($condition, array('pintuanorder_state'=>0));
+                $condition = array();
+                $condition[] = array('order_id', '=', $order_info['order_id']);
+                $condition[] = array('pintuanorder_type', '=', 0);
+                $condition[] = array('pintuanorder_state', '=', 1);
+                $ppintuanorder_model->editPpintuanorder($condition, array('pintuanorder_state' => 0));
             }
             model('goods')->cancelOrderUpdateStorage($data);
 
@@ -83,11 +83,11 @@ class Order {
                     }
                 }
 
-                if ($order_info['order_state'] == ORDER_STATE_PAY && $order_info['payment_code'] != 'offline') {//offline为货到付款的订单，取消时不需要返回预存款
+                if ($order_info['order_state'] == ORDER_STATE_PAY) {
                     //拼团退团
                     if (!empty($pintuan_list)) {
                         foreach ($pintuan_list as $goods) {
-                            $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $goods['promotions_id'])->lock(true)->find();
+                            $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $goods['promotions_id'])->find();
                             if ($ppintuangroup_info && $ppintuangroup_info['pintuangroup_state'] == 1) {
                                 if ($ppintuangroup_info['pintuangroup_joined'] > 0) {
                                     Db::name('ppintuangroup')->where('pintuangroup_id', $goods['promotions_id'])->dec('pintuangroup_joined')->update();
@@ -114,10 +114,10 @@ class Order {
                 throw new \think\Exception('保存失败', 10006);
             }
             //分销佣金取消
-            $condition=array();
-            $condition[]=array('orderinviter_order_id','=',$order_id);
-            $condition[]=array('orderinviter_valid','=',0);
-            $condition[]=array('orderinviter_order_type','=',0);
+            $condition = array();
+            $condition[] = array('orderinviter_order_id', '=', $order_id);
+            $condition[] = array('orderinviter_valid', '=', 0);
+            $condition[] = array('orderinviter_order_type', '=', 0);
             Db::name('orderinviter')->where($condition)->update(['orderinviter_valid' => 2]);
 
             //添加订单日志
@@ -129,8 +129,7 @@ class Order {
             if ($msg) {
                 $data['log_msg'] .= ' ( ' . $msg . ' )';
             }
-            $data['log_orderstate'] = ORDER_STATE_CANCEL;
-            $order_model->addOrderlog($data);
+            model('orderlog')->addOrderlog($data);
         }
     }
 
@@ -166,8 +165,7 @@ class Order {
             if ($msg) {
                 $data['log_msg'] .= ' ( ' . $msg . ' )';
             }
-            $data['log_orderstate'] = ORDER_STATE_SUCCESS;
-            $order_model->addOrderlog($data);
+            model('orderlog')->addOrderlog($data);
             //分发推广佣金
             $orderinviter_model = model('orderinviter');
             $orderinviter_model->giveMoney($order_id);
@@ -196,7 +194,7 @@ class Order {
             }
 
             return ds_callback(true, '操作成功');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ds_callback(false, '操作失败');
         }
     }
@@ -232,11 +230,9 @@ class Order {
             $data['log_role'] = $role;
             $data['log_user'] = $user;
             $data['log_msg'] = '修改了运费' . '( ' . $price . ' )';
-            ;
-            $data['log_orderstate'] = $order_info['payment_code'] == 'offline' ? ORDER_STATE_PAY : ORDER_STATE_NEW;
-            $order_model->addOrderlog($data);
+            model('orderlog')->addOrderlog($data);
             return ds_callback(true, '操作成功');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return ds_callback(false, $e->getMessage());
         }
     }
@@ -290,27 +286,27 @@ class Order {
 
                     $order_model->editOrdergoods(array('goods_pay_price' => $price), array('rec_id' => $ordergoods['rec_id']));
                     //修改分销佣金
-                    $condition=array();
-                    $condition[]=array('orderinviter_order_id','=',$order_id);
-                    $condition[]=array('orderinviter_goods_id','=',$ordergoods['goods_id']);
-                    $condition[]=array('orderinviter_valid','=',0);
-                    $condition[]=array('orderinviter_order_type','=',0);
-                    $orderinviter_list=Db::name('orderinviter')->where($condition)->select()->toArray();
-                    foreach($orderinviter_list as $orderinviter_info){
-                        $orderinviter_goods_amount=$price;
-                        $orderinviter_money=round($orderinviter_info['orderinviter_ratio']/100*$orderinviter_goods_amount,2);
-                        Db::name('orderinviter')->where(array(array('orderinviter_id','=',$orderinviter_info['orderinviter_id'])))->update(['orderinviter_goods_amount' => $orderinviter_goods_amount,'orderinviter_money'=>$orderinviter_money]);
+                    $condition = array();
+                    $condition[] = array('orderinviter_order_id', '=', $order_id);
+                    $condition[] = array('orderinviter_goods_id', '=', $ordergoods['goods_id']);
+                    $condition[] = array('orderinviter_valid', '=', 0);
+                    $condition[] = array('orderinviter_order_type', '=', 0);
+                    $orderinviter_list = Db::name('orderinviter')->where($condition)->select()->toArray();
+                    foreach ($orderinviter_list as $orderinviter_info) {
+                        $orderinviter_goods_amount = $price;
+                        $orderinviter_money = round($orderinviter_info['orderinviter_ratio'] / 100 * $orderinviter_goods_amount, 2);
+                        Db::name('orderinviter')->where(array(array('orderinviter_id', '=', $orderinviter_info['orderinviter_id'])))->update(['orderinviter_goods_amount' => $orderinviter_goods_amount, 'orderinviter_money' => $orderinviter_money]);
                     }
                     $i++;
                 }
             } else {
                 $order_model->editOrdergoods(array('goods_pay_price' => 0), array('order_id' => $order_id));
                 //修改分销佣金
-                $condition=array();
-                $condition[]=array('orderinviter_order_id','=',$order_id);
-                $condition[]=array('orderinviter_valid','=',0);
-                $condition[]=array('orderinviter_order_type','=',0);
-                Db::name('orderinviter')->where($condition)->update(['orderinviter_goods_amount' => 0,'orderinviter_money'=>0]);
+                $condition = array();
+                $condition[] = array('orderinviter_order_id', '=', $order_id);
+                $condition[] = array('orderinviter_valid', '=', 0);
+                $condition[] = array('orderinviter_order_type', '=', 0);
+                Db::name('orderinviter')->where($condition)->update(['orderinviter_goods_amount' => 0, 'orderinviter_money' => 0]);
             }
 
             //记录订单日志
@@ -319,14 +315,13 @@ class Order {
             $data['log_role'] = $role;
             $data['log_user'] = $user;
             $data['log_msg'] = '修改了运费' . '( ' . $price . ' )';
-            ;
-            $data['log_orderstate'] = $order_info['payment_code'] == 'offline' ? ORDER_STATE_PAY : ORDER_STATE_NEW;
-            $order_model->addOrderlog($data);
+            model('orderlog')->addOrderlog($data);
+            Db::commit();
         } catch (\Exception $e) {
             Db::rollback();
             return ds_callback(false, $e->getMessage());
         }
-        Db::commit();
+
         return ds_callback(true, '操作成功');
     }
 
@@ -372,8 +367,9 @@ class Order {
             return ds_callback(FALSE, '拼团订单暂时不允许发货');
         }
 
+        Db::startTrans();
         try {
-            Db::startTrans();
+
             $data = array();
             $data['reciver_name'] = $post['reciver_name'];
             $data['reciver_info'] = $post['reciver_info'];
@@ -398,7 +394,7 @@ class Order {
                 throw new \think\Exception('操作失败', 10006);
             }
             Db::commit();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Db::rollback();
             return ds_callback(false, $e->getMessage());
         }
@@ -412,8 +408,7 @@ class Order {
         $data['log_role'] = 'admin';
         $data['log_user'] = $user;
         $data['log_msg'] = '发出了货物 ( 编辑了发货信息 )';
-        $data['log_orderstate'] = ORDER_STATE_SEND;
-        $order_model->addOrderlog($data);
+        model('orderlog')->addOrderlog($data);
 
         // 发送买家消息
         $param = array();
@@ -427,7 +422,7 @@ class Order {
             $order_info['order_sn'],
         );
         $param['param'] = array_merge($param['ali_param'], array(
-            'order_url' => HOME_SITE_URL .'/Memberorder/show_order?order_id='.$order_id
+            'order_url' => HOME_SITE_URL . '/Memberorder/show_order?order_id=' . $order_id
         ));
         //微信模板消息
         $param['weixin_param'] = array(
@@ -455,7 +450,7 @@ class Order {
                 )
             ),
         );
-        model('cron')->addCron(array('cron_exetime'=>TIMESTAMP,'cron_type'=>'sendMemberMsg','cron_value'=>serialize($param)));
+        model('cron')->addCron(array('cron_exetime' => TIMESTAMP, 'cron_type' => 'sendMemberMsg', 'cron_value' => serialize($param)));
         return ds_callback(true, '操作成功');
     }
 
@@ -468,8 +463,6 @@ class Order {
      */
     public function changeOrderReceivePay($order_list, $role, $user = '', $post = array()) {
         $order_model = model('order');
-
-
 
         $data = array();
         $data['api_paystate'] = 1;
@@ -531,7 +524,7 @@ class Order {
                 //如果是拼团
                 if ($goods['goods_type'] == 6) {
 
-                    $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $goods['promotions_id'])->lock(true)->find();
+                    $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $goods['promotions_id'])->find();
                     if ($ppintuangroup_info && $ppintuangroup_info['pintuangroup_state'] == 1) {
                         if ($ppintuangroup_info['pintuangroup_joined'] == 0) {
                             //拼团统计开团数量
@@ -567,7 +560,7 @@ class Order {
                 $order_info['order_sn'],
             );
             $param['param'] = array_merge($param['ali_param'], array(
-                'order_url' => HOME_SITE_URL .'/Memberorder/show_order?order_id='.$order_info['order_id']
+                'order_url' => HOME_SITE_URL . '/Memberorder/show_order?order_id=' . $order_info['order_id']
             ));
             //微信模板消息
             $param['weixin_param'] = array(
@@ -591,8 +584,7 @@ class Order {
                     )
                 ),
             );
-            model('cron')->addCron(array('cron_exetime'=>TIMESTAMP,'cron_type'=>'sendMemberMsg','cron_value'=>serialize($param)));
-
+            model('cron')->addCron(array('cron_exetime' => TIMESTAMP, 'cron_type' => 'sendMemberMsg', 'cron_value' => serialize($param)));
 
             //添加订单日志
             $data = array();
@@ -600,9 +592,7 @@ class Order {
             $data['log_role'] = $role;
             $data['log_user'] = $user;
             $data['log_msg'] = '收到了货款 ' . (isset($post['trade_no']) ? ('( 支付平台交易号 : ' . $post['trade_no'] . ' )') : '');
-            $data['log_orderstate'] = ORDER_STATE_PAY;
-            $order_model->addOrderlog($data);
+            model('orderlog')->addOrderlog($data);
         }
     }
-
 }

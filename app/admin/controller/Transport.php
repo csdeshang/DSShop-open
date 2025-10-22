@@ -124,8 +124,9 @@ class Transport extends AdminControl
         $transport['transport_title'] .= lang('transport_clone_name');
         $transport['transport_updatetime'] = TIMESTAMP;
 
+        Db::startTrans();
         try {
-            Db::startTrans();
+            
             $insert = $transport_model->addTransport($transport);
             if ($insert) {
                 $extend = $transport_model->getTransportextendList(array('transport_id' => $id));
@@ -143,7 +144,7 @@ class Transport extends AdminControl
             Db::commit();
             header('location: ' . $_SERVER['HTTP_REFERER']);
             exit;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Db::rollback();
             $this->error($e->getMessage(), $_SERVER['HTTP_REFERER']);
         }
@@ -243,143 +244,6 @@ class Transport extends AdminControl
         }
     }
 
-    /**
-     * 货到付款地区设置
-     *
-     */
-    public function offpay_area() {
-        $config_model = model('config');
-        $area_model = model('area');
-
-        if (request()->isPost()) {
-            $county_array = input('post.county');
-            if (!preg_match('/^[\d,]+$/', $county_array)) {
-                $county_array = '';
-            }
-            $data = array();
-            $county = trim($county_array, ',');
-            //地区修改
-            $county_array = explode(',', $county);
-
-            $all_array = array();
-
-            $province_array = input('post.province/a');
-            if (!empty($province_array) && is_array($province_array)) {
-                foreach ($province_array as $v) {
-                    $all_array[$v] = $v;
-                }
-            }
-
-            $city_array = input('post.city/a');
-            if (!empty($city_array) && is_array($city_array)) {
-                foreach ($city_array as $v) {
-                    $all_array[$v] = $v;
-                }
-            }
-
-
-            if (is_array($county_array)) {
-                foreach ($county_array as $pid) {
-                    if ($pid == '')
-                        continue;
-                    $all_array[$pid] = $pid;
-                    $temp = $area_model->getChildsByPid($pid);
-                    if (!empty($temp) && is_array($temp)) {
-                        foreach ($temp as $v) {
-                            $all_array[$v] = $v;
-                        }
-                    }
-                }
-            }
-
-            $all_array = array_values($all_array);
-            $data['distribution_area'] = serialize($all_array);
-            $result = $config_model->editConfig($data);
-            if ($result) {
-                $this->success('保存成功');
-            } else {
-                $this->error('保存失败');
-            }
-        } else {
-            //取出支持货到付款的县ID及上级市ID
-            $parea_info = config('ds_config.distribution_area');
-            if (!empty($parea_info)) {
-                $parea_ids = @unserialize($parea_info);
-            }
-            if (empty($parea_ids)) {
-                $parea_ids = array();
-            }
-
-            View::assign('parea_ids', $parea_ids);
-
-            //取出支持货到付款县ID的上级市ID
-            $city_checked_child_array = array();
-            //地区修改
-            $county_array = $area_model->getAreaList(array('area_deep' => 3), 'area_id,area_parent_id');
-            foreach ($county_array as $v) {
-                if (in_array($v['area_id'], $parea_ids)) {
-                    $city_checked_child_array[$v['area_parent_id']][] = $v['area_id'];
-                }
-            }
-            //halt($city_checked_child_array);
-            View::assign('city_checked_child_array', $city_checked_child_array);
-            //市级下面的县是不是全部支持货到付款，如果全部支持，默认选中，如果其中部分县支持货到付款，默认不选中但显示一个支付到付县的数量
-            //格式 city_id => 下面支持到付的县ID数量
-            $city_count_array = array();
-            //格式 city_id => 是否选中true/false
-            $city_checked_array = array();
-            $list = $area_model->getAreaList(array('area_deep' => 3), 'area_parent_id,count(area_id) as child_count', 'area_parent_id');
-            foreach ($list as $k => $v) {
-                $city_count_array[$v['area_parent_id']] = $v['child_count'];
-            }
-            foreach ($city_checked_child_array as $city_id => $city_child) {
-                if (count($city_child) > 0) {
-                    if (count($city_child) == $city_count_array[$city_id]) {
-                        $city_checked_array[$city_id] = true;
-                    }
-                }
-            }
-            View::assign('city_checked_array', $city_checked_array);
-
-            //取得省级地区及直属子地区(循环输出)
-            require(PUBLIC_PATH . DIRECTORY_SEPARATOR . "static" . DIRECTORY_SEPARATOR . "plugins" . DIRECTORY_SEPARATOR . '/area_datas.php');
-            //地区修改 修改地区从3级变成5级，以及N级引发的错误
-            $province_array = array();
-            foreach ($area_array as $k => $v) {
-                if ($v['area_parent_id'] == '0') {
-                    $province_array[$k] = $k;
-                }
-            }
-
-            foreach ($area_array as $k => $v) {
-                if ($v['area_parent_id'] != '0') {
-                    if (in_array($v['area_parent_id'], $province_array)) {
-                        $area_array[$v['area_parent_id']]['child'][$k] = $v['area_name'];
-                    }
-                    unset($area_array[$k]);
-                }
-            }
-
-            View::assign('province_array', $area_array);
-
-            //计算哪些省需要默认选中(即该省下面的所有县都支持到付，即所有市都是选中状态)
-            $province_array = $area_array;
-            foreach ($province_array as $pid => $value) {
-                if (isset($value['child']) && is_array($value['child'])) {
-                    foreach ($value['child'] as $k => $v) {
-                        if (!array_key_exists($k, $city_checked_array)) {
-                            unset($province_array[$pid]);
-                            break;
-                        }
-                    }
-                }
-            }
-            View::assign('province_checked_array', $province_array);
-
-            $this->setAdminCurItem('offpay_area');
-            return View::fetch();
-        }
-    }
 
     /**
      * 用户中心右边，小导航
@@ -395,9 +259,6 @@ class Transport extends AdminControl
             array(
                 'name' => 'transport', 'text' => lang('ds_member_path_postage'), 'url' => url('Transport/index')
             ),
-        );
-        $menu_array[] = array(
-            'name' => 'offpay_area', 'text' => '配送地区', 'url' => url('Transport/offpay_area')
         );
         $menu_array[] = array(
             'name' => 'add','text' => lang('transport_tpl_add'),'url' => url('Transport/add')

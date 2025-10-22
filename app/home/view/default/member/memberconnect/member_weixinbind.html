@@ -5,13 +5,13 @@
 
 
 
-{if $Think.config.ds_config.weixin_isuse == 1}
+{if $Think.config.ds_config.weixin_pc_isuse == 1}
 <div class="dsm-bind">
     {notempty name="member_info.member_wxunionid"}
     <div class="alert">
         <h4>{$Think.lang.prompt_information}：</h4>
         <ul>
-            <li>{$Think.lang.member_qqconnect_binding_tip_1}}<em>“{:session('member_name')}”</em>{$Think.lang.member_wxsconnect_tip_1}<em>“{$member_info.weixin_infoarr.nickname}”</em>{$Think.lang.member_qqconnect_binding_tip_3}</li>
+            <li>{$Think.lang.member_qqconnect_binding_tip_1}}<em>“{:session('member_name')}”</em>{$Think.lang.member_wxsconnect_tip_1}<em>“{$member_info.member_wxnickname}”</em>{$Think.lang.member_qqconnect_binding_tip_3}</li>
             <li>{$Think.lang.member_sconnect_modpw_tip_1}<em>“{:session('member_name')}”</em>{$Think.lang.member_sconnect_modpw_tip_2}</li>
         </ul>
     </div>

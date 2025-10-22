@@ -97,6 +97,18 @@
                     </table>
                 </td>
             </tr>
+            {notempty name="$order_info.extend_orderlog"}
+            <tr>
+                <th>{$Think.lang.order_handle_history}</th>
+            </tr>
+            {foreach name="$order_info.extend_orderlog" item="val"}
+            <tr>
+                <td>
+                    {$val.log_role} {$val.log_user}&emsp;{$Think.lang.order_show_at}&emsp;{$val.log_time|date="Y-m-d H:i:s"}&emsp;{$val.log_msg}
+                </td>
+            </tr>
+           {/foreach}
+           {/notempty}
         </tbody>
     </table>
 </div>

@@ -374,7 +374,6 @@ $lang['confirm_submit'] = '确认提交';
 //goods_edit_search_goods
 $lang['add_goods'] = '添加商品';
 
-//goods_list_offline
 $lang['virtual_exchange'] = '虚拟兑换商品';
 
 return $lang;

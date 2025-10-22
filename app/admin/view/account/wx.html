@@ -16,68 +16,123 @@
     <form id="weixin_form" method="post">
         <table class="ds-default-table">
             <tbody>
-                <tr class="noborder"> 
-                        <td class="required w150">{$Think.lang.weixin_isuse}</td>
+                    <tr class="noborder"> 
+                        <td class="required w150">微信PC扫码登录</td>
                         <td class="vatop rowform">
                             <div class="onoff">
-                                 <label for="weixin_isuse_show1" class="cb-enable {if condition="$list_config.weixin_isuse eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
-                                 <label for="weixin_isuse_show0" class="cb-disable {if condition="$list_config.weixin_isuse eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
-                                 <input id="weixin_isuse_show1" name="weixin_isuse" value="1" type="radio" {if condition="$list_config.weixin_isuse eq 1"} checked="checked"{/if}>
-                                 <input id="weixin_isuse_show0" name="weixin_isuse" value="0" type="radio" {if condition="$list_config.weixin_isuse eq 0"} checked="checked"{/if}>
+                                 <label for="weixin_pc_isuse_show1" class="cb-enable {if condition="$list_config.weixin_pc_isuse eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                 <label for="weixin_pc_isuse_show0" class="cb-disable {if condition="$list_config.weixin_pc_isuse eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                 <input id="weixin_pc_isuse_show1" name="weixin_pc_isuse" value="1" type="radio" {if condition="$list_config.weixin_pc_isuse eq 1"} checked="checked"{/if}>
+                                 <input id="weixin_pc_isuse_show0" name="weixin_pc_isuse" value="0" type="radio" {if condition="$list_config.weixin_pc_isuse eq 0"} checked="checked"{/if}>
                             </div>
                         </td>
 			<td class="vatop tips"></td>
                     </tr>
                     <tr class="noborder"> 
-                        <td class="required w120">{$Think.lang.weixin_appid}</td>
-                        <td class="vatop rowform"><input type="text" name="weixin_appid" id="weixin_appid" value="{$list_config.weixin_appid}" class="w300"/></td>
+                        <td class="required w120">网站应用AppID</td>
+                        <td class="vatop rowform"><input type="text" name="weixin_pc_appid" id="weixin_pc_appid" value="{$list_config.weixin_pc_appid}" class="w300"/></td>
 			<td class="vatop tips"></td>
                     </tr>
-                    <tr class="noborder"> 
-                        <td class="required w120">{$Think.lang.weixin_secret}</td>
+                    <tr class="noborder">
+                        <td class="required w120">网站应用AppSecret</td>
                         <td class="vatop rowform">
-                            <input type="text" name="weixin_secret" id="weixin_secret" value="{$list_config.weixin_secret}" class="w300"/>
+                            <input type="text" name="weixin_pc_secret" id="weixin_pc_secret" value="{$list_config.weixin_pc_secret}" class="w300"/>
                         </td>
                         <td class="vatop tips">
-                            <a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419316505&token=&lang=zh_CN" target="_blank">{$Think.lang.ds_documents}</a>
                             <a href="https://open.weixin.qq.com" target="_blank">{$Think.lang.ds_apply}</a>
                         </td>
                     </tr>
+                    
+                    <tr class="noborder"> 
+                        <td class="required w150">公众号登录</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                 <label for="weixin_h5_isuse_show1" class="cb-enable {if condition="$list_config.weixin_h5_isuse eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                 <label for="weixin_h5_isuse_show0" class="cb-disable {if condition="$list_config.weixin_h5_isuse eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                 <input id="weixin_h5_isuse_show1" name="weixin_h5_isuse" value="1" type="radio" {if condition="$list_config.weixin_h5_isuse eq 1"} checked="checked"{/if}>
+                                 <input id="weixin_h5_isuse_show0" name="weixin_h5_isuse" value="0" type="radio" {if condition="$list_config.weixin_h5_isuse eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+			<td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">公众号AppID</td>
+                        <td class="vatop rowform"><input type="text" name="weixin_h5_appid" id="weixin_h5_appid" value="{$list_config.weixin_h5_appid}" class="w300"/></td>
+			<td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required w120">公众号AppSecret</td>
+                        <td class="vatop rowform">
+                            <input type="text" name="weixin_h5_secret" id="weixin_h5_secret" value="{$list_config.weixin_h5_secret}" class="w300"/>
+                        </td>
+                        <td class="vatop tips">
+                            <a href="https://open.weixin.qq.com" target="_blank">{$Think.lang.ds_apply}</a>
+                        </td>
+                    </tr>
+                    
+                    
+                    <tr class="noborder"> 
+                        <td class="required w150">小程序登录</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                 <label for="weixin_xcx_isuse_show1" class="cb-enable {if condition="$list_config.weixin_xcx_isuse eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                 <label for="weixin_xcx_isuse_show0" class="cb-disable {if condition="$list_config.weixin_xcx_isuse eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                 <input id="weixin_xcx_isuse_show1" name="weixin_xcx_isuse" value="1" type="radio" {if condition="$list_config.weixin_xcx_isuse eq 1"} checked="checked"{/if}>
+                                 <input id="weixin_xcx_isuse_show0" name="weixin_xcx_isuse" value="0" type="radio" {if condition="$list_config.weixin_xcx_isuse eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+			<td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">小程序AppID</td>
+                        <td class="vatop rowform"><input type="text" name="weixin_xcx_appid" id="weixin_xcx_appid" value="{$list_config.weixin_xcx_appid}" class="w300"/></td>
+			<td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required w120">小程序AppSecret</td>
+                        <td class="vatop rowform">
+                            <input type="text" name="weixin_xcx_secret" id="weixin_xcx_secret" value="{$list_config.weixin_xcx_secret}" class="w300"/>
+                        </td>
+                        <td class="vatop tips">
+                            <a href="https://open.weixin.qq.com" target="_blank">{$Think.lang.ds_apply}</a>
+                        </td>
+                    </tr>
+                    
+                    <tr class="noborder"> 
+                        <td class="required w150">APP应用登录</td>
+                        <td class="vatop rowform">
+                            <div class="onoff">
+                                 <label for="weixin_app_isuse_show1" class="cb-enable {if condition="$list_config.weixin_app_isuse eq 1"}selected{/if}">{$Think.lang.ds_yes}</label>
+                                 <label for="weixin_app_isuse_show0" class="cb-disable {if condition="$list_config.weixin_app_isuse eq 0"}selected{/if}">{$Think.lang.ds_no}</label>
+                                 <input id="weixin_app_isuse_show1" name="weixin_app_isuse" value="1" type="radio" {if condition="$list_config.weixin_app_isuse eq 1"} checked="checked"{/if}>
+                                 <input id="weixin_app_isuse_show0" name="weixin_app_isuse" value="0" type="radio" {if condition="$list_config.weixin_app_isuse eq 0"} checked="checked"{/if}>
+                            </div>
+                        </td>
+			<td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder"> 
+                        <td class="required w120">APP应用AppID</td>
+                        <td class="vatop rowform"><input type="text" name="weixin_app_appid" id="weixin_app_appid" value="{$list_config.weixin_app_appid}" class="w300"/></td>
+			<td class="vatop tips"></td>
+                    </tr>
+                    <tr class="noborder">
+                        <td class="required w120">APP应用AppSecret</td>
+                        <td class="vatop rowform">
+                            <input type="text" name="weixin_app_secret" id="weixin_app_secret" value="{$list_config.weixin_app_secret}" class="w300"/>
+                        </td>
+                        <td class="vatop tips">
+                            <a href="https://open.weixin.qq.com" target="_blank">{$Think.lang.ds_apply}</a>
+                        </td>
+                    </tr>
+                    
             </tbody>
             <tfoot>
                 <td class="vatop tips"></td>
                 <tr class="tfoot">
                     <td></td>
-                        <td colspan="15"><input id="submitBtn" class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
+                        <td colspan="15"><input class="btn" type="submit" value="{$Think.lang.ds_submit}"/></td>
                     </tr>	
             </tfoot>
         </table>
     </form>
 </div>
-
-<script type="text/javascript">
-    $(function() {
-        $('#weixin_form').validate({
-            errorPlacement: function(error, element) {
-                error.appendTo(element.parent().parent().find('td:last'));
-            },
-            rules: {
-                weixin_appid : {
-                    required: true,
-                },
-                weixin_secret : {
-                    required: true,
-                },
-            },
-            messages: {
-                weixin_appid : {
-                    required: '{$Think.lang.sina_weixin_akey_error}',
-                },
-                weixin_secret : {
-                    required: '{$Think.lang.sina_weixin_skey_error}',
-                },
-
-            }
-        });
-    });
-</script>

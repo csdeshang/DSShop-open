@@ -56,6 +56,7 @@
                 <label for="is_default">{$Think.lang.set_default_shipping_address}</label>
             </dd>
         </dl>
+        <!--{if $Think.config.ds_config.mapak_type neq '0'}-->
         <dl>
             <dt>{$Think.lang.map_location}：</dt>
             <dd>
@@ -64,6 +65,7 @@
                 <div id="allmap" style="width:530px;height: 350px;margin-top: 20px"></div>
             </dd>
         </dl>
+        <!--{/if}-->
         <dl class="bottom">
             <dt></dt>
             <dd>
@@ -82,7 +84,8 @@
         }
 </script>
 <script type="text/javascript" src="//webapi.amap.com/maps?v=2.0&key={$Think.config.ds_config.gaode_ak}"></script>
-<!--{else}-->
+<!--{/if}-->
+<!--{if $Think.config.ds_config.mapak_type eq '2'}-->
 <script type="text/javascript" src="{$Think.HTTP_TYPE}api.map.baidu.com/api?v=2.0&ak={$Think.config.ds_config.baidu_ak}"></script>
 <!--{/if}-->
 <script>
@@ -102,7 +105,7 @@
             
     }
     $(function(){
-       if({$Think.config.ds_config.mapak_type} == '1'){
+       if('{$Think.config.ds_config.mapak_type}' === '1'){
        			var map = new AMap.Map("allmap", {
        			    resizeEnable: true,
        				zoom:15
@@ -218,7 +221,8 @@
        					map.add(marker);
        				});
        			}
-       		}else{
+       		}
+                if('{$Think.config.ds_config.mapak_type}' === '2'){
        			map = new BMap.Map("allmap");
        			var lng = '{$address.address_longitude}';
        			var lat = '{$address.address_latitude}';

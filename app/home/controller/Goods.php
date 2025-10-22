@@ -308,7 +308,6 @@ class Goods extends BaseGoods {
      */
     public function consulting_list() {
 
-        View::assign('hidden_nctoolbar', 1);
         $goods_id = intval(input('param.goods_id'));
         if ($goods_id <= 0) {
             $this->error(lang('param_error'));

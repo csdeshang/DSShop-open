@@ -16,8 +16,8 @@ return array(
         array('name' => 'wx_key', 'type' => 'password', 'value' => '', 'desc' => '描述'),
         array('name' => 'wx_trade_refund_state', 'type' => 'radio', 'value' => '0', 'desc' => '描述'),
         array('name' => 'wx_trade_transfer_state', 'type' => 'radio', 'value' => '0', 'desc' => '描述'),
-        array('name' => 'wx_sslcert_path', 'type' => 'text', 'value' => '', 'desc' => '描述'),
-        array('name' => 'wx_sslkey_path', 'type' => 'text', 'value' => '', 'desc' => '描述'),
+        array('name' => 'wx_sslcert_path', 'type' => 'textarea', 'value' => '', 'desc' => '描述'),
+        array('name' => 'wx_sslkey_path', 'type' => 'textarea', 'value' => '', 'desc' => '描述'),
         
     ),
 );

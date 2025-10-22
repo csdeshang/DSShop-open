@@ -75,7 +75,7 @@
             </div>
             <input type="hidden" value="{$Request.param.ref_url}" name="ref_url">
         </form>
-        {if $Think.config.ds_config.qq_isuse =='1' || $Think.config.ds_config.sina_isuse =='1' || $Think.config.ds_config.weixin_isuse =='1'}
+        {if $Think.config.ds_config.qq_isuse =='1' || $Think.config.ds_config.sina_isuse =='1' || $Think.config.ds_config.weixin_pc_isuse =='1'}
         <div class="partner-login clearfix">
             <h3>{$Think.lang.partner_account_login}</h3>
             <p>
@@ -85,7 +85,7 @@
                 {if $Think.config.ds_config.sina_isuse == '1'}
                 <a class="login_ico ico_weibo" href="{:url('Api/oa_sina')}"></a>
                 {/if}
-                {if $Think.config.ds_config.weixin_isuse == '1'}
+                {if $Think.config.ds_config.weixin_pc_isuse == '1'}
                 <a class="login_ico ico_weixin" onclick="ajax_form('weixin_form', '{$Think.lang.wechat_account_login}', '{:url('Connectwx/index')}', 360);" title={$Think.lang.wechat_account_login}></a>
                 {/if}
             </p>

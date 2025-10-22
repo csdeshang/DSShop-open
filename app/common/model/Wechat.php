@@ -163,7 +163,7 @@ class Wechat extends BaseModel
      * @return type
      */
     public function getWxmemberList() {
-        $info = Db::name('member')->where('member_wxinfo','not null')->where('member_wxopenid','<>','')->where('member_wxunionid','<>','')->field('member_name,member_addtime,member_wxunionid,member_wxopenid,member_id')->paginate(['list_rows'=>8,'query' => request()->param()],false);
+        $info = Db::name('member')->where('member_h5_wxopenid','<>','')->where('member_wxunionid','<>','')->field('member_name,member_addtime,member_wxunionid,member_h5_wxopenid,member_id')->paginate(['list_rows'=>8,'query' => request()->param()],false);
         $this->page_info = $info;
         return $info->items();
     }

@@ -7,37 +7,27 @@
         <table class="ds-default-table">
             <tbody>
                 <tr>
-                    <td colspan="2" class="required">{$Think.lang.refund_order_refund}{$Think.lang.ds_colon}</td>
-                </tr>
-                <tr class="noborder">
+                    <td class="w120">{$Think.lang.refund_order_refund}{$Think.lang.ds_colon}</td>
                     <td class="vatop rowform">{:ds_price_format($return.refund_amount)}</td>
                     <td class="vatop tips"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="required">商品名称{$Think.lang.ds_colon}</td>
-                </tr>
-                <tr class="noborder">
+                    <td>商品名称{$Think.lang.ds_colon}</td>
                     <td class="vatop rowform">{$return.goods_name}</td>
                     <td class="vatop tips"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="required">{$Think.lang.refund_buyer_message}{$Think.lang.ds_colon}</td>
-                </tr>
-                <tr class="noborder">
+                    <td>{$Think.lang.refund_buyer_message}{$Think.lang.ds_colon}</td>
                     <td class="vatop rowform">{$return.reason_info}</td>
                     <td class="vatop tips"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="required">退货说明{$Think.lang.ds_colon}</td>
-                </tr>
-                <tr class="noborder">
+                    <td>退货说明{$Think.lang.ds_colon}</td>
                     <td class="vatop rowform">{$return.buyer_message}</td>
                     <td class="vatop tips"></td>
                 </tr>
                 <tr>
-                    <td colspan="2" class="required">凭证上传{$Think.lang.ds_colon}</td>
-                </tr>
-                <tr class="noborder">
+                    <td class="required">凭证上传{$Think.lang.ds_colon}</td>
                     <td class="vatop rowform">
                         {notempty name="pic_list"}
                         {foreach name="pic_list" item="val"}
@@ -50,8 +40,6 @@
                 </tr>
                 <tr>
                     <td colspan="2" class="required">处理意见{$Think.lang.ds_colon}</td>
-                </tr>
-                <tr>
                     <td>
                         <div class="onoff">
                             <label for="sina_isuse_show1" class="cb-enable selected" >同意</label>
@@ -64,21 +52,19 @@
                         </div>
                         <p class="hint">如果选择弃货，买家将不用退回原商品，提交后直接确认退款。</p>
                     </td>
+                    <td class="vatop tips"></td>
                 </tr>
-                <tr class="noborder" dstype="state1" style="display: none"> 
-                        <td class="required w120">{$Think.lang.trade_no}</td>
-                        <td class="vatop rowform"><input type="text" class="txt2" name="trade_no" id="trade_no" value="{$trade_no}"></td>
+                <tr dstype="state1" style="display: none"> 
+                        <td class="required">{$Think.lang.trade_no}</td>
+                        <td class="vatop rowform"><input type="text" class="w300" name="trade_no" id="trade_no" value="{$trade_no}"></td>
 			<td class="vatop tips">{$Think.lang.trade_no_tip}</td>
                     </tr>
-                <tr class="noborder">
-                    <td colspan="2" class="required"><label class="validation">{$Think.lang.refund_message}{$Think.lang.ds_colon}</label></td>
-                </tr>
-                <tr class="noborder">
+                <tr>
+                    <td class="required"><label class="validation">{$Think.lang.refund_message}{$Think.lang.ds_colon}</label></td>
                     <td class="vatop rowform">
                         <textarea id="admin_message" name="admin_message" class="tarea"></textarea></td>
                     <td class="vatop tips"></td>
                 </tr>
-
             </tbody>
             <tfoot>
                 <tr class="tfoot">
@@ -104,7 +90,7 @@
         })
         $('#post_form').validate({
             errorPlacement: function(error, element) {
-                error.appendTo(element.parent().parent().prev().find('td:first'));
+                error.appendTo(element.parent().parent().find('td:last'));
             },
             rules: {
                 admin_message: {

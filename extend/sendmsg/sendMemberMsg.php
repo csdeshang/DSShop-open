@@ -74,7 +74,7 @@ class sendMemberMsg
             if(!empty($weixin_param) && $tpl_info['membermt_weixin_switch'] && $tpl_info['membermt_weixin_code']){
                 $param['site_name'] = config('ds_config.site_name');
                 $this->getMemberInfo();
-                    if($this->member_info['member_wxopenid']){
+                    if($this->member_info['member_h5_wxopenid']){
                         $tm_data = array(
                             "first" => array(
                                 "value" => $tpl_info['membermt_name'],
@@ -87,7 +87,7 @@ class sendMemberMsg
                         );
                         $wechat_model=model('wechat');
                         $wechat_model->getOneWxconfig();
-                        $wechat_model->sendMessageTemplate($this->member_info['member_wxopenid'], $tpl_info['membermt_weixin_code'], $weixin_param['url'], array_merge($tm_data,$weixin_param['data']));
+                        $wechat_model->sendMessageTemplate($this->member_info['member_h5_wxopenid'], $tpl_info['membermt_weixin_code'], $weixin_param['url'], array_merge($tm_data,$weixin_param['data']));
                     }
             }
         }

@@ -24,29 +24,6 @@ class Account extends AdminControl {
     }
 
     /**
-     * 设置
-     */
-    public function setting() {
-        $config_model = model('config');
-        if (!request()->isPost()) {
-            $list_config = rkcache('config', true);
-            View::assign('list_config', $list_config);
-            /* 设置卖家当前栏目 */
-            $this->setAdminCurItem('setting');
-            return View::fetch();
-        } else {
-            $update_array=array();
-            $update_array['auto_register'] = input('post.auto_register');
-            $result = $config_model->editConfig($update_array);
-            if ($result) {
-                $this->log(lang('ds_edit').lang('ds_account'),1);
-                $this->success(lang('ds_common_save_succ'));
-            }else{
-                $this->log(lang('ds_edit').lang('ds_account'),0);
-            }
-        }
-    }
-    /**
      * QQ互联
      */
     function qq() {
@@ -126,9 +103,21 @@ class Account extends AdminControl {
             return View::fetch('wx');
         } else {
             $update_array = array();
-            $update_array['weixin_isuse'] = input('post.weixin_isuse');
-            $update_array['weixin_appid'] = input('post.weixin_appid');
-            $update_array['weixin_secret'] = input('post.weixin_secret');
+            $update_array['weixin_pc_isuse'] = input('post.weixin_pc_isuse');
+            $update_array['weixin_pc_appid'] = input('post.weixin_pc_appid');
+            $update_array['weixin_pc_secret'] = input('post.weixin_pc_secret');
+            
+            $update_array['weixin_h5_isuse'] = input('post.weixin_h5_isuse');
+            $update_array['weixin_h5_appid'] = input('post.weixin_h5_appid');
+            $update_array['weixin_h5_secret'] = input('post.weixin_h5_secret');
+            
+            $update_array['weixin_xcx_isuse'] = input('post.weixin_xcx_isuse');
+            $update_array['weixin_xcx_appid'] = input('post.weixin_xcx_appid');
+            $update_array['weixin_xcx_secret'] = input('post.weixin_xcx_secret');
+            
+            $update_array['weixin_app_isuse'] = input('post.weixin_app_isuse');
+            $update_array['weixin_app_appid'] = input('post.weixin_app_appid');
+            $update_array['weixin_app_secret'] = input('post.weixin_app_secret');
             //定义验证规则
             $account_validate = ds_validate('account');
             if (!$account_validate->scene('wx')->check($update_array)){
@@ -149,11 +138,6 @@ class Account extends AdminControl {
      */
     protected function getAdminItemList() {
         $menu_array = array(
-            array(
-                'name' => 'setting',
-                'text' => lang('account_setting'),
-                'url' => url('Account/setting')
-            ),
             array(
                 'name' => 'qq',
                 'text' => lang('qq_interconnection'),

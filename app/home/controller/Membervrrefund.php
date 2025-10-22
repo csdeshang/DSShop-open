@@ -152,8 +152,10 @@ class Membervrrefund extends BaseMember
         $condition = array();
         $condition[] = array('buyer_id','=',session('member_id'));
         $condition[] = array('refund_id','=',intval(input('param.refund_id')));
-        $refund_list = $vrrefund_model->getVrrefundList($condition);
-        $refund = $refund_list[0];
+        $refund = $vrrefund_model->getOneVrrefund($condition);
+        if(empty($refund)){
+            $this->error(lang('param_error'));
+        }
         View::assign('refund', $refund);
         $code_array = explode(',', $refund['redeemcode_sn']);
         View::assign('code_array', $code_array);

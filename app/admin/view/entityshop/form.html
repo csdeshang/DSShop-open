@@ -167,11 +167,13 @@
                         </td>
                         <td class="vatop tips"></td>
                     </tr>
+                    <!--{if $Think.config.ds_config.mapak_type neq '0'}-->
                     <tr class="noborder">
                         <td class="required w120"></td>
                         <td class="vatop rowform"><div id="allmap" style="width:530px;height: 350px;margin-top: 20px"></div></td>
                         <td class="vatop tips"></td>
                     </tr>
+                    <!--{/if}-->
                     <tr class="noborder"> 
                         <td class="required w120">{$Think.lang.entityshop_intro}</td>
                         <td class="vatop rowform"><textarea name="entityshop_intro">{$entityshop.entityshop_intro|default=''}</textarea></td>

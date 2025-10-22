@@ -16,7 +16,7 @@
             
     }
     $(function(){
-    if ({$Think.config.ds_config.mapak_type} == '1'){
+    if ('{$Think.config.ds_config.mapak_type}' === '1'){
     		map = new AMap.Map("allmap", {
     			resizeEnable: true,
     			zoom:15
@@ -83,7 +83,8 @@
     				  }
     				});
     			  });
-    		}else{
+    		}
+                if ('{$Think.config.ds_config.mapak_type}' === '2'){
     			map = new BMap.Map("allmap");
     			var lng = '';
     			var lat = '';
@@ -180,6 +181,7 @@
                 <p class="hint">{$Think.lang.cart_step1_true_address}</p>
             </dd>
         </dl>
+        <!--{if $Think.config.ds_config.mapak_type neq '0'}-->
         <dl>
                     <dt>{$Think.lang.location_map}：</dt>
                     <dd>
@@ -188,6 +190,7 @@
                 <div id="allmap" style="width:530px;height: 350px;margin-top: 20px"></div>
                     </dd>
                 </dl>
+        <!--{/if}-->
         <dl>
             <dt> <i class="required">*</i>{$Think.lang.cart_step1_mobile_num}</dt>
             <dd>

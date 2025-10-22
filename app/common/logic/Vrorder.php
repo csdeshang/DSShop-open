@@ -28,22 +28,21 @@ class Vrorder {
      */
     public function changeOrderStateCancel($order_info, $role, $msg, $if_queue = true) {
 
+        Db::startTrans();
         try {
 
             $vrorder_model = model('vrorder');
-            Db::startTrans();
-            
-            $ppintuanorder_model=model('ppintuanorder');
-            if($order_info['order_promotion_type']==2){
-                $condition=array();
-                $condition[]=array('order_id','=',$order_info['order_id']);
-                $condition[]=array('pintuanorder_type','=',1);
-                $condition[]=array('pintuanorder_state','=',1);
-                $ppintuanorder_model->editPpintuanorder($condition, array('pintuanorder_state'=>0));
+
+            $ppintuanorder_model = model('ppintuanorder');
+            if ($order_info['order_promotion_type'] == 2) {
+                $condition = array();
+                $condition[] = array('order_id', '=', $order_info['order_id']);
+                $condition[] = array('pintuanorder_type', '=', 1);
+                $condition[] = array('pintuanorder_state', '=', 1);
+                $ppintuanorder_model->editPpintuanorder($condition, array('pintuanorder_state' => 0));
             }
             //库存、销量变更
             model('goods')->cancelOrderUpdateStorage(array($order_info['goods_id'] => $order_info['goods_num']));
-
 
             $predeposit_model = model('predeposit');
 
@@ -76,7 +75,7 @@ class Vrorder {
                 $refundreturn_model->refundAmount($order_info, $order_info['order_amount']);
 
                 if ($order_info['order_promotion_type'] == 2) {//如果是拼团
-                    $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $order_info['promotions_id'])->lock(true)->find();
+                    $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $order_info['promotions_id'])->find();
                     if ($ppintuangroup_info && $ppintuangroup_info['pintuangroup_state'] == 1) {
                         if ($ppintuangroup_info['pintuangroup_joined'] > 0) {
                             Db::name('ppintuangroup')->where('pintuangroup_id', $order_info['promotions_id'])->dec('pintuangroup_joined')->update();
@@ -101,15 +100,26 @@ class Vrorder {
                 throw new \think\Exception('保存失败', 10006);
             }
             //分销佣金取消
-            $condition=array();
-            $condition[]=array('orderinviter_order_id','=',$order_info['order_id']);
-            $condition[]=array('orderinviter_valid','=',0);
-            $condition[]=array('orderinviter_order_type','=',1);
+            $condition = array();
+            $condition[] = array('orderinviter_order_id', '=', $order_info['order_id']);
+            $condition[] = array('orderinviter_valid', '=', 0);
+            $condition[] = array('orderinviter_order_type', '=', 1);
             Db::name('orderinviter')->where($condition)->update(['orderinviter_valid' => 2]);
+
+            //添加订单日志
+            $data = array();
+            $data['order_id'] = $order_info['order_id'];
+            $data['log_role'] = $role;
+            $data['log_msg'] = '取消了订单';
+            $data['log_user'] = '';
+            if ($msg) {
+                $data['log_msg'] .= ' ( ' . $msg . ' )';
+            }
+            model('orderlog')->addVrOrderlog($data);
 
             Db::commit();
             return ds_callback(true, '更新成功');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Db::rollback();
             return ds_callback(false, $e->getMessage());
         }
@@ -123,10 +133,11 @@ class Vrorder {
      * @return array
      */
     public function changeOrderStatePay($order_info, $role, $post) {
+
+        Db::startTrans();
         try {
 
             $vrorder_model = model('vrorder');
-            Db::startTrans();
 
             $predeposit_model = model('predeposit');
             //下单，支付被冻结的充值卡
@@ -161,10 +172,19 @@ class Vrorder {
             if (!$update) {
                 throw new \think\Exception(lang('ds_common_save_fail'), 10006);
             }
+
+            //添加订单日志
+            $data = array();
+            $data['order_id'] = $order_info['order_id'];
+            $data['log_role'] = $role;
+            $data['log_user'] = '';
+            $data['log_msg'] = '收到了货款 ' . (isset($post['trade_no']) ? ('( 支付平台交易号 : ' . $post['trade_no'] . ' )') : '');
+            model('orderlog')->addVrOrderlog($data);
+
             //如果是拼团
             if ($order_info['order_promotion_type'] == 2) {
                 $ppintuangroup_model = model('ppintuangroup');
-                $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $order_info['promotions_id'])->lock(true)->find();
+                $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $order_info['promotions_id'])->find();
                 if ($ppintuangroup_info && $ppintuangroup_info['pintuangroup_state'] == 1) {
                     if ($ppintuangroup_info['pintuangroup_joined'] == 0) {
                         //拼团统计开团数量
@@ -191,7 +211,7 @@ class Vrorder {
 
             Db::commit();
             return ds_callback(true, '更新成功');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Db::rollback();
             return ds_callback(false, $e->getMessage());
         }
@@ -217,7 +237,7 @@ class Vrorder {
             $order_info['order_sn'],
         );
         $param['param'] = array_merge($param['ali_param'], array(
-            'order_url' => HOME_SITE_URL .'/Membervrorder/show_order?order_id='.$order_info['order_id']
+            'order_url' => HOME_SITE_URL . '/Membervrorder/show_order?order_id=' . $order_info['order_id']
         ));
         //微信模板消息
         $param['weixin_param'] = array(
@@ -241,8 +261,7 @@ class Vrorder {
                 )
             ),
         );
-        model('cron')->addCron(array('cron_exetime'=>TIMESTAMP,'cron_type'=>'sendMemberMsg','cron_value'=>serialize($param)));
-
+        model('cron')->addCron(array('cron_exetime' => TIMESTAMP, 'cron_type' => 'sendMemberMsg', 'cron_value' => serialize($param)));
 
         //发送兑换码到手机 
         $param = array(
@@ -278,6 +297,14 @@ class Vrorder {
         $orderinviter_model = model('orderinviter');
         $orderinviter_model->giveMoney($order_id);
 
+        //记录订单日志
+        $data = array();
+        $data['order_id'] = $order_id;
+        $data['log_role'] = 'system';
+        $data['log_user'] = '';
+        $data['log_msg'] = '确认收货';
+        model('orderlog')->addVrOrderlog($data);
+
         $order_info = $vrorder_model->getVrorderInfo(array('order_id' => $order_id));
         //添加会员积分
         if (config('ds_config.points_isuse') == 1) {
@@ -297,5 +324,4 @@ class Vrorder {
 
         return ds_callback(true, '更新成功');
     }
-
 }

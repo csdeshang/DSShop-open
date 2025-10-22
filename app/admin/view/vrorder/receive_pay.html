@@ -16,40 +16,30 @@
   <form method="post" name="form1" id="form1">
     <table class="ds-default-table">
       <tbody>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label for="order_sn">订单编号{$Think.lang.ds_colon} </label></td>
-        </tr>
-        <tr class="noborder">
+        <tr>
+          <td class="w120"><label for="order_sn">订单编号{$Think.lang.ds_colon} </label></td>
           <td class="vatop rowform">{$order_info.order_sn}</td>
           <td class="vatop tips"></td>
         </tr>
         {if $Request.action=='order'}
-        <tr class="noborder">
-          <td colspan="2" class="required"><label for="pay_sn">支付单号{$Think.lang.ds_colon}</label></td>
-        </tr>
-        <tr class="noborder">
+        <tr>
+          <td><label for="pay_sn">支付单号{$Think.lang.ds_colon}</label></td>
           <td class="vatop rowform">{$order_info.pay_sn}</td>
           <td class="vatop tips"></td>
         </tr>
        {/if}
-        <tr class="noborder">
-          <td colspan="2" class="required"><label for="order_amount">订单总金额 {$Think.lang.ds_colon}</label></td>
-        </tr>
-        <tr class="noborder">
+        <tr>
+          <td><label for="order_amount">订单总金额 {$Think.lang.ds_colon}</label></td>
           <td class="vatop rowform">{$order_info.order_amount}</td>
           <td class="vatop tips"></td>
         </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label for="payment_time">付款时间{$Think.lang.ds_colon}</label></td>
-        </tr>
-        <tr class="noborder">
+        <tr>
+          <td class="required"><label for="payment_time">付款时间{$Think.lang.ds_colon}</label></td>
           <td class="vatop rowform"><input readonly id="payment_time" class="" name="payment_time" value="" type="text" /></td>
           <td class="vatop tips"></td>
         </tr>
-        <tr class="noborder">
-          <td colspan="2" class="required"><label for="payment_code">付款方式 {$Think.lang.ds_colon}</label></td>
-        </tr>
-        <tr class="noborder">
+        <tr>
+          <td class="required"><label for="payment_code">付款方式 {$Think.lang.ds_colon}</label></td>
           <td class="vatop rowform">
             <select name="payment_code" class="querySelect">
             <option value="">{$Think.lang.ds_please_choose}</option>
@@ -61,16 +51,14 @@
           <td class="vatop tips"></td>
         </tr>
         <tr>
-          <td colspan="2" class="required"><label for="trade_no">第三方支付平台交易号{$Think.lang.ds_colon}</label></td>
-        </tr>
-        <tr class="noborder">
-          <td class="vatop rowform"><input type="text" class="txt2" name="trade_no" id="trade_no" maxlength="40"></td>
+          <td class="required"><label for="trade_no">第三方支付平台交易号{$Think.lang.ds_colon}</label></td>
+          <td class="vatop rowform"><input type="text" class="w300" name="trade_no" id="trade_no" maxlength="40"></td>
           <td class="vatop tips"><span class="vatop rowform">支付宝等第三方支付平台交易号</span></td>
         </tr>
       </tbody>
       <tfoot id="submit-holder">
         <tr class="tfoot">
-          <td colspan="2" ><a href="JavaScript:void(0);" id="dssubmit" class="btn"><span>{$Think.lang.ds_submit}</span></a></td>
+          <td colspan="3" ><a href="JavaScript:void(0);" id="dssubmit" class="btn"><span>{$Think.lang.ds_submit}</span></a></td>
         </tr>
       </tfoot>
     </table>
@@ -91,7 +79,7 @@ $(function(){
     });
     $("#form1").validate({
         errorPlacement: function(error, element){
-            error.appendTo(element.parent().parent().prev().find('td:first'));
+            error.appendTo(element.parent().parent().find('td:last'));
         },
         rules : {
             payment_time : {

@@ -69,11 +69,8 @@ class Memberrefund extends BaseMember {
         $condition[]=array('buyer_id','=',$order['buyer_id']);
         $condition[]=array('order_id','=',$order['order_id']);
         $condition[]=array('order_goods_id','=',$goods_id);
-        $refund_list = $refundreturn_model->getRefundreturnList($condition);
-        $refund = array();
-        if (!empty($refund_list) && is_array($refund_list)) {
-            $refund = $refund_list[0];
-        }
+        $refund = $refundreturn_model->getRefundreturnInfo($condition);
+        
         $refund_state = $refundreturn_model->getRefundState($order); //根据订单状态判断是否可以退款退货
         if ((isset($refund['refund_id']) && $refund['refund_id'] > 0) || $refund_state != 1) {//检查订单状态,防止页面刷新不及时造成数据错误
             $this->error(lang('param_error'),url('Memberorder/index'));
@@ -123,6 +120,14 @@ class Memberrefund extends BaseMember {
             $refund_array['buyer_message'] = input('post.buyer_message');
             $refund_array['add_time'] = TIMESTAMP;
             $state = $refundreturn_model->addRefundreturn($refund_array, $order, $goods);
+            
+            $data = array();
+            $data['order_id'] = $order_id;
+            $data['log_role'] = 'user';
+            $data['log_user'] = '';
+            $data['log_msg'] = '用户申请单个商品退款';
+            model('orderlog')->addOrderlog($data);
+            
             if ($state) {
                 if ($order['order_state'] == $order_shipped) {
                     $refundreturn_model->editOrderLock($order_id);
@@ -162,17 +167,14 @@ class Memberrefund extends BaseMember {
         $condition[]=array('buyer_id','=',$order['buyer_id']);
         $condition[]=array('order_id','=',$order['order_id']);
         $condition[]=array('goods_id','=','0');
-        $refund_list = $refundreturn_model->getRefundreturnList($condition);
-        $refund = array();
-        if (!empty($refund_list) && is_array($refund_list)) {
-            $refund = $refund_list[0];
-        }
+        $refund = $refundreturn_model->getRefundreturnInfo($condition);
+        
         $order_paid = $trade_model->getOrderState('order_paid'); //订单状态20:已付款
         $payment_code = $order['payment_code']; //支付方式
         if (isset($refund['refund_id']) && $refund['refund_id'] > 0){
             $this->error(lang('refund_error_tip'), 'home/memberrefund/index');
         }
-        if ($order['order_state'] != $order_paid || $payment_code == 'offline') {//检查订单状态,防止页面刷新不及时造成数据错误
+        if ($order['order_state'] != $order_paid) {//检查订单状态,防止页面刷新不及时造成数据错误
             $this->error(lang('param_error'), 'home/memberrefund/index');
         }
         if (!request()->isPost()) {
@@ -198,6 +200,14 @@ class Memberrefund extends BaseMember {
             $info = serialize($pic_array);
             $refund_array['pic_info'] = $info;
             $state = $refundreturn_model->addRefundreturn($refund_array, $order);
+            
+            $data = array();
+            $data['order_id'] = $order_id;
+            $data['log_role'] = 'user';
+            $data['log_user'] = '';
+            $data['log_msg'] = '用户申请全额退款';
+            model('orderlog')->addOrderlog($data);
+            
             if ($state) {
                 $refundreturn_model->editOrderLock($order_id);
                 $this->success(lang('ds_common_save_succ'), 'home/memberrefund/index');

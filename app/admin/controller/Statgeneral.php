@@ -68,14 +68,14 @@ class Statgeneral extends AdminControl
         $where[] = array('member_addtime','between', array($stime, $etime));
         $field = ' COUNT(*) as newmember ';
         $stat_member = $stat_model->getOneByMember($where, $field);
-        $statnew_arr['newmember'] = ($t = $stat_member['newmember']) ? $t : 0;
+        $statnew_arr['newmember'] = isset($stat_member['newmember']) ? $stat_member['newmember'] : 0;
         unset($stat_member);
 
         //会员总数
         $where = array();
         $field = ' COUNT(*) as membernum ';
         $stat_member = $stat_model->getOneByMember($where, $field);
-        $statnew_arr['membernum'] = ($t = $stat_member['membernum']) ? $t : 0;
+        $statnew_arr['membernum'] = isset($stat_member['membernum']) ? $stat_member['membernum'] : 0;
         unset($stat_member);
 
         //新增商品，商品总数

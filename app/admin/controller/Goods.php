@@ -1,9 +1,11 @@
 <?php
 
 namespace app\admin\controller;
+
 use think\facade\View;
 use think\facade\Db;
 use think\facade\Lang;
+
 /**
  * ============================================================================
  * DSShop单店铺商城
@@ -21,7 +23,7 @@ class Goods extends AdminControl {
     public function initialize() {
         parent::initialize();
         error_reporting(0);
-        Lang::load(base_path() . 'admin/lang/'.config('lang.default_lang').'/goods.lang.php');
+        Lang::load(base_path() . 'admin/lang/' . config('lang.default_lang') . '/goods.lang.php');
     }
 
     /**
@@ -41,25 +43,25 @@ class Goods extends AdminControl {
          * 查询条件
          */
         $where = array();
-        
+
         $search_goods_name = trim(input('param.search_goods_name'));
         if ($search_goods_name != '') {
-            $where[] = array('goodscommon.goods_name','like', '%' . $search_goods_name . '%');
+            $where[] = array('goodscommon.goods_name', 'like', '%' . $search_goods_name . '%');
         }
         $search_commonid = intval(input('param.search_commonid'));
         if ($search_commonid > 0) {
-            $where[] = array('goodscommon.goods_commonid','=',$search_commonid);
+            $where[] = array('goodscommon.goods_commonid', '=', $search_commonid);
         }
         $b_id = intval(input('param.b_id'));
         if ($b_id > 0) {
-            $where[] = array('goodscommon.brand_id','=',$b_id);
+            $where[] = array('goodscommon.brand_id', '=', $b_id);
         }
         if ($choose_gcid > 0) {
-            $where[] = array('goodscommon.gc_id_' . ($gccache_arr['showclass'][$choose_gcid]['depth']),'=',$choose_gcid);
+            $where[] = array('goodscommon.gc_id_' . ($gccache_arr['showclass'][$choose_gcid]['depth']), '=', $choose_gcid);
         }
         $goods_state = input('param.goods_state');
-        if (in_array($goods_state, array('10', '1'))) {
-            $where[] = array('goodscommon.goods_state','=',$goods_state);
+        if (in_array($goods_state, array('0', '1'))) {
+            $where[] = array('goodscommon.goods_state', '=', $goods_state);
         }
 
         $stock = trim(input('get.stock'));
@@ -69,32 +71,29 @@ class Goods extends AdminControl {
                 $where[] = array('goods.goods_storage_alarm', '>', 0);
                 break;
         }
-		$type = input('param.type');
-		if ($type == 'lockup'){
-			$goods_list = $goods_model->getGoodsCommonLockUpList($where);
-		}else{
-		    $goods_list = $goods_model->getGoodsUnionList($where, 'goods.goods_id,goods.goods_storage_alarm,goods.goods_state,goods.goods_storage,goodscommon.goods_commonid,goodscommon.mobile_body,goodscommon.goods_name,goodscommon.goods_addtime,goodscommon.goods_lock,goodscommon.goods_sort,goodscommon.goods_commend,goodscommon.goods_serial,goodscommon.is_virtual,goodscommon.is_goodsfcode,goodscommon.is_appoint,goodscommon.goods_advword,goodscommon.goods_image,goods.goods_promotion_price,goodscommon.goods_price','goodscommon.goods_commonid desc','goodscommon.goods_commonid', 10);
-		}
-		foreach($goods_list as $key => $val){
-            if($val['goods_storage_alarm'] != 0 && $val['goods_storage'] <= $val['goods_storage_alarm']){
-                $goods_list[$key]['alarm']=true;
+        $type = input('param.type');
+        if ($type == 'lockup') {
+            $goods_list = $goods_model->getGoodsCommonLockUpList($where);
+        } else {
+            $goods_list = $goods_model->getGoodsUnionList($where, 'goods.goods_id,goods.goods_storage_alarm,goods.goods_state,goods.goods_storage,goodscommon.goods_commonid,goodscommon.mobile_body,goodscommon.goods_name,goodscommon.goods_addtime,goodscommon.goods_lock,goodscommon.goods_sort,goodscommon.goods_commend,goodscommon.goods_serial,goodscommon.is_virtual,goodscommon.is_goodsfcode,goodscommon.is_appoint,goodscommon.goods_advword,goodscommon.goods_image,goods.goods_promotion_price,goodscommon.goods_price', 'goodscommon.goods_commonid desc', 'goodscommon.goods_commonid', 10);
+        }
+        foreach ($goods_list as $key => $val) {
+            if ($val['goods_storage_alarm'] != 0 && $val['goods_storage'] <= $val['goods_storage_alarm']) {
+                $goods_list[$key]['alarm'] = true;
             }
-            $goods_list[$key]['sum']=Db::name('goods')->where(array(array('goods_commonid','=',$val['goods_commonid'])))->sum('goods_storage');
+            $goods_list[$key]['sum'] = Db::name('goods')->where(array(array('goods_commonid', '=', $val['goods_commonid'])))->sum('goods_storage');
         }
 
         View::assign('goods_list', $goods_list);
         View::assign('show_page', $goods_model->page_info->render());
 
-
-
         // 品牌
         $brand_list = model('brand')->getBrandPassedList(array());
 
-        View::assign('search', $where);
         View::assign('brand_list', $brand_list);
 
-        View::assign('state', array('1' => '出售中', '10' => '仓库中'));
-        if(!in_array($type, array('lockup'))){
+        View::assign('state', array('1' => '出售中', '0' => '下架'));
+        if (!in_array($type, array('lockup'))) {
             $type = 'allgoods';
         }
 
@@ -112,8 +111,8 @@ class Goods extends AdminControl {
         $storage_array = array();
         if (!empty($goods_list)) {
             foreach ($goods_list as $value) {
-                $storage_array[$value['goods_commonid']]['goods_storage'] = $goods_model->getGoodsSum(array('goods_commonid'=>$value['goods_commonid']),'goods_storage');
-                $storage_array[$value['goods_commonid']][] = $goods_model->getGoodsInfo(array('goods_commonid'=>$value['goods_commonid']),'goods_id');
+                $storage_array[$value['goods_commonid']]['goods_storage'] = $goods_model->getGoodsSum(array('goods_commonid' => $value['goods_commonid']), 'goods_storage');
+                $storage_array[$value['goods_commonid']][] = $goods_model->getGoodsInfo(array('goods_commonid' => $value['goods_commonid']), 'goods_id');
             }
             return $storage_array;
         } else {
@@ -137,9 +136,9 @@ class Goods extends AdminControl {
             $update['goods_stateremark'] = trim(input('post.close_reason'));
 
             $where = array();
-            $where[] = array('goods_commonid','in', $commonid_array);
+            $where[] = array('goods_commonid', 'in', $commonid_array);
 
-            model('goods')->editProducesLockUp($update, $where,$type);
+            model('goods')->editProducesLockUp($update, $where, $type);
             dsLayerOpenSuccess(lang('ds_common_op_succ'));
         } else {
             View::assign('commonids', input('param.commonid'));
@@ -170,7 +169,7 @@ class Goods extends AdminControl {
         }
         $map['goods_commonid'] = $common_id;
         $goods_model = model('goods');
-        $common_info = $goods_model->getGoodsCommonInfo($map,'spec_name');
+        $common_info = $goods_model->getGoodsCommonInfo($map, 'spec_name');
         $goods_list = $goods_model->getGoodsList($map);
         $spec_name = array_values((array) unserialize($common_info['spec_name']));
         foreach ($goods_list as $key => $val) {
@@ -185,6 +184,7 @@ class Goods extends AdminControl {
         }
         return json_encode($goods_list);
     }
+
     /**
      * ajax操作
      */
@@ -194,7 +194,7 @@ class Goods extends AdminControl {
             case 'goods_commend':
             case 'goods_sort':
                 if (empty($result)) {
-                    $goods_model->editGoodsCommonById(array(trim(input('param.branch')) => trim(input('param.value'))),array(intval(input('param.id'))));
+                    $goods_model->editGoodsCommonById(array(trim(input('param.branch')) => trim(input('param.value'))), array(intval(input('param.id'))));
                     echo 'true';
                     exit;
                 } else {
@@ -221,7 +221,7 @@ class Goods extends AdminControl {
         $where = array('goods_commonid' => $common_id);
         $goodscommon_info['g_storage'] = $goods_model->getGoodsSum($where, 'goods_storage');
         $goodscommon_info['spec_name'] = unserialize($goodscommon_info['spec_name']);
-        if ($goodscommon_info['goods_marketprice'] == 0.00){
+        if ($goodscommon_info['goods_marketprice'] == 0.00) {
             $goodscommon_info['goods_marketprice'] = null;
         }
         if ($goodscommon_info['mobile_body'] != '') {
@@ -295,7 +295,6 @@ class Goods extends AdminControl {
         }
         View::assign('sp_value', $sp_value);
 
-
         // 是否能使用编辑器
         $editor_multimedia = true;
         View::assign('editor_multimedia', $editor_multimedia);
@@ -305,7 +304,6 @@ class Goods extends AdminControl {
         View::assign('hour_array', $hour_array);
         $minute_array = array('05', '10', '15', '20', '25', '30', '35', '40', '45', '50', '55');
         View::assign('minute_array', $minute_array);
-
 
         // F码
         if ($goodscommon_info['is_goodsfcode'] == 1) {
@@ -325,7 +323,7 @@ class Goods extends AdminControl {
 
         $common_id = intval(input('param.commonid'));
         if (!request()->isPost() || $common_id <= 0) {
-            ds_json_encode(10001,lang('goods_index_goods_edit_fail'));
+            ds_json_encode(10001, lang('goods_index_goods_edit_fail'));
         }
 
         $gc_id = intval(input('post.cate_id'));
@@ -333,9 +331,9 @@ class Goods extends AdminControl {
         // 验证商品分类是否存在且商品分类是否为最后一级
         $data = model('goodsclass')->getGoodsclassForCacheModel();
         if (!isset($data[$gc_id]) || isset($data[$gc_id]['child']) || isset($data[$gc_id]['childchild'])) {
-            ds_json_encode(10001,lang('goods_index_again_choose_category1'));
+            ds_json_encode(10001, lang('goods_index_again_choose_category1'));
         }
-        
+
         // 分类信息
         $goods_class = model('goodsclass')->getGoodsclassLineForTag(intval(input('post.cate_id')));
         $goods_model = model('goods');
@@ -344,9 +342,9 @@ class Goods extends AdminControl {
         $update_common['goods_name'] = input('post.g_name');
         $update_common['goods_advword'] = input('post.g_jingle');
         $update_common['gc_id'] = $gc_id;
-        $update_common['gc_id_1'] = isset($goods_class['gc_id_1'])?intval($goods_class['gc_id_1']):0;
-        $update_common['gc_id_2'] = isset($goods_class['gc_id_2'])?intval($goods_class['gc_id_2']):0;
-        $update_common['gc_id_3'] = isset($goods_class['gc_id_3'])?intval($goods_class['gc_id_3']):0;
+        $update_common['gc_id_1'] = isset($goods_class['gc_id_1']) ? intval($goods_class['gc_id_1']) : 0;
+        $update_common['gc_id_2'] = isset($goods_class['gc_id_2']) ? intval($goods_class['gc_id_2']) : 0;
+        $update_common['gc_id_3'] = isset($goods_class['gc_id_3']) ? intval($goods_class['gc_id_3']) : 0;
         $update_common['gc_name'] = input('post.cate_name');
         $update_common['brand_id'] = input('post.b_id');
         $update_common['brand_name'] = input('post.b_name');
@@ -358,12 +356,12 @@ class Goods extends AdminControl {
         $update_common['goods_discount'] = floatval(input('post.g_discount'));
         $update_common['goods_serial'] = input('post.g_serial');
         $update_common['goods_storage_alarm'] = intval(input('post.g_alarm'));
-        $update_common['goods_attr'] = !empty(input('post.attr/a'))?serialize(input('post.attr/a')):'';
-        
-            $goods_body=preg_replace_callback("/<\s*img\s+[^>]*?src\s*=\s*(\'|\")(.*?)\\1[^>]*?\/?\s*>/i", function ($matches) {
-                return str_replace($matches[2],strip_tags($matches[2]),$matches[0]);
-            }, htmlspecialchars_decode(input('post.goods_body')));
-            $update_common['goods_body'] = $goods_body;
+        $update_common['goods_attr'] = !empty(input('post.attr/a')) ? serialize(input('post.attr/a')) : '';
+
+        $goods_body = preg_replace_callback("/<\s*img\s+[^>]*?src\s*=\s*(\'|\")(.*?)\\1[^>]*?\/?\s*>/i", function ($matches) {
+            return str_replace($matches[2], strip_tags($matches[2]), $matches[0]);
+        }, htmlspecialchars_decode(input('post.goods_body')));
+        $update_common['goods_body'] = $goods_body;
         // 序列化保存手机端商品描述数据
         $mobile_body = input('post.m_body');
         if ($mobile_body != '') {
@@ -377,7 +375,7 @@ class Goods extends AdminControl {
         }
         $update_common['mobile_body'] = $mobile_body;
         $update_common['goods_commend'] = intval(input('post.g_commend'));
-        $update_common['goods_state'] = intval(input('post.g_state')); 
+        $update_common['goods_state'] = intval(input('post.g_state'));
         $update_common['goods_shelftime'] = strtotime(input('post.starttime')) + intval(input('post.starttime_H')) * 3600 + intval(input('post.starttime_i')) * 60;
         $update_common['spec_name'] = !empty(input('post.spec/a')) ? serialize(input('post.sp_name/a')) : serialize(null);
         $update_common['spec_value'] = !empty(input('post.spec/a')) ? serialize(input('post.sp_val/a')) : serialize(null);
@@ -391,10 +389,9 @@ class Goods extends AdminControl {
         //验证数据  BEGIN
         $goods_validate = ds_validate('goods');
         if (!$goods_validate->scene('edit_save_goods')->check($update_common)) {
-            ds_json_encode(10001,$goods_validate->getError());
+            ds_json_encode(10001, $goods_validate->getError());
         }
         //验证数据  END
-
         //查询店铺商品分类
         $goods_stcids_arr = array();
         if (empty($goods_stcids_arr)) {
@@ -413,45 +410,128 @@ class Goods extends AdminControl {
         $update_common['appoint_satedate'] = $update_common['is_appoint'] == 1 ? strtotime(input('post.g_saledate')) : '';   // 预约商品的销售时间
         $update_common['is_presell'] = $update_common['goods_state'] == 1 ? intval(input('post.is_presell')) : 0;     // 只有出售中的商品可以预售
         $update_common['presell_deliverdate'] = $update_common['is_presell'] == 1 ? strtotime(input('post.g_deliverdate')) : ''; // 预售商品的发货时间
-
         // 开始事务
         Db::startTrans();
-        try{
-        $goods_model->lock=true;  
-        $goodsgift_model = model('goodsgift');
-        // 清除原有规格数据
-        $type_model = model('type');
-        $type_model->delGoodsAttr(array('goods_commonid' => $common_id));
+        try {
+            $goods_model->lock = true;
+            $goodsgift_model = model('goodsgift');
+            // 清除原有规格数据
+            $type_model = model('type');
+            $type_model->delGoodsAttr(array('goods_commonid' => $common_id));
 
-        // 更新商品规格
-        $goodsid_array = array();
-        $colorid_array = array();
-        $spec_array = input('post.spec/a');#获取数组
-        if (is_array($spec_array)&&!empty($spec_array)) {
-            foreach ($spec_array as $value) {
-                $goods_info = $goods_model->getGoodsInfo(array('goods_id' => $value['goods_id'], 'goods_commonid' => $common_id), 'goods_id');
+            // 更新商品规格
+            $goodsid_array = array();
+            $colorid_array = array();
+            $spec_array = input('post.spec/a'); #获取数组
+            if (is_array($spec_array) && !empty($spec_array)) {
+                foreach ($spec_array as $value) {
+                    $goods_info = $goods_model->getGoodsInfo(array('goods_id' => $value['goods_id'], 'goods_commonid' => $common_id), 'goods_id');
+                    if (!empty($goods_info)) {
+                        $goods_id = $goods_info['goods_id'];
+                        $update = array();
+                        $update['goods_commonid'] = $common_id;
+                        $update['goods_name'] = $update_common['goods_name'] . ' ' . implode(' ', $value['sp_value']);
+                        $update['goods_advword'] = $update_common['goods_advword'];
+                        $update['gc_id'] = $update_common['gc_id'];
+                        $update['gc_id_1'] = $update_common['gc_id_1'];
+                        $update['gc_id_2'] = $update_common['gc_id_2'];
+                        $update['gc_id_3'] = $update_common['gc_id_3'];
+                        $update['brand_id'] = $update_common['brand_id'];
+                        $update['goods_price'] = $value['price'];
+                        $update['goods_marketprice'] = $value['marketprice'] == 0 ? $update_common['goods_marketprice'] : $value['marketprice'];
+                        $update['goods_serial'] = $value['sku'];
+                        $update['goods_storage_alarm'] = intval($value['alarm']);
+                        $update['goods_spec'] = serialize($value['sp_value']);
+                        $update['goods_storage'] = $value['stock'];
+                        $update['goods_state'] = $update_common['goods_state'];
+                        $update['goods_edittime'] = TIMESTAMP;
+                        $update['areaid_1'] = $update_common['areaid_1'];
+                        $update['areaid_2'] = $update_common['areaid_2'];
+                        $update['color_id'] = isset($value['color']) ? intval($value['color']) : '';
+                        $update['transport_id'] = $update_common['transport_id'];
+                        $update['goods_freight'] = $update_common['goods_freight'];
+                        $update['goods_vat'] = $update_common['goods_vat'];
+                        $update['goods_commend'] = $update_common['goods_commend'];
+                        $update['goods_stcids'] = $update_common['goods_stcids'];
+                        $update['is_virtual'] = $update_common['is_virtual'];
+                        $update['virtual_indate'] = $update_common['virtual_indate'];
+                        $update['virtual_limit'] = $update_common['virtual_limit'];
+                        $update['virtual_invalid_refund'] = $update_common['virtual_invalid_refund'];
+                        $update['is_goodsfcode'] = $update_common['is_goodsfcode'];
+                        $update['is_appoint'] = $update_common['is_appoint'];
+                        $update['is_presell'] = $update_common['is_presell'];
+                        // 虚拟商品不能有赠品
+                        if ($update_common['is_virtual'] == 1) {
+                            $update['is_have_gift'] = 0;
+                            $goodsgift_model->delGoodsgift(array('goods_id' => $goods_id));
+                        }
+                        $goods_model->editGoodsById($update, $goods_id);
+                    } else {
+                        $insert = array();
+                        $insert['goods_commonid'] = $common_id;
+                        $insert['goods_name'] = $update_common['goods_name'] . ' ' . implode(' ', $value['sp_value']);
+                        $insert['goods_advword'] = $update_common['goods_advword'];
+                        $insert['gc_id'] = $update_common['gc_id'];
+                        $insert['gc_id_1'] = $update_common['gc_id_1'];
+                        $insert['gc_id_2'] = $update_common['gc_id_2'];
+                        $insert['gc_id_3'] = $update_common['gc_id_3'];
+                        $insert['brand_id'] = $update_common['brand_id'];
+                        $insert['goods_price'] = $value['price'];
+                        $insert['goods_promotion_price'] = $value['price'];
+                        $insert['goods_marketprice'] = $value['marketprice'] == 0 ? $update_common['goods_marketprice'] : $value['marketprice'];
+                        $insert['goods_serial'] = $value['sku'];
+                        $insert['goods_storage_alarm'] = intval($value['alarm']);
+                        $insert['goods_spec'] = serialize($value['sp_value']);
+                        $insert['goods_storage'] = $value['stock'];
+                        $insert['goods_image'] = $update_common['goods_image'];
+                        $insert['goods_state'] = $update_common['goods_state'];
+                        $insert['goods_addtime'] = TIMESTAMP;
+                        $insert['goods_edittime'] = TIMESTAMP;
+                        $insert['areaid_1'] = $update_common['areaid_1'];
+                        $insert['areaid_2'] = $update_common['areaid_2'];
+                        $insert['color_id'] = isset($value['color']) ? intval($value['color']) : '';
+                        $insert['transport_id'] = $update_common['transport_id'];
+                        $insert['goods_freight'] = $update_common['goods_freight'];
+                        $insert['goods_vat'] = $update_common['goods_vat'];
+                        $insert['goods_commend'] = $update_common['goods_commend'];
+                        $insert['goods_stcids'] = $update_common['goods_stcids'];
+                        $insert['is_virtual'] = $update_common['is_virtual'];
+                        $insert['virtual_indate'] = $update_common['virtual_indate'];
+                        $insert['virtual_limit'] = $update_common['virtual_limit'];
+                        $insert['virtual_invalid_refund'] = $update_common['virtual_invalid_refund'];
+                        $insert['is_goodsfcode'] = $update_common['is_goodsfcode'];
+                        $insert['is_appoint'] = $update_common['is_appoint'];
+                        $insert['is_presell'] = $update_common['is_presell'];
+                        $goods_id = $goods_model->addGoods($insert);
+                    }
+                    $goodsid_array[] = intval($goods_id);
+                    $colorid_array[] = isset($value['color']) ? intval($value['color']) : '';
+                    $type_model->addGoodsType($goods_id, $common_id, array('cate_id' => input('post.cate_id'), 'type_id' => input('post.type_id'), 'attr' => input('post.attr/a')));
+                }
+            } else {
+                $goods_info = $goods_model->getGoodsInfo(array('goods_spec' => serialize(null), 'goods_commonid' => $common_id), 'goods_id');
                 if (!empty($goods_info)) {
                     $goods_id = $goods_info['goods_id'];
                     $update = array();
                     $update['goods_commonid'] = $common_id;
-                    $update['goods_name'] = $update_common['goods_name'] . ' ' . implode(' ', $value['sp_value']);
+                    $update['goods_name'] = $update_common['goods_name'];
                     $update['goods_advword'] = $update_common['goods_advword'];
                     $update['gc_id'] = $update_common['gc_id'];
                     $update['gc_id_1'] = $update_common['gc_id_1'];
                     $update['gc_id_2'] = $update_common['gc_id_2'];
                     $update['gc_id_3'] = $update_common['gc_id_3'];
                     $update['brand_id'] = $update_common['brand_id'];
-                    $update['goods_price'] = $value['price'];
-                    $update['goods_marketprice'] = $value['marketprice'] == 0 ? $update_common['goods_marketprice'] : $value['marketprice'];
-                    $update['goods_serial'] = $value['sku'];
-                    $update['goods_storage_alarm'] = intval($value['alarm']);
-                    $update['goods_spec'] = serialize($value['sp_value']);
-                    $update['goods_storage'] = $value['stock'];
+                    $update['goods_price'] = $update_common['goods_price'];
+                    $update['goods_marketprice'] = $update_common['goods_marketprice'];
+                    $update['goods_serial'] = $update_common['goods_serial'];
+                    $update['goods_storage_alarm'] = $update_common['goods_storage_alarm'];
+                    $update['goods_spec'] = serialize(null);
+                    $update['goods_storage'] = intval(input('post.g_storage'));
                     $update['goods_state'] = $update_common['goods_state'];
                     $update['goods_edittime'] = TIMESTAMP;
                     $update['areaid_1'] = $update_common['areaid_1'];
                     $update['areaid_2'] = $update_common['areaid_2'];
-                    $update['color_id'] = isset($value['color'])?intval($value['color']):'';
+                    $update['color_id'] = 0;
                     $update['transport_id'] = $update_common['transport_id'];
                     $update['goods_freight'] = $update_common['goods_freight'];
                     $update['goods_vat'] = $update_common['goods_vat'];
@@ -464,7 +544,6 @@ class Goods extends AdminControl {
                     $update['is_goodsfcode'] = $update_common['is_goodsfcode'];
                     $update['is_appoint'] = $update_common['is_appoint'];
                     $update['is_presell'] = $update_common['is_presell'];
-                    // 虚拟商品不能有赠品
                     if ($update_common['is_virtual'] == 1) {
                         $update['is_have_gift'] = 0;
                         $goodsgift_model->delGoodsgift(array('goods_id' => $goods_id));
@@ -473,27 +552,27 @@ class Goods extends AdminControl {
                 } else {
                     $insert = array();
                     $insert['goods_commonid'] = $common_id;
-                    $insert['goods_name'] = $update_common['goods_name'] . ' ' . implode(' ', $value['sp_value']);
+                    $insert['goods_name'] = $update_common['goods_name'];
                     $insert['goods_advword'] = $update_common['goods_advword'];
                     $insert['gc_id'] = $update_common['gc_id'];
                     $insert['gc_id_1'] = $update_common['gc_id_1'];
                     $insert['gc_id_2'] = $update_common['gc_id_2'];
                     $insert['gc_id_3'] = $update_common['gc_id_3'];
                     $insert['brand_id'] = $update_common['brand_id'];
-                    $insert['goods_price'] = $value['price'];
-                    $insert['goods_promotion_price'] = $value['price'];
-                    $insert['goods_marketprice'] = $value['marketprice'] == 0 ? $update_common['goods_marketprice'] : $value['marketprice'];
-                    $insert['goods_serial'] = $value['sku'];
-                    $insert['goods_storage_alarm'] = intval($value['alarm']);
-                    $insert['goods_spec'] = serialize($value['sp_value']);
-                    $insert['goods_storage'] = $value['stock'];
+                    $insert['goods_price'] = $update_common['goods_price'];
+                    $insert['goods_promotion_price'] = $update_common['goods_price'];
+                    $insert['goods_marketprice'] = $update_common['goods_marketprice'];
+                    $insert['goods_serial'] = $update_common['goods_serial'];
+                    $insert['goods_storage_alarm'] = $update_common['goods_storage_alarm'];
+                    $insert['goods_spec'] = serialize(null);
+                    $insert['goods_storage'] = intval(input('post.g_storage'));
                     $insert['goods_image'] = $update_common['goods_image'];
                     $insert['goods_state'] = $update_common['goods_state'];
                     $insert['goods_addtime'] = TIMESTAMP;
                     $insert['goods_edittime'] = TIMESTAMP;
                     $insert['areaid_1'] = $update_common['areaid_1'];
                     $insert['areaid_2'] = $update_common['areaid_2'];
-                    $insert['color_id'] = isset($value['color'])?intval($value['color']):'';
+                    $insert['color_id'] = 0;
                     $insert['transport_id'] = $update_common['transport_id'];
                     $insert['goods_freight'] = $update_common['goods_freight'];
                     $insert['goods_vat'] = $update_common['goods_vat'];
@@ -509,156 +588,72 @@ class Goods extends AdminControl {
                     $goods_id = $goods_model->addGoods($insert);
                 }
                 $goodsid_array[] = intval($goods_id);
-                $colorid_array[] = isset($value['color'])?intval($value['color']):'';
+                $colorid_array[] = 0;
                 $type_model->addGoodsType($goods_id, $common_id, array('cate_id' => input('post.cate_id'), 'type_id' => input('post.type_id'), 'attr' => input('post.attr/a')));
             }
-        } else {
-            $goods_info = $goods_model->getGoodsInfo(array('goods_spec' => serialize(null), 'goods_commonid' => $common_id), 'goods_id');
-            if (!empty($goods_info)) {
-                $goods_id = $goods_info['goods_id'];
-                $update = array();
-                $update['goods_commonid'] = $common_id;
-                $update['goods_name'] = $update_common['goods_name'];
-                $update['goods_advword'] = $update_common['goods_advword'];
-                $update['gc_id'] = $update_common['gc_id'];
-                $update['gc_id_1'] = $update_common['gc_id_1'];
-                $update['gc_id_2'] = $update_common['gc_id_2'];
-                $update['gc_id_3'] = $update_common['gc_id_3'];
-                $update['brand_id'] = $update_common['brand_id'];
-                $update['goods_price'] = $update_common['goods_price'];
-                $update['goods_marketprice'] = $update_common['goods_marketprice'];
-                $update['goods_serial'] = $update_common['goods_serial'];
-                $update['goods_storage_alarm'] = $update_common['goods_storage_alarm'];
-                $update['goods_spec'] = serialize(null);
-                $update['goods_storage'] = intval(input('post.g_storage'));
-                $update['goods_state'] = $update_common['goods_state'];
-                $update['goods_edittime'] = TIMESTAMP;
-                $update['areaid_1'] = $update_common['areaid_1'];
-                $update['areaid_2'] = $update_common['areaid_2'];
-                $update['color_id'] = 0;
-                $update['transport_id'] = $update_common['transport_id'];
-                $update['goods_freight'] = $update_common['goods_freight'];
-                $update['goods_vat'] = $update_common['goods_vat'];
-                $update['goods_commend'] = $update_common['goods_commend'];
-                $update['goods_stcids'] = $update_common['goods_stcids'];
-                $update['is_virtual'] = $update_common['is_virtual'];
-                $update['virtual_indate'] = $update_common['virtual_indate'];
-                $update['virtual_limit'] = $update_common['virtual_limit'];
-                $update['virtual_invalid_refund'] = $update_common['virtual_invalid_refund'];
-                $update['is_goodsfcode'] = $update_common['is_goodsfcode'];
-                $update['is_appoint'] = $update_common['is_appoint'];
-                $update['is_presell'] = $update_common['is_presell'];
-                if ($update_common['is_virtual'] == 1) {
-                    $update['is_have_gift'] = 0;
-                    $goodsgift_model->delGoodsgift(array('goods_id' => $goods_id));
+
+
+            // 清理商品数据
+            $condition = array();
+            $condition[] = array('goods_id', 'not in', $goodsid_array);
+            $condition[] = array('goods_commonid', '=', $common_id);
+            $goods_model->delGoods($condition);
+
+            // 清理商品图片表
+            $colorid_array = array_unique($colorid_array);
+            $condition = array();
+            $condition[] = array('color_id', 'not in', $colorid_array);
+            $condition[] = array('goods_commonid', '=', $common_id);
+            $goods_model->delGoodsImages($condition);
+            // 更新商品默认主图
+            $default_image_list = $goods_model->getGoodsImageList(array('goods_commonid' => $common_id, 'goodsimage_isdefault' => 1), 'color_id,goodsimage_url');
+            if (!empty($default_image_list)) {
+                foreach ($default_image_list as $val) {
+                    $goods_model->editGoods(array('goods_image' => $val['goodsimage_url']), array('goods_commonid' => $common_id, 'color_id' => $val['color_id']));
                 }
-                $goods_model->editGoodsById($update, $goods_id);
+            }
+
+            // 商品加入上架队列
+            if (!empty(input('post.starttime'))) {
+                $selltime = strtotime(input('post.starttime')) + intval(input('post.starttime_H')) * 3600 + intval(input('post.starttime_i')) * 60;
+                if ($selltime > TIMESTAMP) {
+                    $this->addcron(array('cron_exetime' => $selltime, 'cron_value' => serialize(intval($common_id)), 'cron_type' => 'editProducesOnline'), true);
+                }
+            }
+            // 添加操作日志
+            $this->log('编辑商品，平台货号：' . $common_id, 1);
+
+            if ($update_common['is_virtual'] == 1 || $update_common['is_goodsfcode'] == 1 || $update_common['is_presell'] == 1) {
+                // 如果是特殊商品清理促销活动，抢购、秒杀、组合销售
+                model('cron')->addCron(array('cron_exetime' => TIMESTAMP, 'cron_type' => 'clearSpecialGoodsPromotion', 'cron_value' => serialize(array('goods_commonid' => $common_id, 'goodsid_array' => $goodsid_array))));
             } else {
-                $insert = array();
-                $insert['goods_commonid'] = $common_id;
-                $insert['goods_name'] = $update_common['goods_name'];
-                $insert['goods_advword'] = $update_common['goods_advword'];
-                $insert['gc_id'] = $update_common['gc_id'];
-                $insert['gc_id_1'] = $update_common['gc_id_1'];
-                $insert['gc_id_2'] = $update_common['gc_id_2'];
-                $insert['gc_id_3'] = $update_common['gc_id_3'];
-                $insert['brand_id'] = $update_common['brand_id'];
-                $insert['goods_price'] = $update_common['goods_price'];
-                $insert['goods_promotion_price'] = $update_common['goods_price'];
-                $insert['goods_marketprice'] = $update_common['goods_marketprice'];
-                $insert['goods_serial'] = $update_common['goods_serial'];
-                $insert['goods_storage_alarm'] = $update_common['goods_storage_alarm'];
-                $insert['goods_spec'] = serialize(null);
-                $insert['goods_storage'] = intval(input('post.g_storage'));
-                $insert['goods_image'] = $update_common['goods_image'];
-                $insert['goods_state'] = $update_common['goods_state'];
-                $insert['goods_addtime'] = TIMESTAMP;
-                $insert['goods_edittime'] = TIMESTAMP;
-                $insert['areaid_1'] = $update_common['areaid_1'];
-                $insert['areaid_2'] = $update_common['areaid_2'];
-                $insert['color_id'] = 0;
-                $insert['transport_id'] = $update_common['transport_id'];
-                $insert['goods_freight'] = $update_common['goods_freight'];
-                $insert['goods_vat'] = $update_common['goods_vat'];
-                $insert['goods_commend'] = $update_common['goods_commend'];
-                $insert['goods_stcids'] = $update_common['goods_stcids'];
-                $insert['is_virtual'] = $update_common['is_virtual'];
-                $insert['virtual_indate'] = $update_common['virtual_indate'];
-                $insert['virtual_limit'] = $update_common['virtual_limit'];
-                $insert['virtual_invalid_refund'] = $update_common['virtual_invalid_refund'];
-                $insert['is_goodsfcode'] = $update_common['is_goodsfcode'];
-                $insert['is_appoint'] = $update_common['is_appoint'];
-                $insert['is_presell'] = $update_common['is_presell'];
-                $goods_id = $goods_model->addGoods($insert);
+                // 更新商品促销价格
+                model('cron')->addCron(array('cron_exetime' => TIMESTAMP, 'cron_type' => 'updateGoodsPromotionPriceByGoodsCommonId', 'cron_value' => serialize($common_id)));
             }
-            $goodsid_array[] = intval($goods_id);
-            $colorid_array[] = 0;
-            $type_model->addGoodsType($goods_id, $common_id, array('cate_id' => input('post.cate_id'), 'type_id' => input('post.type_id'), 'attr' => input('post.attr/a')));
-        }
-        
 
-        // 清理商品数据
-        $condition = array();
-        $condition[] = array('goods_id','not in', $goodsid_array);
-        $condition[] = array('goods_commonid','=', $common_id);
-        $goods_model->delGoods($condition);
-        
-        // 清理商品图片表
-        $colorid_array = array_unique($colorid_array);
-        $condition = array();
-        $condition[] = array('color_id','not in', $colorid_array);
-        $condition[] = array('goods_commonid','=', $common_id);
-        $goods_model->delGoodsImages($condition);
-        // 更新商品默认主图
-        $default_image_list = $goods_model->getGoodsImageList(array('goods_commonid' => $common_id, 'goodsimage_isdefault' => 1), 'color_id,goodsimage_url');
-        if (!empty($default_image_list)) {
-            foreach ($default_image_list as $val) {
-                $goods_model->editGoods(array('goods_image' => $val['goodsimage_url']), array('goods_commonid' => $common_id, 'color_id' => $val['color_id']));
+            // 生成F码
+            if ($update_common['is_goodsfcode'] == 1) {
+                model('goodsfcode')->createGoodsfcode(array('goods_commonid' => $common_id, 'goodsfcode_count' => intval(input('post.g_fccount')), 'goodsfcode_prefix' => input('post.g_fcprefix')));
             }
-        }
 
-        // 商品加入上架队列
-        if (!empty(input('post.starttime'))) {
-            $selltime = strtotime(input('post.starttime')) + intval(input('post.starttime_H')) * 3600 + intval(input('post.starttime_i')) * 60;
-            if ($selltime > TIMESTAMP) {
-                $this->addcron(array('cron_exetime' => $selltime, 'cron_value' => serialize(intval($common_id)), 'cron_type' => 'editProducesOnline'), true);
-            }
-        }
-        // 添加操作日志
-        $this->log('编辑商品，平台货号：' . $common_id,1);
-        
-        if ($update_common['is_virtual'] == 1 || $update_common['is_goodsfcode'] == 1 || $update_common['is_presell'] == 1) {
-            // 如果是特殊商品清理促销活动，抢购、秒杀、组合销售
-            model('cron')->addCron(array('cron_exetime'=>TIMESTAMP,'cron_type'=>'clearSpecialGoodsPromotion','cron_value'=>serialize(array('goods_commonid' => $common_id, 'goodsid_array' => $goodsid_array))));
-        } else {
-            // 更新商品促销价格
-            model('cron')->addCron(array('cron_exetime'=>TIMESTAMP,'cron_type'=>'updateGoodsPromotionPriceByGoodsCommonId','cron_value'=>serialize($common_id)));
-        }
-        
-        // 生成F码
-        if ($update_common['is_goodsfcode'] == 1) {
-            model('goodsfcode')->createGoodsfcode(array('goods_commonid' => $common_id, 'goodsfcode_count' => intval(input('post.g_fccount')), 'goodsfcode_prefix' => input('post.g_fcprefix')));
-        }
-        
-        $return = $goods_model->editGoodsCommon($update_common, array('goods_commonid' => $common_id));
-                } catch (\Exception $e){
+            $return = $goods_model->editGoodsCommon($update_common, array('goods_commonid' => $common_id));
+            Db::commit();
+        } catch (\Exception $e) {
             Db::rollback();
-            ds_json_encode(10001,$e->getMessage());
+            ds_json_encode(10001, $e->getMessage());
         }
-        //提交事务
-        Db::commit();
-        if ($return){
-            ds_json_encode(10000,lang('ds_common_op_succ'));
+        
+        if ($return) {
+            ds_json_encode(10000, lang('ds_common_op_succ'));
         }
-
     }
 
     /**
      * 编辑库存
      */
     public function edit_storage() {
-        $common_id=intval(input('param.commonid'));
-        if(!$common_id){
+        $common_id = intval(input('param.commonid'));
+        if (!$common_id) {
             ds_json_encode(10001, lang('param_error'));
         }
         $goods_model = model('goods');
@@ -668,46 +663,46 @@ class Goods extends AdminControl {
         }
         if (request()->isPost()) {
             Db::startTrans();
-            try{
-                $spec=input('param.spec/a');
-                $min_item=array();
-                foreach($spec as $goods_id => $val){
-                    $data=array(
-                        'goods_storage'=> abs(intval($val['stock'])),
-                        'goods_storage_alarm'=> abs(intval($val['alarm'])),
-                        'goods_serial'=> $val['sku'],
+            try {
+                $spec = input('param.spec/a');
+                $min_item = array();
+                foreach ($spec as $goods_id => $val) {
+                    $data = array(
+                        'goods_storage' => abs(intval($val['stock'])),
+                        'goods_storage_alarm' => abs(intval($val['alarm'])),
+                        'goods_serial' => $val['sku'],
                     );
-                    if(!$goodscommon_info['goods_lock']){
+                    if (!$goodscommon_info['goods_lock']) {
                         $data['goods_marketprice'] = abs(floatval($val['marketprice']));
-                        $data['goods_price']=abs(floatval($val['price']));
+                        $data['goods_price'] = abs(floatval($val['price']));
                         $data['goods_promotion_price'] = abs(floatval($val['price']));
-                        if($data['goods_price']==0){
+                        if ($data['goods_price'] == 0) {
                             throw new \think\Exception(lang('prompt_information4'), 10006);
                         }
-                        if($data['goods_marketprice']>0 && $data['goods_price']>$data['goods_marketprice']){
+                        if ($data['goods_marketprice'] > 0 && $data['goods_price'] > $data['goods_marketprice']) {
                             throw new \think\Exception(lang('not_higher_than'), 10006);
                         }
-                        if(empty($min_item) || $min_item['goods_price']>$data['goods_price']){
-                            $min_item=$data;
+                        if (empty($min_item) || $min_item['goods_price'] > $data['goods_price']) {
+                            $min_item = $data;
                         }
                     }
-                    $goods_model->editGoods($data, array('goods_commonid'=>$common_id,'goods_id'=>$goods_id));
+                    $goods_model->editGoods($data, array('goods_commonid' => $common_id, 'goods_id' => $goods_id));
                 }
                 //最低价格
-                if(!empty($min_item)){
-                    $goods_model->editGoodsCommon(array('goods_discount' => $min_item['goods_marketprice']>0?intval($min_item['goods_price'] / $min_item['goods_marketprice'] * 100):0, 'goods_marketprice' => $min_item['goods_marketprice'], 'goods_price' => $min_item['goods_price']),array('goods_commonid'=>$common_id));
+                if (!empty($min_item)) {
+                    $goods_model->editGoodsCommon(array('goods_discount' => $min_item['goods_marketprice'] > 0 ? intval($min_item['goods_price'] / $min_item['goods_marketprice'] * 100) : 0, 'goods_marketprice' => $min_item['goods_marketprice'], 'goods_price' => $min_item['goods_price']), array('goods_commonid' => $common_id));
                 }
-                
-            }catch(\Exception $e){
+                Db::commit();
+            } catch (\Exception $e) {
                 Db::rollback();
-                ds_json_encode(10001,$e->getMessage());
+                ds_json_encode(10001, $e->getMessage());
             }
-            Db::commit();
+            
             ds_json_encode(10000, lang('ds_common_op_succ'));
-        }else{
-            View::assign('goodscommon_info',$goodscommon_info);
-            $goods_list=$goods_model->getGoodsList(array('goods_commonid'=>$common_id));
-            View::assign('goods_list',$goods_list);
+        } else {
+            View::assign('goodscommon_info', $goodscommon_info);
+            $goods_list = $goods_model->getGoodsList(array('goods_commonid' => $common_id));
+            View::assign('goods_list', $goods_list);
             return View::fetch($this->template_dir . 'edit_storage');
         }
     }
@@ -726,9 +721,9 @@ class Goods extends AdminControl {
             $this->error('您的商品不存在，或商品已被锁定，请删除促销解除锁定');
         }
         $spec_value = unserialize($common_list['spec_value']);
-        if(isset($spec_value[1])){
+        if (isset($spec_value[1])) {
             View::assign('spec_value', $spec_value);
-        }else{
+        } else {
             View::assign('spec_value', null);
         }
         View::assign('spec_value', $spec_value);
@@ -743,7 +738,7 @@ class Goods extends AdminControl {
                 if (isset($image_list[$val['color_id']])) {
                     $image_array[$val['color_id']] = $image_list[$val['color_id']];
                 } else {
-                    $image_array[$val['color_id']][0]['goodsimage_url'] = isset($val['goodsimage_url'])?$val['goodsimage_url']:'';
+                    $image_array[$val['color_id']][0]['goodsimage_url'] = isset($val['goodsimage_url']) ? $val['goodsimage_url'] : '';
                     $image_array[$val['color_id']][0]['goodsimage_sort'] = 0;
                     $image_array[$val['color_id']][0]['goodsimage_isdefault'] = 1;
                 }
@@ -752,9 +747,8 @@ class Goods extends AdminControl {
         }
         View::assign('img', $image_array);
 
-
         $spec_model = model('spec');
-        $value_array = $spec_model->getSpecvalueList(array(array('spvalue_id','in', $colorid_array)), 'spvalue_id,spvalue_name');
+        $value_array = $spec_model->getSpecvalueList(array(array('spvalue_id', 'in', $colorid_array)), 'spvalue_id,spvalue_name');
         if (empty($value_array)) {
             $value_array[] = array('spvalue_id' => '0', 'spvalue_name' => '无颜色');
         }
@@ -773,9 +767,9 @@ class Goods extends AdminControl {
     public function edit_save_image() {
         if (request()->isPost()) {
             $common_id = intval(input('param.commonid'));
-            $img_array = input('post.img/a');#获取数组
+            $img_array = input('post.img/a'); #获取数组
             if ($common_id <= 0 || empty($img_array)) {
-                ds_json_encode(10001,lang('param_error'));
+                ds_json_encode(10001, lang('param_error'));
             }
             $goods_model = model('goods');
             // 删除原有图片信息
@@ -814,10 +808,10 @@ class Goods extends AdminControl {
             $rs = $goods_model->addGoodsImagesAll($insert_array);
             if ($rs) {
                 // 添加操作日志
-                $this->log('编辑商品，平台货号：' . $common_id,1);
-                ds_json_encode(10000,lang('ds_common_op_succ'));
+                $this->log('编辑商品，平台货号：' . $common_id, 1);
+                ds_json_encode(10000, lang('ds_common_op_succ'));
             } else {
-                ds_json_encode(10001,lang('ds_common_save_fail'));
+                ds_json_encode(10001, lang('ds_common_save_fail'));
             }
         }
     }
@@ -852,15 +846,15 @@ class Goods extends AdminControl {
         if (request()->isPost()) {
             $common_id = $this->checkRequestCommonId(input('param.commonid'));
             $commonid_array = explode(',', $common_id);
-            $where = array(array('goods_commonid','in', $commonid_array));
+            $where = array(array('goods_commonid', 'in', $commonid_array));
             $update = array('goods_advword' => trim(input('post.g_jingle')));
             $return = model('goods')->editProducesNoLock($where, $update);
             if ($return) {
                 // 添加操作日志
-                $this->log('设置广告词，平台货号：' . $common_id,1);
-                ds_json_encode(10000,lang('ds_common_op_succ'));
+                $this->log('设置广告词，平台货号：' . $common_id, 1);
+                ds_json_encode(10000, lang('ds_common_op_succ'));
             } else {
-                ds_json_encode(10001,lang('ds_common_op_fail'));
+                ds_json_encode(10001, lang('ds_common_op_fail'));
             }
         }
         $this->checkRequestCommonId(input('param.commonid'));
@@ -880,7 +874,7 @@ class Goods extends AdminControl {
         $goodscommon_info = $goods_model->getGoodsCommonInfoByID($common_id);
 
         // 商品列表
-        $goods_array = $goods_model->getGoodsListForPromotion(array(array('goods_commonid' ,'=', $common_id)), '*', 0, 'gift');
+        $goods_array = $goods_model->getGoodsListForPromotion(array(array('goods_commonid', '=', $common_id)), '*', 0, 'gift');
         View::assign('goods_array', $goods_array);
 
         // 赠品列表
@@ -902,21 +896,21 @@ class Goods extends AdminControl {
      */
     public function save_gift() {
         if (!request()->isPost()) {
-            ds_json_encode(10001,lang('param_error'));
+            ds_json_encode(10001, lang('param_error'));
         }
-        $gift_array = input('post.gift/a',array());
+        $gift_array = input('post.gift/a', array());
         $commonid = intval(input('param.commonid'));
         if ($commonid <= 0) {
-            ds_json_encode(10001,lang('param_error'));
+            ds_json_encode(10001, lang('param_error'));
         }
 
         $goods_model = model('goods');
         $goodsgift_model = model('goodsgift');
 
         // 验证商品是否存在
-        $goods_list = $goods_model->getGoodsListForPromotion(array(array('goods_commonid' ,'=', $commonid)), 'goods_id', 0, 'gift');
+        $goods_list = $goods_model->getGoodsListForPromotion(array(array('goods_commonid', '=', $commonid)), 'goods_id', 0, 'gift');
         if (empty($goods_list)) {
-            ds_json_encode(10001,lang('param_error'));
+            ds_json_encode(10001, lang('param_error'));
         }
         // 删除该商品原有赠品
         $goodsgift_model->delGoodsgift(array('goods_commonid' => $commonid));
@@ -961,10 +955,10 @@ class Goods extends AdminControl {
         if (!empty($insert))
             $goodsgift_model->addGoodsgiftAll($insert);
         // 更新商品赠品标记
-        if (!empty($update_goodsid)){
+        if (!empty($update_goodsid)) {
             $goods_model->editGoodsById(array('is_have_gift' => 1), $update_goodsid);
         }
-        ds_json_encode(10000,lang('ds_common_save_succ'));
+        ds_json_encode(10000, lang('ds_common_save_succ'));
     }
 
     /**
@@ -981,7 +975,7 @@ class Goods extends AdminControl {
             $this->error(lang('param_error'), url('Goods/index'));
         }
 
-        $goods_array = $goods_model->getGoodsListForPromotion(array(array('goods_commonid' ,'=', $common_id)), '*', 0, 'combo');
+        $goods_array = $goods_model->getGoodsListForPromotion(array(array('goods_commonid', '=', $common_id)), '*', 0, 'combo');
         View::assign('goods_array', $goods_array);
 
         // 推荐组合商品列表
@@ -993,7 +987,7 @@ class Goods extends AdminControl {
             }
         }
 
-        $combo_goods_array = $goods_model->getGeneralGoodsList(array(array('goods_id','in', $combo_goodsid_array)), 'goods_id,goods_name,goods_image,goods_price');
+        $combo_goods_array = $goods_model->getGeneralGoodsList(array(array('goods_id', 'in', $combo_goodsid_array)), 'goods_id,goods_name,goods_image,goods_price');
         $combo_goods_list = array();
         if (!empty($combo_goods_array)) {
             foreach ($combo_goods_array as $val) {
@@ -1016,23 +1010,23 @@ class Goods extends AdminControl {
      */
     public function save_combo() {
         if (!request()->isPost()) {
-            ds_json_encode(10001,lang('param_error'));
+            ds_json_encode(10001, lang('param_error'));
         }
 
-        $combo_array = input('post.combo/a');#获取数组
-        
+        $combo_array = input('post.combo/a'); #获取数组
+
         $commonid = intval(input('param.commonid'));
         if ($commonid <= 0) {
-            ds_json_encode(10001,lang('param_error'));
+            ds_json_encode(10001, lang('param_error'));
         }
 
         $goods_model = model('goods');
         $goodscombo_model = model('goodscombo');
 
         // 验证商品是否存在
-        $goods_list = $goods_model->getGoodsListForPromotion(array(array('goods_commonid' ,'=', $commonid)), 'goods_id', 0, 'combo');
+        $goods_list = $goods_model->getGoodsListForPromotion(array(array('goods_commonid', '=', $commonid)), 'goods_id', 0, 'combo');
         if (empty($goods_list)) {
-            ds_json_encode(10001,lang('param_error'));
+            ds_json_encode(10001, lang('param_error'));
         }
         // 删除该商品原有赠品
         $goodscombo_model->delGoodscombo(array('goods_commonid' => $commonid));
@@ -1071,7 +1065,7 @@ class Goods extends AdminControl {
             // 插入数据
             $goodscombo_model->addGoodscomboAll($insert);
         }
-        ds_json_encode(10000,lang('ds_common_save_succ'));
+        ds_json_encode(10000, lang('ds_common_save_succ'));
     }
 
     /**
@@ -1081,13 +1075,14 @@ class Goods extends AdminControl {
         $where = array();
         $name = input('param.name');
         if ($name) {
-            $where[] = array('goods_name','like', '%' . $name . '%');
+            $where[] = array('goods_name', 'like', '%' . $name . '%');
         }
         $goods_model = model('goods');
         $goods_list = $goods_model->getGeneralGoodsList($where, '*', 5);
         View::assign('show_page', $goods_model->page_info->render());
         View::assign('goods_list', $goods_list);
-        echo View::fetch('goods_edit_search_goods');exit;
+        echo View::fetch('goods_edit_search_goods');
+        exit;
     }
 
     /**
@@ -1127,7 +1122,7 @@ class Goods extends AdminControl {
      */
     private function checkRequestCommonId($common_ids) {
         if (!preg_match('/^[\d,]+$/i', $common_ids)) {
-            ds_json_encode(10001,lang('param_error'));
+            ds_json_encode(10001, lang('param_error'));
         }
         return $common_ids;
     }
@@ -1144,7 +1139,7 @@ class Goods extends AdminControl {
             ),
             array(
                 'name' => 'lockup',
-                'text' => '仓库商品',
+                'text' => '下架商品',
                 'url' => url('Goods/index', ['type' => 'lockup'])
             ),
             array(
@@ -1187,7 +1182,6 @@ class Goods extends AdminControl {
         }
         return $item_list;
     }
-
 }
 
 ?>

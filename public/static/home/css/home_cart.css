@@ -166,29 +166,6 @@ a:hover.dsc-btn-black { background-color: #222222; border-color: #1F1F1F #1F1F1F
 .dsc-candidate-items label i { font-size: 14px; margin-right: 2px;}
 .dsc-candidate-items .del { color: #ff4040;}
 .dsc-selected-item { background-color: #FFF5CC; font-size: 12px;}
-/* 支付方式 */
-.dsc-offpay-list { padding: 0 15px;}
-.dsc-offpay-list:hover { background-color: #FFFDEE;}
-.dsc-offpay-list dt { font: 12px/20px arial,"microsoft yahei"; color: #333; height: 20px; padding: 10px 0; }
-.dsc-offpay-list dt strong { font-size: 14px; font-weight: 600; color: #F30; margin: 0 2px;}
-.dsc-offpay-list dd { border-bottom: dotted 1px #E7E7E7;}
-.dsc-offpay-list ul { font-size: 0; *word-spacing:-1px/*IE6、7*/; width: 350px; display: inline-block; *display: inline/*IE7*/; zoom: 1; }
-.dsc-offpay-list ul li { vertical-align: top; letter-spacing: normal; word-spacing: normal; text-align: right; display: inline-block; *display: inline/*IE7*/; width: 42px; height: 42px; margin: 0 8px 8px 0; zoom: 1;}
-
-.dsc-offpay-list ul li span { line-height: 0; background-color: #FFF; text-align: center; vertical-align: middle; display: table-cell; *display: block; width: 40px; height: 40px; border: solid 1px #CCC; overflow: hidden;}
-.dsc-offpay-list ul li span img { max-width: 40px; max-height: 40px; margin-top:expression(40-this.height/2); *margin-top:expression(20-this.height/2)/*IE6,7*/;}
-.dsc-offpay-list label { display: inline-block; *display: inline/*IE7*/; zoom: 1; margin: 15px; vertical-align: top; }
-
-.dsc-payment-showgoods { line-height: 20px; color: #005EA7; display: inline-block; padding: 0 5px;}
-.dsc-payment-showgoods:hover { text-decoration: none; color: #FFF; background: #ff4040; }
-.dsc-payment-showgoods i { font-size: 14px; margin-right: 4px;}
-.dsc-payment-showgoods-list { background-color: #FFF9D4; display: none; width: 270px; border: solid 1px #FEC500; position: absolute; z-index: 99;}
-.dsc-payment-showgoods-list dl { display: block; clear: both; padding: 0 10px 5px 10px; overflow: hidden;}
-.dsc-payment-showgoods-list dt { font-weight: 600; line-height: 20px; color: #ff4040; display: block; border-bottom: dotted 1px #FEC500; margin-top: 5px;}
-.dsc-payment-showgoods-list dd { display: block; margin-top: 3px;}
-.dsc-payment-showgoods-list .goods-thumb { vertical-align: top; letter-spacing: normal; word-spacing: normal; text-align: right; display: inline-block; *display: inline/*IE7*/; width: 32px; height: 32px; margin: 0 3px 3px 0; zoom: 1;}
-.dsc-payment-showgoods-list .goods-thumb span { line-height: 0; background-color: #FFF; text-align: center; vertical-align: middle; display: table-cell; *display: block; width: 30px; height: 30px; float: left; border: solid 1px #FEC500; overflow: hidden;}
-.dsc-payment-showgoods-list .goods-thumb span img { max-width: 30px; max-height: 30px; margin-top:expression(30-this.height/2); *margin-top:expression(15-this.height/2)/*IE6,7*/;}
 
 .dsc-table-style td h3 { float: left; width: 340px; font-size: 12px; font-weight: normal; padding-left: 20px; }
 .dsc-table-style td h3 a { display: block; margin-bottom: 5px; color: #333; text-decoration: none; }

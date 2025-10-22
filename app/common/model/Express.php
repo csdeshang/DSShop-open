@@ -156,20 +156,46 @@ class Express extends BaseModel {
      * 快递查询
      */
     public function queryExpress($express_code,$shipping_code,$phone = ''){
+        
+        //默认只有快递鸟,后期可新增
+        $result = $this->queryExpressKdniao($express_code,$shipping_code,$phone);
+        
+        return $result;
+    }
+    
+    //快递鸟 返回物流信息
+    private function queryExpressKdniao($express_code,$shipping_code,$phone = ''){
+        
         if ($express_code == 'SF'){
             $phone = ds_substing($phone,7,4);
         }
         $requestData= "{'OrderCode':'','ShipperCode':'".$express_code."','LogisticCode':'".$shipping_code."','CustomerName':'".$phone."'}";
         $datas = array(
             'EBusinessID' => config('ds_config.expresscf_kdn_id'),
-            'RequestType' => config('ds_config.expresscf_kdn_type'),//1002即时查询 8002快递查询
-            'RequestType' => '1002',
+            'RequestType' => config('ds_config.expresscf_kdn_type'),//1002即时查询 8002快递查询  
             'RequestData' => urlencode($requestData) ,
             'DataType' => '2',
             'DataSign' => urlencode(base64_encode(md5($requestData.config('ds_config.expresscf_kdn_key'))))
         );
         $result = http_request('http://api.kdniao.com/Ebusiness/EbusinessOrderHandle.aspx','post',$datas);
-        return json_decode($result, true);
+        $result = json_decode($result, true);
+        
+        //对获取数据格式处理
+        if ($result['Success'] != true) {
+            return array();
+        }
+        $content['Traces'] = array_reverse($result['Traces']);
+        $output = array();
+        if (is_array($content['Traces'])) {
+            foreach ($content['Traces'] as $k => $v) {
+                if ($v['AcceptTime'] == '')
+                    continue;
+                //$output[] = $v['time'] . '&nbsp;&nbsp;' . $v['context'];
+                $output[$k]['trace_time'] = $v['AcceptTime'];
+                $output[$k]['trace_desc'] = $v['AcceptStation'];
+            }
+        }
+        return $output;
     }
 }
 

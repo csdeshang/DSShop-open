@@ -224,7 +224,7 @@ class Ppintuan extends BaseModel {
 
         $condition[]=array('pintuan_state','=',self::PINTUAN_STATE_NORMAL);
 
-        $updata = array();
+        $update = array();
         $update['pintuan_state'] = self::PINTUAN_STATE_CLOSE;
         $this->editPintuan($update, $condition);
         return true;

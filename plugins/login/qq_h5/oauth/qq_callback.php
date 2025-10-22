@@ -8,8 +8,8 @@ function qq_callback()
     {
         //构造请求获取access_token的url
         $token_url = "https://graph.qq.com/oauth2.0/token?grant_type=authorization_code&"
-            . "client_id=" . session('appid'). "&redirect_uri=" . urlencode(session('callback'))
-            . "&client_secret=" . session('appkey'). "&code=" . input('param.code');
+            . "client_id=" . session('qq_appid'). "&redirect_uri=" . urlencode(session('qq_callback'))
+            . "&client_secret=" . session('qq_appkey'). "&code=" . input('param.code');
 
         $response = get_url_contents($token_url);
         if (strpos($response, "callback") !== false)
@@ -29,7 +29,7 @@ function qq_callback()
         parse_str($response, $params);
 
         //set access token to session
-       session('access_token',$params["access_token"]);
+       session('qq_access_token',$params["access_token"]);
 
     }
     else 
@@ -41,7 +41,7 @@ function qq_callback()
 function get_openid()
 {
     //构造请求获取openid的url
-    $graph_url = "https://graph.qq.com/oauth2.0/me?access_token=" . session('access_token');
+    $graph_url = "https://graph.qq.com/oauth2.0/me?access_token=" . session('qq_access_token');
     $str  = get_url_contents($graph_url);
     if (strpos($str, "callback") !== false)
     {
@@ -59,7 +59,7 @@ function get_openid()
 
 
     //set openid to session
-    session('openid',$user->openid);
+    session('qq_openid',$user->openid);
 }
 
 //QQ登录成功后的回调地址,主要保存access token

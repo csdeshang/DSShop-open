@@ -28,7 +28,7 @@
                             <input type="radio" {if $config.value == '0'}checked="checked"{/if} value="0" name="cfg_value['key_{$key}']" id="{$config.name}0">
                         </div>
                         {elseif $config.type == 'textarea'}
-                        <textarea name="cfg_value['key_{$key}']" style="width:520px;height:100px;">{$config.value}</textarea>
+                        <textarea name="cfg_value['key_{$key}']" style="width:350px;height:80px;">{$config.value}</textarea>
                         {/if}
                         <input name="cfg_name['key_{$key}']" type="hidden" value="{$config.name}" />
                     </td>

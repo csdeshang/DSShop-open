@@ -29,31 +29,36 @@ function model($name, $layer = 'model') {
 }
 
 /**
+ * 过滤特殊字符
+ * @param type $clean_text
+ * @return type
+ */
+function remove_special_words($clean_text) {
+    //不过滤变量
+    $filter = ['modify_pwd', 'modify_mobile', 'modify_email','modify_paypwd', 'unionpay', 'unionpay_h5',];
+    if(in_array($clean_text, $filter)){
+        return $clean_text;
+    }
+    
+    $farr = [
+            "/select|join|where|drop|like|modify|rename|insert|update|table|database|alter|truncate|union|into|load_file|outfile/is"
+        ];
+    $clean_text = preg_replace($farr, '', $clean_text);
+    return $clean_text;
+}
+
+/**
  * 去除特殊表情符号
  * @param type $string
  * @return type
  */
 function removeEmojis($clean_text) {
-    // Match Emoticons
-    $regexEmoticons = '/[\x{1F600}-\x{1F64F}]/u';
-    $clean_text = preg_replace($regexEmoticons, '', $clean_text);
-
-    // Match Miscellaneous Symbols and Pictographs
-    $regexSymbols = '/[\x{1F300}-\x{1F5FF}]/u';
-    $clean_text = preg_replace($regexSymbols, '', $clean_text);
-
-    // Match Transport And Map Symbols
-    $regexTransport = '/[\x{1F680}-\x{1F6FF}]/u';
-    $clean_text = preg_replace($regexTransport, '', $clean_text);
-
-    // Match Miscellaneous Symbols
-    $regexMisc = '/[\x{2600}-\x{26FF}]/u';
-    $clean_text = preg_replace($regexMisc, '', $clean_text);
-
-    // Match Dingbats
-    $regexDingbats = '/[\x{2700}-\x{27BF}]/u';
-    $clean_text = preg_replace($regexDingbats, '', $clean_text);
-
+    $clean_text = preg_replace_callback(//执行一个正则表达式搜索并且使用一个回调进行替换
+            '/./u',
+            function (array $match) {
+                return strlen($match[0]) >= 4 ? '' : $match[0];
+            },
+            $clean_text);
     return $clean_text;
 }
 
@@ -251,7 +256,7 @@ function ds_encrypt($txt, $key = '') {
     if (empty($txt))
         return $txt;
     if (empty($key))
-        $key = md5(config('ds_config.setup_date'));
+        $key = md5(config('ds_config.site_uniqid'));
     $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.";
     $ikey = "-x6g6ZWm2G9g_vr0Bo.pOq3kRIxsZ6rm";
     $nh1 = rand(0, 64);
@@ -296,7 +301,7 @@ function ds_decrypt($txt, $key = '', $ttl = 0) {
     if (empty($txt))
         return $txt;
     if (empty($key))
-        $key = md5(config('ds_config.setup_date'));
+        $key = md5(config('ds_config.site_uniqid'));
 
     $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.";
     $ikey = "-x6g6ZWm2G9g_vr0Bo.pOq3kRIxsZ6rm";
@@ -499,12 +504,16 @@ function get_member_id_by_XDSKEY() {
     if (!$key) {
         return;
     }
-    $mbusertoken_model = model('mbusertoken');
-    $mb_user_token_info = $mbusertoken_model->getMbusertokenInfoByToken($key);
-    if (empty($mb_user_token_info)) {
+    
+    $condition = array();
+    $condition[] = array('platform_type', '=', 'member');
+    $condition[] = array('platform_token', '=', $key);
+
+    $platformtoken_info = model('platformtoken')->getPlatformtokenInfo($condition);
+    if (empty($platformtoken_info)) {
         return;
     } else {
-        return $mb_user_token_info['member_id'];
+        return $platformtoken_info['platform_userid'];
     }
 }
 
@@ -835,32 +844,6 @@ function dsLayerOpenSuccess($msg = '', $url = '') {
     exit;
 }
 
-/**
- * 移除微信昵称中的emoji字符
- * @param type $nickname
- * @return type
- */
-function removeEmoji($nickname) {
-    $clean_text = "";
-    // Match Emoticons
-    $regexEmoticons = '/[\x{1F600}-\x{1F64F}]/u';
-    $clean_text = preg_replace($regexEmoticons, '', $nickname);
-    // Match Miscellaneous Symbols and Pictographs
-    $regexSymbols = '/[\x{1F300}-\x{1F5FF}]/u';
-    $clean_text = preg_replace($regexSymbols, '', $clean_text);
-    // Match Transport And Map Symbols
-    $regexTransport = '/[\x{1F680}-\x{1F6FF}]/u';
-    $clean_text = preg_replace($regexTransport, '', $clean_text);
-    // Match Miscellaneous Symbols
-    $regexMisc = '/[\x{2600}-\x{26FF}]/u';
-    $clean_text = preg_replace($regexMisc, '', $clean_text);
-    // Match Dingbats
-    $regexDingbats = '/[\x{2700}-\x{27BF}]/u';
-    $clean_text = preg_replace($regexDingbats, '', $clean_text);
-    //截取指定长度的昵称
-    $clean_text = ds_substing($clean_text, 0, 20);
-    return trim($clean_text);
-}
 
 /**
  * 截取指定长度的字符
@@ -892,25 +875,6 @@ function ds_delete_param($ids) {
     }
 }
 
-/**
- * 某县级地区是否支持货到付款
- * $area_id 地区ID
- */
-function ds_support_offpay($area_id) {
-    if (empty($area_id))
-        return false;
-    $area = config('ds_config.distribution_area');
-    if (!empty($area)) {
-        $area_id_array = unserialize($area);
-    } else {
-        $area_id_array = array();
-    }
-    if (empty($area_id_array)) {
-        $area_id_array = array();
-    }
-    $res[1] = in_array($area_id, $area_id_array) ? true : false;
-    return $res;
-}
 
 
 function word_filter_access_token(){
@@ -1018,4 +982,77 @@ function image_filter($img_url) {
         }
     }
     return ds_callback(true, '', $data);
+}
+
+
+//根据USER_AGENT 获取系统名称
+function getOSFromUserAgent() {
+    $userAgent = $_SERVER['HTTP_USER_AGENT'];
+    $osPatterns = array(
+        '/windows nt 6.2/i' => 'Windows 8',
+        '/windows nt 6.1/i' => 'Windows 7',
+        '/windows nt 6.0/i' => 'Windows Vista',
+        '/windows nt 5.2/i' => 'Windows Server 2003/XP x64',
+        '/windows nt 5.1/i' => 'Windows XP',
+        '/windows xp/i' => 'Windows XP',
+        '/windows nt 5.0/i' => 'Windows 2000',
+        '/windows me/i' => 'Windows ME',
+        '/win98/i' => 'Windows 98',
+        '/win95/i' => 'Windows 95',
+        '/win16/i' => 'Windows 3.11',
+        '/macintosh|mac os x/i' => 'Mac OS X',
+        '/mac_powerpc/i' => 'Mac OS 9',
+        '/linux/i' => 'Linux',
+        '/unix/i' => 'Unix',
+        '/sunos/i' => 'SunOS',
+        '/bsd/i' => 'FreeBSD',
+        '/ibm/i' => 'IBM OS/2',
+        '/applewebkit/i' => 'Apple WebKit',
+        '/chrome/i' => 'Chrome',
+        '/safari/i' => 'Safari',
+        '/opera/i' => 'Opera',
+        '/opera mobi/i' => 'Opera Mobile',
+        '/opera mini/i' => 'Opera Mini',
+        '/konqueror/i' => 'Konqueror',
+        '/mozilla/i' => 'Mozilla Firefox',
+        '/seamonkey/i' => 'SeaMonkey',
+        '/firefox/i' => 'Mozilla Firefox',
+        '/msie/i' => 'Internet Explorer',
+        '/netscape/i' => 'Netscape',
+        '/maxthon/i' => 'Maxthon',
+        '/tencent traveler/i' => 'Tencent Traveler',
+        '/trident/i' => 'Trident',
+        '/realplayer/i' => 'RealPlayer',
+        '/flashget/i' => 'FlashGet',
+        '/java/i' => 'Java',
+        '/curl/i' => 'cURL',
+        '/wget/i' => 'Wget',
+        '/googlebot/i' => 'Googlebot',
+    );
+    foreach ($osPatterns as $pattern => $os) {
+        if (preg_match($pattern, $userAgent)) {
+            return $os;
+        }
+    }   
+    return '未知系统';
+}
+
+//获取来源
+function get_clienttype(){
+    return request()->header('from-clienttype') != null? request()->header('from-clienttype'):'unknow';
+}
+
+//获取指定长度的随机字符串
+function get_rand_str($length = 6) {
+    $chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    $str = '';
+    for ($i = 0; $i < $length; $i++) {
+        $str .= $chars[mt_rand(0, strlen($chars) - 1)];
+    }
+    return $str;
+}
+
+//获取随机昵称
+function get_rand_nickname($prefix='昵称'){
+    return $prefix.rand(100000,999999);
 }

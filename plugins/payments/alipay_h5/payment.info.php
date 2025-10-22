@@ -11,9 +11,9 @@ return array(
     'payment_version' => '1.0',
     'payment_config' => array(
         array('name' => 'alipay_appid', 'type' => 'text', 'value' => '', 'desc' => '描述'),
-        array('name' => 'app_cert_path', 'type' => 'text', 'value' => '', 'desc' => '描述'),
-        array('name' => 'alipay_cert_path', 'type' => 'text', 'value' => '', 'desc' => '描述'),
-        array('name' => 'root_cert_path', 'type' => 'text', 'value' => '', 'desc' => '描述'),
+        array('name' => 'app_cert_path', 'type' => 'textarea', 'value' => '', 'desc' => '描述'),
+        array('name' => 'alipay_cert_path', 'type' => 'textarea', 'value' => '', 'desc' => '描述'),
+        array('name' => 'root_cert_path', 'type' => 'textarea', 'value' => '', 'desc' => '描述'),
         array('name' => 'private_key', 'type' => 'password', 'value' => '', 'desc' => '描述'),
     ),
 );

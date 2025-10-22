@@ -1,9 +1,11 @@
 <?php
 
 namespace app\admin\controller;
+
 use think\facade\View;
 use think\facade\Lang;
 use think\facade\Db;
+
 /**
  * ============================================================================
  * DSShop单店铺商城
@@ -16,37 +18,34 @@ use think\facade\Db;
  * ============================================================================
  * 控制器
  */
-class Order extends AdminControl
-{
+class Order extends AdminControl {
 
     const EXPORT_SIZE = 1000;
 
-    public function initialize()
-    {
+    public function initialize() {
         parent::initialize();
         Lang::load(base_path() . 'admin/lang/' . config('lang.default_lang') . '/order.lang.php');
     }
 
-    public function index()
-    {
+    public function index() {
         $order_model = model('order');
         $condition = array();
 
         $order_sn = input('param.order_sn');
         if ($order_sn) {
-            $condition[] = array('order_sn','=',$order_sn);
+            $condition[] = array('order_sn', '=', $order_sn);
         }
         $order_state = input('param.order_state');
         if (in_array($order_state, array('0', '10', '20', '30', '40'))) {
-            $condition[] = array('order_state','=',$order_state);
+            $condition[] = array('order_state', '=', $order_state);
         }
         $payment_code = input('param.payment_code');
         if ($payment_code) {
-            $condition[] = array('payment_code','=',$payment_code);
+            $condition[] = array('payment_code', '=', $payment_code);
         }
         $buyer_name = input('param.buyer_name');
         if ($buyer_name) {
-            $condition[] = array('buyer_name','=',$buyer_name);
+            $condition[] = array('buyer_name', '=', $buyer_name);
         }
         $query_start_time = input('param.query_start_time');
         $query_end_time = input('param.query_end_time');
@@ -55,10 +54,10 @@ class Order extends AdminControl
         $start_unixtime = $if_start_time ? strtotime($query_start_time) : null;
         $end_unixtime = $if_end_time ? strtotime($query_end_time) : null;
         if ($start_unixtime) {
-            $condition[] = array('add_time','>=',$start_unixtime);
+            $condition[] = array('add_time', '>=', $start_unixtime);
         }
         if ($end_unixtime) {
-            $condition[] = array('add_time','<=',$end_unixtime);
+            $condition[] = array('add_time', '<=', $end_unixtime);
         }
         $order_list = $order_model->getOrderList($condition, 10);
         View::assign('show_page', $order_model->page_info->render());
@@ -88,14 +87,13 @@ class Order extends AdminControl
     /**
      * 查看订单
      */
-    public function order_print()
-    {
+    public function order_print() {
         $order_id = ds_delete_param(input('param.order_id'));
         if (empty($order_id)) {
             $this->error(lang('param_error'));
         }
         $order_model = model('order');
-        $condition[] = array('order_id','in',$order_id);
+        $condition[] = array('order_id', 'in', $order_id);
         $order_list = $order_model->getOrderList($condition, '', '*', 'order_id desc', 0, array('order_common', 'order_goods'));
         if (empty($order_list)) {
             $this->error(lang('member_printorder_ordererror'));
@@ -103,7 +101,7 @@ class Order extends AdminControl
 
 
         //订单商品
-        foreach($order_list as $key =>$order_info){
+        foreach ($order_list as $key => $order_info) {
             $goods_all_num = 0;
             $goods_total_price = 0;
             if (isset($order_info['extend_order_goods']) && !empty($order_info['extend_order_goods'])) {
@@ -112,7 +110,7 @@ class Order extends AdminControl
                     $goods_all_num += $v['goods_num'];
                     $v['goods_all_price'] = ds_price_format($v['goods_num'] * $v['goods_price']);
                     $goods_total_price += $v['goods_all_price'];
-                    $order_list[$key]['extend_order_goods'][$k]=$v;
+                    $order_list[$key]['extend_order_goods'][$k] = $v;
                 }
                 //优惠金额
                 $order_list[$key]['promotion_amount'] = $goods_total_price - $order_info['goods_amount'];
@@ -120,11 +118,10 @@ class Order extends AdminControl
                 $order_list[$key]['goods_total_price'] = ds_price_format($goods_total_price);
                 $order_list[$key]['total_page'] = ceil(count($order_info['extend_order_goods']) / 15);
             }
-            
         }
         View::assign('order_list', $order_list);
-        View::assign('seal_printexplain',config('ds_config.seal_printexplain'));
-        View::assign('seal_img',config('ds_config.seal_img')?ds_get_pic(DIR_ADMIN,config('ds_config.seal_img')):'');
+        View::assign('seal_printexplain', config('ds_config.seal_printexplain'));
+        View::assign('seal_img', config('ds_config.seal_img') ? ds_get_pic(DIR_ADMIN, config('ds_config.seal_img')) : '');
         $this->setAdminCurItem();
         return View::fetch('order_print');
     }
@@ -133,8 +130,7 @@ class Order extends AdminControl
      * 平台订单状态操作
      *
      */
-    public function change_state()
-    {
+    public function change_state() {
         $order_id = intval(input('param.order_id'));
         if ($order_id <= 0) {
             $this->error(lang('miss_order_number'));
@@ -143,13 +139,13 @@ class Order extends AdminControl
 
         //获取订单详细
         $condition = array();
-        $condition[] = array('order_id','=',$order_id);
+        $condition[] = array('order_id', '=', $order_id);
         $order_info = $order_model->getOrderInfo($condition);
 
         $state_type = input('param.type_state');
         if ($state_type == 'cancel') {
             $result = $this->_order_cancel($order_info);
-            if ($result['code']){
+            if ($result['code']) {
                 ds_json_encode(10000, $result['msg']);
             }
         } elseif ($state_type == 'spay_price') {
@@ -168,26 +164,26 @@ class Order extends AdminControl
         }
     }
 
-
     /**
      * 系统取消订单
      */
-    private function _order_cancel($order_info)
-    {
+    private function _order_cancel($order_info) {
         $order_model = model('order');
         $logic_order = model('order', 'logic');
         $if_allow = $order_model->getOrderOperateState('system_cancel', $order_info);
         if (!$if_allow) {
             return ds_callback(false, '无权操作');
         }
-        try{
-            Db::startTrans();
+        Db::startTrans();
+        try {
+
             $logic_order->changeOrderStateCancel($order_info, 'system', $this->admin_info['admin_name']);
+            Db::commit();
         } catch (\Exception $e) {
             Db::rollback();
             return ds_callback(false, $e->getMessage());
         }
-        Db::commit();
+
         $this->log(lang('order_log_cancel') . ',' . lang('order_number') . ':' . $order_info['order_sn'], 1);
         return ds_callback(true, lang('ds_common_op_succ'));
     }
@@ -195,13 +191,12 @@ class Order extends AdminControl
     /**
      * 修改发货地址
      */
-    private function _edit_order_daddress($daddress_id, $order_id)
-    {
+    private function _edit_order_daddress($daddress_id, $order_id) {
         $order_model = model('order');
         $data = array();
         $data['daddress_id'] = intval($daddress_id);
         $condition = array();
-        $condition[] = array('order_id','=',$order_id);
+        $condition[] = array('order_id', '=', $order_id);
         return $order_model->editOrdercommon($data, $condition);
     }
 
@@ -209,8 +204,7 @@ class Order extends AdminControl
      * 修改商品价格
      * @param unknown $order_info
      */
-    private function _order_spay_price($order_info, $post)
-    {
+    private function _order_spay_price($order_info, $post) {
         $order_model = model('order');
         $logic_order = model('order', 'logic');
         if (!request()->isPost()) {
@@ -231,8 +225,7 @@ class Order extends AdminControl
      * 修改运费
      * @param unknown $order_info
      */
-    private function _order_ship_price($order_info, $post)
-    {
+    private function _order_ship_price($order_info, $post) {
         $order_model = model('order');
         $logic_order = model('order', 'logic');
         if (!request()->isPost()) {
@@ -249,13 +242,11 @@ class Order extends AdminControl
         }
     }
 
-
     /**
      * 系统收到货款
      * @throws Exception
      */
-    private function _order_receive_pay($order_info, $post)
-    {
+    private function _order_receive_pay($order_info, $post) {
         $order_model = model('order');
         $logic_order = model('order', 'logic');
         $if_allow = $order_model->getOrderOperateState('system_receive_pay', $order_info);
@@ -269,7 +260,7 @@ class Order extends AdminControl
             $payment_list = model('payment')->getPaymentOpenList();
             //去掉预存款和货到付款
             foreach ($payment_list as $key => $value) {
-                if ($value['payment_code'] == 'predeposit' || $value['payment_code'] == 'offline') {
+                if ($value['payment_code'] == 'predeposit') {
                     unset($payment_list[$key]);
                 }
             }
@@ -279,14 +270,16 @@ class Order extends AdminControl
             exit;
         } else {
             $order_list = $order_model->getOrderList(array('pay_sn' => $order_info['pay_sn'], 'order_state' => ORDER_STATE_NEW));
-            try{
-                Db::startTrans();
+            Db::startTrans();
+            try {
+
                 $logic_order->changeOrderReceivePay($order_list, 'system', $this->admin_info['admin_name'], $post);
+                Db::commit();
             } catch (\Exception $e) {
                 Db::rollback();
                 return ds_callback(false, $e->getMessage());
             }
-            Db::commit();    
+
             $this->log('将订单改为已收款状态,' . lang('order_number') . ':' . $order_info['order_sn'], 1);
             return ds_callback(true, lang('ds_common_op_succ'));
         }
@@ -296,8 +289,7 @@ class Order extends AdminControl
      * 查看订单
      *
      */
-    public function show_order()
-    {
+    public function show_order() {
         $order_id = intval(input('param.order_id'));
         if ($order_id <= 0) {
             $this->error(lang('miss_order_number'));
@@ -312,8 +304,8 @@ class Order extends AdminControl
         //退款退货信息
         $refundreturn_model = model('refundreturn');
         $condition = array();
-        $condition[] = array('order_id','=',$order_info['order_id']);
-        $condition[] = array('admin_time','>', 0);
+        $condition[] = array('order_id', '=', $order_info['order_id']);
+        $condition[] = array('admin_time', '>', 0);
         $return_list = $refundreturn_model->getReturnList($condition);
         View::assign('return_list', $return_list);
 
@@ -334,26 +326,25 @@ class Order extends AdminControl
      * 导出
      *
      */
-    public function export_step1()
-    {
+    public function export_step1() {
 
         $order_model = model('order');
         $condition = array();
         $order_sn = input('param.order_sn');
         if ($order_sn) {
-            $condition[] = array('order_sn','=',$order_sn);
+            $condition[] = array('order_sn', '=', $order_sn);
         }
         $order_state = input('param.order_state');
         if (in_array($order_state, array('0', '10', '20', '30', '40'))) {
-            $condition[] = array('order_state','=',$order_state);
+            $condition[] = array('order_state', '=', $order_state);
         }
         $payment_code = input('param.payment_code');
         if ($payment_code) {
-            $condition[] = array('payment_code','=',$payment_code);
+            $condition[] = array('payment_code', '=', $payment_code);
         }
         $buyer_name = input('param.buyer_name');
         if ($buyer_name) {
-            $condition[] = array('buyer_name','=',$buyer_name);
+            $condition[] = array('buyer_name', '=', $buyer_name);
         }
         $query_start_time = input('param.query_start_time');
         $query_end_time = input('param.query_end_time');
@@ -362,7 +353,7 @@ class Order extends AdminControl
         $start_unixtime = $if_start_time ? strtotime($query_start_time) : null;
         $end_unixtime = $if_end_time ? strtotime($query_end_time) : null;
         if ($start_unixtime || $end_unixtime) {
-            $condition[] = array('add_time','between', array($start_unixtime, $end_unixtime));
+            $condition[] = array('add_time', 'between', array($start_unixtime, $end_unixtime));
         }
 
         if (!is_numeric(input('param.page'))) {
@@ -392,8 +383,7 @@ class Order extends AdminControl
     /**
      * 发货
      */
-    public function send()
-    {
+    public function send() {
         $order_id = input('param.order_id');
         if ($order_id <= 0) {
             $this->error(lang('param_error'));
@@ -401,7 +391,7 @@ class Order extends AdminControl
 
         $order_model = model('order');
         $condition = array();
-        $condition[] = array('order_id','=',$order_id);
+        $condition[] = array('order_id', '=', $order_id);
         $order_info = $order_model->getOrderInfo($condition, array('order_common', 'order_goods'));
         $if_allow_send = intval($order_info['lock_state']) || !in_array($order_info['order_state'], array(ORDER_STATE_PAY, ORDER_STATE_SEND));
         if ($if_allow_send) {
@@ -433,7 +423,6 @@ class Order extends AdminControl
             //如果是自提订单
             $express_list = rkcache('express', true);
 
-
             View::assign('express_list', $express_list);
 
             return View::fetch('send');
@@ -455,8 +444,7 @@ class Order extends AdminControl
      *
      * @param array $data
      */
-    private function createExcel($data = array())
-    {
+    private function createExcel($data = array()) {
         Lang::load(base_path() . 'admin/lang/' . config('lang.default_lang') . '/export.lang.php');
         $excel_obj = new \excel\Excel();
         $excel_data = array();
@@ -473,7 +461,7 @@ class Order extends AdminControl
         $excel_data[0][] = array('styleid' => 's_title', 'data' => lang('exp_od_buyerid'));
         $excel_data[0][] = array('styleid' => 's_title', 'data' => lang('exp_od_bemail'));
         //data
-        foreach ((array)$data as $k => $v) {
+        foreach ((array) $data as $k => $v) {
             $tmp = array();
             $tmp[] = array('data' => 'DS' . $v['order_sn']);
             $tmp[] = array('data' => $v['buyer_name']);
@@ -491,5 +479,4 @@ class Order extends AdminControl
         $excel_obj->addWorksheet($excel_obj->charset(lang('ds_orders'), CHARSET));
         $excel_obj->generateXML($excel_obj->charset(lang('ds_orders'), CHARSET) . input('param.page') . '-' . date('Y-m-d-H', TIMESTAMP));
     }
-
 }

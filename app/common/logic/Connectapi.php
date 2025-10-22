@@ -17,7 +17,7 @@ namespace app\common\logic;
  */
 class Connectapi {
 
-    public function smsRegister($phone, $captcha, $password, $client, $inviter_id = 0) {
+    public function smsRegister($phone, $captcha, $password, $inviter_id = 0) {
         if ($this->check_captcha($phone, $captcha)) {
             if (config('ds_config.sms_register') != 1) {
                 return array('state' => 0, 'msg' => '系统没有开启手机注册功能');
@@ -43,7 +43,7 @@ class Connectapi {
             if ($insert_id) {
                 $member_model->addMemberAfter($insert_id,$member);
                 $member = $member_model->getMemberInfo(array('member_mobile' => $phone));
-                $key = $member_model->getBuyerToken($member['member_id'], $member['member_name'], $client);
+                $key = $member_model->getBuyerToken($member['member_id'], $member['member_name']);
                 return array('state' => 1, 'username' => $member_name, 'token' => $key,'info'=>$member);
             } else {
                 return array('state' => 0, 'msg' => '注册失败', $member);
@@ -58,7 +58,7 @@ class Connectapi {
      * @param string $password 密码
      * @return array
      */
-    public function smsPassword($phone, $captcha, $password, $client) {
+    public function smsPassword($phone, $captcha, $password) {
         if (config('ds_config.sms_password') != 1) {
             return array('state' => 0, 'msg' => '系统没有开启手机找回密码功能');
         }
@@ -76,8 +76,8 @@ class Connectapi {
         if (!empty($member)) {
             $new_password = md5($password);
             $member_model->editMember(array('member_id' => $member['member_id']), array('member_password' => $new_password),$member['member_id']);
-            $member_model->createSession($member); //自动登录
-            $key = $member_model->getBuyerToken($member['member_id'], $member['member_name'], $client);
+            $member_model->createSession($member,'login'); //自动登录
+            $key = $member_model->getBuyerToken($member['member_id'], $member['member_name']);
             return array('state' => 1, 'msg' => '密码修改成功', 'token' => $key,'info'=>$member);
         }
     }
@@ -116,8 +116,8 @@ class Connectapi {
      * @return type
      */
     public function wx_register($reg_info, $reg_type) {
-        $reg_info['nickname'] = isset($reg_info['nickname']) ? $reg_info['nickname'] : '';
-        $reg_info['nickname'] = removeEmoji($reg_info['nickname']);
+        $reg_info['nickname'] = isset($reg_info['nickname']) ? $reg_info['nickname'] : get_rand_nickname();
+        $reg_info['nickname'] = removeEmojis($reg_info['nickname']);
         
         $member = array();
         $member_model = model('member');
@@ -128,8 +128,19 @@ class Connectapi {
                 return $exist_member;
             }
             $member['member_wxunionid'] = $reg_info['member_wxunionid'];
-            $member['member_wxopenid'] = $reg_info['member_wxopenid'];
-            $member['member_wxinfo'] = serialize($reg_info);
+            if(isset($reg_info['member_pc_wxopenid'])){
+                $member['member_pc_wxopenid'] = $reg_info['member_pc_wxopenid'];
+            }
+            if(isset($reg_info['member_h5_wxopenid'])){
+                $member['member_h5_wxopenid'] = $reg_info['member_h5_wxopenid'];
+            }
+            if(isset($reg_info['member_mini_wxopenid'])){
+                $member['member_mini_wxopenid'] = $reg_info['member_mini_wxopenid'];
+            }
+            if(isset($reg_info['member_app_wxopenid'])){
+                $member['member_app_wxopenid'] = $reg_info['member_app_wxopenid'];
+            }
+            $member['member_wxnickname'] = $reg_info['nickname'];
         }elseif ($reg_type == 'qq' && !empty($reg_info['member_qqopenid'])) {
             //如果用户存在.
             $exist_member = $member_model->getMemberInfo(array('member_qqopenid' => $reg_info['member_qqopenid']));

@@ -202,11 +202,13 @@ body { background-color: #FEFEFE; min-width: 1200px; }
 
 /*文章新闻内容*/
 .dsh-article-con{background:#FFF;display:block;padding:19px;border:1px solid #E6E6E6;margin-bottom:10px;overflow:hidden}
-.dsh-article-con h1{font:600 16px/32px "microsoft yahei";color:#3D3F3E;text-align:center}
-.dsh-article-con h2{color:#9A9A9A;font-size:12px;padding:5px 0 20px;margin-bottom:20px;font-weight:400;text-align:center;border-bottom:1px solid #D2D2D2}
-.dsh-article-con .title-bar{border-bottom:solid 1px #E6E6E6;padding-bottom:15px;margin-bottom:15px}
-.dsh-article-con .title-bar h3{font:400 18px/20px "microsoft yahei"}
-.dsh-article-con .default p{display:block;clear:both;padding:5px}
+.dsh-article-con .article_title{font:600 16px/32px "microsoft yahei";color:#3D3F3E;text-align:center}
+.dsh-article-con .article_time{color:#9A9A9A;font-size:12px;padding:5px 0 20px;margin-bottom:20px;font-weight:400;text-align:center;border-bottom:1px solid #D2D2D2}
+.dsh-article-con .title-bar{border-bottom:solid 1px #E6E6E6;padding-bottom:15px;margin-bottom:15px;font-weight:bold;font-size:20px;}
+.dsh-article-con .default{display:block;clear:both;padding:5px;font-size:16px;color:#303030;line-height:30px;}
+.dsh-article-con .default p{margin-bottom:10px;}
+.dsh-article-con .default h2{font-size:20px;line-height:50px;font-weight:bold;margin-bottom:10px;}
+.dsh-article-con .default h3{font-size:18px;line-height:40px;font-weight:bold;margin-bottom:10px;}
 .dsh-article-con img{max-width:930px}
 .dsh-article-list li{line-height:20px;display:block;height:20px;padding:5px 0}
 .dsh-article-list li i{background:#666;vertical-align:middle;display:inline-block;width:3px;height:3px;margin-right:10px}

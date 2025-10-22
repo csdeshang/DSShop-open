@@ -42,8 +42,8 @@ class Marketmanage extends BaseModel {
      * @param array $conditions 检索条件
      * @return array 数组类型的返回结果
      */
-    public function getOneMarketmanage($conditions,$lock=false) {
-        return Db::name('marketmanage')->where($conditions)->lock($lock)->find();
+    public function getOneMarketmanage($conditions) {
+        return Db::name('marketmanage')->where($conditions)->find();
     }
 
     /**
@@ -124,8 +124,8 @@ class Marketmanage extends BaseModel {
      * @param array $pagesize 分页信息
      * @return array 数组类型的返回结果
      */
-    public function getMarketmanageAwardList($condition,$lock=false) {
-        $result = Db::name('marketmanageaward')->where($condition)->order('marketmanageaward_level asc')->lock($lock)->select()->toArray();
+    public function getMarketmanageAwardList($condition) {
+        $result = Db::name('marketmanageaward')->where($condition)->order('marketmanageaward_level asc')->select()->toArray();
         return $result;
     }
 

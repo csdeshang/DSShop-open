@@ -72,7 +72,7 @@ class Buyvirtual extends BaseMember
     public function buy_step3() {
         $logic_buyvirtual = model('buyvirtual','logic');
         $post = input('post.');
-        $post['order_from'] = 1;
+        $post['order_from'] = 'PC';
         $result = $logic_buyvirtual->buyStep3($post,session('member_id'));
         if (!$result['code']) {
            $this->error($result['msg']);
@@ -132,7 +132,7 @@ class Buyvirtual extends BaseMember
         //显示支付接口列表
         $payment_model = model('payment');
         $condition = array();
-        $condition[] = array('payment_code','not in',array('offline', 'predeposit'));
+        $condition[] = array('payment_code','not in',array('predeposit'));
         $condition[] = array('payment_platform','=','pc');
         $payment_list = $payment_model->getPaymentOpenList($condition);
         if (empty($payment_list)) {

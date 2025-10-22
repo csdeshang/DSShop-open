@@ -5,9 +5,9 @@ require_once(PLUGINS_PATH.'/login/qq_h5/comm/utils.php');
 function get_user_info()
 {
     $get_user_info = "https://graph.qq.com/user/get_user_info?"
-        . "access_token=" . session('access_token')
-        . "&oauth_consumer_key=" . session("appid")
-        . "&openid=" . session("openid")
+        . "access_token=" . session('qq_access_token')
+        . "&oauth_consumer_key=" . session("qq_appid")
+        . "&openid=" . session("qq_openid")
         . "&format=json";
 
     $info = get_url_contents($get_user_info);

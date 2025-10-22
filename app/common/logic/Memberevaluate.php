@@ -86,7 +86,7 @@ class Memberevaluate {
             $evaluate_goods_info['geval_goodsprice'] = $value['goods_price'];
             $evaluate_goods_info['geval_goodsimage'] = $value['goods_image'];
             $evaluate_goods_info['geval_scores'] = $evaluate_score;
-            $evaluate_goods_info['geval_content'] = removeEmojis($evaluate_comment);
+            $evaluate_goods_info['geval_content'] = $evaluate_comment;
             $evaluate_goods_info['geval_isanonymous'] = input('post.anony') ? 1 : 0;
             $evaluate_goods_info['geval_addtime'] = TIMESTAMP;
             $evaluate_goods_info['geval_frommemberid'] = $member_id;
@@ -109,6 +109,7 @@ class Memberevaluate {
             $data = array();
             $data['order_id'] = $order_info['order_id'];
             $data['log_role'] = 'buyer';
+            $data['log_user'] = '';
             $data['log_msg'] = lang('order_log_eval');
             model('order')->addOrderlog($data);
             $res = true;
@@ -176,7 +177,7 @@ class Memberevaluate {
             $evaluate_goods_info['geval_goodsprice'] = $value['goods_price'];
             $evaluate_goods_info['geval_goodsimage'] = $value['goods_image'];
             $evaluate_goods_info['geval_scores'] = $evaluate_score;
-            $evaluate_goods_info['geval_content'] = removeEmojis($evaluate_comment);
+            $evaluate_goods_info['geval_content'] = $evaluate_comment;
             $evaluate_goods_info['geval_isanonymous'] = input('post.anony') ? 1 : 0;
             $evaluate_goods_info['geval_addtime'] = TIMESTAMP;
             $evaluate_goods_info['geval_frommemberid'] = $member_id;

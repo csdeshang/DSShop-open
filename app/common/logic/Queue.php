@@ -303,19 +303,13 @@ class Queue
      *
      * @param array $cron
      */
-    public function editExpireXianshi($cron = array()) {
-        $condition = array(array('xianshi_id','in', array_keys($cron)));
+    public function editExpireXianshi($xianshi_id) {
+        $condition = array(array('xianshi_id','=', $xianshi_id));
         //秒杀过期
         $update = model('pxianshi')->editExpireXianshi($condition);
-        if ($update){
-            //返回执行成功的cronid
-            $cronid = array();
-            foreach ($cron as $v) {
-                $cronid[] = $v['id'];
-            }
-        }else{
-            return false;
+        if (!$update) {
+            return ds_callback(false);
         }
-        return $cronid;
+        return ds_callback(true);
     }
 }

@@ -113,9 +113,9 @@ function getStatData_Basicbar($stat_arr){
 /**
  * 计算环比
  */
-function getHb($updata, $currentdata){
-	if($updata != 0){
-		$mtomrate = round(($currentdata - $updata)/$updata*100, 2).'%';
+function getHb($update, $currentdata){
+	if($update != 0){
+		$mtomrate = round(($currentdata - $update)/$update*100, 2).'%';
 	} else {
 	    $mtomrate = '-';
 	}
@@ -125,9 +125,9 @@ function getHb($updata, $currentdata){
 /**
  * 计算同比
  */
-function getTb($updata, $currentdata){
-	if($updata != 0){
-		$ytoyrate = round(($currentdata - $updata)/$updata*100, 2).'%';
+function getTb($update, $currentdata){
+	if($update != 0){
+		$ytoyrate = round(($currentdata - $update)/$update*100, 2).'%';
 	} else {
 	    $ytoyrate = '-';
 	}

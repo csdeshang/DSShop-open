@@ -26,7 +26,7 @@ class Vrorder extends BaseModel {
      * @param type $fields 字段
      * @return type
      */
-    public function getVrorderInfo($condition = array(), $fields = '*') {
+    public function getVrorderInfo($condition = array(), $fields = '*',$extend = array()) {
         $order_info = Db::name('vrorder')->field($fields)->where($condition)->find();
         if (empty($order_info)) {
             return array();
@@ -39,6 +39,17 @@ class Vrorder extends BaseModel {
         if (isset($order_info['payment_code'])) {
             $order_info['payment_name'] = get_order_payment_name($order_info['payment_code']);
         }
+        
+        //追加返回订单日志
+        if (in_array('orderlog', $extend)) {
+            //取商品列表
+            $orderlog_list = model('orderlog')->getOrderlogList(array('order_id' => $order_info['order_id'],'log_type' => 'vrorder'));
+            foreach ($orderlog_list as $orderlog_key => $orderlog) {
+                $orderlog_list[$orderlog_key]['log_time_desc'] = date('Y-m-d H:i:s',$orderlog['log_time']);
+            }
+            $order_info['extend_orderlog'] = $orderlog_list;
+        }
+        
         return $order_info;
     }
 

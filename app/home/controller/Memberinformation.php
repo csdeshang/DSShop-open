@@ -45,6 +45,7 @@ class Memberinformation extends BaseMember {
                 $member_array['member_birthday'] = strtotime(input('post.birthday'));
             }
             $member_array['member_privacy'] = serialize(input('post.privacy/a'));
+            
             $update = $member_model->editMember(array('member_id' => session('member_id')), $member_array,session('member_id'));
 
             if ($update){

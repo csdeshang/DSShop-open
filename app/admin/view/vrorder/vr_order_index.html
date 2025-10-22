@@ -17,7 +17,7 @@
         <div class="ds-search-form">
             <dl>
                 <dt>{$Think.lang.order_number}</dt>
-                <dd><input class="txt2" type="text" name="order_sn" value="{$Request.param.order_sn}" /></dd>
+                <dd><input class="txt" type="text" name="order_sn" value="{$Request.param.order_sn}" /></dd>
             </dl>
             <dl>
                 <dt>{$Think.lang.order_state}</dt>
@@ -48,7 +48,6 @@
                     <select name="payment_code" class="w100">
                         <option value="">{$Think.lang.ds_please_choose}</option>
                         <?php foreach($payment_list as $val) { ?>
-                        <?php if ($val['payment_code'] == 'offline') continue;?>
                         <option {if condition="$Request.param.payment_code eq $val.payment_code"}selected{/if} value="{$val.payment_code}">{$val.payment_name}</option>
                         <?php } ?>
                     </select>

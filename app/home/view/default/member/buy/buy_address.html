@@ -39,16 +39,6 @@
         $.post(url, {'freight_hash': '{$freight_hash}',city_id: city_id, 'area_id': area_id}, function(data) {
             if (data.state == 'success') {
                 $('#buy_city_id').val(city_id);
-                $('#allow_offpay').val(data.allow_offpay);
-                if (data.allow_offpay_batch) {
-                    var arr = new Array();
-                    $.each(data.allow_offpay_batch, function(k, v) {
-                        arr.push('' + k + ':' + (v ? 1 : 0));
-                    });
-                    $('#allow_offpay_batch').val(arr.join(";"));
-                }
-                $('#offpay_hash').val(data.offpay_hash);
-                $('#offpay_hash_batch').val(data.offpay_hash_batch);
                 var content = data.content;
                 var amount = 0;
                 $('#eachFreight_').html(number_format(content,2));

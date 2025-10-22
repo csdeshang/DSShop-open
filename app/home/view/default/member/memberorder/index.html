@@ -72,8 +72,8 @@
                     <th colspan="19"> <span class="ml10">
                             <!-- order_sn -->
                             {$Think.lang.member_order_sn}{$Think.lang.ds_colon}{$order_info.order_sn}
-                            {if $order_info.order_from == 2}
-                            <i class="iconfont">&#xe60e;</i>
+                            {if $order_info.order_from}
+                            ({$order_info.order_from})
                             {/if}
                         </span>
                         <!-- order_time -->

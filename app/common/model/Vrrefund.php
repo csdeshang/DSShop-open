@@ -40,15 +40,16 @@ class Vrrefund extends BaseModel {
         }
         $refund_array['refund_sn'] = $this->getVrrefundSn();
 
+        Db::startTrans();
         try {
-            Db::startTrans();
+
             $refund_id = Db::name('vrrefund')->insertGetId($refund_array);
             $code_array = explode(',', $refund_array['redeemcode_sn']);
             $vrorder_model = model('vrorder');
             $vrorder_model->editVrorderCode(array('refund_lock' => 1), array(array('vr_code', 'in', $code_array))); //退款锁定
             Db::commit();
             return $refund_id;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Db::rollback();
             return false;
         }
@@ -68,8 +69,9 @@ class Vrrefund extends BaseModel {
 
         $order_id = $refund['order_id']; //订单编号
 
+        Db::startTrans();
         try {
-            Db::startTrans();
+
             $order = $vrorder_model->getVrorderInfo(array('order_id' => $order_id));
             $state = $this->editVrrefund(array('refund_id' => $refund_id), $refund); ////更新退款
             if ($state && $refund['admin_state'] == '2') {//审核状态:1为待审核,2为同意,3为不同意
@@ -77,7 +79,7 @@ class Vrrefund extends BaseModel {
                 $refundreturn_model->refundAmount($order, $order['order_amount']);
 
                 if ($order['order_promotion_type'] == 2) {//如果是拼团
-                    $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $order['promotions_id'])->lock(true)->find();
+                    $ppintuangroup_info = Db::name('ppintuangroup')->where('pintuangroup_id', $order['promotions_id'])->find();
                     if ($ppintuangroup_info && $ppintuangroup_info['pintuangroup_state'] == 1) {
                         if ($ppintuangroup_info['pintuangroup_joined'] > 0) {
                             Db::name('ppintuangroup')->where('pintuangroup_id', $order['promotions_id'])->dec('pintuangroup_joined')->update();
@@ -102,17 +104,16 @@ class Vrrefund extends BaseModel {
                     $order_array['refund_amount'] = ds_price_format($refund_amount);
                     $state = $vrorder_model->editVrorder($order_array, array('order_id' => $order_id)); //更新订单退款
                     //修改分销佣金
-                    $condition=array();
-                    $condition[]=array('orderinviter_order_id','=',$order_id);
-                    $condition[]=array('orderinviter_valid','=',0);
-                    $condition[]=array('orderinviter_order_type','=',1);
-                    $orderinviter_list=Db::name('orderinviter')->where($condition)->select()->toArray();
-                    foreach($orderinviter_list as $orderinviter_info){
-                        $orderinviter_goods_amount=round($order_amount-$refund_amount,2);
-                        $orderinviter_money=round($orderinviter_info['orderinviter_ratio']/100*$orderinviter_goods_amount,2);
-                        Db::name('orderinviter')->where(array(array('orderinviter_id','=',$orderinviter_info['orderinviter_id'])))->update(['orderinviter_goods_amount' => $orderinviter_goods_amount,'orderinviter_money'=>$orderinviter_money]);
+                    $condition = array();
+                    $condition[] = array('orderinviter_order_id', '=', $order_id);
+                    $condition[] = array('orderinviter_valid', '=', 0);
+                    $condition[] = array('orderinviter_order_type', '=', 1);
+                    $orderinviter_list = Db::name('orderinviter')->where($condition)->select()->toArray();
+                    foreach ($orderinviter_list as $orderinviter_info) {
+                        $orderinviter_goods_amount = round($order_amount - $refund_amount, 2);
+                        $orderinviter_money = round($orderinviter_info['orderinviter_ratio'] / 100 * $orderinviter_goods_amount, 2);
+                        Db::name('orderinviter')->where(array(array('orderinviter_id', '=', $orderinviter_info['orderinviter_id'])))->update(['orderinviter_goods_amount' => $orderinviter_goods_amount, 'orderinviter_money' => $orderinviter_money]);
                     }
-                    
                 }
             }
             if ($state) {
@@ -124,7 +125,7 @@ class Vrrefund extends BaseModel {
             }
             Db::commit();
             return $state;
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Db::rollback();
             return false;
         }
@@ -255,5 +256,4 @@ class Vrrefund extends BaseModel {
             return $state_data; //返回所有
         return $state_data[$type];
     }
-
 }

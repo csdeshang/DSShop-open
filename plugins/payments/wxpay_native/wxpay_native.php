@@ -113,10 +113,23 @@ class wxpay_native {
         require_once PLUGINS_PATH . '/payments/wxpay_native/lib/WxPay.Api.php';
         require_once PLUGINS_PATH . '/payments/wxpay_native/lib/WxPay.Notify.php';
         
-	    $transaction_id = $order_info['trade_no'];
-	    //total_fee总订单价格
-        $total_fee = ($order_info['total_order_amount']-$order_info['rcb_amount']-$order_info['pd_amount'])*100;
+	$transaction_id = $order_info['trade_no'];
+	//total_fee 总订单价格 获取该支付单号所有的订单总额[]  多店铺合并支付,需要获取支付总金额,当前$order_info为拆分订单是当前需要退款的订单
+        $fields = 'SUM(order_amount - rcb_amount - pd_amount) as total_fee';
+        $condition = array();
+        $condition[] = array('trade_no','=',$transaction_id);
+        //判断订单类型[实物订单、虚拟订单]
+        if(isset($order_info['virtual_type'])){
+            $vrorder_model = model('vrorder');
+            $tradeamount = $vrorder_model->getVrorderInfo($condition,$fields);
+        }else{
+            $order_model = model('order');
+            $tradeamount = $order_model->getOrderInfo($condition,array(),$fields);
+        }
+        $total_fee = $tradeamount['total_fee'] * 100;
         $refund_fee = $refund_amount*100;
+        
+        
         $input = new WxPayRefund();
         $input->SetTransaction_id($transaction_id);
         $input->SetTotal_fee($total_fee);

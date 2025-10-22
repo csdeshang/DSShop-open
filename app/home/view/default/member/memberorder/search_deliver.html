@@ -59,7 +59,7 @@
           <div class="more"> <span class="arrow"></span>
             <ul>
               <li>{$Think.lang.ds_payment_method}：<span>{$order_info.payment_name}
-                <?php if($order_info['payment_code'] != 'offline' && !in_array($order_info['order_state'],array(ORDER_STATE_CANCEL,ORDER_STATE_NEW))) { ?>
+                <?php if(!in_array($order_info['order_state'],array(ORDER_STATE_CANCEL,ORDER_STATE_NEW))) { ?>
                 ({$Think.lang.order_number}{$Think.lang.ds_colon}{$order_info.pay_sn})
                 <?php } ?>
                 </span> </li>

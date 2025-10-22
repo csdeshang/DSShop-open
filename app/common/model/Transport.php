@@ -1,6 +1,7 @@
 <?php
 
 namespace app\common\model;
+
 use think\facade\Db;
 
 /**
@@ -71,16 +72,15 @@ class Transport extends BaseModel {
      * @return boolean
      */
     public function delTansport($transport_id) {
+        Db::startTrans();
         try {
-            Db::startTrans();
-            $delete = Db::name('transport')->where('transport_id',$transport_id)->delete();
+            $delete = Db::name('transport')->where('transport_id', $transport_id)->delete();
             if ($delete) {
-                $delete = Db::name('transportextend')->where('transport_id',$transport_id)->delete();
+                $delete = Db::name('transportextend')->where('transport_id', $transport_id)->delete();
             }
             Db::commit();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             Db::rollback();
-
             return false;
         }
 
@@ -108,15 +108,13 @@ class Transport extends BaseModel {
      * @return array
      */
     public function getTransportList($condition = array(), $pagesize = '', $order = 'transport_id desc') {
-        if($pagesize){
-            $res = Db::name('transport')->where($condition)->order($order)->paginate(['list_rows'=>$pagesize,'query' => request()->param()],false);
-            $this->page_info=$res;
+        if ($pagesize) {
+            $res = Db::name('transport')->where($condition)->order($order)->paginate(['list_rows' => $pagesize, 'query' => request()->param()], false);
+            $this->page_info = $res;
             return $res->items();
-        }else{
+        } else {
             return Db::name('transport')->where($condition)->order($order)->select()->toArray();
         }
-        
-        
     }
 
     /**
@@ -130,7 +128,7 @@ class Transport extends BaseModel {
     public function getTransportextendList($condition = array(), $order = 'transportext_id asc') {
         return Db::name('transportextend')->where($condition)->order($order)->select()->toArray();
     }
-    
+
     /**
      * 编辑更新售卖区域
      * @access public
@@ -168,7 +166,7 @@ class Transport extends BaseModel {
      * @param int $count 计数
      * @return number/boolean
      */
-    public function calcTransport($transport_id, $area_id,$count=1) {
+    public function calcTransport($transport_id, $area_id, $count = 1) {
         if (empty($transport_id)) {
             return 0;
         }
@@ -177,7 +175,7 @@ class Transport extends BaseModel {
         if (empty($extend_list) || !$transport) {
             return false;
         } else {
-            return $this->_calc_unit($area_id,$transport, $extend_list,$count);
+            return $this->_calc_unit($area_id, $transport, $extend_list, $count);
         }
     }
 
@@ -190,35 +188,34 @@ class Transport extends BaseModel {
      * @param type $count 计数
      * @return type
      */
-    private function _calc_unit($area_id, $transport,$extend,$count) {
+    private function _calc_unit($area_id, $transport, $extend, $count) {
         if (!empty($extend) && is_array($extend)) {
             foreach ($extend as $v) {
-				if ($v['transportext_area_id']=='' && !$transport['transport_is_limited']) {
-                        $calc_total = $v['transportext_sprice'];
-                        if($v['transportext_xprice']>0 && $count>$v['transportext_snum']){
-                            if($v['transportext_xnum']){
-                            $calc_total+=ceil(($count-$v['transportext_snum'])/$v['transportext_xnum'])*$v['transportext_xprice'];
-                          }else{
-                            $calc_total+=$v['transportext_xprice'];
-                          }
+                if ($v['transportext_area_id'] == '' && !$transport['transport_is_limited']) {
+                    $calc_total = $v['transportext_sprice'];
+                    if ($v['transportext_xprice'] > 0 && $count > $v['transportext_snum']) {
+                        if ($v['transportext_xnum']) {
+                            $calc_total += ceil(($count - $v['transportext_snum']) / $v['transportext_xnum']) * $v['transportext_xprice'];
+                        } else {
+                            $calc_total += $v['transportext_xprice'];
                         }
                     }
-                    if($area_id){
-                if (strpos($v['transportext_area_id'], "," . $area_id . ",") !== false) {
-                    $calc_total = $v['transportext_sprice'];
-					if($v['transportext_xprice']>0 && $count>$v['transportext_snum']){
-                        if($v['transportext_xnum']){
-                            $calc_total+=ceil(($count-$v['transportext_snum'])/$v['transportext_xnum'])*$v['transportext_xprice'];
-                          }else{
-                            $calc_total+=$v['transportext_xprice'];
-                          }
-                    }
                 }
+                if ($area_id) {
+                    if (strpos($v['transportext_area_id'], "," . $area_id . ",") !== false) {
+                        $calc_total = $v['transportext_sprice'];
+                        if ($v['transportext_xprice'] > 0 && $count > $v['transportext_snum']) {
+                            if ($v['transportext_xnum']) {
+                                $calc_total += ceil(($count - $v['transportext_snum']) / $v['transportext_xnum']) * $v['transportext_xprice'];
+                            } else {
+                                $calc_total += $v['transportext_xprice'];
+                            }
+                        }
+                    }
                 }
             }
         }
 
         return isset($calc_total) ? ds_price_format($calc_total) : false;
     }
-
 }

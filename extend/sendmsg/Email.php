@@ -117,6 +117,9 @@ final class Email {
     }
 
     public function send_sys_email($email_to, $subject, $message) {
+        if(empty(config('ds_config.email_addr'))||empty(config('ds_config.email_id'))||empty(config('ds_config.email_pass'))){
+            throw new  Exception('系统未配置邮箱发送');
+        }
         $this->set('email_server', config('ds_config.email_host'));
         $this->set('email_secure', config('ds_config.email_secure'));
         $this->set('email_port', config('ds_config.email_port'));

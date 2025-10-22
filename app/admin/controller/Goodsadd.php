@@ -1,9 +1,11 @@
 <?php
 
 namespace app\admin\controller;
+
 use think\facade\View;
 use think\facade\Lang;
 use think\facade\Db;
+
 /**
  * ============================================================================
  * DSShop单店铺商城
@@ -60,7 +62,7 @@ class Goodsadd extends AdminControl {
         View::assign('editor_multimedia', $editor_multimedia);
 
         $gc_id = intval(input('get.class_id'));
-        
+
         // 验证商品分类是否存在且商品分类是否为最后一级
         $data = model('goodsclass')->getGoodsclassForCacheModel();
         if (!isset($data[$gc_id]) || isset($data[$gc_id]['child']) || isset($data[$gc_id]['childchild'])) {
@@ -71,7 +73,7 @@ class Goodsadd extends AdminControl {
         $goods_class = $goodsclass_model->getGoodsclassLineForTag($gc_id);
         View::assign('goods_class', $goods_class);
         model('goodsclassstaple')->autoIncrementStaple($goods_class);
-        
+
         // 获取类型相关数据
         $typeinfo = model('type')->getAttribute($goods_class['type_id'], $gc_id);
         list($spec_json, $spec_list, $attr_list, $brand_list) = $typeinfo;
@@ -79,7 +81,6 @@ class Goodsadd extends AdminControl {
         View::assign('spec_list', $spec_list);
         View::assign('attr_list', $attr_list);
         View::assign('brand_list', $brand_list);
-        
 
         // 小时分钟显示
         $hour_array = array(
@@ -101,118 +102,161 @@ class Goodsadd extends AdminControl {
         if (request()->isPost()) {
             $goods_model = model('goods');
             Db::startTrans();
-            try{
-            $type_model = model('type');
+            try {
+                $type_model = model('type');
 
-            // 分类信息
-            $goods_class = model('goodsclass')->getGoodsclassLineForTag(intval(input('post.cate_id')));
+                // 分类信息
+                $goods_class = model('goodsclass')->getGoodsclassLineForTag(intval(input('post.cate_id')));
 
-            $common_array = array();
-            $common_array['goods_name'] = input('post.g_name');
-            $common_array['goods_advword'] = input('post.g_jingle');
-            $common_array['gc_id'] = intval(input('post.cate_id'));
-            $common_array['gc_id_1'] = intval($goods_class['gc_id_1']);
-            $common_array['gc_id_2'] = intval($goods_class['gc_id_2']);
-            $common_array['gc_id_3'] = intval($goods_class['gc_id_3']);
-            $common_array['gc_name'] = input('post.cate_name');
-            $common_array['brand_id'] = input('post.b_id');
-            $common_array['brand_name'] = input('post.b_name');
-            $common_array['type_id'] = intval(input('post.type_id'));
-            $common_array['goods_image'] = input('post.image_path');
-            $common_array['goods_price'] = floatval(input('post.g_price'));
-            $common_array['goods_marketprice'] = floatval(input('post.g_marketprice'));
-            $common_array['goods_costprice'] = floatval(input('post.g_costprice'));
-            $common_array['goods_discount'] = floatval(input('post.g_discount'));
-            $common_array['goods_serial'] = input('post.g_serial');
-            $common_array['goods_storage_alarm'] = intval(input('post.g_alarm'));
-            $common_array['goods_attr'] = input('post.attr/a')?serialize(input('post.attr/a')) : serialize(null);
-            $goods_body=preg_replace_callback("/<\s*img\s+[^>]*?src\s*=\s*(\'|\")(.*?)\\1[^>]*?\/?\s*>/i", function ($matches) {
-                return str_replace($matches[2],strip_tags($matches[2]),$matches[0]);
-            }, htmlspecialchars_decode(input('post.goods_body')));
-            $common_array['goods_body'] = $goods_body;
+                $common_array = array();
+                $common_array['goods_name'] = input('post.g_name');
+                $common_array['goods_advword'] = input('post.g_jingle');
+                $common_array['gc_id'] = intval(input('post.cate_id'));
+                $common_array['gc_id_1'] = intval($goods_class['gc_id_1']);
+                $common_array['gc_id_2'] = intval($goods_class['gc_id_2']);
+                $common_array['gc_id_3'] = intval($goods_class['gc_id_3']);
+                $common_array['gc_name'] = input('post.cate_name');
+                $common_array['brand_id'] = input('post.b_id');
+                $common_array['brand_name'] = input('post.b_name');
+                $common_array['type_id'] = intval(input('post.type_id'));
+                $common_array['goods_image'] = input('post.image_path');
+                $common_array['goods_price'] = floatval(input('post.g_price'));
+                $common_array['goods_marketprice'] = floatval(input('post.g_marketprice'));
+                $common_array['goods_costprice'] = floatval(input('post.g_costprice'));
+                $common_array['goods_discount'] = floatval(input('post.g_discount'));
+                $common_array['goods_serial'] = input('post.g_serial');
+                $common_array['goods_storage_alarm'] = intval(input('post.g_alarm'));
+                $common_array['goods_attr'] = input('post.attr/a') ? serialize(input('post.attr/a')) : serialize(null);
+                $goods_body = preg_replace_callback("/<\s*img\s+[^>]*?src\s*=\s*(\'|\")(.*?)\\1[^>]*?\/?\s*>/i", function ($matches) {
+                    return str_replace($matches[2], strip_tags($matches[2]), $matches[0]);
+                }, htmlspecialchars_decode(input('post.goods_body')));
+                $common_array['goods_body'] = $goods_body;
 
-            // 序列化保存手机端商品描述数据
-            $mobile_body = input('post.m_body');
-            if ($mobile_body != '') {
-                $mobile_body = str_replace('&quot;', '"', $mobile_body);
-                $mobile_body = json_decode($mobile_body, true);
-                if (!empty($mobile_body)) {
-                    $mobile_body = serialize($mobile_body);
-                } else {
-                    $mobile_body = '';
+                // 序列化保存手机端商品描述数据
+                $mobile_body = input('post.m_body');
+                if ($mobile_body != '') {
+                    $mobile_body = str_replace('&quot;', '"', $mobile_body);
+                    $mobile_body = json_decode($mobile_body, true);
+                    if (!empty($mobile_body)) {
+                        $mobile_body = serialize($mobile_body);
+                    } else {
+                        $mobile_body = '';
+                    }
                 }
-            }
-            $common_array['mobile_body'] = $mobile_body;
-            $common_array['goods_commend'] = intval(input('post.g_commend'));
-            $common_array['goods_state'] = intval(input('post.g_state'));
-            $common_array['goods_addtime'] = TIMESTAMP;
-            $common_array['goods_shelftime'] = strtotime(input('post.starttime')) + intval(input('post.starttime_H')) * 3600 + intval(input('post.starttime_i')) * 60;
-            $common_array['spec_name']  = is_array(input('post.spec/a')) ? serialize(input('post.sp_name/a')) : serialize(null);
-            $common_array['spec_value'] = is_array(input('post.spec/a')) ? serialize(input('post.sp_val/a')) : serialize(null);
-            $common_array['goods_vat'] = intval(input('post.g_vat'));
-            $common_array['areaid_1'] = intval(input('post.province_id'));
-            $common_array['areaid_2'] = intval(input('post.city_id'));
-            $common_array['transport_id'] = (input('post.freight') == '0') ? '0' : intval(input('post.transport_id')); // 售卖区域
-            $common_array['transport_title'] = input('post.transport_title');
-            $common_array['goods_freight'] = floatval(input('post.g_freight'));
+                $common_array['mobile_body'] = $mobile_body;
+                $common_array['goods_commend'] = intval(input('post.g_commend'));
+                $common_array['goods_state'] = intval(input('post.g_state'));
+                $common_array['goods_addtime'] = TIMESTAMP;
+                $common_array['goods_shelftime'] = strtotime(input('post.starttime')) + intval(input('post.starttime_H')) * 3600 + intval(input('post.starttime_i')) * 60;
+                $common_array['spec_name'] = is_array(input('post.spec/a')) ? serialize(input('post.sp_name/a')) : serialize(null);
+                $common_array['spec_value'] = is_array(input('post.spec/a')) ? serialize(input('post.sp_val/a')) : serialize(null);
+                $common_array['goods_vat'] = intval(input('post.g_vat'));
+                $common_array['areaid_1'] = intval(input('post.province_id'));
+                $common_array['areaid_2'] = intval(input('post.city_id'));
+                $common_array['transport_id'] = (input('post.freight') == '0') ? '0' : intval(input('post.transport_id')); // 售卖区域
+                $common_array['transport_title'] = input('post.transport_title');
+                $common_array['goods_freight'] = floatval(input('post.g_freight'));
 
-            //验证数据  BEGIN
-            $goods_validate = ds_validate('goods');
-            if (!$goods_validate->scene('edit_save_goods')->check($common_array)) {
-                throw new \think\Exception($goods_validate->getError(), 10006);
-            }
-            //验证数据  END
-            //查询店铺商品分类
-            $goods_stcids_arr = array();
-            if (empty($goods_stcids_arr)) {
-                $common_array['goods_stcids'] = '';
-            } else {
-                $common_array['goods_stcids'] = ',' . implode(',', $goods_stcids_arr) . ','; // 首尾需要加,
-            }
+                //验证数据  BEGIN
+                $goods_validate = ds_validate('goods');
+                if (!$goods_validate->scene('edit_save_goods')->check($common_array)) {
+                    throw new \think\Exception($goods_validate->getError(), 10006);
+                }
+                //验证数据  END
+                //查询店铺商品分类
+                $goods_stcids_arr = array();
+                if (empty($goods_stcids_arr)) {
+                    $common_array['goods_stcids'] = '';
+                } else {
+                    $common_array['goods_stcids'] = ',' . implode(',', $goods_stcids_arr) . ','; // 首尾需要加,
+                }
 
-            $common_array['plateid_top'] = intval(input('post.plate_top')) > 0 ? intval(input('post.plate_top')) : '';
-            $common_array['plateid_bottom'] = intval(input('post.plate_bottom')) > 0 ? intval(input('post.plate_bottom')) : '';
-            $common_array['is_virtual'] = intval(input('post.is_gv'));
-            $common_array['virtual_indate'] = input('post.g_vindate') != '' ? (strtotime(input('post.g_vindate')) + 24 * 60 * 60 - 1) : 0;  // 当天的最后一秒结束
-            $common_array['virtual_limit'] = intval(input('post.g_vlimit')) > 10 || intval(input('post.g_vlimit')) < 0 ? 10 : intval(input('post.g_vlimit'));
-            $common_array['virtual_invalid_refund'] = intval(input('post.g_vinvalidrefund'));
-            $common_array['is_goodsfcode'] = intval(input('post.is_fc'));
-            $common_array['is_appoint'] = intval(input('post.is_appoint'));     // 只有库存为零的商品可以预约
-            $common_array['appoint_satedate'] = $common_array['is_appoint'] == 1 ? strtotime(input('post.g_saledate')) : '';   // 预约商品的销售时间
-            $common_array['is_presell'] = $common_array['goods_state'] == 1 ? intval(input('post.is_presell')) : 0;     // 只有出售中的商品可以预售
-            $common_array['presell_deliverdate'] = $common_array['is_presell'] == 1 ? strtotime(input('post.g_deliverdate')) : ''; // 预售商品的发货时间
-            // 保存数据
-            $common_id = $goods_model->addGoodsCommon($common_array);
-            if ($common_id) {
-                // 生成的商品id（SKU）
-                $goodsid_array = array();
-                // 商品规格
-                $spec_array = input('post.spec/a');#获取数组
-                if (is_array($spec_array)&&!empty($spec_array)) {
-                    foreach ($spec_array as $value) {
+                $common_array['plateid_top'] = intval(input('post.plate_top')) > 0 ? intval(input('post.plate_top')) : '';
+                $common_array['plateid_bottom'] = intval(input('post.plate_bottom')) > 0 ? intval(input('post.plate_bottom')) : '';
+                $common_array['is_virtual'] = intval(input('post.is_gv'));
+                $common_array['virtual_indate'] = input('post.g_vindate') != '' ? (strtotime(input('post.g_vindate')) + 24 * 60 * 60 - 1) : 0;  // 当天的最后一秒结束
+                $common_array['virtual_limit'] = intval(input('post.g_vlimit')) > 10 || intval(input('post.g_vlimit')) < 0 ? 10 : intval(input('post.g_vlimit'));
+                $common_array['virtual_invalid_refund'] = intval(input('post.g_vinvalidrefund'));
+                $common_array['is_goodsfcode'] = intval(input('post.is_fc'));
+                $common_array['is_appoint'] = intval(input('post.is_appoint'));     // 只有库存为零的商品可以预约
+                $common_array['appoint_satedate'] = $common_array['is_appoint'] == 1 ? strtotime(input('post.g_saledate')) : '';   // 预约商品的销售时间
+                $common_array['is_presell'] = $common_array['goods_state'] == 1 ? intval(input('post.is_presell')) : 0;     // 只有出售中的商品可以预售
+                $common_array['presell_deliverdate'] = $common_array['is_presell'] == 1 ? strtotime(input('post.g_deliverdate')) : ''; // 预售商品的发货时间
+                // 保存数据
+                $common_id = $goods_model->addGoodsCommon($common_array);
+                if ($common_id) {
+                    // 生成的商品id（SKU）
+                    $goodsid_array = array();
+                    // 商品规格
+                    $spec_array = input('post.spec/a'); #获取数组
+                    if (is_array($spec_array) && !empty($spec_array)) {
+                        foreach ($spec_array as $value) {
+                            $goods = array();
+                            $goods['goods_commonid'] = $common_id;
+                            $goods['goods_name'] = $common_array['goods_name'] . ' ' . implode(' ', $value['sp_value']);
+                            $goods['goods_advword'] = $common_array['goods_advword'];
+                            $goods['gc_id'] = $common_array['gc_id'];
+                            $goods['gc_id_1'] = $common_array['gc_id_1'];
+                            $goods['gc_id_2'] = $common_array['gc_id_2'];
+                            $goods['gc_id_3'] = $common_array['gc_id_3'];
+                            $goods['brand_id'] = $common_array['brand_id'];
+                            $goods['goods_price'] = $value['price'];
+                            $goods['goods_promotion_price'] = $value['price'];
+                            $goods['goods_marketprice'] = $value['marketprice'] == 0 ? $common_array['goods_marketprice'] : $value['marketprice'];
+                            $goods['goods_serial'] = $value['sku'];
+                            $goods['goods_storage_alarm'] = intval($value['alarm']);
+                            $goods['goods_spec'] = serialize($value['sp_value']);
+                            $goods['goods_storage'] = $value['stock'];
+                            $goods['goods_image'] = $common_array['goods_image'];
+                            $goods['goods_state'] = $common_array['goods_state'];
+                            $goods['goods_addtime'] = TIMESTAMP;
+                            $goods['goods_edittime'] = TIMESTAMP;
+                            $goods['areaid_1'] = $common_array['areaid_1'];
+                            $goods['areaid_2'] = $common_array['areaid_2'];
+                            $goods['color_id'] = isset($value['color']) ? intval($value['color']) : '';
+                            $goods['transport_id'] = $common_array['transport_id'];
+                            $goods['goods_freight'] = $common_array['goods_freight'];
+                            $goods['goods_vat'] = $common_array['goods_vat'];
+                            $goods['goods_commend'] = $common_array['goods_commend'];
+                            $goods['goods_stcids'] = $common_array['goods_stcids'];
+                            $goods['is_virtual'] = $common_array['is_virtual'];
+                            $goods['virtual_indate'] = $common_array['virtual_indate'];
+                            $goods['virtual_limit'] = $common_array['virtual_limit'];
+                            $goods['virtual_invalid_refund'] = $common_array['virtual_invalid_refund'];
+                            $goods['is_goodsfcode'] = $common_array['is_goodsfcode'];
+                            $goods['is_appoint'] = $common_array['is_appoint'];
+                            $goods['is_presell'] = $common_array['is_presell'];
+                            $goods_id = $goods_model->addGoods($goods);
+                            $type_model->addGoodsType($goods_id, $common_id, array(
+                                'cate_id' => input('post.cate_id'), 'type_id' => input('post.type_id'), 'attr' => input('post.attr/a')
+                            ));
+
+                            $goodsid_array[] = $goods_id;
+                        }
+                    } else {
                         $goods = array();
                         $goods['goods_commonid'] = $common_id;
-                        $goods['goods_name'] = $common_array['goods_name'] . ' ' . implode(' ', $value['sp_value']);
+                        $goods['goods_name'] = $common_array['goods_name'];
                         $goods['goods_advword'] = $common_array['goods_advword'];
                         $goods['gc_id'] = $common_array['gc_id'];
                         $goods['gc_id_1'] = $common_array['gc_id_1'];
                         $goods['gc_id_2'] = $common_array['gc_id_2'];
                         $goods['gc_id_3'] = $common_array['gc_id_3'];
                         $goods['brand_id'] = $common_array['brand_id'];
-                        $goods['goods_price'] = $value['price'];
-                        $goods['goods_promotion_price'] = $value['price'];
-                        $goods['goods_marketprice'] = $value['marketprice'] == 0 ? $common_array['goods_marketprice'] : $value['marketprice'];
-                        $goods['goods_serial'] = $value['sku'];
-                        $goods['goods_storage_alarm'] = intval($value['alarm']);
-                        $goods['goods_spec'] = serialize($value['sp_value']);
-                        $goods['goods_storage'] = $value['stock'];
+                        $goods['goods_price'] = $common_array['goods_price'];
+                        $goods['goods_promotion_price'] = $common_array['goods_price'];
+                        $goods['goods_marketprice'] = $common_array['goods_marketprice'];
+                        $goods['goods_serial'] = $common_array['goods_serial'];
+                        $goods['goods_storage_alarm'] = $common_array['goods_storage_alarm'];
+                        $goods['goods_spec'] = serialize(null);
+                        $goods['goods_storage'] = intval(input('post.g_storage'));
                         $goods['goods_image'] = $common_array['goods_image'];
                         $goods['goods_state'] = $common_array['goods_state'];
                         $goods['goods_addtime'] = TIMESTAMP;
                         $goods['goods_edittime'] = TIMESTAMP;
                         $goods['areaid_1'] = $common_array['areaid_1'];
                         $goods['areaid_2'] = $common_array['areaid_2'];
-                        $goods['color_id'] = isset($value['color']) ? intval($value['color']) : '';
+                        $goods['color_id'] = 0;
                         $goods['transport_id'] = $common_array['transport_id'];
                         $goods['goods_freight'] = $common_array['goods_freight'];
                         $goods['goods_vat'] = $common_array['goods_vat'];
@@ -232,76 +276,32 @@ class Goodsadd extends AdminControl {
 
                         $goodsid_array[] = $goods_id;
                     }
-                } else {
-                    $goods = array();
-                    $goods['goods_commonid'] = $common_id;
-                    $goods['goods_name'] = $common_array['goods_name'];
-                    $goods['goods_advword'] = $common_array['goods_advword'];
-                    $goods['gc_id'] = $common_array['gc_id'];
-                    $goods['gc_id_1'] = $common_array['gc_id_1'];
-                    $goods['gc_id_2'] = $common_array['gc_id_2'];
-                    $goods['gc_id_3'] = $common_array['gc_id_3'];
-                    $goods['brand_id'] = $common_array['brand_id'];
-                    $goods['goods_price'] = $common_array['goods_price'];
-                    $goods['goods_promotion_price'] = $common_array['goods_price'];
-                    $goods['goods_marketprice'] = $common_array['goods_marketprice'];
-                    $goods['goods_serial'] = $common_array['goods_serial'];
-                    $goods['goods_storage_alarm'] = $common_array['goods_storage_alarm'];
-                    $goods['goods_spec'] = serialize(null);
-                    $goods['goods_storage'] = intval(input('post.g_storage'));
-                    $goods['goods_image'] = $common_array['goods_image'];
-                    $goods['goods_state'] = $common_array['goods_state'];
-                    $goods['goods_addtime'] = TIMESTAMP;
-                    $goods['goods_edittime'] = TIMESTAMP;
-                    $goods['areaid_1'] = $common_array['areaid_1'];
-                    $goods['areaid_2'] = $common_array['areaid_2'];
-                    $goods['color_id'] = 0;
-                    $goods['transport_id'] = $common_array['transport_id'];
-                    $goods['goods_freight'] = $common_array['goods_freight'];
-                    $goods['goods_vat'] = $common_array['goods_vat'];
-                    $goods['goods_commend'] = $common_array['goods_commend'];
-                    $goods['goods_stcids'] = $common_array['goods_stcids'];
-                    $goods['is_virtual'] = $common_array['is_virtual'];
-                    $goods['virtual_indate'] = $common_array['virtual_indate'];
-                    $goods['virtual_limit'] = $common_array['virtual_limit'];
-                    $goods['virtual_invalid_refund'] = $common_array['virtual_invalid_refund'];
-                    $goods['is_goodsfcode'] = $common_array['is_goodsfcode'];
-                    $goods['is_appoint'] = $common_array['is_appoint'];
-                    $goods['is_presell'] = $common_array['is_presell'];
-                    $goods_id = $goods_model->addGoods($goods);
-                    $type_model->addGoodsType($goods_id, $common_id, array(
-                        'cate_id' => input('post.cate_id'), 'type_id' => input('post.type_id'), 'attr' => input('post.attr/a')
-                    ));
-
-                    $goodsid_array[] = $goods_id;
-                }
 
 
-                // 商品加入上架队列
-                if (!empty(input('post.starttime'))) {
-                    $selltime = strtotime(input('post.starttime')) + intval(input('post.starttime_H')) * 3600 + intval(input('post.starttime_i')) * 60;
-                    if ($selltime > TIMESTAMP) {
-                        $this->addcron(array('cron_exetime' => $selltime, 'cron_value' => serialize(intval($common_id)), 'cron_type' => 'editProducesOnline'), true);
+                    // 商品加入上架队列
+                    if (!empty(input('post.starttime'))) {
+                        $selltime = strtotime(input('post.starttime')) + intval(input('post.starttime_H')) * 3600 + intval(input('post.starttime_i')) * 60;
+                        if ($selltime > TIMESTAMP) {
+                            $this->addcron(array('cron_exetime' => $selltime, 'cron_value' => serialize(intval($common_id)), 'cron_type' => 'editProducesOnline'), true);
+                        }
                     }
+
+                    // 记录日志
+                    $this->log('添加商品，平台货号:' . $common_id, 1);
+
+                    // 生成F码
+                    if ($common_array['is_goodsfcode'] == 1) {
+                        model('goodsfcode')->createGoodsfcode(array('goods_commonid' => $common_id, 'goodsfcode_count' => intval(input('post.g_fccount')), 'goodsfcode_prefix' => input('post.g_fcprefix')));
+                    }
+                } else {
+                    throw new \think\Exception(lang('goods_index_goods_add_fail'), 10006);
                 }
-
-                // 记录日志
-                $this->log('添加商品，平台货号:' . $common_id, 1);
-
-
-                // 生成F码
-                if ($common_array['is_goodsfcode'] == 1) {
-                    model('goodsfcode')->createGoodsfcode(array('goods_commonid' => $common_id, 'goodsfcode_count' => intval(input('post.g_fccount')), 'goodsfcode_prefix' => input('post.g_fcprefix')));
-                }
-                
-            } else {
-                throw new \think\Exception(lang('goods_index_goods_add_fail'), 10006);
-            }
-            } catch (\Exception $e){
+                Db::commit();
+            } catch (\Exception $e) {
                 Db::rollback();
                 $this->error($e->getMessage(), get_referer());
             }
-            Db::commit();
+
             $this->redirect(url('Goodsadd/add_step_three', ['commonid' => $common_id]));
         }
     }
@@ -334,14 +334,13 @@ class Goodsadd extends AdminControl {
         View::assign('spec_value', $spec_value);
 
         $spec_model = model('spec');
-        $value_array = $spec_model->getSpecvalueList(array(array('spvalue_id','in', $colorid_array)), 'spvalue_id,spvalue_name');
+        $value_array = $spec_model->getSpecvalueList(array(array('spvalue_id', 'in', $colorid_array)), 'spvalue_id,spvalue_name');
         if (empty($value_array)) {
             $value_array[] = array('spvalue_id' => '0', 'spvalue_name' => '无颜色');
         }
         View::assign('value_array', $value_array);
 
         View::assign('commonid', $common_id);
-
 
         $this->setAdminCurItem();
         return View::fetch($this->template_dir . 'goods_add_step3');
@@ -353,9 +352,9 @@ class Goodsadd extends AdminControl {
     public function save_image() {
         if (request()->isPost()) {
             $common_id = intval(input('param.commonid'));
-            $img_array = input('post.img/a');#获取数组
+            $img_array = input('post.img/a'); #获取数组
             if ($common_id <= 0 || empty($img_array)) {
-                ds_json_encode(10001,lang('param_error'));
+                ds_json_encode(10001, lang('param_error'));
             }
             $goods_model = model('goods');
             // 保存
@@ -389,14 +388,14 @@ class Goodsadd extends AdminControl {
                     $insert_array[] = $tmp_insert;
                 }
             }
-            if(!empty($insert_array)){
+            if (!empty($insert_array)) {
                 $rs = $goods_model->addGoodsImagesAll($insert_array);
                 if ($rs) {
                     $this->redirect(url('Goodsadd/add_step_four', ['commonid' => $common_id]));
                 } else {
                     $this->error(lang('ds_common_save_fail'));
                 }
-            }else{
+            } else {
                 $this->redirect(url('Goodsadd/add_step_four', ['commonid' => $common_id]));
             }
         }
@@ -419,8 +418,6 @@ class Goodsadd extends AdminControl {
         $data_array['goods_transfee_charge'] = $goods_info['goods_freight'] == 0 ? 1 : 0;
         $data_array['goods_freight'] = $goods_info['goods_freight'];
 
-
-
         View::assign('allow_gift', model('goods')->checkGoodsIfAllowGift($goods_info));
         View::assign('allow_combo', model('goods')->checkGoodsIfAllowCombo($goods_info));
         View::assign('goods_id', $goods_info['goods_id']);
@@ -435,20 +432,20 @@ class Goodsadd extends AdminControl {
     public function image_upload() {
         // 判断图片数量是否超限
         $album_model = model('album');
-        $aclass_id=input('param.aclass_id');
-        if($aclass_id){
+        $aclass_id = input('param.aclass_id');
+        if ($aclass_id) {
             $class_info = $album_model->getOne(array('aclass_id' => $aclass_id), 'albumclass');
         }
-        if(!$aclass_id || !$class_info){
+        if (!$aclass_id || !$class_info) {
             $class_info = $album_model->getOne(array('aclass_isdefault' => 1), 'albumclass');
         }
         /**
          * 上传图片
          */
-        $time=TIMESTAMP;
+        $time = TIMESTAMP;
         //上传文件保存路径
-        $upload_path = ATTACH_GOODS . '/' . date('Ymd',$time);
-        $save_name = date('YmdHis',$time) . rand(10000, 99999);
+        $upload_path = ATTACH_GOODS . '/' . date('Ymd', $time);
+        $save_name = date('YmdHis', $time) . rand(10000, 99999);
         $file_name = input('post.name');
 
         $result = upload_albumpic($upload_path, $file_name, $save_name);
@@ -471,7 +468,6 @@ class Goodsadd extends AdminControl {
         $insert_array['apic_spec'] = $width . 'x' . $height;
         $insert_array['apic_uploadtime'] = $time;
         model('album')->addAlbumpic($insert_array);
-
 
         $data = array();
         $data ['thumb_name'] = goods_cthumb($img_path, 240);
@@ -502,13 +498,12 @@ class Goodsadd extends AdminControl {
             exit();
         }
         if ($deep != 4) {
-        $gc_list = $goodsclass_model->getGoodsclass($gc_id, $deep);
+            $gc_list = $goodsclass_model->getGoodsclass($gc_id, $deep);
         }
         // 分类不为空输出分类信息
         if (!empty($gc_list)) {
             $data = array('type' => 'class', 'data' => $gc_list, 'deep' => $deep);
-        }
-        else {
+        } else {
             // 查询类型
             $type_model = model('type');
             $spec_list = $type_model->getSpecByType(array('type_id' => $gc_info['type_id']), 't.type_id, s.*');
@@ -534,7 +529,7 @@ class Goodsadd extends AdminControl {
 
         exit();
     }
-    
+
     /**
      * ajax删除常用分类
      */
@@ -699,7 +694,7 @@ class Goodsadd extends AdminControl {
         // 实例化模型
         $type_model = model('type');
         $where = array();
-        $where[] = array('type_id','=',$type_id);
+        $where[] = array('type_id', '=', $type_id);
         // 验证类型是否关联品牌
         $count = $type_model->getTypebrandCount($where);
         if ($type == 'letter') {
@@ -707,14 +702,14 @@ class Goodsadd extends AdminControl {
                 case 'all':
                     break;
                 case '0-9':
-                    $where[] = array('brand_initial','in', array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
+                    $where[] = array('brand_initial', 'in', array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9));
                     break;
                 default:
-                    $where[] = array('brand_initial','=',$initial);
+                    $where[] = array('brand_initial', '=', $initial);
                     break;
             }
         } else {
-            $where[] = array('brand_name|brand_initial','like', '%' . $keyword . '%');
+            $where[] = array('brand_name|brand_initial', 'like', '%' . $keyword . '%');
         }
         if ($count > 0) {
             $brand_array = $type_model->typeRelatedJoinList($where, 'brand', 'brand.brand_id,brand.brand_name,brand.brand_initial');
@@ -725,7 +720,6 @@ class Goodsadd extends AdminControl {
         echo json_encode($brand_array);
         die();
     }
-
 }
 
 ?>

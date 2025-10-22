@@ -9,7 +9,8 @@
         }
 </script>
 <script type="text/javascript" src="//webapi.amap.com/maps?v=2.0&key={$Think.config.ds_config.gaode_ak}"></script>
-<!--{else}-->
+<!--{/if}-->
+<!--{if $Think.config.ds_config.mapak_type eq '2'}-->
 <script type="text/javascript" src="{$Think.HTTP_TYPE}api.map.baidu.com/api?v=2.0&ak={$Think.config.ds_config.baidu_ak}"></script>
 <!--{/if}-->
 <div class="dsc-header">
@@ -52,8 +53,8 @@
         {include file="default/member/buy/buy_invoice" /}
         {include file="default/member/buy/buy_goods_list" /}
         {include file="default/member/buy/buy_amount" /}
-        <!-- 订单来源1为PC 2为手机 -->
-        <input value="1" type="hidden" name="order_from">
+        <!-- 订单来源 -->
+        <input value="PC" type="hidden" name="order_from">
         <!-- 来源于购物车标志 -->
         <input value="{$ifcart}" type="hidden" name="ifcart">
         <!-- offline/online -->
@@ -65,11 +66,6 @@
         <!-- 城市ID(运费) -->
         <input value="" name="buy_city_id" id="buy_city_id" type="hidden">
         
-        <!-- 记录所选地区是否支持货到付款 第一个前端JS判断 第二个后端PHP判断 -->
-        <input value="" id="allow_offpay" name="allow_offpay" type="hidden">
-        <input value="" id="allow_offpay_batch" name="allow_offpay_batch" type="hidden">
-        <input value="" id="offpay_hash" name="offpay_hash" type="hidden">
-        <input value="" id="offpay_hash_batch" name="offpay_hash_batch" type="hidden">
 
         <input value="{present name='inv_info.invoice_id'}{$inv_info.invoice_id}{/present}" name="invoice_id" id="invoice_id" type="hidden">
     </div>

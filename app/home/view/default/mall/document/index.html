@@ -3,10 +3,10 @@
 
 
 <div class="dsh-article-con" style="margin:0 auto 20px; width:1160px">
-  <h1>{$doc.document_title}</h1>
-  <h2>{$doc.document_time|date="Y-m-d H:i"}</h2>
+  <div class="article_title">{$doc.document_title}</div>
+  <div class="article_time">{$doc.document_time|date="Y-m-d H:i"}</div>
   <div class="default">
-    <p>{:htmlspecialchars_decode($doc['document_content']);}</p>
+    {:htmlspecialchars_decode($doc['document_content']);}
   </div>
 </div>
 

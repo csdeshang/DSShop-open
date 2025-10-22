@@ -19,7 +19,6 @@ class Goods extends BaseModel {
 
     const STATE1 = 1;       // 出售中
     const STATE0 = 0;       // 下架
-    const STATE10 = 10;     // 存入仓库
     public $page_info;
 
     /**
@@ -1510,7 +1509,7 @@ class Goods extends BaseModel {
         if ($type == 'reduction'){
             $update_param['goods_state'] = self::STATE1;
         }else{
-            $update_param['goods_state'] = self::STATE10;
+            $update_param['goods_state'] = self::STATE0;
         }
         $update = array_merge($update, $update_param);
         $return = $this->editProduces($condition, $update, $update_param);

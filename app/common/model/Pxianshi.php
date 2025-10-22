@@ -226,7 +226,7 @@ class Pxianshi extends BaseModel {
         }
         $condition[]=array('xianshi_state','=',self::XIANSHI_STATE_NORMAL);
 
-        $updata = array();
+        $update = array();
         $update['xianshi_state'] = self::XIANSHI_STATE_CLOSE;
         $result = $this->editXianshi($update, $condition);
         if ($result) {

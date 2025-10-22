@@ -27,11 +27,8 @@
                     <select name="state">
                         <option value="0"
                          {eq name="Request.get.state" value="0"}selected{/eq}>{$Think.lang.ds_state}</option>
-                        {notempty name="templatestate_arr"}
-                        {foreach name="templatestate_arr" item="val"}
-                        <option value="{$val.0}" {eq name="val.0" value="$Request.get.state" }selected{/eq}>{$val.1}</option>
-                        {/foreach}
-                        {/notempty}
+                        <option value="1" {eq name="Request.get.state" value="1" }selected{/eq}>有效</option>
+                        <option value="2" {eq name="Request.get.state" value="2" }selected{/eq}>无效</option>
                     </select>
                 </dd>
             </dl>
@@ -91,9 +88,7 @@
                 <td class="align-center"><span>{$val.vouchertemplate_adddate|date="Y-m-d"}</span></td>
                 <td class="align-center">
                     <span>
-                    {foreach name="templatestate_arr" item="v"}
-                    {eq name="val.vouchertemplate_state" value="$v.0"}{$v.1}{/eq}
-                    {/foreach}
+                        {if $val.vouchertemplate_state ==1}有效{else}无效{/if}
                     </span>
                 </td>
                 <td class="align-center yes-onoff">

@@ -101,25 +101,31 @@
 					<p class="notic">{$Think.lang.member_auth_notice}</p>
 				</dd>
 			</dl>
-			<dl>
-				<dt>{$Think.lang.mapak_type}</dt>
-				<dd>
-					<label class="radio-label">
-						<i  class="radio-common {if !$list_config.mapak_type || $list_config.mapak_type =='1'}selected{/if}">
-							<input type="radio" value="1" name="mapak_type" class='gaoderadio' {if !$list_config.mapak_type || $list_config.mapak_type =='1'} checked="checked"{/if}>
-						</i>
-						<span>{$Think.lang.gaode_map}</span>
-					</label>
-					<label class="radio-label">
-						<i class="radio-common {if $list_config.mapak_type =='2'}selected{/if}">
-							<input type="radio" value="2" name="mapak_type" class='baiduradio' {if $list_config.mapak_type =='2'} checked="checked"{/if}>
-						</i>
-						<span>{$Think.lang.baidu_map}</span>
-					</label>
-					<span class="tips"></span>
-				</dd>
-			
-			</dl>
+                        <dl>
+                            <dt>{$Think.lang.mapak_type}</dt>
+                            <dd>
+                                <label class="radio-label">
+                                    <i  class="radio-common {if !$list_config.mapak_type || $list_config.mapak_type =='1'}selected{/if}">
+                                        <input type="radio" value="1" name="mapak_type" class='gaoderadio' {if !$list_config.mapak_type || $list_config.mapak_type =='1'} checked="checked"{/if}>
+                                    </i>
+                                    <span>{$Think.lang.gaode_map}</span>
+                                </label>
+                                <label class="radio-label">
+                                    <i class="radio-common {if $list_config.mapak_type =='2'}selected{/if}">
+                                        <input type="radio" value="2" name="mapak_type" class='baiduradio' {if $list_config.mapak_type =='2'} checked="checked"{/if}>
+                                    </i>
+                                    <span>{$Think.lang.baidu_map}</span>
+                                </label>
+                                <label class="radio-label">
+                                    <i class="radio-common {if $list_config.mapak_type =='0'}selected{/if}">
+                                        <input type="radio" value="0" name="mapak_type" class='mapakradio' {if $list_config.mapak_type =='0'} checked="checked"{/if}>
+                                    </i>
+                                    <span>不使用地图</span>
+                                </label>
+                                <span class="tips"></span>
+                            </dd>
+
+                        </dl>
             <dl class='gaodedl'>
 				<dt>{$Think.lang.gaode_ak}</dt>
 				<dd>

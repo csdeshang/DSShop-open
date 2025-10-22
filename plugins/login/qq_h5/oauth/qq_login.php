@@ -1,7 +1,7 @@
 <?php
 require_once(PLUGINS_PATH.'/login/qq_h5/comm/config.php');
 //用户点击qq登录按钮调用此函数
-qq_login( session("appid"), session("scope"),  session("callback"));
+qq_login( session("qq_appid"), session("qq_scope"),  session("qq_callback"));
 function qq_login($appid, $scope, $callback)
 {
     session('state', md5(uniqid(rand(), TRUE))); //CSRF protection

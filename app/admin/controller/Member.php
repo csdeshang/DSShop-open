@@ -117,10 +117,6 @@ class Member extends AdminControl {
                 'member_loginnum' => 0,
                 'inform_allow' => 1, //默认允许举报商品
             );
-            $member_validate = ds_validate('member');
-            if (!$member_validate->scene('add')->check($data)){
-                $this->error($member_validate->getError());
-            }
             $result = $member_model->addMember($data);
             if ($result) {
                 dsLayerOpenSuccess(lang('ds_common_op_succ'));
@@ -132,7 +128,7 @@ class Member extends AdminControl {
 
     public function edit() {
         //注：pathinfo地址参数不能通过get方法获取，查看“获取PARAM变量”
-        $member_id = input('param.member_id');
+        $member_id = intval(input('param.member_id'));
         if (empty($member_id)) {
             $this->error(lang('param_error'));
         }
@@ -177,11 +173,10 @@ class Member extends AdminControl {
                 $data['member_paypwd'] = md5(input('post.member_paypwd'));
             }
 
-            $member_validate = ds_validate('member');
-            if (!$member_validate->scene('edit')->check($data)){
-                $this->error($member_validate->getError());
-            }
-            $result = $member_model->editMember(array('member_id'=>intval($member_id)),$data,intval($member_id));
+            //用于验证器 的 unique 
+            $data['member_id'] = $member_id;
+            
+            $result = $member_model->editMember(array('member_id'=>$member_id),$data,$member_id);
             if ($result>=0) {
                 dsLayerOpenSuccess(lang('ds_common_op_succ'));
             } else {

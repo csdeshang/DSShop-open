@@ -343,22 +343,6 @@ class Buy_1 {
         }
     }
 
-    /**
-     * 输出有货到付款时，在线支付和货到付款及每种支付下商品数量和详细列表
-     * @param $buy_list 商品列表
-     * @return 返回 以支付方式为下标分组的商品列表
-     */
-    public function getOfflineGoodsPay($buy_list) {
-        //以支付方式为下标，存放购买商品
-        $buy_goods_list = array();
-        $offline_pay = model('payment')->getPaymentOpenInfo(array(array('payment_code', '=', 'offline')));
-        if ($offline_pay) {
-            foreach ($buy_list as $value) {
-                $buy_goods_list['offline'][] = $value;
-            }
-        }
-        return $buy_goods_list;
-    }
 
     /**
      * 计算每个店铺(所有店铺级优惠活动)总共优惠多少金额
@@ -843,19 +827,13 @@ class Buy_1 {
 
     /**
      * 计算本次下单中每个店铺订单是货到付款还是线上支付,店铺ID=>付款方式[online在线支付offline货到付款]
-     * @param boolean $if_offpay 是否支持货到付款 true/false
      * @param string $pay_name 付款方式 online/offline
      * @return array
      */
-    public function getPayTypeList($if_offpay, $pay_name) {
+    public function getPayTypeList($pay_name) {
         $pay_type_list = array();
         if ($pay_name == 'online') {
             $pay_type_list = 'online';
-        } else {
-            $offline_pay = model('payment')->getPaymentOpenInfo(array(array('payment_code', '=', 'offline')));
-            if ($offline_pay) {
-                $pay_type_list = 'offline';
-            }
         }
         return $pay_type_list;
     }

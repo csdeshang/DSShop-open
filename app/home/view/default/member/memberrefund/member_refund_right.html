@@ -38,9 +38,7 @@
                 <a href="javascript:void(0);" class="a">{$Think.lang.ds_more}<i class="iconfont">&#xe689;</i>
                     <div class="more"> <span class="arrow"></span>
                         <ul>
-                            {if $order.payment_code != 'offline'}
                             <li>{$Think.lang.payment_order}{$Think.lang.ds_colon}<span>{$order.pay_sn}</span></li>
-                           {/if}
                             <li>{$Think.lang.ds_payment_method}{$Think.lang.ds_colon}<span>{$order.payment_name}</span></li>
                             <li>{$Think.lang.order_time}{$Think.lang.ds_colon}<span>{:date('Y-m-d H:i:s',$order.add_time)}</span></li>
                             {if $order.payment_time >0}

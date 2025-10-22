@@ -140,7 +140,7 @@ class Vrorder extends AdminControl {
             $payment_list = model('payment')->getPaymentOpenList();
             //去掉预存款和货到付款
             foreach ($payment_list as $key => $value) {
-                if ($value['payment_code'] == 'predeposit' || $value['payment_code'] == 'offline') {
+                if ($value['payment_code'] == 'predeposit') {
                     unset($payment_list[$key]);
                 }
             }
@@ -164,7 +164,7 @@ class Vrorder extends AdminControl {
             $this->error(lang('miss_order_number'));
         }
         $vrorder_model = model('vrorder');
-        $order_info = $vrorder_model->getVrorderInfo(array('order_id' => $order_id));
+        $order_info = $vrorder_model->getVrorderInfo(array('order_id' => $order_id),'*', array('orderlog'));
         if (empty($order_info)) {
             $this->error('订单不存在');
         }

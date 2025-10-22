@@ -1,6 +1,7 @@
 <?php
 
 namespace app\common\logic;
+
 use think\facade\Db;
 
 /**
@@ -15,8 +16,8 @@ use think\facade\Db;
  * ============================================================================
  * 逻辑层模型
  */
-class Buyvirtual
-{
+class Buyvirtual {
+
     /**
      * 虚拟商品购买第一步，得到购买数据(商品、会员)
      * @param int $goods_id 商品ID
@@ -35,8 +36,8 @@ class Buyvirtual
      * @param int $member_id 会员ID
      * @return array
      */
-    public function getBuyStep2Data($goods_id, $quantity, $member_id,$extra=array()) {
-        return $this->getBuyStepData($goods_id, $quantity, $member_id,$extra);
+    public function getBuyStep2Data($goods_id, $quantity, $member_id, $extra = array()) {
+        return $this->getBuyStepData($goods_id, $quantity, $member_id, $extra);
     }
 
     /**
@@ -46,12 +47,12 @@ class Buyvirtual
      * @param int $member_id 会员ID
      * @return array
      */
-    public function getBuyStepData($goods_id, $quantity, $member_id,$extra=array()) {
+    public function getBuyStepData($goods_id, $quantity, $member_id, $extra = array()) {
         $goods_info = model('goods')->getGoodsOnlineInfoAndPromotionById($goods_id);
         if (empty($goods_info)) {
             return ds_callback(false, '该商品不符合购买条件，可能的原因有：下架、不存在、过期等');
         }
-        if($goods_info['is_virtual'] != 1 || $goods_info['virtual_indate'] < TIMESTAMP){
+        if ($goods_info['is_virtual'] != 1 || $goods_info['virtual_indate'] < TIMESTAMP) {
             return ds_callback(false, '该商品不符合购买条件，可能的原因有：下架、不存在、过期等');
         }
         if ($goods_info['virtual_limit'] > $goods_info['goods_storage']) {
@@ -59,10 +60,10 @@ class Buyvirtual
         }
         if (isset($extra['pintuan_id']) && intval($extra['pintuan_id']) > 0) {
             //如果是特定拼团商品，则只按照拼团的规则进行处理
-            model('buy_1','logic')->getPintuanInfo($goods_info, $quantity,$extra,$member_id);
-        } else{
-        //取得抢购信息
-        $goods_info = $this->_getGroupbuyInfo($goods_info);
+            model('buy_1', 'logic')->getPintuanInfo($goods_info, $quantity, $extra, $member_id);
+        } else {
+            //取得抢购信息
+            $goods_info = $this->_getGroupbuyInfo($goods_info);
         }
         $quantity = abs(intval($quantity));
         $quantity = $quantity == 0 ? 1 : $quantity;
@@ -86,15 +87,15 @@ class Buyvirtual
         //            $return['member_info']['available_rc_balance'] = 0;
         //        }
         //返回店铺可用的代金券
-        $return['voucher_list']=array();
-            if (config('ds_config.voucher_allow')){
-              $voucher_model = model('voucher');
-              $condition = array();
-              $condition[] = array('voucher_owner_id','=',$member_id);
-              $return['voucher_list'] = $voucher_model->getCurrentAvailableVoucher($condition, $goods_info['goods_total']);
-            }
-            
-        return ds_callback(true,'',$return);
+        $return['voucher_list'] = array();
+        if (config('ds_config.voucher_allow')) {
+            $voucher_model = model('voucher');
+            $condition = array();
+            $condition[] = array('voucher_owner_id', '=', $member_id);
+            $return['voucher_list'] = $voucher_model->getCurrentAvailableVoucher($condition, $goods_info['goods_total']);
+        }
+
+        return ds_callback(true, '', $return);
     }
 
     /**
@@ -105,19 +106,20 @@ class Buyvirtual
      */
     public function buyStep3($post, $member_id) {
 
-        $result = $this->getBuyStepData($post['goods_id'], $post['quantity'], $member_id,$post);
-        if (!$result['code']) return $result;
+        $result = $this->getBuyStepData($post['goods_id'], $post['quantity'], $member_id, $post);
+        if (!$result['code'])
+            return $result;
 
         $goods_info = $result['data']['goods_info'];
         $member_info = $result['data']['member_info'];
 
-        $goods_info['voucher_list'] = isset($result['data']['voucher_list'])?$result['data']['voucher_list']:array();
-        
+        $goods_info['voucher_list'] = isset($result['data']['voucher_list']) ? $result['data']['voucher_list'] : array();
+
         //应付总金额计算
         $pay_total = $goods_info['goods_price'] * $goods_info['quantity'];
 
-        if($post['buyer_phone']==encrypt_show($member_info['member_mobile'],4,4)){
-            $post['buyer_phone']=$member_info['member_mobile'];
+        if ($post['buyer_phone'] == encrypt_show($member_info['member_mobile'], 4, 4)) {
+            $post['buyer_phone'] = $member_info['member_mobile'];
         }
         //整理数据
         $input = array();
@@ -126,17 +128,16 @@ class Buyvirtual
         $input['buyer_msg'] = $post['buyer_msg'];
         $input['pay_total'] = $pay_total;
         $input['order_from'] = $post['order_from'];
-        $input['pintuan_id'] = isset($post['pintuan_id'])?$post['pintuan_id']:0;
-        $input['pintuangroup_id'] = isset($post['pintuangroup_id'])?$post['pintuangroup_id']:0;
-        $input['voucher'] = isset($post['voucher'])?$post['voucher']:'';
+        $input['pintuan_id'] = isset($post['pintuan_id']) ? $post['pintuan_id'] : 0;
+        $input['pintuangroup_id'] = isset($post['pintuangroup_id']) ? $post['pintuangroup_id'] : 0;
+        $input['voucher'] = isset($post['voucher']) ? $post['voucher'] : '';
+
+        Db::startTrans();
         try {
 
             $goods_model = model('goods');
-            //开始事务
-            Db::startTrans();
-
             //生成订单
-            $order_info = $this->_createOrder($input,$goods_info,$member_info);
+            $order_info = $this->_createOrder($input, $goods_info, $member_info);
             //生成推广记录
             $this->addOrderInviter($order_info);
 
@@ -144,8 +145,7 @@ class Buyvirtual
             $goods_model->createOrderUpdateStorage(array($goods_info['goods_id'] => $goods_info['quantity']));
             //提交事务
             Db::commit();
-
-        }catch (Exception $e){
+        } catch (\Exception $e) {
 
             //回滚事务
             Db::rollback();
@@ -156,8 +156,9 @@ class Buyvirtual
         //更新抢购信息
         $this->_updateGroupBuy($goods_info);
 
-        return ds_callback(true,'',array('order_id' => $order_info['order_id'],'order_sn'=>$order_info['order_sn']));
+        return ds_callback(true, '', array('order_id' => $order_info['order_id'], 'order_sn' => $order_info['order_sn']));
     }
+
     /**
      * 生成推广记录
      * @param array $order_list
@@ -180,75 +181,73 @@ class Buyvirtual
         if (!$goods_common_info['inviter_open']) {
             return;
         }
-        $goods_amount=$order['order_amount']*$goods_common_info['inviter_ratio']/100;
+        $goods_amount = $order['order_amount'] * $goods_common_info['inviter_ratio'] / 100;
         $inviter_ratios = array(
             $inviter_ratio_1,
             $inviter_ratio_2,
             $inviter_ratio_3,
         );
         //判断买家是否是分销员
-            if(config('ds_config.inviter_return')){
-                if(Db::name('inviter')->where('inviter_state=1 AND inviter_id='.$order['buyer_id'])->value('inviter_id')){
-                    if (isset($inviter_ratios[0]) && floatval($inviter_ratios[0]) > 0) {
-                    $ratio=round($inviter_ratios[0]*$goods_common_info['inviter_ratio']/100,2);
-                            $money_1 = round($inviter_ratios[0] / 100 * $goods_amount, 2);
-                            if ($money_1 > 0) {
-                               
-                                    //生成推广记录
-                                    Db::name('orderinviter')->insert(array(
-                                        'orderinviter_addtime' => TIMESTAMP,
-                                        'orderinviter_goods_amount' => $order['order_amount'],
-                                        'orderinviter_goods_quantity' => $goods['goods_num'],
-                                        'orderinviter_order_type' => 1,
-                                        'orderinviter_goods_commonid' => $goods_common_info['goods_commonid'],
-                                        'orderinviter_goods_id' => $goods['goods_id'],
-                                        'orderinviter_level' => 1,
+        if (config('ds_config.inviter_return')) {
+            if (Db::name('inviter')->where('inviter_state=1 AND inviter_id=' . $order['buyer_id'])->value('inviter_id')) {
+                if (isset($inviter_ratios[0]) && floatval($inviter_ratios[0]) > 0) {
+                    $ratio = round($inviter_ratios[0] * $goods_common_info['inviter_ratio'] / 100, 2);
+                    $money_1 = round($inviter_ratios[0] / 100 * $goods_amount, 2);
+                    if ($money_1 > 0) {
+
+                        //生成推广记录
+                        Db::name('orderinviter')->insert(array(
+                            'orderinviter_addtime' => TIMESTAMP,
+                            'orderinviter_goods_amount' => $order['order_amount'],
+                            'orderinviter_goods_quantity' => $goods['goods_num'],
+                            'orderinviter_order_type' => 1,
+                            'orderinviter_goods_commonid' => $goods_common_info['goods_commonid'],
+                            'orderinviter_goods_id' => $goods['goods_id'],
+                            'orderinviter_level' => 1,
                             'orderinviter_ratio' => $ratio,
-                                        'orderinviter_goods_name' => $goods['goods_name'],
-                                        'orderinviter_order_id' => $order_id,
-                                        'orderinviter_order_sn' => $order['order_sn'],
-                                        'orderinviter_member_id' => $order['buyer_id'],
-                                        'orderinviter_member_name' => $order['buyer_name'],
-                                        'orderinviter_money' => $money_1,
-                                        'orderinviter_remark' => '获得分销员返佣，佣金比例' . $ratio . '%，订单号' . $order['order_sn'],
-                                    ));
-                                    
-                            }
-                        }
+                            'orderinviter_goods_name' => $goods['goods_name'],
+                            'orderinviter_order_id' => $order_id,
+                            'orderinviter_order_sn' => $order['order_sn'],
+                            'orderinviter_member_id' => $order['buyer_id'],
+                            'orderinviter_member_name' => $order['buyer_name'],
+                            'orderinviter_money' => $money_1,
+                            'orderinviter_remark' => '获得分销员返佣，佣金比例' . $ratio . '%，订单号' . $order['order_sn'],
+                        ));
                     }
+                }
             }
+        }
         //一级推荐人
         $inviter_1_id = Db::name('member')->where('member_id', $order['buyer_id'])->value('inviter_id');
         if (!$inviter_1_id || !Db::name('inviter')->where('inviter_state=1 AND inviter_id=' . $inviter_1_id)->value('inviter_id')) {
             return;
         }
-        
-        
+
+
         $inviter_1 = Db::name('member')->where('member_id', $inviter_1_id)->field('inviter_id,member_id,member_name')->find();
         if ($inviter_1 && isset($inviter_ratios[0]) && floatval($inviter_ratios[0]) > 0) {
-            $ratio=round($inviter_ratios[0]*$goods_common_info['inviter_ratio']/100,2);
+            $ratio = round($inviter_ratios[0] * $goods_common_info['inviter_ratio'] / 100, 2);
             $money_1 = round($inviter_ratios[0] / 100 * $goods_amount, 2);
             if ($money_1 > 0) {
-   
-                    //生成推广记录
-                    Db::name('orderinviter')->insert(array(
-                        'orderinviter_addtime' => TIMESTAMP,
-                        'orderinviter_goods_amount'=>$order['order_amount'],
-                        'orderinviter_goods_quantity'=>$goods['goods_num'],
-                        'orderinviter_order_type'=>1,
-                        'orderinviter_goods_commonid' => $goods_common_info['goods_commonid'],
-                        'orderinviter_goods_id' => $goods['goods_id'],
-                        'orderinviter_level' => 1,
+
+                //生成推广记录
+                Db::name('orderinviter')->insert(array(
+                    'orderinviter_addtime' => TIMESTAMP,
+                    'orderinviter_goods_amount' => $order['order_amount'],
+                    'orderinviter_goods_quantity' => $goods['goods_num'],
+                    'orderinviter_order_type' => 1,
+                    'orderinviter_goods_commonid' => $goods_common_info['goods_commonid'],
+                    'orderinviter_goods_id' => $goods['goods_id'],
+                    'orderinviter_level' => 1,
                     'orderinviter_ratio' => $ratio,
-                        'orderinviter_goods_name' => $goods['goods_name'],
-                        'orderinviter_order_id' => $order_id,
-                        'orderinviter_order_sn' => $order['order_sn'],
-                        'orderinviter_member_id' => $inviter_1['member_id'],
-                        'orderinviter_member_name' => $inviter_1['member_name'],
-                        'orderinviter_money' => $money_1,
-                        'orderinviter_remark' => '获得一级推荐佣金，佣金比例' . $ratio . '%，推荐关系' . $inviter_1['member_name'] . '->' . $order['buyer_name'] . '，订单号' . $order['order_sn'],
-                    ));
-   
+                    'orderinviter_goods_name' => $goods['goods_name'],
+                    'orderinviter_order_id' => $order_id,
+                    'orderinviter_order_sn' => $order['order_sn'],
+                    'orderinviter_member_id' => $inviter_1['member_id'],
+                    'orderinviter_member_name' => $inviter_1['member_name'],
+                    'orderinviter_money' => $money_1,
+                    'orderinviter_remark' => '获得一级推荐佣金，佣金比例' . $ratio . '%，推荐关系' . $inviter_1['member_name'] . '->' . $order['buyer_name'] . '，订单号' . $order['order_sn'],
+                ));
             }
         }
         if (config('ds_config.inviter_level') <= 1) {
@@ -261,29 +260,28 @@ class Buyvirtual
         }
         $inviter_2 = Db::name('member')->where('member_id', $inviter_2_id)->field('inviter_id,member_id,member_name')->find();
         if ($inviter_2 && isset($inviter_ratios[1]) && floatval($inviter_ratios[1]) > 0) {
-            $ratio=round($inviter_ratios[1]*$goods_common_info['inviter_ratio']/100,2);
+            $ratio = round($inviter_ratios[1] * $goods_common_info['inviter_ratio'] / 100, 2);
             $money_2 = round($inviter_ratios[1] / 100 * $goods_amount, 2);
             if ($money_2 > 0) {
-     
-                    //生成推广记录
-                    Db::name('orderinviter')->insert(array(
-                        'orderinviter_addtime' => TIMESTAMP,
-                        'orderinviter_goods_amount'=>$order['order_amount'],
-                        'orderinviter_goods_quantity'=>$goods['goods_num'],
-                        'orderinviter_order_type'=>1,
-                        'orderinviter_goods_commonid' => $goods_common_info['goods_commonid'],
-                        'orderinviter_goods_id' => $goods['goods_id'],
-                        'orderinviter_level' => 2,
+
+                //生成推广记录
+                Db::name('orderinviter')->insert(array(
+                    'orderinviter_addtime' => TIMESTAMP,
+                    'orderinviter_goods_amount' => $order['order_amount'],
+                    'orderinviter_goods_quantity' => $goods['goods_num'],
+                    'orderinviter_order_type' => 1,
+                    'orderinviter_goods_commonid' => $goods_common_info['goods_commonid'],
+                    'orderinviter_goods_id' => $goods['goods_id'],
+                    'orderinviter_level' => 2,
                     'orderinviter_ratio' => $ratio,
-                        'orderinviter_goods_name' => $goods['goods_name'],
-                        'orderinviter_order_id' => $order_id,
-                        'orderinviter_order_sn' => $order['order_sn'],
-                        'orderinviter_member_id' => $inviter_2['member_id'],
-                        'orderinviter_member_name' => $inviter_2['member_name'],
-                        'orderinviter_money' => $money_2,
-                        'orderinviter_remark' => '获得二级推荐佣金，佣金比例' . $ratio . '%，推荐关系' . $inviter_2['member_name'] . '->' . $inviter_1['member_name'] . '->' . $order['buyer_name'] . '，订单号' . $order['order_sn'],
-                    ));
-     
+                    'orderinviter_goods_name' => $goods['goods_name'],
+                    'orderinviter_order_id' => $order_id,
+                    'orderinviter_order_sn' => $order['order_sn'],
+                    'orderinviter_member_id' => $inviter_2['member_id'],
+                    'orderinviter_member_name' => $inviter_2['member_name'],
+                    'orderinviter_money' => $money_2,
+                    'orderinviter_remark' => '获得二级推荐佣金，佣金比例' . $ratio . '%，推荐关系' . $inviter_2['member_name'] . '->' . $inviter_1['member_name'] . '->' . $order['buyer_name'] . '，订单号' . $order['order_sn'],
+                ));
             }
         }
         if (config('ds_config.inviter_level') <= 2) {
@@ -296,32 +294,32 @@ class Buyvirtual
         }
         $inviter_3 = Db::name('member')->where('member_id', $inviter_3_id)->field('inviter_id,member_id,member_name')->find();
         if ($inviter_3 && isset($inviter_ratios[2]) && floatval($inviter_ratios[2]) > 0) {
-            $ratio=round($inviter_ratios[2]*$goods_common_info['inviter_ratio']/100,2);
+            $ratio = round($inviter_ratios[2] * $goods_common_info['inviter_ratio'] / 100, 2);
             $money_3 = round($inviter_ratios[2] / 100 * $goods_amount, 2);
             if ($money_3 > 0) {
-    
-                    //生成推广记录
-                    Db::name('orderinviter')->insert(array(
-                        'orderinviter_addtime' => TIMESTAMP,
-                        'orderinviter_goods_amount'=>$order['order_amount'],
-                        'orderinviter_goods_quantity'=>$goods['goods_num'],
-                        'orderinviter_order_type'=>1,
-                        'orderinviter_goods_commonid' => $goods_common_info['goods_commonid'],
-                        'orderinviter_goods_id' => $goods['goods_id'],
-                        'orderinviter_level' => 3,
+
+                //生成推广记录
+                Db::name('orderinviter')->insert(array(
+                    'orderinviter_addtime' => TIMESTAMP,
+                    'orderinviter_goods_amount' => $order['order_amount'],
+                    'orderinviter_goods_quantity' => $goods['goods_num'],
+                    'orderinviter_order_type' => 1,
+                    'orderinviter_goods_commonid' => $goods_common_info['goods_commonid'],
+                    'orderinviter_goods_id' => $goods['goods_id'],
+                    'orderinviter_level' => 3,
                     'orderinviter_ratio' => $ratio,
-                        'orderinviter_goods_name' => $goods['goods_name'],
-                        'orderinviter_order_id' => $order_id,
-                        'orderinviter_order_sn' => $order['order_sn'],
-                        'orderinviter_member_id' => $inviter_3['member_id'],
-                        'orderinviter_member_name' => $inviter_3['member_name'],
-                        'orderinviter_money' => $money_3,
-                        'orderinviter_remark' => '获得三级推荐佣金，佣金比例' . $ratio . '%，推荐关系' . $inviter_3['member_name'] . '->' . $inviter_2['member_name'] . '->' . $inviter_1['member_name'] . '->' . $order['buyer_name'] . '，订单号' . $order['order_sn'],
-                    ));
-    
+                    'orderinviter_goods_name' => $goods['goods_name'],
+                    'orderinviter_order_id' => $order_id,
+                    'orderinviter_order_sn' => $order['order_sn'],
+                    'orderinviter_member_id' => $inviter_3['member_id'],
+                    'orderinviter_member_name' => $inviter_3['member_name'],
+                    'orderinviter_money' => $money_3,
+                    'orderinviter_remark' => '获得三级推荐佣金，佣金比例' . $ratio . '%，推荐关系' . $inviter_3['member_name'] . '->' . $inviter_2['member_name'] . '->' . $inviter_1['member_name'] . '->' . $order['buyer_name'] . '，订单号' . $order['order_sn'],
+                ));
             }
         }
     }
+
     /**
      * 生成订单
      * @param array $input 表单数据
@@ -342,28 +340,28 @@ class Buyvirtual
         //验证代金券
         if (!empty($input['voucher'])) {
             if (preg_match_all('/^(\d+)\|([\d.]+)$/', $input['voucher'], $matchs)) {
-                    if (floatval($matchs[2][0]) > 0) {
-                        $input_voucher=array();
-                        $input_voucher['vouchertemplate_id'] = $matchs[1][0];
-                        $input_voucher['voucher_price'] = $matchs[2][0];
-                  
-                        $voucher_list = $goods_info['voucher_list'];
-                        if(is_array($voucher_list) && isset($voucher_list[$input_voucher['vouchertemplate_id']])){
-                          $input_voucher['voucher_id'] = $voucher_list[$input_voucher['vouchertemplate_id']]['voucher_id'];
-                          $input_voucher['voucher_code'] = $voucher_list[$input_voucher['vouchertemplate_id']]['voucher_code'];
-                          $input_voucher['voucher_owner_id'] = $voucher_list[$input_voucher['vouchertemplate_id']]['voucher_owner_id'];
-                          $input_voucher['voucher_price']=floatval($input_voucher['voucher_price']);
-                          $pay_total=bcsub($pay_total,$input_voucher['voucher_price'],2);
-                          if($pay_total<0){
-                              $pay_total=0;
-                          }
-                        }else{
-                          $input_voucher=array();
+                if (floatval($matchs[2][0]) > 0) {
+                    $input_voucher = array();
+                    $input_voucher['vouchertemplate_id'] = $matchs[1][0];
+                    $input_voucher['voucher_price'] = $matchs[2][0];
+
+                    $voucher_list = $goods_info['voucher_list'];
+                    if (is_array($voucher_list) && isset($voucher_list[$input_voucher['vouchertemplate_id']])) {
+                        $input_voucher['voucher_id'] = $voucher_list[$input_voucher['vouchertemplate_id']]['voucher_id'];
+                        $input_voucher['voucher_code'] = $voucher_list[$input_voucher['vouchertemplate_id']]['voucher_code'];
+                        $input_voucher['voucher_owner_id'] = $voucher_list[$input_voucher['vouchertemplate_id']]['voucher_owner_id'];
+                        $input_voucher['voucher_price'] = floatval($input_voucher['voucher_price']);
+                        $pay_total = bcsub($pay_total, $input_voucher['voucher_price'], 2);
+                        if ($pay_total < 0) {
+                            $pay_total = 0;
                         }
+                    } else {
+                        $input_voucher = array();
                     }
                 }
+            }
         }
-        
+
         $order['order_sn'] = makePaySn($member_info['member_id']);
         $order['buyer_id'] = $member_info['member_id'];
         $order['buyer_name'] = $member_info['member_name'];
@@ -382,10 +380,10 @@ class Buyvirtual
         $order['vr_invalid_refund'] = $goods_info['virtual_invalid_refund'];
         $order['order_from'] = $input['order_from'];
         $order['order_promotion_type'] = 0;
-        if (isset($goods_info['ifgroupbuy'])&&$goods_info['ifgroupbuy'] == 1) {
+        if (isset($goods_info['ifgroupbuy']) && $goods_info['ifgroupbuy'] == 1) {
             $order['order_promotion_type'] = 1;
             $order['promotions_id'] = $goods_info['groupbuy_id'];
-        } else if(isset($goods_info['ifpintuan']) && intval($input['pintuan_id'])>0){
+        } else if (isset($goods_info['ifpintuan']) && intval($input['pintuan_id']) > 0) {
             $order['order_promotion_type'] = 2;
             $order['promotions_id'] = $input['pintuangroup_id'];
         }
@@ -396,10 +394,10 @@ class Buyvirtual
             throw new \think\Exception('订单保存失败', 10006);
         }
         $order['order_id'] = $order_id;
-        if($order['order_promotion_type'] == 2){
-            $res=model('buy_1','logic')->updatePintuan($input,$goods_info,$order,1,$member_info['member_id']);
-            if(!$order['promotions_id']){
-                $vrorder_model->editVrorder(array('promotions_id'=>$res['pintuangroup_id']), array('order_id'=>$order['order_id']));
+        if ($order['order_promotion_type'] == 2) {
+            $res = model('buy_1', 'logic')->updatePintuan($input, $goods_info, $order, 1, $member_info['member_id']);
+            if (!$order['promotions_id']) {
+                $vrorder_model->editVrorder(array('promotions_id' => $res['pintuangroup_id']), array('order_id' => $order['order_id']));
             }
         }
         //更新使用的代金券状态
@@ -418,150 +416,7 @@ class Buyvirtual
             $groupbuy_info = array();
             $groupbuy_info['groupbuy_id'] = $goods_info['groupbuy_id'];
             $groupbuy_info['quantity'] = $goods_info['quantity'];
-            model('cron')->addCron(array('cron_exetime'=>TIMESTAMP,'cron_type'=>'editGroupbuySaleCount','cron_value'=>serialize($groupbuy_info)));
-        }
-    }
-
-    /**
-     * 充值卡支付
-     * 如果充值卡足够就单独支付了该订单，如果不足就暂时冻结，等API支付成功了再彻底扣除
-     */
-    private function _rcbPay($order_info, $input, $buyer_info) {
-        $available_rcb_amount = floatval($buyer_info['available_rc_balance']);
-
-        if ($available_rcb_amount <= 0) return;
-        if(!isset($order_info['rcb_amount'])){
-            $order_info['rcb_amount']=0;
-        }
-            
-        if(!isset($order_info['pd_amount'])){
-            $order_info['pd_amount']=0;
-        }
-          
-        $vrorder_model = model('vrorder');
-        $predeposit_model = model('predeposit');
-
-        $order_amount = floatval($order_info['order_amount']);
-        $data_pd = array();
-        $data_pd['member_id'] = $buyer_info['member_id'];
-        $data_pd['member_name'] = $buyer_info['member_name'];
-        $data_pd['amount'] = $order_amount;
-        $data_pd['order_sn'] = $order_info['order_sn'];
-
-        if ($available_rcb_amount >= $order_amount) {
-
-            // 预存款立即支付，订单支付完成
-            $predeposit_model->changeRcb('order_pay',$data_pd);
-            $available_rcb_amount -= $order_amount;
-
-            // 订单状态 置为已支付
-            $data_order = array();
-            $order_info['order_state'] = $data_order['order_state'] = ORDER_STATE_PAY;
-            $data_order['payment_time'] = TIMESTAMP;
-            $data_order['payment_code'] = 'predeposit';
-            $data_order['rcb_amount'] = $order_info['order_amount'];
-            $result = $vrorder_model->editVrorder($data_order,array('order_id'=>$order_info['order_id']));
-            if (!$result) {
-                throw new \think\Exception('订单更新失败', 10006);
-            }
-            if($order_info['order_promotion_type']!=2){
-            //发放兑换码
-            $insert = $vrorder_model->addVrorderCode($order_info);
-            //发送兑换码到手机
-            $param = array('order_id'=>$order_info['order_id'],'buyer_id'=>$order_info['buyer_id'],'buyer_phone'=>$order_info['buyer_phone']);
-            $vrorder_model->sendVrCode($param);
-            }
-        } else {
-
-            //暂冻结预存款,后面还需要 API彻底完成支付
-            $data_pd['amount'] = $available_rcb_amount;
-            $predeposit_model->changeRcb('order_freeze',$data_pd);
-            //预存款支付金额保存到订单
-            $data_order = array();
-            $order_info['rcb_amount'] = $data_order['rcb_amount'] = $available_rcb_amount;
-            $result = $vrorder_model->editVrorder($data_order,array('order_id'=>$order_info['order_id']));
-            if (!$result) {
-                throw new \think\Exception('订单更新失败', 10006);
-            }
-        }
-        return $order_info;
-    }
-
-    /**
-     * 预存款支付
-     * 如果预存款足够就单独支付了该订单，如果不足就暂时冻结，等API支付成功了再彻底扣除
-     */
-    private function _pdPay($order_info, $input, $buyer_info) {
-        if ($order_info['order_state'] == ORDER_STATE_PAY) return;
-
-        $available_pd_amount = floatval($buyer_info['available_predeposit']);
-        if ($available_pd_amount <= 0) return;
-        if(!isset($order_info['rcb_amount'])){
-            $order_info['rcb_amount']=0;
-        }
-            
-        if(!isset($order_info['pd_amount'])){
-            $order_info['pd_amount']=0;
-        }
-        $vrorder_model = model('vrorder');
-        $predeposit_model = model('predeposit');
-
-        //充值卡支付金额
-        $rcb_amount = isset($order_info['rcb_amount'])?floatval($order_info['rcb_amount']):0;
-        
-        $order_amount = floatval($order_info['order_amount'])-$rcb_amount;
-        $data_pd = array();
-        $data_pd['member_id'] = $buyer_info['member_id'];
-        $data_pd['member_name'] = $buyer_info['member_name'];
-        $data_pd['amount'] = $order_amount;
-        $data_pd['order_sn'] = $order_info['order_sn'];
-
-        if ($available_pd_amount >= $order_amount) {
-
-            //预存款立即支付，订单支付完成
-            $predeposit_model->changePd('order_pay',$data_pd);
-            $available_pd_amount -= $order_amount;
-
-            //下单，支付被冻结的充值卡
-            $pd_amount = $rcb_amount;
-            if ($pd_amount > 0) {
-                $data_pd = array();
-                $data_pd['member_id'] = $buyer_info['member_id'];
-                $data_pd['member_name'] = $buyer_info['member_name'];
-                $data_pd['amount'] = $pd_amount;
-                $data_pd['order_sn'] = $order_info['order_sn'];
-                $predeposit_model->changeRcb('order_comb_pay',$data_pd);
-            }
-
-            // 订单状态 置为已支付
-            $data_order = array();
-            $data_order['order_state'] = ORDER_STATE_PAY;
-            $data_order['payment_time'] = TIMESTAMP;
-            $data_order['payment_code'] = 'predeposit';
-            $data_order['pd_amount'] = $order_amount;
-            $result = $vrorder_model->editVrorder($data_order,array('order_id'=>$order_info['order_id']));
-            if (!$result) {
-                throw new \think\Exception('订单更新失败', 10006);
-            }
-            if($order_info['order_promotion_type']!=2){
-            //发放兑换码
-            $vrorder_model->addVrorderCode($order_info);
-            //发送兑换码到手机
-            $param = array('order_id'=>$order_info['order_id'],'buyer_id'=>$order_info['buyer_id'],'buyer_phone'=>$order_info['buyer_phone']);
-            $vrorder_model->sendVrCode($param);
-            }
-        } else {
-
-            //暂冻结预存款,后面还需要 API彻底完成支付
-            $data_pd['amount'] = $available_pd_amount;
-            $predeposit_model->changePd('order_freeze',$data_pd);
-            //预存款支付金额保存到订单
-            $data_order = array();
-            $data_order['pd_amount'] = $available_pd_amount;
-            $result = $vrorder_model->editVrorder($data_order,array('order_id'=>$order_info['order_id']));
-            if (!$result) {
-                throw new \think\Exception('订单更新失败', 10006);
-            }
+            model('cron')->addCron(array('cron_exetime' => TIMESTAMP, 'cron_type' => 'editGroupbuySaleCount', 'cron_value' => serialize($groupbuy_info)));
         }
     }
 
@@ -572,7 +427,8 @@ class Buyvirtual
     public function rcbPay($order_info, $input, $buyer_info) {
         $available_rcb_amount = floatval($buyer_info['available_rc_balance']);
 
-        if ($available_rcb_amount <= 0) $order_info;
+        if ($available_rcb_amount <= 0)
+            $order_info;
         $vrorder_model = model('vrorder');
         $predeposit_model = model('predeposit');
 
@@ -586,7 +442,7 @@ class Buyvirtual
         if ($available_rcb_amount >= $order_amount) {
 
             // 预存款立即支付，订单支付完成
-            $predeposit_model->changeRcb('order_pay',$data_pd);
+            $predeposit_model->changeRcb('order_pay', $data_pd);
             $available_rcb_amount -= $order_amount;
             //支付被冻结的充值卡
             $rcb_amount = isset($order_info['rcb_amount']) ? floatval($order_info['rcb_amount']) : 0;
@@ -604,29 +460,38 @@ class Buyvirtual
             $data_order['payment_time'] = TIMESTAMP;
             $data_order['payment_code'] = 'predeposit';
             $data_order['rcb_amount'] = round($order_info['rcb_amount'] + $order_amount, 2);
-            $result = $vrorder_model->editVrorder($data_order,array('order_id'=>$order_info['order_id']));
+            $result = $vrorder_model->editVrorder($data_order, array('order_id' => $order_info['order_id']));
+
+            //添加订单日志
+            $data = array();
+            $data['order_id'] = $order_info['order_id'];
+            $data['log_role'] = 'buyer';
+            $data['log_user'] = '';
+            $data['log_msg'] = '使用充值卡支付';
+            model('orderlog')->addVrOrderlog($data);
+
             if (!$result) {
                 throw new \think\Exception('订单更新失败', 10006);
             }
-            if($order_info['order_promotion_type']!=2){
-            //发放兑换码
-            $insert = $vrorder_model->addVrorderCode($order_info);
-            //发送兑换码到手机
-            $param = array('order_id'=>$order_info['order_id'],'buyer_id'=>$order_info['buyer_id'],'buyer_phone'=>$order_info['buyer_phone']);
-            $vrorder_model->sendVrCode($param);
-            if (!$insert) {
-                throw new \think\Exception('兑换码发送失败', 10006);
-            }
+            if ($order_info['order_promotion_type'] != 2) {
+                //发放兑换码
+                $insert = $vrorder_model->addVrorderCode($order_info);
+                //发送兑换码到手机
+                $param = array('order_id' => $order_info['order_id'], 'buyer_id' => $order_info['buyer_id'], 'buyer_phone' => $order_info['buyer_phone']);
+                $vrorder_model->sendVrCode($param);
+                if (!$insert) {
+                    throw new \think\Exception('兑换码发送失败', 10006);
+                }
             }
         } else {
 
             //暂冻结预存款,后面还需要 API彻底完成支付
             $data_pd['amount'] = $available_rcb_amount;
-            $predeposit_model->changeRcb('order_freeze',$data_pd);
+            $predeposit_model->changeRcb('order_freeze', $data_pd);
             //预存款支付金额保存到订单
             $data_order = array();
             $order_info['rcb_amount'] = $data_order['rcb_amount'] = round($order_info['rcb_amount'] + $available_rcb_amount, 2);
-            $result = $vrorder_model->editVrorder($data_order,array('order_id'=>$order_info['order_id']));
+            $result = $vrorder_model->editVrorder($data_order, array('order_id' => $order_info['order_id']));
             if (!$result) {
                 throw new \think\Exception('订单更新失败', 10006);
             }
@@ -639,10 +504,12 @@ class Buyvirtual
      * 如果预存款足够就单独支付了该订单，如果不足就暂时冻结，等API支付成功了再彻底扣除
      */
     public function pdPay($order_info, $input, $buyer_info) {
-        if ($order_info['order_state'] == ORDER_STATE_PAY) $order_info;
+        if ($order_info['order_state'] == ORDER_STATE_PAY)
+            $order_info;
 
         $available_pd_amount = floatval($buyer_info['available_predeposit']);
-        if ($available_pd_amount <= 0) $order_info;
+        if ($available_pd_amount <= 0)
+            $order_info;
 
         $vrorder_model = model('vrorder');
         $predeposit_model = model('predeposit');
@@ -657,7 +524,7 @@ class Buyvirtual
         if ($available_pd_amount >= $order_amount) {
 
             //预存款立即支付，订单支付完成
-            $predeposit_model->changePd('order_pay',$data_pd);
+            $predeposit_model->changePd('order_pay', $data_pd);
             $available_pd_amount -= $order_amount;
 
             //下单，支付被冻结的充值卡
@@ -668,7 +535,7 @@ class Buyvirtual
                 $data_pd['member_name'] = $buyer_info['member_name'];
                 $data_pd['amount'] = $pd_amount;
                 $data_pd['order_sn'] = $order_info['order_sn'];
-                $predeposit_model->changeRcb('order_comb_pay',$data_pd);
+                $predeposit_model->changeRcb('order_comb_pay', $data_pd);
             }
 
             //支付被冻结的预存款
@@ -687,26 +554,35 @@ class Buyvirtual
             $order_info['payment_time'] = $data_order['payment_time'] = TIMESTAMP;
             $order_info['payment_code'] = $data_order['payment_code'] = 'predeposit';
             $order_info['pd_amount'] = $data_order['pd_amount'] = round($order_info['pd_amount'] + $order_amount, 2);
-            $result = $vrorder_model->editVrorder($data_order,array('order_id'=>$order_info['order_id']));
+            $result = $vrorder_model->editVrorder($data_order, array('order_id' => $order_info['order_id']));
+
+            //添加订单日志
+            $data = array();
+            $data['order_id'] = $order_info['order_id'];
+            $data['log_role'] = 'buyer';
+            $data['log_user'] = '';
+            $data['log_msg'] = '使用预存款支付';
+            model('orderlog')->addVrOrderlog($data);
+
             if (!$result) {
                 throw new \think\Exception('订单更新失败', 10006);
             }
-            if($order_info['order_promotion_type']!=2){
-            //发放兑换码
-            $vrorder_model->addVrorderCode($order_info);
-            //发送兑换码到手机
-            $param = array('order_id'=>$order_info['order_id'],'buyer_id'=>$order_info['buyer_id'],'buyer_phone'=>$order_info['buyer_phone']);
-            $vrorder_model->sendVrCode($param);
+            if ($order_info['order_promotion_type'] != 2) {
+                //发放兑换码
+                $vrorder_model->addVrorderCode($order_info);
+                //发送兑换码到手机
+                $param = array('order_id' => $order_info['order_id'], 'buyer_id' => $order_info['buyer_id'], 'buyer_phone' => $order_info['buyer_phone']);
+                $vrorder_model->sendVrCode($param);
             }
         } else {
 
             //暂冻结预存款,后面还需要 API彻底完成支付
             $data_pd['amount'] = $available_pd_amount;
-            $predeposit_model->changePd('order_freeze',$data_pd);
+            $predeposit_model->changePd('order_freeze', $data_pd);
             //预存款支付金额保存到订单
             $data_order = array();
             $order_info['pd_amount'] = $data_order['pd_amount'] = round($order_info['pd_amount'] + $available_pd_amount, 2);
-            $result = $vrorder_model->editVrorder($data_order,array('order_id'=>$order_info['order_id']));
+            $result = $vrorder_model->editVrorder($data_order, array('order_id' => $order_info['order_id']));
             if (!$result) {
                 throw new \think\Exception('订单更新失败', 10006);
             }
@@ -720,10 +596,12 @@ class Buyvirtual
      * @return array
      */
     private function _getGroupbuyInfo($goods_info = array()) {
-        if (!config('ds_config.groupbuy_allow') || empty($goods_info) || !is_array($goods_info)) return $goods_info;
+        if (!config('ds_config.groupbuy_allow') || empty($goods_info) || !is_array($goods_info))
+            return $goods_info;
 
         $groupbuy_info = model('groupbuy')->getGroupbuyInfoByGoodsCommonID($goods_info['goods_commonid']);
-        if (empty($groupbuy_info)) return $goods_info;
+        if (empty($groupbuy_info))
+            return $goods_info;
         // 虚拟抢购数量限制
         if ($groupbuy_info['groupbuy_upper_limit'] > 0 && $groupbuy_info['groupbuy_upper_limit'] < $goods_info['virtual_limit']) {
             $goods_info['virtual_limit'] = $groupbuy_info['groupbuy_upper_limit'];

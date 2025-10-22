@@ -121,12 +121,8 @@ $lang['sina_wb_skey_error'] = '请添加应用密钥';
 $lang['sina_function_fail_tip'] = '该功能需要在  php.ini 中 开启 php_curl 扩展，才能使用。';
 $lang['sina_settings'] = '微博同步登录';
 
-$lang['weixin_isuse'] = '是否启用微信扫码登录功能';
-$lang['weixin_appid'] = '应用标识(appid)';
-$lang['weixin_secret'] = '应用密钥';
 $lang['sina_weixin_akey_error'] = '请添加应用标识';
 $lang['sina_weixin_skey_error'] = '请添加应用密钥';
-
 
 
 $lang['site_logo_notice'] = '默认网站LOGO,通用头部显示，最佳显示尺寸为220*46像素';

@@ -330,11 +330,12 @@ class TaobaoImport extends AdminControl {
                 if (!$result) {
 //                    throw new \think\Exception('插入albumpic表失败', 10006);
                 }
+                Db::commit();
             } catch (\Exception $e) {
                 Db::rollback();
                 throw new \think\Exception($e->getMessage(), 10006);
             }
-            Db::commit();
+            
         }
     }
 

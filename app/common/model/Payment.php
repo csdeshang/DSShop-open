@@ -142,7 +142,7 @@ class Payment extends BaseModel {
             $payments = array();
             while (false !== ($entry = $dir->read())) {
                 /* 隐藏文件，当前目录，上一级，排除 */
-                if ($entry{0} == '.') {
+                if ($entry[0] == '.') {
                     continue;
                 }
                 /* 获取支付方式信息 */

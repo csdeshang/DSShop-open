@@ -158,7 +158,7 @@ class Connectsms extends BaseMall {
             $member_model = model('member');
             $member = $member_model->getMemberInfo(array('member_mobile' => $phone)); //检查手机号是否已被注册
             if (!empty($member)) {
-                $member_model->createSession($member); //自动登录
+                $member_model->createSession($member,'login'); //自动登录
                 ds_json_encode(10000,lang('login_index_login_success'), '','',false);
             }
         }
@@ -197,7 +197,7 @@ class Connectsms extends BaseMall {
         $member = $member_model->getMemberInfo(array('member_mobile' => $sms_mobile)); //检查手机号是否已被注册
         if (!empty($member)) {
             $member_model->editMember(array('member_id' => $member['member_id']), array('member_password' => md5($member_password)),$member['member_id']);
-            $member_model->createSession($member); //自动登录
+            $member_model->createSession($member,'login'); //自动登录
             ds_json_encode(10000,lang('password_changed_successfully'));
         }
     }
