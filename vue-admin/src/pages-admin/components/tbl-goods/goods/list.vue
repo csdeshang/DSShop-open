@@ -1,0 +1,285 @@
+<template>
+    <!-- 公共商品列表 显示 TblGoods 表中的数据 -->
+
+    <div>
+        <el-card shadow="never" class="mb-[10px]">
+            <el-form :model="searchParams" inline>
+                <el-form-item label="商品名">
+                    <el-input v-model="searchParams.goods_name" placeholder="输入商品名" clearable />
+                </el-form-item>
+                <el-form-item label="商品分类">
+                    <el-tree-select
+                        v-model="searchParams.category_id"
+                        :data="categoryList"
+                        node-key="id"
+                        :props="{ label: 'name', children: 'children' }"
+                        placeholder="全部"
+                        clearable
+                        check-strictly
+                        filterable
+                        class="w-[240px]"
+                        @change="handleCategoryChange"
+                    />
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="resetPage">查询</el-button>
+                    <el-button @click="resetSearchParams">重置</el-button>
+                </el-form-item>
+            </el-form>
+        </el-card>
+
+        <el-card shadow="never">
+            <el-tabs v-model="searchParams.tab_selected" @tab-change="handleTabChange">
+                <el-tab-pane name="all" label="全部"></el-tab-pane>
+                <el-tab-pane name="pending" label="店铺销售中"></el-tab-pane>
+                <el-tab-pane name="un_send" label="店铺下架"></el-tab-pane>
+                <el-tab-pane name="pending_review" label="待审核"></el-tab-pane>
+                <el-tab-pane name="review_failed" label="审核失败"></el-tab-pane>
+                <el-tab-pane name="violated" label="违规下架"></el-tab-pane>
+                <el-tab-pane name="sys_recommend" label="系统推荐"></el-tab-pane>
+                <el-tab-pane name="deleted" label="已删除"></el-tab-pane>
+            </el-tabs>
+            <el-table :data="tableData.data" size="large" v-loading="tableData.loading">
+                <el-table-column label="ID" prop="id" width="120" />
+                <el-table-column label="商品" prop="goods_name">
+                    <template #default="{ row }">
+                        <div class="flex flex-row">
+                            <div class="mr-[10px]">
+                                <el-image :src="formatImageUrl(row.cover_image, ThumbnailPresets.small, 'goods')" style="width: 50px; height: 50px;"
+                                    fit="cover" />
+                            </div>
+                            <div>
+                                <div class="text-[14px]">{{ row.goods_name }}</div>
+                            </div>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column label="价格" prop="goodsSku.sku_price" width="100" />
+                <el-table-column label="销量" prop="sales_num" width="100" />
+                <el-table-column label="总库存" prop="stock_num" width="100" />
+                <el-table-column label="排序" prop="sort" width="100" />
+                <el-table-column label="状态" prop="goods_status_desc" width="100" />
+                <el-table-column label="操作" align="right" fixed="right" width="160">
+                    <template #default="{ row }">
+                        <div class="flex flex-row flex-wrap justify-end gap-x-0">
+                            <el-button type="primary" link @click="handleDtail(row)">详情</el-button>
+                            <el-dropdown class="ml-[6px]" @command="(command: string) => handleMore(command, row)">
+                                <el-button type="primary" link>更多<el-icon><arrow-down /></el-icon></el-button>
+                                <template #dropdown>
+                                    <el-dropdown-menu>
+                                        <el-dropdown-item command="previewPc">PC预览</el-dropdown-item>
+                                        <el-dropdown-item command="previewH5">H5预览</el-dropdown-item>
+                                        <el-dropdown-item command="editSysStatus" divided>修改状态</el-dropdown-item>
+                                        <el-dropdown-item command="editSysRecommend">{{ row.sys_recommend_status ? '取消推荐' : '推荐' }}</el-dropdown-item>
+                                        <el-dropdown-item v-if="row.is_deleted != 1" command="softDelete" divided>删除</el-dropdown-item>
+                                        <el-dropdown-item v-if="row.is_deleted == 1" command="restore" divided>恢复</el-dropdown-item>
+                                    </el-dropdown-menu>
+                                </template>
+                            </el-dropdown>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+
+            <div class="flex justify-end mt-[20px]">
+                <el-pagination v-model:current-page="tableData.page_current" v-model:page-size="tableData.page_size"
+                    layout="total, sizes, prev, pager, next, jumper" :total="tableData.total"
+                    @size-change="getTableList()" @current-change="getTableList" />
+            </div>
+
+        </el-card>
+
+
+        <TblGoodsDetail ref="detailTblGoodsDialog" />
+        <!-- 修改状态 sys_status -->
+        <EditSysStatus ref="editSysStatusDialog" @complete="getTableList" />
+
+    </div>
+
+</template>
+
+<script lang="ts" setup>
+
+import { reactive, ref, onMounted } from 'vue';
+import { ElMessageBox, ElMessage } from 'element-plus'
+
+import { formatImageUrl, ThumbnailPresets } from '@/utils/image'
+import { openGoodsPreview } from '@/utils/goods-preview'
+
+import { ArrowDown } from '@element-plus/icons-vue'
+import { usePagination } from '@/hooks/usePagination'
+import { getTblGoodsPages, updateTblGoodsSysRecommend, softDeleteTblGoods, restoreTblGoods } from '@/pages-admin/main/api/tbl-goods/tblGoods'
+import { getTblGoodsCategoryTree } from '@/pages-admin/main/api/tbl-goods/tblGoodsCategory'
+import TblGoodsDetail from './detail.vue'
+import EditSysStatus from './editSysStatus.vue'
+
+
+const props = defineProps({
+    //公共店铺关联的店铺类型
+    platform: {
+        type: String,
+        default: ''
+    },
+})
+
+
+
+
+const searchParams = reactive({
+    goods_name: '',
+    category_id: undefined as number | undefined,
+    platform: props.platform,
+    tab_selected: 'all'
+})
+
+const categoryList = ref<any[]>([])
+
+const fetchCategoryList = () => {
+    getTblGoodsCategoryTree({ platform: props.platform }).then(res => {
+        categoryList.value = res.data || []
+    }).catch(() => {
+        categoryList.value = []
+    })
+}
+
+onMounted(() => {
+    fetchCategoryList()
+})
+
+const handleCategoryChange = (val: number | null) => {
+    if (!val) {
+        searchParams.category_id = undefined
+    }
+}
+
+// 切换列表 Tab
+const handleTabChange = (name: any) => {
+  searchParams.tab_selected = name
+  getTableList()
+}
+
+const {
+    tableData,
+    getTableList,
+    resetSearchParams,
+    resetPage
+} = usePagination({
+    page_current: 1,
+    page_size: 10,
+    requestFun: getTblGoodsPages,
+    searchParams: searchParams
+})
+getTableList()
+
+//详情
+const detailTblGoodsDialog = ref()
+const handleDtail = (row: any) => {
+    detailTblGoodsDialog.value.setDialogData(row)
+    detailTblGoodsDialog.value?.openDialog()
+}
+
+// 修改状态
+const editSysStatusDialog = ref()
+const handleEditSysStatus = (row: any) => {
+    editSysStatusDialog.value.setDialogData(row)
+    editSysStatusDialog.value?.openDialog()
+}
+
+// 更多操作
+const handleMore = (command: string, row: any) => {
+    switch (command) {
+        case 'previewPc':
+            openGoodsPreview(row, 'pc')
+            break
+        case 'previewH5':
+            openGoodsPreview(row, 'h5')
+            break
+        case 'editSysStatus':
+            handleEditSysStatus(row)
+            break
+        case 'editSysRecommend':
+            handleEditSysRecommend(row)
+            break
+        case 'softDelete':
+            handleSoftDelete(row.id)
+            break
+        case 'restore':
+            handleRestore(row.id)
+            break
+        default:
+            console.log('未知命令', command)
+    }
+}
+
+/** 软删除商品 */
+const handleSoftDelete = (id: number) => {
+    ElMessageBox.confirm('确定要删除此商品吗？删除后可以恢复。', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        softDeleteTblGoods(id).then(() => {
+            ElMessage.success('删除成功')
+            getTableList()
+        }).catch(() => {})
+    }).catch(() => {})
+}
+
+/** 恢复商品 */
+const handleRestore = (id: number) => {
+    ElMessageBox.confirm('确定要恢复此商品吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        restoreTblGoods(id).then(() => {
+            ElMessage.success('恢复成功')
+            getTableList()
+        }).catch(() => {})
+    }).catch(() => {})
+}
+
+// 处理推荐/取消推荐商品
+const handleEditSysRecommend = async (row: any) => {
+  try {
+    const newStatus = !row.sys_recommend_status;
+    const actionText = newStatus ? '推荐' : '取消推荐';
+    
+    // 可以在此添加确认对话框，防止误操作
+    await ElMessageBox.confirm(
+      `确定要${actionText}商品"${row.goods_name}"吗？`, 
+      '提示', 
+      {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }
+    );
+    
+    // 调用API更新推荐状态
+    const res = await updateTblGoodsSysRecommend({
+      id: row.id,
+      sys_recommend_status: newStatus ? 1 : 0
+    });
+    
+    if (res.code === 10000) {
+      ElMessage.success(`商品${actionText}成功`);
+      // 刷新列表
+      getTableList();
+    } else {
+      ElMessage.error(res.message || `商品${actionText}失败`);
+    }
+  } catch (error) {
+    // 用户取消操作或发生错误
+    if (error !== 'cancel') {
+      console.error('修改推荐状态失败:', error);
+      ElMessage.error('操作失败，请重试');
+    }
+  }
+};
+
+
+
+
+
+</script>
