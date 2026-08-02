@@ -1,0 +1,465 @@
+page {
+    background-color: $ds-bg-page;
+    min-height: 100vh;
+    font-size: 28rpx;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+
+//边框半径
+.ds-rounded-sm {
+    border-radius: 16rpx;
+}
+
+.ds-rounded {
+    border-radius: 20rpx;
+}
+
+.ds-rounded-md {
+    border-radius: 24rpx;
+}
+
+
+
+.mt-10{
+    margin-top: 10rpx;
+}
+.mt-20{
+    margin-top: 20rpx;
+}
+.mt-30{
+    margin-top: 30rpx;
+}
+.mt-40{
+    margin-top: 40rpx;
+}
+.mt-50{
+    margin-top: 50rpx;
+}
+
+.ml-10{
+    margin-left: 10rpx;
+}
+.ml-20{
+    margin-left: 20rpx;
+}
+.mr-10{
+    margin-right: 10rpx;
+}
+.mr-20{
+    margin-right: 20rpx;
+}
+.mb-10{
+    margin-bottom: 10rpx;
+}
+.mb-20{
+    margin-bottom: 20rpx;
+}
+.mb-30{
+    margin-bottom: 30rpx;
+}
+.mb-40{
+    margin-bottom: 40rpx;
+}
+.mb-50{
+    margin-bottom: 50rpx;
+}
+
+.p-10{
+    padding: 10rpx;
+}
+.p-20{
+    padding: 20rpx;
+}
+.p-30{
+    padding: 30rpx;
+}
+
+
+.pt-10{
+    padding-top: 10rpx;
+}
+.pt-20{
+    padding-top: 20rpx;
+}
+.pt-30{
+    padding-top: 30rpx;
+}
+
+.pb-10{
+    padding-bottom: 10rpx;
+}
+.pb-20{
+    padding-bottom: 20rpx;
+}
+.pb-30{
+    padding-bottom: 30rpx;
+}
+
+
+
+.pl-10{
+    padding-left: 10rpx;
+}
+.pl-20{
+    padding-left: 20rpx;
+}
+.pl-30{
+    padding-left: 30rpx;
+}
+
+.pr-10{
+    padding-right: 10rpx;
+}
+.pr-20{
+    padding-right: 20rpx;
+}
+.pr-30{
+    padding-right: 30rpx;
+}
+
+
+
+
+
+@mixin ds-button-core {
+    color: #fff;
+    border: none;
+    border-radius: 40rpx;
+    font-weight: 500;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #FF7B52 0%, #FF6034 100%);
+    box-shadow: 0 4rpx 16rpx rgba(255, 96, 52, 0.3);
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        background: linear-gradient(135deg, #FF8A66 0%, #FF6E4A 100%);
+        box-shadow: 0 6rpx 20rpx rgba(255, 96, 52, 0.4);
+    }
+
+    &:active {
+        transform: translateY(2rpx);
+        box-shadow: 0 2rpx 8rpx rgba(255, 96, 52, 0.3);
+    }
+
+    &:disabled {
+        background: #e0e0e0;
+        box-shadow: none;
+        cursor: not-allowed;
+        opacity: 0.7;
+    }
+}
+
+
+.ds-btn-lg {
+    @include ds-button-core;
+    padding: 0 60rpx;
+    font-size: 32rpx;
+    width: 100%;
+    height: 88rpx;
+    letter-spacing: 1rpx;
+}
+
+.ds-btn-md {
+    @include ds-button-core;
+    padding: 0 40rpx;
+    font-size: 28rpx;
+    min-width: 180rpx;
+    height: 72rpx;
+}
+
+.ds-btn-sm {
+    @include ds-button-core;
+    padding: 0 32rpx;
+    font-size: 24rpx;
+    min-width: 140rpx;
+    height: 60rpx;
+}
+
+// 默认橙色主题
+.ds-btn-orange {
+    background: linear-gradient(135deg, #FF7B52 0%, #FF6034 100%);
+    box-shadow: 0 4rpx 16rpx rgba(255, 96, 52, 0.3);
+
+    &:hover {
+        background: linear-gradient(135deg, #FF8A66 0%, #FF6E4A 100%);
+        box-shadow: 0 6rpx 20rpx rgba(255, 96, 52, 0.4);
+    }
+}
+// 蓝色主题
+.ds-btn-blue {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    box-shadow: 0 4rpx 16rpx rgba(59, 130, 246, 0.3);
+
+    &:hover {
+        background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+        box-shadow: 0 6rpx 20rpx rgba(59, 130, 246, 0.4);
+    }
+}
+// 绿色主题
+.ds-btn-green {
+    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    box-shadow: 0 4rpx 16rpx rgba(16, 185, 129, 0.3);
+
+    &:hover {
+        background: linear-gradient(135deg, #34D399 0%, #10B981 100%);
+        box-shadow: 0 6rpx 20rpx rgba(16, 185, 129, 0.4);
+    }
+}
+
+// 白色主题 
+.ds-btn-white {
+    background: #ffffff;
+    color: #333333;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+    border: 1rpx solid #e0e0e0;
+
+    &:hover {
+        background: #f5f5f5;
+    }
+
+    &:active {
+        background: #eeeeee;
+    }
+
+    &:disabled {
+        background: #f5f5f5;
+        color: #b0b0b0;
+    }
+}
+
+
+
+//通用卡片样式
+.ds-card {
+    margin: 20rpx;
+    padding: 30rpx;
+    background-color: #fff;
+    border-radius: 12rpx;
+    box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20rpx;
+        padding-bottom: 20rpx;
+        border-bottom: 1rpx solid #f0f0f0;
+
+        .card-title {
+            margin-left: 10rpx;
+            font-size: 28rpx;
+            font-weight: bold;
+            color: #333;
+        }
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20rpx;
+        font-size: 26rpx;
+
+        .info-label {
+            color: #999;
+            width: 160rpx;
+        }
+
+        .info-value {
+            color: #333;
+        }
+    }
+
+    .log-item {
+        padding: 16rpx 0;
+        border-bottom: 1rpx solid #f5f5f5;
+
+        .log-content {
+            font-size: 28rpx;
+            margin-bottom: 8rpx;
+        }
+
+        .log-time {
+            font-size: 24rpx;
+            color: #999;
+        }
+    }
+
+}
+
+.promotion-type{
+    font-size: 22rpx;
+    color: #FF6034;
+    padding: 4rpx 10rpx;
+    display: inline-block;
+    margin-right: 10rpx;
+    background-color: rgba(255, 96, 52, 0.1);
+    border-radius: 4rpx;
+}
+
+
+
+
+
+//通用输入相关样式
+.ds-field-line {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    min-height: 50px;
+    background: #fff;
+    border-bottom: 1px dashed #eee;
+    padding:0rpx 20rpx;
+
+    .field-icon{
+        
+    }
+
+    .field-name {
+        align-items: center;
+        font-size: $ds-font-md;
+        color: #333333;
+        font-weight:400;
+        width: 100px;
+    }
+
+    .field-input {
+        display: flex;
+        flex: 1;
+        font-size: $ds-font-md;
+        color: #333333;
+    }
+
+    .field-textarea {
+        display: flex;
+        flex: 1;
+        font-size: $ds-font-md;
+        min-height:60rpx;
+        color: #333333;
+        line-height: 1.6;
+        padding: 30rpx 0;
+        box-sizing: border-box;
+        vertical-align: middle;
+        resize: none;
+        border: none;
+        outline: none;
+        background: transparent;
+    }
+
+
+    .field-info {
+        display: flex;
+        flex: 1;
+        font-size: $ds-font-md;
+        color: #A2A6AD;
+        justify-content: flex-end;
+    }
+
+    .field-unit {
+        margin-left: 10rpx;
+        font-size: 28rpx;
+        color: #999;
+    }
+
+    .pic-captcha {
+        width: auto;
+        height: 35px;
+        min-width: 110px;
+    }
+
+    .send-msg {
+        text-align: center;
+        color: $ds-primary-color;
+        min-width: 40px;
+        height: 24px;
+        line-height: 24px;
+        padding: 0 14px;
+        font-size: 12px;
+    }
+
+    .arrow {
+        font-size: $ds-font-md;
+        color: #A2A6AD
+    }
+}
+
+
+
+.ds-field-line-textarea {
+    padding: 24rpx 20rpx;
+    border-bottom: 1px solid #f0f0f0;
+
+    .field-name {
+        font-size: $ds-font-md;
+        color: #333333;
+        font-weight: 500;
+        margin-bottom:30rpx;
+        display: block;
+    }
+
+    .field-textarea {
+        width: 100%;
+        height: 180rpx;
+        font-size: 28rpx;
+        color: #333;
+        background-color: #f9f9f9;
+        padding: 20rpx;
+        border-radius: 8rpx;
+        box-sizing: border-box;
+        line-height: 1.5;
+
+        &::placeholder {
+            color: #999;
+        }
+    }
+}
+
+
+.ds-popup-header {
+    height: 40px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #f0f2f5;
+
+    .cancel,
+    .confirm {
+        font-size: $ds-font-sm;
+        border: none;
+        border-radius: 0;
+        background-color: #f0f2f5;
+
+    }
+
+    .cancel {
+        margin-left: 10px;
+        color: #4e545d;
+    }
+
+    .confirm {
+        margin-right: 10px;
+        color: red;
+    }
+
+    .title {
+        color: #4e545d;
+        line-height: 40px;
+        font-size: $ds-font-lg;
+    }
+}
+
+
+.status-holder {
+    /*  #ifndef  APP-PLUS-NVUE  */
+    height: var(--status-bar-height);
+    /*  #endif  */
+}

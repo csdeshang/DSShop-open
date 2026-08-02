@@ -1,0 +1,871 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "home/pages/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "home/pages/editable/preview",
+			"style": {
+				"navigationBarTitleText": "预览"
+			}
+		},
+		{
+			"path": "home/pages/diy",
+			"style": {
+				"navigationBarTitleText": "专题"
+			}
+		}
+		
+	],
+	"subPackages": [
+		{
+			// 公共页面
+			"root": "shared/pages",
+			"pages": [
+				{
+					"path": "auth/login/index",
+					"style": {
+						"navigationBarTitleText": "登录"
+					}
+				},
+				{
+					"path": "auth/register/index",
+					"style": {
+						"navigationBarTitleText": "注册"
+					}
+				},
+				{
+					"path": "auth/resetpwd/index",
+					"style": {
+						"navigationBarTitleText": "重置密码"
+					}
+				},
+				{
+					"path": "system/agreement",
+					"style": {
+						"navigationBarTitleText": "协议"
+					}
+				},
+				{
+					"path": "contact_us",
+					"style": {
+						"navigationBarTitleText": "联系客服"
+					}
+				},
+				{
+					"path": "system/notice/index",
+					"style": {
+						"navigationBarTitleText": "消息通知"
+					}
+				},
+				{
+					"path": "system/notice/detail",
+					"style": {
+						"navigationBarTitleText": "消息通知详情"
+					}
+				},
+				{
+					"path": "system/article/category",
+					"style": {
+						"navigationBarTitleText": "文章分类"
+					}
+				},
+				{
+					"path": "system/article/list",
+					"style": {
+						"navigationBarTitleText": "文章列表"
+					}
+				},
+				{
+					"path": "system/article/detail",
+					"style": {
+						"navigationBarTitleText": "文章详情"
+					}
+				},
+				{
+					"path": "apply/rider",
+					"style": {
+						"navigationBarTitleText": "申请成为骑手"
+					}
+				},
+				{
+					"path": "apply/technician",
+					"style": {
+						"navigationBarTitleText": "申请成为师傅"
+					}
+				}
+			]
+		},
+		{
+			// 搜索页
+			"root": "home/pages/search",
+			"pages": [
+				{
+					// 搜索全部类型商品 包含普通商城，外卖，上门家政等
+					"path": "goodslist/index",
+					"style": {
+						"navigationBarTitleText": "搜索商品"
+					}
+				}
+			]
+		},
+		{
+			// 优惠券
+			"root": "home/pages/store",
+			"pages": [
+				{
+					"path": "coupon_list",
+					"style": {
+						"navigationBarTitleText": "优惠券"
+					}
+				}
+			]
+		},
+		{
+			// 前端积分商品展示页
+			"root": "home/pages/points-goods",
+			"pages": [
+				{
+					"path": "goods/index",
+					"style": {
+						"navigationBarTitleText": "店铺"
+					}
+				},
+				{
+					"path": "goods/detail/index",
+					"style": {
+						"navigationBarTitleText": "积分商品详情"
+					}
+				},
+				{
+					"path": "category/index",
+					"style": {
+						"navigationBarTitleText": "积分商品分类"
+					}
+				},
+				{
+					"path": "evaluate/index",
+					"style": {
+						"navigationBarTitleText": "积分商品评价"
+					}
+				}
+			]
+		},
+		{
+			// 用户中心
+			"root": "home/pages/user",
+			"pages": [
+				{
+					"path": "index/index",
+					"style": {
+						"navigationBarTitleText": "个人中心"
+					}
+				},
+				{
+					"path": "pay/index",
+					"style": {
+						"navigationBarTitleText": "支付"
+					}
+				},
+				{
+					"path": "setting/index",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "setting/profile",
+					"style": {
+						"navigationBarTitleText": "个人设置"
+					}
+				},
+				{
+					"path": "setting/bind_mobile",
+					"style": {
+						"navigationBarTitleText": "手机绑定"
+					}
+				},
+				{
+					"path": "setting/password",
+					"style": {
+						"navigationBarTitleText": "修改密码"
+					}
+				},
+				{
+					"path": "setting/idcard",
+					"style": {
+						"navigationBarTitleText": "实名认证"
+					}
+				},
+				{
+					"path": "address/index",
+					"style": {
+						"navigationBarTitleText": "收货地址"
+					}
+				},
+				{
+					"path": "address/edit",
+					"style": {
+						"navigationBarTitleText": "地址编辑"
+					}
+				},
+				{
+					"path": "balance/index",
+					"style": {
+						"navigationBarTitleText": "余额"
+					}
+				},
+				{
+					"path": "balance/logs",
+					"style": {
+						"navigationBarTitleText": "余额流水"
+					}
+				},
+				{
+					"path": "recharge/add",
+					"style": {
+						"navigationBarTitleText": "充值"
+					}
+				},
+				{
+					"path": "recharge/logs",
+					"style": {
+						"navigationBarTitleText": "充值记录"
+					}
+				},
+				{
+					"path": "withdrawal/apply",
+					"style": {
+						"navigationBarTitleText": "提现申请"
+					}
+				},
+				{
+					"path": "withdrawal/logs",
+					"style": {
+						"navigationBarTitleText": "提现记录"
+					}
+				},
+				{
+					"path": "withdrawal/accountList",
+					"style": {
+						"navigationBarTitleText": "提现账户"
+					}
+				},
+				{
+					"path": "order/index",
+					"style": {
+						"navigationBarTitleText": "订单"
+					}
+				},
+				{
+					"path": "order/detail",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "order/invoice-apply",
+					"style": {
+						"navigationBarTitleText": "申请开票"
+					}
+				},
+				{
+					"path": "order/invoice-list",
+					"style": {
+						"navigationBarTitleText": "开票记录"
+					}
+				},
+				{
+					"path": "order/invoice-detail",
+					"style": {
+						"navigationBarTitleText": "开票详情"
+					}
+				},
+				{
+					"path": "evaluate/index",
+					"style": {
+						"navigationBarTitleText": "订单评价"
+					}
+				},
+				{
+					"path": "evaluate/add",
+					"style": {
+						"navigationBarTitleText": "评价"
+					}
+				},
+				{
+					"path": "refund/index",
+					"style": {
+						"navigationBarTitleText": "我的退款"
+					}
+				},
+				{
+					"path": "refund/apply",
+					"style": {
+						"navigationBarTitleText": "退款申请"
+					}
+				},
+				{
+					"path": "refund/view",
+					"style": {
+						"navigationBarTitleText": "退款详情"
+					}
+				},
+				{
+					"path": "level/index",
+					"style": {
+						"navigationBarTitleText": "会员等级"
+					}
+				},
+				{
+					"path": "points/index",
+					"style": {
+						"navigationBarTitleText": "积分"
+					}
+				},
+				{
+					"path": "points/logs",
+					"style": {
+						"navigationBarTitleText": "积分流水"
+					}
+				},
+				{
+					"path": "points/sign",
+					"style": {
+						"navigationBarTitleText": "每日签到"
+					}
+				},
+				{
+					"path": "points-goods/order/checkout",
+					"style": {
+						"navigationBarTitleText": "积分订单结算"
+					}
+				},
+				{
+					"path": "points-goods/order/index",
+					"style": {
+						"navigationBarTitleText": "积分订单"
+					}
+				},
+				{
+					"path": "points-goods/order/detail",
+					"style": {
+						"navigationBarTitleText": "积分订单详情"
+					}
+				},
+				{
+					"path": "points-goods/evaluate/index",
+					"style": {
+						"navigationBarTitleText": "积分评价"
+					}
+				},
+				{
+					"path": "points-goods/evaluate/add",
+					"style": {
+						"navigationBarTitleText": "积分商品评价"
+					}
+				},
+				{
+					"path": "growth/logs",
+					"style": {
+						"navigationBarTitleText": "成长值"
+					}
+				},
+				{
+					"path": "favorites/goods",
+					"style": {
+						"navigationBarTitleText": "商品收藏"
+					}
+				},
+				{
+					"path": "store-coupon/index",
+					"style": {
+						"navigationBarTitleText": "店铺优惠券"
+					}
+				},
+				{
+					"path": "invoice/index",
+					"style": {
+						"navigationBarTitleText": "我的发票"
+					}
+				},
+				{
+					"path": "invoice/edit",
+					"style": {
+						"navigationBarTitleText": "发票编辑"
+					}
+				}
+			]
+		},
+		{
+			// 分销员管理中心
+			"root": "home/pages/distributor",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "分销中心"
+					}
+				},
+				{
+					"path": "apply/index",
+					"style": {
+						"navigationBarTitleText": "分销员申请"
+					}
+				},
+				{
+					"path": "order/index",
+					"style": {
+						"navigationBarTitleText": "分销订单"
+					}
+				},
+				{
+					"path": "balance/logs",
+					"style": {
+						"navigationBarTitleText": "分销佣金流水"
+					}
+				},
+				{
+					"path": "relation/index",
+					"style": {
+						"navigationBarTitleText": "分销关系"
+					}
+				}
+			]
+		},
+		{
+			// 商城  Mall
+			"root": "home/platform/mall/pages",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "商城首页"
+					}
+				},
+				{
+					"path": "search/goodslist/index",
+					"style": {
+						"navigationBarTitleText": "搜索商品"
+					}
+				},
+				{
+					"path": "goods/category/index",
+					"style": {
+						"navigationBarTitleText": "商品分类"
+					}
+				},
+				{
+					"path": "goods/detail/index",
+					"style": {
+						"navigationBarTitleText": "商品详情"
+					}
+				},
+				{
+					"path": "goods/comment/index",
+					"style": {
+						"navigationBarTitleText": "商品评价"
+					}
+				},
+				{
+					"path": "cart/index",
+					"style": {
+						"navigationBarTitleText": "购物车"
+					}
+				},
+				{
+					"path": "order/checkout",
+					"style": {
+						"navigationBarTitleText": "下单"
+					}
+				}
+			]
+		},
+		{
+			// 教育  Kms
+			"root": "home/platform/kms/pages",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "视频教育"
+					}
+				},
+				{
+					"path": "search/goodslist/index",
+					"style": {
+						"navigationBarTitleText": "搜索商品"
+					}
+				},
+				{
+					"path": "goods/category/index",
+					"style": {
+						"navigationBarTitleText": "商品分类"
+					}
+				},
+				{
+					"path": "goods/detail/index",
+					"style": {
+						"navigationBarTitleText": "商品详情"
+					}
+				},
+				{
+					"path": "goods/comment/index",
+					"style": {
+						"navigationBarTitleText": "商品评价"
+					}
+				},
+				{
+					"path": "cart/index",
+					"style": {
+						"navigationBarTitleText": "购物车"
+					}
+				},
+				{
+					"path": "order/checkout",
+					"style": {
+						"navigationBarTitleText": "下单"
+					}
+				},
+				{
+					"path": "lesson/index",
+					"style": {
+						"navigationBarTitleText": "课时"
+					}
+				}
+			]
+		},
+		{
+			// 家政  Kms
+			"root": "home/platform/house/pages",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "家政首页"
+					}
+				},
+				{
+					"path": "search/goodslist/index",
+					"style": {
+						"navigationBarTitleText": "搜索商品"
+					}
+				},
+				{
+					"path": "goods/category/index",
+					"style": {
+						"navigationBarTitleText": "商品分类"
+					}
+				},
+				{
+					"path": "goods/detail/index",
+					"style": {
+						"navigationBarTitleText": "商品详情"
+					}
+				},
+				{
+					"path": "goods/comment/index",
+					"style": {
+						"navigationBarTitleText": "商品评价"
+					}
+				},
+				{
+					"path": "cart/index",
+					"style": {
+						"navigationBarTitleText": "购物车"
+					}
+				},
+				{
+					"path": "order/checkout",
+					"style": {
+						"navigationBarTitleText": "下单"
+					}
+				}
+			]
+		},
+		{
+			// 外卖  Kms
+			"root": "home/platform/food/pages",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "外卖首页"
+					}
+				},
+				{
+					"path": "search/goodslist/index",
+					"style": {
+						"navigationBarTitleText": "搜索商品"
+					}
+				},
+				{
+					"path": "goods/category/index",
+					"style": {
+						"navigationBarTitleText": "商品分类"
+					}
+				},
+				{
+					"path": "goods/detail/index",
+					"style": {
+						"navigationBarTitleText": "商品详情"
+					}
+				},
+				{
+					"path": "goods/comment/index",
+					"style": {
+						"navigationBarTitleText": "商品评价"
+					}
+				},
+				{
+					"path": "cart/index",
+					"style": {
+						"navigationBarTitleText": "购物车"
+					}
+				},
+				{
+					"path": "order/checkout",
+					"style": {
+						"navigationBarTitleText": "下单"
+					}
+				}
+			]
+		},
+		{
+			// 骑手管理中心
+			"root": "rider/pages",
+			"pages": [
+				{
+					"path": "index/index",
+					"style": {
+						"navigationBarTitleText": "骑手首页"
+					}
+				},
+				{
+					"path": "rider/index",
+					"style": {
+						"navigationBarTitleText": "骑手中心"
+					}
+				},
+				{
+					"path": "rider/setting/index",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "rider/setting/profile",
+					"style": {
+						"navigationBarTitleText": "师傅设置"
+					}
+				},
+				{
+					"path": "rider/balance/logs",
+					"style": {
+						"navigationBarTitleText": "收入记录"
+					}
+				},
+				{
+					"path": "rider/balance/to-user-balance",
+					"style": {
+						"navigationBarTitleText": "转至用户余额"
+					}
+				},
+				{
+					"path": "rider/order-delivery/index",
+					"style": {
+						"navigationBarTitleText": "配送订单"
+					}
+				},
+				{
+					"path": "rider/order-delivery/detail",
+					"style": {
+						"navigationBarTitleText": "配送订单详情"
+					}
+				},
+				{
+					"path": "rider/comment/index",
+					"style": {
+						"navigationBarTitleText": "我的评论"
+					}
+				},
+				{
+					"path": "track/index",
+					"style": {
+						"navigationBarTitleText": "我的轨迹"
+					}
+				}
+			]
+		},
+		{
+			// 师傅手机端展示
+			"root": "home/pages/technician",
+			"pages": [
+				{
+					"path": "list",
+					"style": {
+						"navigationBarTitleText": "师傅列表"
+					}
+				},
+				{
+					"path": "detail/index",
+					"style": {
+						"navigationBarTitleText": "师傅详情"
+					}
+				},
+				{
+					"path": "comment/index",
+					"style": {
+						"navigationBarTitleText": "师傅评价"
+					}
+				}
+			]
+		},
+		{
+			// 师傅管理中心
+			"root": "technician/pages",
+			"pages": [
+				{
+					"path": "index/index",
+					"style": {
+						"navigationBarTitleText": "师傅中心"
+					}
+				},
+				{
+					"path": "setting/index",
+					"style": {
+						"navigationBarTitleText": "设置"
+					}
+				},
+				{
+					"path": "setting/profile",
+					"style": {
+						"navigationBarTitleText": "师傅设置"
+					}
+				},
+				{
+					"path": "balance/logs",
+					"style": {
+						"navigationBarTitleText": "收入记录"
+					}
+				},
+				{
+					"path": "balance/to-user-balance",
+					"style": {
+						"navigationBarTitleText": "转至用户余额"
+					}
+				},
+				{
+					"path": "goods/index",
+					"style": {
+						"navigationBarTitleText": "服务项目"
+					}
+				},
+				{
+					"path": "order-delivery/index",
+					"style": {
+						"navigationBarTitleText": "订单"
+					}
+				},
+				{
+					"path": "order-delivery/detail",
+					"style": {
+						"navigationBarTitleText": "订单详情"
+					}
+				},
+				{
+					"path": "track/index",
+					"style": {
+						"navigationBarTitleText": "我的轨迹"
+					}
+				},
+				{
+					"path": "comment/index",
+					"style": {
+						"navigationBarTitleText": "我的评论"
+					}
+				}
+			]
+		},
+		{
+			// 视频
+			"root": "video/pages",
+			"pages": [
+				{
+					"path": "index",
+					"style": {
+						"navigationBarTitleText": "视频"
+					}
+				},
+				{
+					"path": "short/detail/video",
+					"style": {
+						"navigationBarTitleText": "短视频"
+					}
+				},
+				{
+					"path": "short/detail/image",
+					"style": {
+						"navigationBarTitleText": "图片"
+					}
+				},
+				{
+					"path": "space/index",
+					"style": {
+						"navigationBarTitleText": "创作者展示页"
+					}
+				},
+				// 创作者中心
+				{
+					"path": "blogger/setting/index",
+					"style": {
+						"navigationBarTitleText": "创作者设置"
+					}
+				},
+				{
+					"path": "blogger/setting/profile",
+					"style": {
+						"navigationBarTitleText": "创作者设置"
+					}
+				},
+				{	
+					"path": "blogger/short/publish",
+					"style": {
+						"navigationBarTitleText": "短视频发布页"
+					}
+				},
+				{
+					"path": "blogger/short/list",
+					"style": {
+						"navigationBarTitleText": "短视频列表"
+					}
+				},
+				// 用户中心
+				{
+					"path": "user/index",
+					"style": {
+						"navigationBarTitleText": "用户中心"
+					}
+				},
+				{
+					"path": "user/video-short-view-log",
+					"style": {
+						"navigationBarTitleText": "短视频浏览记录"
+					}
+				}
+			]
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "首页",
+		"navigationBarBackgroundColor": "#F8F8F8",
+		"backgroundColor": "#F8F8F8",
+		"h5": {
+			"navigationStyle": "custom"
+		}
+	}
+}
