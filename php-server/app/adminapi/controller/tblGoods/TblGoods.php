@@ -1,0 +1,233 @@
+<?php
+
+namespace app\adminapi\controller\tblGoods;
+
+use app\deshang\base\controller\BaseAdminController;
+use app\adminapi\service\goods\TblGoodsService;
+
+/**
+ * @OA\Tag(name="admin-api/tblGoods/TblGoods", description="商品管理接口")
+ */
+class TblGoods extends BaseAdminController
+{
+
+    /**
+     * @OA\Get(
+     *     path="/adminapi/tbl-goods/goods/pages",
+     *     summary="获取商品分页列表",
+     *     tags={"admin-api/tblGoods/TblGoods"},
+     *     @OA\Parameter(
+     *         name="platform",
+     *         in="query",
+     *         required=false,
+     *         description="平台类型",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="tab_selected",
+     *         in="query",
+     *         required=false,
+     *         description="选项卡",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="goods_name",
+     *         in="query",
+     *         required=false,
+     *         description="商品名称",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="is_distributor_goods",
+     *         in="query",
+     *         required=false,
+     *         description="是否分销商品",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Parameter(
+     *         name="category_id",
+     *         in="query",
+     *         required=false,
+     *         description="商品分类ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="操作成功",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=10000),
+     *             @OA\Property(property="msg", type="string", example="操作成功"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function getTblGoodsPages()
+    {
+        $data = array(
+            'platform' => input('param.platform'),
+            'tab_selected' => input('param.tab_selected'),
+            'goods_name' => input('param.goods_name'),
+            'is_distributor_goods' => input('param.is_distributor_goods'),
+            'is_flashsale_goods' => input('param.is_flashsale_goods'),
+            'is_wholesale_goods' => input('param.is_wholesale_goods'),
+            'is_userdiscount_goods' => input('param.is_userdiscount_goods'),
+            'category_id' => input('param.category_id', 0),
+        );
+
+        $this->validate($data, 'app\adminapi\controller\tblGoods\validate\TblGoodsValidate.pages');
+
+        $result = (new TblGoodsService())->getTblGoodsPages($data);
+        return ds_json_success('操作成功', $result);
+    }
+
+    /**
+     * @OA\Get(
+     *     path="/adminapi/tbl-goods/goods/{id}",
+     *     summary="获取商品详情",
+     *     tags={"admin-api/tblGoods/TblGoods"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="商品ID",
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="操作成功",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=10000),
+     *             @OA\Property(property="msg", type="string", example="操作成功"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function getTblGoodsInfo($id)
+    {
+        $data = array(
+            'id' => $id,
+        );
+
+        $result = (new TblGoodsService())->getTblGoodsInfo($data);
+        return ds_json_success('操作成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-goods/goods/{id}/sys-status",
+     *     summary="更新商品系统状态",
+     *     tags={"admin-api/tblGoods/TblGoods"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="商品ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="系统状态信息",
+     *         @OA\JsonContent(
+     *             required={"sys_status"},
+     *             @OA\Property(property="sys_status", type="integer", example=1, description="系统状态"),
+     *             @OA\Property(property="sys_status_reason", type="string", example="审核通过", description="状态原因")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="操作成功",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=10000),
+     *             @OA\Property(property="msg", type="string", example="操作成功")
+     *         )
+     *     )
+     * )
+     */
+    public function updateTblGoodsSysStatus($id)
+    {
+        $data = array(
+            'sys_status' => input('param.sys_status'),
+            'sys_status_reason' => input('param.sys_status_reason'),
+        );
+
+        $result = (new TblGoodsService())->updateTblGoodsSysStatus($id, $data);
+        return ds_json_success('操作成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-goods/goods/{id}/sys-recommend",
+     *     summary="更新商品系统推荐状态",
+     *     tags={"admin-api/tblGoods/TblGoods"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="商品ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="推荐状态信息",
+     *         @OA\JsonContent(
+     *             required={"sys_recommend_status"},
+     *             @OA\Property(property="sys_recommend_status", type="integer", example=1, description="系统推荐状态")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="操作成功",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=10000),
+     *             @OA\Property(property="msg", type="string", example="操作成功")
+     *         )
+     *     )
+     * )
+     */
+    public function updateSysRecommend($id)
+    {
+        $data = array(
+            'sys_recommend_status' => input('param.sys_recommend_status'),
+        );
+
+        $result = (new TblGoodsService())->updateSysRecommend($id, $data);
+        return ds_json_success('操作成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-goods/goods/{id}/soft-delete",
+     *     summary="软删除商品",
+     *     tags={"admin-api/tblGoods/TblGoods"},
+     *     @OA\Parameter(name="id", in="path", required=true, description="商品ID", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="删除成功")
+     * )
+     */
+    public function softDeleteTblGoods($id)
+    {
+        $data = ['id' => $id];
+        $this->validate($data, 'app\adminapi\controller\tblGoods\validate\TblGoodsValidate.softDelete');
+        $result = (new TblGoodsService())->softDeleteTblGoods((int)$id);
+        return ds_json_success('删除成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-goods/goods/{id}/restore",
+     *     summary="恢复已删除的商品",
+     *     tags={"admin-api/tblGoods/TblGoods"},
+     *     @OA\Parameter(name="id", in="path", required=true, description="商品ID", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="恢复成功")
+     * )
+     */
+    public function restoreTblGoods($id)
+    {
+        $data = ['id' => $id];
+        $this->validate($data, 'app\adminapi\controller\tblGoods\validate\TblGoodsValidate.restore');
+        $result = (new TblGoodsService())->restoreTblGoods((int)$id);
+        return ds_json_success('恢复成功', $result);
+    }
+
+}

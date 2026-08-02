@@ -1,0 +1,272 @@
+<?php
+
+namespace app\adminapi\service\user;
+
+use app\deshang\base\service\BaseAdminService;
+use app\deshang\exceptions\CommonException;
+use app\deshang\utils\TokenCache;
+
+use app\deshang\service\user\DeshangUserService;
+
+use app\common\dao\user\UserDao;
+use app\common\enum\user\UserEnum;
+
+class UserService extends BaseAdminService
+{
+
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->dao = new UserDao();
+    }
+
+    public function getUserPages($data)
+    {
+        $condition = [];
+
+        // 根据参数控制是否显示已删除数据，空或不传时不筛选（显示全部）
+        if (isset($data['is_deleted']) && $data['is_deleted'] !== '' && $data['is_deleted'] !== null && in_array((int)$data['is_deleted'], [0, 1], true)) {
+            $condition[] = ['is_deleted', '=', (int)$data['is_deleted']];
+        }
+
+        if (isset($data['username']) && $data['username'] != '') {
+            $username = trim($data['username']);
+            // 判断是否为纯数字（用户ID）
+            if (is_numeric($username) && intval($username) > 0) {
+                // 纯数字：按用户ID精确匹配
+                $condition[] = ['id', '=', intval($username)];
+            } else {
+                // 非纯数字：按用户名模糊匹配
+                $condition[] = ['username', 'like', '%' . $username . '%'];
+            }
+        }
+        if (isset($data['nickname']) && $data['nickname'] != '') {
+            $condition[] = ['nickname', 'like', '%' . $data['nickname'] . '%'];
+        }
+        if (isset($data['email']) && $data['email'] != '') {
+            $condition[] = ['email', 'like', '%' . $data['email'] . '%'];
+        }
+        if (isset($data['mobile']) && $data['mobile'] != '') {
+            $condition[] = ['mobile', 'like', '%' . $data['mobile'] . '%'];
+        }
+
+        // 邀请人ID搜索
+        if (isset($data['inviter_id']) && $data['inviter_id'] !== '') {
+            $condition[] = ['inviter_id', '=', $data['inviter_id']];
+        }
+
+        // 是否启用搜索
+        if (isset($data['is_enabled']) && $data['is_enabled'] !== '') {
+            $condition[] = ['is_enabled', '=', $data['is_enabled']];
+        }
+
+        // 实名认证状态搜索
+        if (isset($data['idcard_status']) && $data['idcard_status'] !== '') {
+            $condition[] = ['idcard_status', '=', (int)$data['idcard_status']];
+        }
+
+        // 可用金额区间搜索
+        if (isset($data['balance_min']) && $data['balance_min'] !== '') {
+            $condition[] = ['balance', '>=', $data['balance_min']];
+        }
+        if (isset($data['balance_max']) && $data['balance_max'] !== '') {
+            $condition[] = ['balance', '<=', $data['balance_max']];
+        }
+
+        // 总收入区间搜索
+        if (isset($data['balance_in_min']) && $data['balance_in_min'] !== '') {
+            $condition[] = ['balance_in', '>=', $data['balance_in_min']];
+        }
+        if (isset($data['balance_in_max']) && $data['balance_in_max'] !== '') {
+            $condition[] = ['balance_in', '<=', $data['balance_in_max']];
+        }
+
+        // 总支出区间搜索
+        if (isset($data['balance_out_min']) && $data['balance_out_min'] !== '') {
+            $condition[] = ['balance_out', '>=', $data['balance_out_min']];
+        }
+        if (isset($data['balance_out_max']) && $data['balance_out_max'] !== '') {
+            $condition[] = ['balance_out', '<=', $data['balance_out_max']];
+        }
+
+        if (isset($data['is_distributor']) && in_array($data['is_distributor'], [0, 1])) {
+            $condition[] = ['is_distributor', '=', $data['is_distributor']];
+        }
+
+        // 分销商余额区间搜索
+        if (isset($data['distributor_balance_min']) && $data['distributor_balance_min'] !== '') {
+            $condition[] = ['distributor_balance', '>=', $data['distributor_balance_min']];
+        }
+        if (isset($data['distributor_balance_max']) && $data['distributor_balance_max'] !== '') {
+            $condition[] = ['distributor_balance', '<=', $data['distributor_balance_max']];
+        }
+
+        // 分销商收入区间搜索
+        if (isset($data['distributor_balance_in_min']) && $data['distributor_balance_in_min'] !== '') {
+            $condition[] = ['distributor_balance_in', '>=', $data['distributor_balance_in_min']];
+        }
+        if (isset($data['distributor_balance_in_max']) && $data['distributor_balance_in_max'] !== '') {
+            $condition[] = ['distributor_balance_in', '<=', $data['distributor_balance_in_max']];
+        }
+
+        // 分销商支出区间搜索
+        if (isset($data['distributor_balance_out_min']) && $data['distributor_balance_out_min'] !== '') {
+            $condition[] = ['distributor_balance_out', '>=', $data['distributor_balance_out_min']];
+        }
+        if (isset($data['distributor_balance_out_max']) && $data['distributor_balance_out_max'] !== '') {
+            $condition[] = ['distributor_balance_out', '<=', $data['distributor_balance_out_max']];
+        }
+
+        $result = $this->dao->getUserPages($condition);
+        return $result;
+    }
+
+
+    public function createUser($data)
+    {
+        $result = (new DeshangUserService())->createUser($data);
+        return $result;
+    }
+
+    public function updateUser(int $id, array $data)
+    {
+        $result = (new DeshangUserService())->updateUser($id, $data);
+        return $result;
+    }
+
+    /**
+     * 实名认证审核（仅当状态为审核中时可操作）
+     * @param int $id 用户ID
+     * @param array $data 必须包含 idcard_status 2=未通过 3=已认证
+     * @return int
+     */
+    public function auditUserIdcard(int $id, array $data)
+    {
+        $user = $this->dao->getUserInfoById($id, 'id,idcard_status');
+        if (empty($user)) {
+            throw new CommonException('会员不存在');
+        }
+        if ((int)$user['idcard_status'] !== UserEnum::IDCARD_STATUS_PENDING) {
+            throw new CommonException('当前实名认证状态不可审核');
+        }
+        $status = (int)$data['idcard_status'];
+        if (!in_array($status, [UserEnum::IDCARD_STATUS_REJECTED, UserEnum::IDCARD_STATUS_VERIFIED], true)) {
+            throw new CommonException('审核结果无效');
+        }
+        return $this->dao->updateUser([['id', '=', $id]], ['idcard_status' => $status]);
+    }
+
+    public function getUserInfo($id)
+    {
+        $result = $this->dao->getUserInfoById($id);
+        // 密码不返回
+        $result['password'] = '';
+        $result['pay_password'] = '';
+        return $result;
+    }
+
+    /**
+     * 获取用户推广关系列表
+     * @param array $data
+     * @return array
+     */
+    public function getUserRelationList($data)
+    {
+        $inviter_id = (int)$data['inviter_id'];
+
+        // 构建查询条件：查询被邀请的用户列表
+        $condition = [
+            ['inviter_id', '=', $inviter_id]
+        ];
+
+        // 查询用户列表
+        $result = $this->dao->getUserList($condition);
+
+        // 为每个用户添加是否有子节点的标识和基础统计
+        foreach ($result as &$user) {
+            // 统计该用户的直推人数（该用户作为邀请人邀请了多少人）
+            $user['direct_count'] = $this->dao->getUserCount([['inviter_id', '=', $user['id']]]);
+
+            // 基于直推人数判断是否有子节点
+            $user['hasChildren'] = $user['direct_count'] > 0;
+        }
+
+        return $result;
+    }
+
+    /**
+     * 软删除用户
+     * 
+     * @param int $id 用户ID
+     * @return int 受影响的行数
+     */
+    public function softDeleteUser(int $id)
+    {
+        // 检查用户是否存在
+        $user_info = $this->dao->getUserInfoById($id);
+        if (empty($user_info)) {
+            throw new CommonException('用户不存在');
+        }
+        
+        // 检查是否已删除
+        if ($user_info['is_deleted'] == 1) {
+            throw new CommonException('用户已被删除');
+        }
+        
+        
+        // 软删除：设置标志位
+        $update_data = [
+            'is_deleted' => 1,
+            'deleted_at' => time()
+        ];
+        
+        $condition = [
+            ['id', '=', $id],
+            ['is_deleted', '=', 0]
+        ];
+        
+        $result = $this->dao->updateUser($condition, $update_data);
+        
+        // 使该用户的所有Token失效
+        if ($result > 0) {
+            (new TokenCache())->invalidateToken('user', $id);
+        }
+        
+        return $result;
+    }
+
+    /**
+     * 恢复用户
+     * 
+     * @param int $id 用户ID
+     * @return int 受影响的行数
+     */
+    public function restoreUser(int $id)
+    {
+        // 检查用户是否存在（包括已删除的）
+        $user_info = $this->dao->getUserInfoById($id);
+        if (empty($user_info)) {
+            throw new CommonException('用户不存在');
+        }
+        
+        // 检查是否已删除
+        if ($user_info['is_deleted'] != 1) {
+            throw new CommonException('用户未被删除，无需恢复');
+        }
+        
+        // 恢复：清除删除标志
+        $update_data = [
+            'is_deleted' => 0,
+            'deleted_at' => null
+        ];
+        
+        $condition = [
+            ['id', '=', $id],
+            ['is_deleted', '=', 1]
+        ];
+        
+        $result = $this->dao->updateUser($condition, $update_data);
+        return $result;
+    }
+}

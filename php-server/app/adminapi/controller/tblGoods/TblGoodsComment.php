@@ -1,0 +1,235 @@
+<?php
+
+namespace app\adminapi\controller\tblGoods;
+
+use app\deshang\base\controller\BaseAdminController;
+use app\adminapi\service\goods\TblGoodsCommentService;
+
+/**
+ * @OA\Tag(name="admin-api/tblGoods/TblGoodsComment", description="商品评论管理接口")
+ */
+class TblGoodsComment extends BaseAdminController
+{
+
+    /**
+     * @OA\Get(
+     *     path="/adminapi/tbl-goods/comments/pages",
+     *     summary="获取商品评论分页列表",
+     *     tags={"admin-api/tblGoods/TblGoodsComment"},
+     *     @OA\Parameter(
+     *         name="platform",
+     *         in="query",
+     *         required=false,
+     *         description="平台类型",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="user_id",
+     *         in="query",
+     *         required=false,
+     *         description="用户ID",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="goods_id",
+     *         in="query",
+     *         required=false,
+     *         description="商品ID",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="order_id",
+     *         in="query",
+     *         required=false,
+     *         description="订单ID",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="is_show",
+     *         in="query",
+     *         required=false,
+     *         description="是否显示 0隐藏 1显示",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="is_reply",
+     *         in="query",
+     *         required=false,
+     *         description="是否回复 0未回复 1已回复",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="is_anonymous",
+     *         in="query",
+     *         required=false,
+     *         description="是否匿名 0实名 1匿名",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="username",
+     *         in="query",
+     *         required=false,
+     *         description="用户名",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Parameter(
+     *         name="goods_name",
+     *         in="query",
+     *         required=false,
+     *         description="商品名称",
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="操作成功",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=10000),
+     *             @OA\Property(property="msg", type="string", example="操作成功"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function getTblGoodsCommentPages()
+    {
+        $data = [
+            'platform' => input('param.platform', ''),
+            'user_id' => input('param.user_id', ''),
+            'goods_id' => input('param.goods_id', ''),
+            'order_id' => input('param.order_id', ''),
+            'is_show' => input('param.is_show', ''),
+            'is_reply' => input('param.is_reply', ''),
+            'is_anonymous' => input('param.is_anonymous', ''),
+            'username' => input('param.username', ''),
+            'goods_name' => input('param.goods_name', ''),
+            'is_deleted' => input('param.is_deleted', ''),
+        ];
+
+        $this->validate($data, 'app\adminapi\controller\tblGoods\validate\TblGoodsCommentValidate.pages');
+
+        $result = (new TblGoodsCommentService())->getTblGoodsCommentPages($data);
+        return ds_json_success('操作成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-goods/comments/{id}/toggle-field",
+     *     summary="切换商品评论字段状态",
+     *     tags={"admin-api/tblGoods/TblGoodsComment"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="评论ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="切换数据",
+     *         @OA\JsonContent(
+     *             required={"field"},
+     *             @OA\Property(property="field", type="string", example="is_show", description="字段名")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="切换成功",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=10000),
+     *             @OA\Property(property="msg", type="string", example="切换成功")
+     *         )
+     *     )
+     * )
+     */
+    public function toggleTblGoodsCommentField($id)
+    {
+        $data = [
+            'id' => $id,
+            'field' => input('param.field')
+        ];
+
+        $this->validate($data, 'app\adminapi\controller\tblGoods\validate\TblGoodsCommentValidate.toggle');
+
+        $result = (new TblGoodsCommentService())->toggleTblGoodsCommentField($data);
+        return ds_json_success('切换成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-goods/comments/{id}/soft-delete",
+     *     summary="软删除商品评论",
+     *     tags={"admin-api/tblGoods/TblGoodsComment"},
+     *     @OA\Parameter(name="id", in="path", required=true, description="评论ID", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="删除成功")
+     * )
+     */
+    public function softDeleteTblGoodsComment($id)
+    {
+        $data = ['id' => $id];
+        $this->validate($data, 'app\adminapi\controller\tblGoods\validate\TblGoodsCommentValidate.softDelete');
+        $result = (new TblGoodsCommentService())->softDeleteTblGoodsComment((int)$id);
+        return ds_json_success('删除成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-goods/comments/{id}/restore",
+     *     summary="恢复已删除的商品评论",
+     *     tags={"admin-api/tblGoods/TblGoodsComment"},
+     *     @OA\Parameter(name="id", in="path", required=true, description="评论ID", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="恢复成功")
+     * )
+     */
+    public function restoreTblGoodsComment($id)
+    {
+        $data = ['id' => $id];
+        $this->validate($data, 'app\adminapi\controller\tblGoods\validate\TblGoodsCommentValidate.restore');
+        $result = (new TblGoodsCommentService())->restoreTblGoodsComment((int)$id);
+        return ds_json_success('恢复成功', $result);
+    }
+
+    /**
+     * @OA\Post(
+     *     path="/adminapi/tbl-goods/comments/{id}/reply",
+     *     summary="回复商品评论",
+     *     description="管理员回复用户的商品评论",
+     *     tags={"admin-api/tblGoods/TblGoodsComment"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         required=true,
+     *         description="评论ID",
+     *         @OA\Schema(type="integer", example=1)
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="回复数据",
+     *         @OA\JsonContent(
+     *             required={"reply_content"},
+     *             @OA\Property(property="reply_content", type="string", description="回复内容", example="感谢您的评价，我们会继续努力")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="操作成功",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="code", type="integer", example=10000),
+     *             @OA\Property(property="msg", type="string", example="操作成功"),
+     *             @OA\Property(property="data", type="object")
+     *         )
+     *     )
+     * )
+     */
+    public function replyTblGoodsComment($id)
+    {
+        $data = [
+            'reply_content' => input('param.reply_content'),
+        ];
+
+        $this->validate($data, 'app\adminapi\controller\tblGoods\validate\TblGoodsCommentValidate.reply');
+
+        $result = (new TblGoodsCommentService())->replyTblGoodsComment((int)$id, $data);
+        return ds_json_success('操作成功', $result);
+    }
+
+}

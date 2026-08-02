@@ -1,0 +1,226 @@
+<?php
+
+namespace app\adminapi\service\goods;
+
+use app\deshang\exceptions\CommonException;
+use app\deshang\base\service\BaseAdminService;
+use app\deshang\service\goods\DeshangTblGoodsService;
+
+use app\common\enum\goods\TblGoodsEnum;
+
+use app\common\dao\goods\TblGoodsDao;
+use app\common\dao\goods\TblGoodsCategoryRelDao;
+
+use think\facade\Db;
+
+
+class TblGoodsService extends BaseAdminService
+{
+    public function __construct()
+    {
+        parent::__construct();
+    }
+    /**
+     * 获取店铺列表
+     * @param array $params 查询参数
+     * @return array
+     */
+    public function getTblGoodsPages(array $data): array
+    {
+
+        // 此处只对 TblGoods 表进行处理 ， 涉及 mall_goods 表 调用 MallGoodsService 进行处理
+
+        $condition = [];
+        $condition[] = ['platform', '=', $data['platform']];
+
+
+        // 使用映射表优化 tab_selected 条件筛选
+        $tabConditions = [
+            'pending' => [
+                ['goods_status', '=', TblGoodsEnum::STATUS_SHELVED],
+                ['is_deleted', '=', 0]
+            ],
+            'un_send' => [
+                ['goods_status', '=', TblGoodsEnum::STATUS_UNSHELVED],
+                ['is_deleted', '=', 0]
+            ],
+            'pending_review' => [
+                ['sys_status', '=', TblGoodsEnum::SYS_STATUS_PENDING_REVIEW],
+                ['is_deleted', '=', 0]
+            ],
+            'review_failed' => [
+                ['sys_status', '=', TblGoodsEnum::SYS_STATUS_FAILED],
+                ['is_deleted', '=', 0]
+            ],
+            'violated' => [
+                ['sys_status', '=', TblGoodsEnum::SYS_STATUS_VIOLATED],
+                ['is_deleted', '=', 0]
+            ],
+            'sys_recommend' => [
+                ['sys_recommend_status', '=', TblGoodsEnum::SYS_RECOMMEND_STATUS_REC],
+                ['is_deleted', '=', 0]
+            ],
+            'deleted' => [
+                ['is_deleted', '=', 1]
+            ]
+        ];
+        
+        // 根据tab_selected添加对应的条件
+        if (isset($data['tab_selected']) && isset($tabConditions[$data['tab_selected']])) {
+            $condition = array_merge($condition, $tabConditions[$data['tab_selected']]);
+        }
+
+        // 处理各种促销类型过滤
+        $promotionTypes = ['is_distributor_goods', 'is_flashsale_goods', 'is_wholesale_goods', 'is_userdiscount_goods'];
+        foreach ($promotionTypes as $type) {
+            if (isset($data[$type]) && in_array($data[$type], [0, 1])) {
+                $condition[] = [$type, '=', $data[$type]];
+            }
+        }
+
+        // 商品名称搜索
+        if (isset($data['goods_name']) && !empty($data['goods_name'])) {
+            $condition[] = ['goods_name', 'like', '%' . $data['goods_name'] . '%'];
+        }
+
+        // 商品分类搜索
+        if (isset($data['category_id']) && !empty($data['category_id'])) {
+            $goods_ids = (new TblGoodsCategoryRelDao())->getGoodsCategoryRelColumn(
+                [['category_id', '=', $data['category_id']]],
+                'goods_id'
+            );
+            if (count($goods_ids) > 0) {
+                $condition[] = ['id', 'in', $goods_ids];
+            } else {
+                $condition[] = ['id', '=', -1];
+            }
+        }
+
+        $result = (new TblGoodsDao())->getWithRelGoodsPages($condition);
+        return $result;
+    }
+
+
+    // 更新商品系统状态
+    public function updateTblGoodsSysStatus(int $id, array $data)
+    {
+        $condition = [];
+        $condition[] = ['id', '=', $id];
+
+
+        $updateData = array(
+            'sys_status' => $data['sys_status'],
+            'sys_status_reason' => $data['sys_status_reason'],
+        );
+
+        $result = (new TblGoodsDao())->updateGoods($condition, $updateData);
+
+        return $result;
+    }
+
+
+
+
+    // 更新商品系统推荐状态
+    public function updateSysRecommend(int $id, array $data)
+    {
+        $condition = [];
+        $condition[] = ['id', '=', $id];
+        $updateData = array(
+            'sys_recommend_status' => $data['sys_recommend_status'] == 1 ? 1 : 0
+        );
+        return (new TblGoodsDao())->updateGoods($condition, $updateData);
+    }
+
+    // 获取商品详情
+    public function getTblGoodsInfo(array $data)
+    {
+        $goods_info = (new TblGoodsDao())->getGoodsInfo([['id', '=', $data['id']]]);
+
+        return $goods_info;
+
+    }
+
+    // 创建商品 涉及 其他关联数据 需要单独使用 对应的 平台方法进行处理
+    public function createTblGoods(array $data) {}
+
+
+
+    // 更新商品， 只能对 TblGoods 表数据进行更新
+    public function updateTblGoods(array $data)
+    {
+
+
+        //公共商品表 tbl_goods tbl_goods_sku tbl_goods_spec 
+        Db::startTrans();
+        try {
+
+            (new DeshangTblGoodsService())->updateTblGoods($data);
+
+            Db::commit();
+        } catch (\Exception $e) {
+            Db::rollback();
+            // 直接抛出原异常，保持异常类型（SystemException、PermissionException等）
+            throw $e;
+        }
+    }
+
+
+
+    // 删除商品， 涉及 其他关联数据 需要单独使用 对应的 平台方法进行处理
+    public function deleteTblGoods(array $data) {}
+
+    /**
+     * 软删除商品
+     *
+     * @param int $id 商品ID
+     * @return int 受影响的行数
+     */
+    public function softDeleteTblGoods(int $id)
+    {
+        $dao = new TblGoodsDao();
+        $goods_info = $dao->getGoodsInfoById($id);
+        if (empty($goods_info)) {
+            throw new CommonException('商品不存在');
+        }
+        if ($goods_info['is_deleted'] == 1) {
+            throw new CommonException('商品已被删除');
+        }
+        $update_data = [
+            'is_deleted' => 1,
+            'deleted_at' => time(),
+        ];
+        $condition = [
+            ['id', '=', $id],
+            ['is_deleted', '=', 0],
+        ];
+        return $dao->updateGoods($condition, $update_data);
+    }
+
+    /**
+     * 恢复商品
+     *
+     * @param int $id 商品ID
+     * @return int 受影响的行数
+     */
+    public function restoreTblGoods(int $id)
+    {
+        $dao = new TblGoodsDao();
+        $goods_info = $dao->getGoodsInfoById($id);
+        if (empty($goods_info)) {
+            throw new CommonException('商品不存在');
+        }
+        if ($goods_info['is_deleted'] != 1) {
+            throw new CommonException('商品未被删除，无需恢复');
+        }
+        $update_data = [
+            'is_deleted' => 0,
+            'deleted_at' => null,
+        ];
+        $condition = [
+            ['id', '=', $id],
+            ['is_deleted', '=', 1],
+        ];
+        return $dao->updateGoods($condition, $update_data);
+    }
+}

@@ -1,0 +1,740 @@
+<?php
+
+namespace app\deshang\service\order;
+
+use app\deshang\exceptions\CommonException;
+use app\deshang\exceptions\PermissionException;
+use app\deshang\exceptions\StateException;
+use app\deshang\service\BaseDeshangService;
+
+
+use app\common\enum\order\TblOrderEnum;
+use app\common\dao\order\TblOrderDao;
+use app\common\dao\order\TblOrderLogDao;
+use app\common\dao\order\TblOrderGoodsDao;
+use app\common\dao\order\TblOrderDeliveryDao;
+use app\common\dao\order\TblOrderFinanceDao;
+use app\common\dao\order\TblOrderInvoiceDao;
+use app\common\enum\order\TblOrderInvoiceEnum;
+use app\common\enum\order\TblOrderDeliveryEnum;
+use app\common\enum\rider\RiderBalanceEnum;
+use app\common\enum\technician\TechnicianBalanceEnum;
+
+use app\deshang\service\distributor\DeshangDistributorOrderService;
+use app\deshang\service\rider\DeshangRiderBalanceService;
+use app\deshang\service\technician\DeshangTechnicianBalanceService;
+use app\deshang\service\order\DeshangTblOrderRefundService;
+use app\common\enum\trade\TradePaymentConfigEnum;
+
+
+
+// 订单服务
+class DeshangTblOrderService  extends BaseDeshangService
+{
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+
+    /**
+     * 获取订单显示状态描述（综合考虑订单状态、退款状态和交付状态）
+     * 
+     * 状态优先级：
+     * 1. 退款中状态（最高优先级）
+     * 2. 退款完成状态（全额退款/部分退款）
+     * 3. 交付状态（已发货/已确认订单，且有交付信息时）
+     * 4. 订单基础状态（默认）
+     * 
+     * @param array $order_info 订单信息（包含 orderDelivery 关联数据）
+     * @return string 显示状态描述
+     */
+    public function getDisplayStatusDesc(array $order_info): string
+    {
+        // 提取订单相关状态信息
+        $order_status = $order_info['order_status'] ?? 0;
+        $refunding_count = $order_info['refunding_count'] ?? 0;
+        $refund_status = $order_info['refund_status'] ?? 0;
+
+        // 检查订单状态描述是否存在（DAO层应该已经通过append获取）
+        if(empty($order_info['order_status_desc'])) {
+            throw new CommonException('订单状态描述不存在');
+        }
+
+        // 初始化基础状态为订单状态描述
+        $baseStatus = $order_info['order_status_desc'];
+
+        // 如果订单状态是已发货(ACCEPTED)或已确认(CONFIRMED)，优先使用交付状态
+        // 例如：已发货订单，如果有交付信息（如：服务中、配送中），则显示交付状态而非"已发货"
+        if (in_array($order_status, [
+            TblOrderEnum::ORDER_STATUS_ACCEPTED,
+            TblOrderEnum::ORDER_STATUS_CONFIRMED
+        ])) {
+            // 检查是否有交付信息（关联查询出来的 orderDelivery）
+            if(!empty($order_info['orderDelivery']) && !empty($order_info['orderDelivery']['delivery_status_desc'])) {
+                // 使用交付状态描述替换基础状态（如：服务中、配送中、已到达等）
+                $baseStatus = $order_info['orderDelivery']['delivery_status_desc'];
+            }
+            // 如果没有交付信息，继续使用订单状态描述（如：已发货）
+        }
+        
+        // 如果有正在进行的退款（refunding_count > 0），在基础状态后追加"(退款中)"
+        if ($refunding_count > 0) {
+            return $baseStatus . '(退款中)';
+        }
+        
+        // 检查退款完成状态
+        // 如果全额退款，直接显示"已完成(全额退款)"
+        if ($refund_status == TblOrderEnum::REFUND_STATUS_FULL_REFUNDED) {
+            return '已完成(全额退款)';
+        }
+        
+        // 如果部分退款，在基础状态后追加"(部分退款)"
+        if ($refund_status == TblOrderEnum::REFUND_STATUS_PARTIAL_REFUNDED) {
+            return $baseStatus . '(部分退款)';
+        }
+        
+        // 其他情况返回基础状态（可能是订单状态或交付状态）
+        return $baseStatus;
+    }
+
+
+
+    // 获取店铺可操作的订单状态
+    // cancel  店铺 取消订单
+    // delivery 店铺 发货
+    // refund 店铺 退款
+    // confirm 店铺 确认收货
+    public function getStoreAvailableActions(array $order_info): array
+    {
+        $actions = [];
+
+        // 订单已删除，则没有操作权限
+        if ($order_info['is_deleted'] == 1) {
+            return $actions;
+        }
+
+
+        // 订单状态是取消 没有任何操作
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_CANCELLED) {
+        }
+
+        // 订单状态是待付款 店铺可以取消
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_PENDING) {
+            $actions[] = 'close';
+            // 修改订单金额
+            $actions[] = 'editAmount';
+        }
+
+        // 订单状态是已付款 店铺可以发货  取消订单(需要处理退款)
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_PAID) {
+            $actions[] = 'delivery';
+            $actions[] = 'cancel';
+        }
+
+        // 订单状态是已发货 ， 店铺可主动发起退款
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_ACCEPTED) {
+            $actions[] = 'refund';
+        }
+
+        // 订单状态是已确认(针对外卖)
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_CONFIRMED) {
+        }
+
+        // 订单状态是已完成
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_COMPLETED) {
+        }
+        return $actions;
+    }
+
+
+
+    // 获取用户可操作的订单状态
+    // delete 用户 删除订单
+    // pay 用户 付款
+    // cancel 用户 取消订单
+    // refund 用户 退款
+    // confirm 用户 确认收货
+    public function getUserAvailableActions(array $order_info): array
+    {
+        $actions = [];
+
+        // 订单已删除，则没有操作权限
+        if ($order_info['is_deleted'] == 1) {
+            return $actions;
+        }
+
+
+        // 订单状态是取消，则可以删除
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_CANCELLED) {
+            // $actions[] = 'delete';
+        }
+
+        // 订单状态是待付款
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_PENDING) {
+            $actions[] = 'pay';
+            // 关闭订单，不再需要进一步处理
+            $actions[] = 'close';
+        }
+
+        // 订单状态是已付款 , 用户可以取消订单
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_PAID) {
+            // 取消订单，需要处理退款
+            $actions[] = 'cancel';
+        }
+
+        // 订单状态是已发货 
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_ACCEPTED) {
+            // 没有正在退款的订单，才能确认收货
+            if ($order_info['refunding_count'] == 0) {
+                $actions[] = 'confirm';
+            }
+
+            $actions[] = 'refund';
+        }
+
+        // 订单状态是已确认(针对外卖)
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_CONFIRMED) {
+            // 没有正在退款的订单，才能确认收货
+            if ($order_info['refunding_count'] == 0) {
+                $actions[] = 'confirm';
+            }
+            $actions[] = 'refund';
+        }
+
+        // 订单状态是已完成
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_COMPLETED) {
+
+            // 确认收货后，有一个 allow_refund_time 允许退款时间
+            // Model 中 通过获取器  自动转成 DateTime 类型，所以需要转换成时间戳
+            $allow_refund_time = strtotime($order_info['allow_refund_time']);
+            if ($allow_refund_time > time()) {
+                $actions[] = 'refund';
+            }
+
+            // $actions[] = 'delete';
+
+            // 评价 (用于未评价，未有退款中的订单，以及无全额退款)
+            if ($order_info['is_evaluate'] == 0 && $order_info['refunding_count'] == 0 && $order_info['refund_status'] != TblOrderEnum::REFUND_STATUS_FULL_REFUNDED) {
+                $actions[] = 'evaluate';
+            }
+
+            /**
+             * 开票申请（action: invoice）
+             *
+             * 前置：本段已在「订单已完成」内；另需无退款中、非全额退款（与评价逻辑一致）。
+             *
+             * 订单表 tbl_order.invoice_status 含义见 TblOrderInvoiceEnum：
+             * - STATUS_NOT_SUBMITTED(0)：尚未提交过开票申请；
+             * - STATUS_REJECTED(4)、STATUS_VOIDED(5)：店铺驳回或作废后，需同步回订单字段后用户才可再次申请。
+             * 若为待处理(1)/处理中(2)/已开票(3)，表示仍有在途流程，此处不再给出「申请开票」入口（与订单展示一致）。
+             *
+             * countBlockingByOrderId：统计该订单下 tbl_order_invoice 中仍处于「待处理/处理中/已开票」的记录条数。
+             * 大于 0 时不允许再提交，避免同一订单并行多条进行中的申请；等于 0 时允许 insert 新申请行。
+             */
+            if ($order_info['refunding_count'] == 0 && $order_info['refund_status'] != TblOrderEnum::REFUND_STATUS_FULL_REFUNDED) {
+                // 订单当前开票进度（缺省按未申请）
+                $inv = (int) ($order_info['invoice_status'] ?? TblOrderInvoiceEnum::STATUS_NOT_SUBMITTED);
+                // 仅未申请、已驳回、已作废三种订单态允许出现「申请/再次申请」入口
+                $allowed = $inv === TblOrderInvoiceEnum::STATUS_NOT_SUBMITTED
+                    || $inv === TblOrderInvoiceEnum::STATUS_REJECTED
+                    || $inv === TblOrderInvoiceEnum::STATUS_VOIDED;
+                if ($allowed) {
+                    // 申请单表中是否仍有进行中的记录（与 TblOrderInvoiceEnum::blockingInvoiceStatuses() 一致）
+                    $blocking = (new TblOrderInvoiceDao())->countBlockingByOrderId((int) $order_info['id']);
+                    if ($blocking === 0) {
+                        $actions[] = 'invoice';
+                    }
+                }
+            }
+        }
+        return $actions;
+    }
+
+
+    public function getSystemAvailableActions(array $order_info): array
+    {
+        $actions = [];
+
+        // 订单已删除，则没有操作权限
+        if ($order_info['is_deleted'] == 1) {
+            return $actions;
+        }
+
+
+        // 订单状态是取消，则可以删除
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_CANCELLED) {
+            // $actions[] = 'delete';
+        }
+
+        // 订单状态是待付款
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_PENDING) {
+            // 关闭订单，不再需要进一步处理
+            $actions[] = 'close';
+        }
+
+        // 订单状态是已付款 , 系统可以取消订单
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_PAID) {
+            // 取消订单，需要处理退款
+            $actions[] = 'cancel';
+        }
+
+        // 订单状态是已发货 
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_ACCEPTED) {
+            // 没有正在退款的订单，才能确认收货
+            if ($order_info['refunding_count'] == 0) {
+                $actions[] = 'confirm';
+            }
+        }
+
+        // 订单状态是已确认(针对外卖)
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_CONFIRMED) {
+            // 没有正在退款的订单，才能确认收货
+            if ($order_info['refunding_count'] == 0) {
+                $actions[] = 'confirm';
+            }
+        }
+
+        // 订单状态是已完成
+        if ($order_info['order_status'] == TblOrderEnum::ORDER_STATUS_COMPLETED) {
+        }
+        return $actions;
+    }
+
+
+
+
+
+
+
+
+
+    // 收到货款，一般有几种情况 
+    // 1.用户通过余额支付,支付宝支付，微信支付，正常修改订单状态 
+    // 2.后台可以手动设置收款
+
+    // 单个店铺订单 收到货款，如果是合并支付订单，则通过事务循环处理
+    public function changeTblOrderReceivePay(array $order_info, string $role, int $user_id = 0, array $extra = array())
+    {
+
+        // 用户确认收货后，款项才到商户余额，商户账户没有冻结金额一说。避免资金反复流转。
+
+        // 修改订单状态
+        $update = array();
+        $update['pay_channel'] = $extra['pay_channel'];
+        $update['pay_scene'] = $extra['pay_scene'];
+
+        if (isset($extra['trade_no'])) {
+            $update['trade_no'] = $extra['trade_no'];
+        }
+
+        $update['payment_time'] = time();
+        $update['order_status'] = TblOrderEnum::ORDER_STATUS_PAID;
+
+
+        $affected = (new TblOrderDao())->updateOrder([
+            ['id', '=', $order_info['id']]
+        ], $update);
+
+        if ($affected <= 0) {
+            throw new CommonException('修改订单状态失败');
+        }
+
+        $order_log = [
+            'order_id' => $order_info['id'],
+            'order_status' => $update['order_status'],
+            'message' => '支付成功,' . TradePaymentConfigEnum::getPaymentChannelDesc($extra['pay_channel']) . $order_info['pay_amount'] . '元',
+            'create_role' => $role,
+            'create_by' => $user_id,
+            'extra' => json_encode($extra),
+        ];
+
+        (new TblOrderLogDao())->createOrderLog($order_log);
+
+
+
+        // 修改分销商订单状态（收到货款
+        (new DeshangDistributorOrderService())->receivePayDistributorOrder($order_info['id']);
+
+
+        // 触发支付成功事件 [PHP事件为同步执行，没有线程池]
+        event('OrderPaySuccessListener', [
+            'order_info' => $order_info,
+        ]);
+
+
+        return true;
+    }
+
+
+
+
+    // 用户取消订单  已付款，未发货 则可取消订单，涉及到退款 (订单关闭是未付款，订单取消是已付款，未发货)
+    public function changeTblOrderCancel(array $order_info, $role, $user_id = '')
+    {
+
+        if ($role == 'user') {
+            $user_available_actions = $this->getUserAvailableActions($order_info);
+            if (!in_array('cancel', $user_available_actions)) {
+                throw new PermissionException('用户没有取消订单权限');
+            }
+        } else if ($role == 'store') {
+            $store_available_actions = $this->getStoreAvailableActions($order_info);
+            if (!in_array('cancel', $store_available_actions)) {
+                throw new PermissionException('店铺没有取消订单权限');
+            }
+        } else if ($role == 'system') {
+            $system_available_actions = $this->getSystemAvailableActions($order_info);
+            if (!in_array('cancel', $system_available_actions)) {
+                throw new PermissionException('系统没有取消订单权限');
+            }
+        } else {
+            throw new CommonException('非法操作');
+        }
+
+
+
+        // 修改分销商订单状态
+        (new DeshangDistributorOrderService())->cancelDistributorOrderByOrderId($order_info['id']);
+
+
+        // 退款处理, 自动处理退款 ， 订单状态 在退款中进行修改
+        $refund_id = (new DeshangTblOrderRefundService())->cancelOrderRefund($order_info, $role, $user_id);
+
+
+
+        return $refund_id;
+    }
+
+
+
+
+
+
+
+    // 关闭订单 (用户未付款，卖家买家都可关闭)
+    public function changeTblOrderClose(array $order_info, $role, $user_id = '')
+    {
+
+        if ($role == 'user') {
+            $user_available_actions = $this->getUserAvailableActions($order_info);
+            if (!in_array('close', $user_available_actions)) {
+                throw new PermissionException('用户没有关闭订单权限');
+            }
+        } else if ($role == 'store') {
+            $store_available_actions = $this->getStoreAvailableActions($order_info);
+            if (!in_array('close', $store_available_actions)) {
+                throw new PermissionException('店铺没有关闭订单权限');
+            }
+        } else if ($role == 'system') {
+            $system_available_actions = $this->getSystemAvailableActions($order_info);
+            if (!in_array('close', $system_available_actions)) {
+                throw new PermissionException('系统没有关闭订单权限');
+            }
+        } else {
+            throw new CommonException('非法操作');
+        }
+
+
+
+
+
+        // 修改订单状态
+        $order_update = array();
+        $order_update['order_status'] = TblOrderEnum::ORDER_STATUS_CLOSED;
+        $order_update['close_time'] = time();
+
+        // 修改订单状态 , 只有未付款的订单才能关闭
+        $affected = (new TblOrderDao())->updateOrder([
+            ['id', '=', $order_info['id']],
+            ['order_status', '=', TblOrderEnum::ORDER_STATUS_PENDING]
+        ], $order_update);
+
+        if ($affected <= 0) {
+            throw new CommonException('关闭订单失败');
+        }
+
+
+        // 修改订单日志
+        $order_log = array();
+        $order_log['order_id'] = $order_info['id'];
+        $order_log['order_status'] = TblOrderEnum::ORDER_STATUS_CLOSED;
+        $order_log['message'] = '订单关闭';
+        $order_log['create_role'] = $role;
+        $order_log['create_by'] = $user_id;
+
+        (new TblOrderLogDao())->createOrderLog($order_log);
+
+        // 修改分销商订单状态
+        (new DeshangDistributorOrderService())->cancelDistributorOrderByOrderId($order_info['id']);
+
+        // 触发订单关闭事件
+        event('OrderCloseListener', [
+            'order_info' => $order_info,
+        ]);
+
+        return true;
+    }
+
+
+
+    // 确认收货
+    public function changeTblOrderConfirm(array $order_info, $role, $user_id = '')
+    {
+
+        if ($role == 'user') {
+            $user_available_actions = $this->getUserAvailableActions($order_info);
+            if (!in_array('confirm', $user_available_actions)) {
+                throw new PermissionException('用户没有确认收货权限');
+            }
+        } else if ($role == 'store') {
+            $store_available_actions = $this->getStoreAvailableActions($order_info);
+            if (!in_array('confirm', $store_available_actions)) {
+                throw new PermissionException('店铺没有确认收货权限');
+            }
+        } else if ($role == 'system') {
+            $system_available_actions = $this->getSystemAvailableActions($order_info);
+            if (!in_array('confirm', $system_available_actions)) {
+                throw new PermissionException('系统没有确认收货权限');
+            }
+        } else {
+            throw new CommonException('非法操作');
+        }
+
+        // 获取订单交付信息
+        $order_delivery_info = (new TblOrderDeliveryDao())->getOrderDeliveryInfo([['order_id', '=', $order_info['id']]]);
+        if (empty($order_delivery_info)) {
+            throw new CommonException('订单交付信息不存在');
+        }
+        // 判断订单交付状态(交付信息需要已完成才能确认收货)(PS:也可自动修改成交付完成状态)
+        // if ($order_delivery_info['delivery_status'] != TblOrderDeliveryEnum::DELIVERY_STATUS_COMPLETED) {
+        //     throw new CommonException('订单未完成交付不能确认收货');
+        // }
+
+
+        // 修改订单状态
+        $order_update = array();
+        $order_update['order_status'] = TblOrderEnum::ORDER_STATUS_COMPLETED;
+        $order_update['finnshed_time'] = time();
+        // 设置允许退款时间
+        $allow_refund_time = sysConfig('order_auto:refund_order_enabled') == 1 ? sysConfig('order_auto:refund_order_days') * 24 * 3600 : 0;
+        $order_update['allow_refund_time'] = time() + $allow_refund_time;
+
+
+
+        // 修改订单状态
+        $affected = (new TblOrderDao())->updateOrder([
+            ['id', '=', $order_info['id']]
+        ], $order_update);
+
+        if ($affected <= 0) {
+            throw new CommonException('确认收货失败');
+        }
+
+
+        // 添加订单日志
+        $order_log = array();
+        $order_log['order_id'] = $order_info['id'];
+        $order_log['order_status'] = TblOrderEnum::ORDER_STATUS_COMPLETED;
+        $order_log['message'] = '确认收货,' . '订单ID：' . $order_info['id'];
+        $order_log['create_role'] = $role;
+        $order_log['create_by'] = $user_id;
+        (new TblOrderLogDao())->createOrderLog($order_log);
+
+
+        // 平台自营：确认收货不再向商户余额划转（无店铺归属）
+        // 分销佣金金额仍写入订单分账表，待订单不可退款后再结算给分销商
+        $total_commission_amount = (new DeshangDistributorOrderService())->getDistributorOrderCommissionAmount($order_info);
+
+        // 骑手配送：增加骑手配送费
+        if ($order_info['delivery_method'] == TblOrderEnum::DELIVERY_RIDER) {
+            $balance_data = [
+                'rider_id' => $order_delivery_info['rider_id'],
+                'related_id' => $order_info['id'],
+                'change_type' => RiderBalanceEnum::TYPE_DELIVERY_FEE,
+                'change_mode' => RiderBalanceEnum::MODE_INCREASE,
+                'change_amount' => $order_delivery_info['rider_fee'],
+                'change_desc' => '确认收货，配送费' . $order_delivery_info['rider_fee'] . '元,用户实际支付配送费' . $order_delivery_info['rider_total_fee'] . '元' . '(订单ID：' . $order_info['id'] . ')',
+            ];
+            (new DeshangRiderBalanceService())->modifyRiderBalance($balance_data);
+        }
+
+        // 师傅服务：增加师傅实际收入
+        if ($order_info['delivery_method'] == TblOrderEnum::DELIVERY_TECHNICIAN) {
+            $technician_fee = $order_delivery_info['technician_fee'] + $order_info['shipping_amount'];
+            $balance_data = [
+                'technician_id' => $order_delivery_info['technician_id'],
+                'related_id' => $order_info['id'],
+                'change_type' => TechnicianBalanceEnum::TYPE_TECHNICIAN_FEE,
+                'change_mode' => TechnicianBalanceEnum::MODE_INCREASE,
+                'change_amount' => $technician_fee,
+                'change_desc' => '确认收货，师傅服务费' . $technician_fee . '元,其中路程费' . $order_info['shipping_amount'] . '元' . '(订单ID：' . $order_info['id'] . ')',
+            ];
+            (new DeshangTechnicianBalanceService())->modifyTechnicianBalance($balance_data);
+        }
+
+
+
+
+        // 创建订单资金分配表/订单分账
+        $order_finance = array(
+            'order_id' => $order_info['id'],
+            'pay_amount' => $order_info['pay_amount'],
+            'distributor_amount' => $total_commission_amount,
+            // 店铺给平台的佣金(服务费)
+            'store_sys_amount' => $order_info['service_amount'],
+            // 结算状态
+            'finance_status' => 1,
+            'settle_time' => time(),
+        );
+
+        //骑手资金分配
+        if ($order_info['delivery_method'] == TblOrderEnum::DELIVERY_RIDER) {
+            // 骑手配送费
+            $order_finance['rider_amount'] = $order_delivery_info['rider_fee'];
+            // 骑手给平台的佣金
+            $order_finance['rider_sys_amount'] = $order_delivery_info['rider_total_fee'] - $order_delivery_info['rider_fee'];
+        }
+
+        // 师傅服务费
+        if ($order_info['delivery_method'] == TblOrderEnum::DELIVERY_TECHNICIAN) {
+            // 师傅服务费
+            $order_finance['technician_amount'] = $order_delivery_info['technician_fee'] + $order_info['shipping_amount'];
+            // 师傅给平台的佣金
+            $order_finance['technician_service_fee'] = $order_delivery_info['technician_fee'];
+            $order_finance['technician_trip_fee'] = $order_info['shipping_amount'];
+        }
+
+        // 计算店铺实际收入
+        $deduct_amount = $total_commission_amount + $order_info['service_amount'];
+
+        // 根据配送方式扣除相应费用
+        if ($order_info['delivery_method'] == TblOrderEnum::DELIVERY_RIDER) {
+            // $order_delivery_info['rider_total_fee'] === $order_info['shipping_amount']
+            $deduct_amount += $order_delivery_info['rider_total_fee'];
+        } elseif ($order_info['delivery_method'] == TblOrderEnum::DELIVERY_TECHNICIAN) {
+            $deduct_amount += $order_delivery_info['technician_fee'] + $order_info['shipping_amount'];
+        }
+
+        $order_finance['store_amount'] = $order_info['pay_amount'] - $deduct_amount;
+
+        (new TblOrderFinanceDao())->createOrderFinance($order_finance);
+
+
+        return true;
+    }
+
+
+
+    /**
+     * 修改订单金额  只更新 order 中 pay_amount shipping_amount order_goods 中 pay_price
+     * 
+     * @param array $order_info 订单信息
+     * @param string $role 操作角色
+     * @param int $user_id 操作用户ID
+     * @param array $extra 额外数据，包含goods_list、shipping_amount、modify_reason等
+     * @return bool 操作结果
+     * @throws CommonException
+     */
+    public function changeTblOrderAmount(array $order_info, string $role, int $user_id = 0, array $extra = array())
+    {
+
+        if ($role == 'store') {
+            $store_available_actions = $this->getStoreAvailableActions($order_info);
+            if (!in_array('editAmount', $store_available_actions)) {
+                throw new PermissionException('店铺没有修改订单金额权限');
+            }
+        } else {
+            throw new CommonException('非法操作');
+        }
+
+
+        // 判断订单是否是未支付状态
+        if ($order_info['order_status'] !== TblOrderEnum::ORDER_STATUS_PENDING) {
+            throw new StateException('订单状态不是未付款，不能修改订单金额');
+        }
+
+        // 验证参数
+        if (empty($extra['goods_list'])) {
+            throw new CommonException('商品列表不能为空');
+        }
+
+        // 计算新的商品总金额
+        $total_pay_price = 0;
+        $orderGoodsDao = new TblOrderGoodsDao();
+        $order_goods_ids = array_column($extra['goods_list'], 'id');
+
+
+        // 获取订单商品信息
+        $order_goods_list = $orderGoodsDao->getOrderGoodsList([
+            ['id', 'in', $order_goods_ids],
+            ['order_id', '=', $order_info['id']]
+        ]);
+
+        if (count($order_goods_list) !== count($extra['goods_list'])) {
+            throw new CommonException('部分商品不属于该订单');
+        }
+
+
+
+
+        // 更新订单商品价格
+        foreach ($extra['goods_list'] as $order_goods) {
+            $pay_price = round($order_goods['pay_price'], 2);
+
+            // 查找对应的订单商品
+            $temp_order_goods = null;
+            foreach ($order_goods_list as $og) {
+                if ($og['id'] == $order_goods['id']) {
+                    $temp_order_goods = $og;
+                    break;
+                }
+            }
+
+            if (!$temp_order_goods) {
+                throw new CommonException('商品不存在');
+            }
+
+            // 更新商品价格
+            $orderGoodsDao->updateOrderGoods(['id' => $order_goods['id']], [
+                'pay_price' => $pay_price
+            ]);
+
+            // 累加商品总金额
+            $total_pay_price += $pay_price * $temp_order_goods['goods_num'];
+        }
+
+        // 设置运费
+        $shipping_amount = isset($extra['shipping_amount']) ? round($extra['shipping_amount'], 2) : $order_info['shipping_amount'];
+
+        // 更新订单支付金额   支付金额 = 订单商品(pay_price) * 数量 + 运费  其他金额不变 只更新  pay_amount
+        $pay_amount = $total_pay_price + $shipping_amount;
+
+        // 更新订单金额
+        $affected = (new TblOrderDao())->updateOrder([
+            ['id', '=', $order_info['id']]
+        ], [
+            'shipping_amount' => $shipping_amount,
+            'pay_amount' => $pay_amount,
+        ]);
+
+        if ($affected <= 0) {
+            throw new CommonException('修改订单金额失败');
+        }
+
+        // 记录订单日志
+        $log_data = [
+            'order_id' => $order_info['id'],
+            'order_status' => $order_info['order_status'],
+            'message' => '修改订单金额，原金额：' . round($order_info['pay_amount'], 2) . '，新金额：' . $pay_amount,
+            'create_role' => $role,
+            'create_by' => $user_id,
+            'extra' => json_encode($extra)
+        ];
+
+        (new TblOrderLogDao())->createOrderLog($log_data);
+
+        return true;
+    }
+}
