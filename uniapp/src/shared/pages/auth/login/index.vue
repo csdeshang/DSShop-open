@@ -19,8 +19,8 @@
             </view>
         </view>
 
-        <login-mobile v-if="loginType === 'mobile'" :isagree="isagree" />
-        <login-normal v-else :isagree="isagree" />
+        <login-mobile v-if="loginType === 'mobile'" :isagree="isagree" @agree="isagree = true" />
+        <login-normal v-else :isagree="isagree" @agree="isagree = true" />
 
         <view class="action-links">
             <view class="reset-pwd" @click="navigateToAuth('reset')">

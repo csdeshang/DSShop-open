@@ -18,13 +18,13 @@
                 <uni-icons type="right" size="12" color="#4e545d"></uni-icons>
             </view>
         </view>
-        <view v-else @click="goToPage({ url: '/home/pages/user/address/edit', params: { redirect: getCurrentPageUrl() } })" class="add-address">
+        <view v-else @click="handleAddAddress" class="add-address">
             <uni-icons type="location-filled" size="30" color="#FF4C4C"></uni-icons>
             <text>请添加收货地址</text>
         </view>
     </view>
 
-    <ds-user-address-picker ref="addressPicker" @confirm="handleAddressConfirm" />
+    <ds-user-address-picker ref="addressPicker" @confirm="handleAddressConfirm" @add="handleAddAddress" />
 </template>
 
 <script lang="ts" setup>
@@ -54,6 +54,10 @@ const selectAddress = () => {
 const emit = defineEmits(['confirm']);
 const handleAddressConfirm = (address: any) => {
     emit('confirm', address);
+};
+
+const handleAddAddress = () => {
+    goToPage({ url: '/home/pages/user/address/edit', params: { redirect: getCurrentPageUrl() } });
 };
 
 

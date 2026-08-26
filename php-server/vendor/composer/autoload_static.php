@@ -42,6 +42,10 @@ class ComposerStaticInit020915b87d4ab8ac8119337ca936e79b
         array (
             'app\\' => 4,
         ),
+        'Z' => 
+        array (
+            'ZipStream\\' => 10,
+        ),
         'Y' => 
         array (
             'Yansongda\\Supports\\' => 19,
@@ -84,6 +88,7 @@ class ComposerStaticInit020915b87d4ab8ac8119337ca936e79b
             'Psr\\Container\\' => 14,
             'Psr\\Cache\\' => 10,
             'PhpParser\\' => 10,
+            'PhpOffice\\PhpSpreadsheet\\' => 25,
             'PHPStan\\PhpDocParser\\' => 21,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
@@ -97,6 +102,11 @@ class ComposerStaticInit020915b87d4ab8ac8119337ca936e79b
         array (
             'Nyholm\\Psr7\\' => 12,
             'Nyholm\\Psr7Server\\' => 18,
+        ),
+        'M' => 
+        array (
+            'MyCLabs\\Enum\\' => 13,
+            'Matrix\\' => 7,
         ),
         'L' => 
         array (
@@ -136,6 +146,11 @@ class ComposerStaticInit020915b87d4ab8ac8119337ca936e79b
             'Darabonba\\GatewaySpi\\' => 21,
             'DASPRiD\\Enum\\' => 13,
         ),
+        'C' => 
+        array (
+            'Composer\\Pcre\\' => 14,
+            'Complex\\' => 8,
+        ),
         'B' => 
         array (
             'BaconQrCode\\' => 12,
@@ -161,16 +176,20 @@ class ComposerStaticInit020915b87d4ab8ac8119337ca936e79b
         ),
         'think\\' => 
         array (
-            0 => __DIR__ . '/..' . '/topthink/think-filesystem/src',
-            1 => __DIR__ . '/..' . '/topthink/think-helper/src',
-            2 => __DIR__ . '/..' . '/topthink/think-orm/src',
-            3 => __DIR__ . '/..' . '/topthink/think-container/src',
-            4 => __DIR__ . '/..' . '/topthink/think-validate/src',
-            5 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            0 => __DIR__ . '/..' . '/topthink/framework/src/think',
+            1 => __DIR__ . '/..' . '/topthink/think-container/src',
+            2 => __DIR__ . '/..' . '/topthink/think-filesystem/src',
+            3 => __DIR__ . '/..' . '/topthink/think-helper/src',
+            4 => __DIR__ . '/..' . '/topthink/think-orm/src',
+            5 => __DIR__ . '/..' . '/topthink/think-validate/src',
         ),
         'app\\' => 
         array (
             0 => __DIR__ . '/../..' . '/app',
+        ),
+        'ZipStream\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maennchen/zipstream-php/src',
         ),
         'Yansongda\\Supports\\' => 
         array (
@@ -297,6 +316,10 @@ class ComposerStaticInit020915b87d4ab8ac8119337ca936e79b
         array (
             0 => __DIR__ . '/..' . '/nikic/php-parser/lib/PhpParser',
         ),
+        'PhpOffice\\PhpSpreadsheet\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/phpoffice/phpspreadsheet/src/PhpSpreadsheet',
+        ),
         'PHPStan\\PhpDocParser\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpstan/phpdoc-parser/src',
@@ -324,6 +347,14 @@ class ComposerStaticInit020915b87d4ab8ac8119337ca936e79b
         'Nyholm\\Psr7Server\\' => 
         array (
             0 => __DIR__ . '/..' . '/nyholm/psr7-server/src',
+        ),
+        'MyCLabs\\Enum\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/myclabs/php-enum/src',
+        ),
+        'Matrix\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/matrix/classes/src',
         ),
         'League\\MimeTypeDetection\\' => 
         array (
@@ -404,6 +435,14 @@ class ComposerStaticInit020915b87d4ab8ac8119337ca936e79b
         'DASPRiD\\Enum\\' => 
         array (
             0 => __DIR__ . '/..' . '/dasprid/enum/src',
+        ),
+        'Composer\\Pcre\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/pcre/src',
+        ),
+        'Complex\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/markbaker/complex/classes/src',
         ),
         'BaconQrCode\\' => 
         array (

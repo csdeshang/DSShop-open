@@ -9,6 +9,7 @@ use app\adminapi\middleware\AdminAuthorizeLog;
 Route::group('tbl-order', function () {
 
     Route::get('orders/pages', 'tblOrder.TblOrder/getTblOrderPages');
+    Route::get('orders/export', 'tblOrder.TblOrder/exportTblOrders');
     Route::get('orders/order-status-dict', 'tblOrder.TblOrder/getTblOrderStatusDict');
     Route::patch('orders/:id/modify-amount', 'tblOrder.TblOrder/modifyTblOrderAmount');
     Route::get('orders/:id', 'tblOrder.TblOrder/getTblOrderInfo');

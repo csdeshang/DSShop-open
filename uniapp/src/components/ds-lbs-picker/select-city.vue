@@ -4,7 +4,7 @@
             <uni-nav-bar title="选择城市" left-icon="back" @clickLeft="close" :border="false"></uni-nav-bar>
 
             <view class="search-city">
-                <uni-search-bar placeholder="请输入城市名" cancelButton="none" :focus="true" v-model="city_keyword"
+                <uni-search-bar placeholder="请输入城市名" cancelButton="none" :focus="false" v-model="city_keyword"
                     @input="searchInput" @clear="clear"></uni-search-bar>
             </view>
             <view class="search-list" v-if="city_keyword != ''">

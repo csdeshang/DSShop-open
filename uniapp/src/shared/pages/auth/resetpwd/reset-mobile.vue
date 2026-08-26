@@ -25,7 +25,7 @@
 
 
         <button size="default" type="warn" :loading="loading" @click="handleSubmit"
-            class="ds-btn-lg mt-20 mb-20">注册</button>
+            class="ds-btn-lg mt-20 mb-20">重置密码</button>
 
 
     </view>
@@ -92,6 +92,27 @@ const handleSendVerifyCode = async () => {
 };
 
 const handleSubmit = async () => {
+    if (!formData.mobile?.trim()) {
+        uni.showToast({ title: '请输入手机号', icon: 'none' })
+        return
+    }
+    if (!formData.code?.trim()) {
+        uni.showToast({ title: '请输入验证码', icon: 'none' })
+        return
+    }
+    if (!formData.password) {
+        uni.showToast({ title: '请输入密码', icon: 'none' })
+        return
+    }
+    if (!formData.confirm_password) {
+        uni.showToast({ title: '请确认密码', icon: 'none' })
+        return
+    }
+    if (formData.password !== formData.confirm_password) {
+        uni.showToast({ title: '两次密码不一致', icon: 'none' })
+        return
+    }
+
     loading.value = true;
 
     const res = await resetPasswordMobile(formData);

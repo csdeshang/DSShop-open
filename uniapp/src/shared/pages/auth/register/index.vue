@@ -19,8 +19,8 @@
             </view>
         </view>
 
-        <register-mobile v-if="registerType === 'mobile'" :isagree="isagree" />
-        <register-normal v-else :isagree="isagree" />
+        <register-mobile v-if="registerType === 'mobile'" :isagree="isagree" @agree="isagree = true" />
+        <register-normal v-else :isagree="isagree" @agree="isagree = true" />
 
         <view class="action-links">
             <view class="reset-pwd" @click="navigateToAuth('reset')">

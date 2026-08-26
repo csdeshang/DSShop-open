@@ -49,6 +49,8 @@ const props = defineProps({
   }
 });
 
+const emit = defineEmits<{ agree: [] }>()
+
 const formData = reactive({
   mobile: '',
   code: '',
@@ -86,13 +88,29 @@ const handleSendVerifyCode = async () => {
 };
 
 const handleSubmit = async () => {
+  if (!formData.mobile?.trim()) {
+    uni.showToast({ title: '请输入手机号', icon: 'none' })
+    return
+  }
+  if (!formData.code?.trim()) {
+    uni.showToast({ title: '请输入验证码', icon: 'none' })
+    return
+  }
 
   if (!formData.isagree) {
-    uni.showToast({
-      title: '请同意用户协议',
-      icon: 'none'
-    });
-    return;
+    const { confirm } = await new Promise<UniApp.ShowModalRes>((resolve) => {
+      uni.showModal({
+        title: '提示',
+        content: '请阅读并同意《用户协议》和《隐私政策》',
+        confirmText: '同意',
+        cancelText: '取消',
+        success: resolve,
+      })
+    })
+    if (!confirm) return
+    emit('agree')
+    formData.isagree = true
+    return
   }
 
   loading.value = true;

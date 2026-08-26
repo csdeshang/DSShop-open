@@ -45,6 +45,8 @@ const props = defineProps({
     }
 });
 
+const emit = defineEmits<{ agree: [] }>()
+
 
 const formData = reactive({
     username: '',
@@ -56,12 +58,37 @@ const formData = reactive({
 
 
 const handleSubmit = async () => {
+    if (!formData.username?.trim()) {
+        uni.showToast({ title: '请输入用户名', icon: 'none' })
+        return
+    }
+    if (!formData.password) {
+        uni.showToast({ title: '请输入密码', icon: 'none' })
+        return
+    }
+    if (!formData.confirm_password) {
+        uni.showToast({ title: '请确认密码', icon: 'none' })
+        return
+    }
+    if (formData.password !== formData.confirm_password) {
+        uni.showToast({ title: '两次密码不一致', icon: 'none' })
+        return
+    }
+
     if (!formData.isagree) {
-        uni.showToast({
-            title: '请同意用户协议',
-            icon: 'none'
-        });
-        return;
+        const { confirm } = await new Promise<UniApp.ShowModalRes>((resolve) => {
+            uni.showModal({
+                title: '提示',
+                content: '请阅读并同意《用户协议》和《隐私政策》',
+                confirmText: '同意',
+                cancelText: '取消',
+                success: resolve,
+            })
+        })
+        if (!confirm) return
+        emit('agree')
+        formData.isagree = true
+        return
     }
 
     loading.value = true

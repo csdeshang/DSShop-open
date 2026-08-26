@@ -22,8 +22,9 @@
                     <uni-swipe-action-item v-for="(item, itemIndex) in cartItems" :key="item.id || itemIndex">
                         <view class="cart-item">
 
-                            <uni-icons type="checkbox-filled" class="checkbox" size="24"
-                                :class="{ active: item.selected }"
+                            <uni-icons class="checkbox" size="24"
+                                :type="item.selected ? 'checkbox-filled' : 'circle'"
+                                :color="item.selected ? '#FF6034' : '#ccc'"
                                 @click="toggleItemSelection(itemIndex)"></uni-icons>
                             <view @click="goGoodsDetailPage(item.goods)">
                                 <image class="item-image"
@@ -72,8 +73,9 @@
                     <!-- 全选区域 -->
                     <view @click="toggleAllSelection" class="select-area">
                         <view class="select-all">
-                            <uni-icons type="checkbox-filled" class="checkbox" size="24"
-                                :class="{ active: isAllSelected }"></uni-icons>
+                            <uni-icons class="checkbox" size="24"
+                                :type="isAllSelected ? 'checkbox-filled' : 'circle'"
+                                :color="isAllSelected ? '#FF6034' : '#ccc'"></uni-icons>
                             <text class="select-text">全选({{ selectedItemCount }})</text>
                         </view>
                     </view>
@@ -387,11 +389,6 @@ onShow(() => {
 
     .checkbox {
         margin-right: 16rpx;
-        color: #ccc;
-
-        &.active {
-            color: #FF6034;
-        }
     }
 
     .item-image {
@@ -509,12 +506,7 @@ onShow(() => {
             align-items: center;
 
             .checkbox {
-                color: #ccc;
                 margin-right: 8rpx;
-
-                &.active {
-                    color: #FF6034;
-                }
             }
 
             .select-text {

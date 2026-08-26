@@ -186,7 +186,7 @@ const editAddress = () => {
             // 延迟跳转，让用户看到成功提示
             setTimeout(() => {
                 if (redirectUrl.value) {
-                    goToPage({ url: redirectUrl.value });
+                    goToPage({ url: redirectUrl.value, type: 'redirectTo' });
                 } else {
                     goToPage({ url: '/home/pages/user/address/index' });
                 }
