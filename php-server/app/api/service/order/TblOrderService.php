@@ -35,6 +35,7 @@ class TblOrderService extends BaseUserService
     {
         $condition = [];
         $condition[] = ['user_id', '=', $this->user_id];
+        $condition[] = ['is_deleted', '=', 0];
 
         if (isset($data['order_sn']) && $data['order_sn'] != '') {
             $condition[] = ['order_sn', 'like', '%' . $data['order_sn'] . '%'];
@@ -98,6 +99,7 @@ class TblOrderService extends BaseUserService
         $condition = [];
         $condition[] = ['id', '=', $id];
         $condition[] = ['user_id', '=', $this->user_id];
+        $condition[] = ['is_deleted', '=', 0];
 
         $result = (new TblOrderDao)->getWithRelOrderInfo($condition);
 
@@ -226,16 +228,17 @@ class TblOrderService extends BaseUserService
     public function getTblOrderStatusCount()
     {
         // 待付款
-        $result['pending_count'] = (new TblOrderDao)->getOrderCount([['user_id', '=', $this->user_id], ['order_status', '=', TblOrderEnum::ORDER_STATUS_PENDING]]);
+        $result['pending_count'] = (new TblOrderDao)->getOrderCount([['user_id', '=', $this->user_id], ['is_deleted', '=', 0], ['order_status', '=', TblOrderEnum::ORDER_STATUS_PENDING]]);
 
 
 
         // 待发货
-        $result['paid_count'] = (new TblOrderDao)->getOrderCount([['user_id', '=', $this->user_id], ['order_status', '=', TblOrderEnum::ORDER_STATUS_PAID]]);
+        $result['paid_count'] = (new TblOrderDao)->getOrderCount([['user_id', '=', $this->user_id], ['is_deleted', '=', 0], ['order_status', '=', TblOrderEnum::ORDER_STATUS_PAID]]);
 
         // 待收货
         $condition = [];
         $condition[] = ['user_id', '=', $this->user_id];
+        $condition[] = ['is_deleted', '=', 0];
         $condition[] = [
             [
                 'order_status',
@@ -253,6 +256,7 @@ class TblOrderService extends BaseUserService
         // 待评价（与评价入口一致：已完成、未评价、无退款中、非全额退款）
         $result['comment_count'] = (new TblOrderDao)->getOrderCount([
             ['user_id', '=', $this->user_id],
+            ['is_deleted', '=', 0],
             ['order_status', '=', TblOrderEnum::ORDER_STATUS_COMPLETED],
             ['is_evaluate', '=', 0],
             ['refunding_count', '=', 0],

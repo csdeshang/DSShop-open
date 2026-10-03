@@ -36,15 +36,15 @@ Route::group('tbl-order', function () {
 
 
     // 订单退款
-    // 注意路由顺序：refunds/pages (2段) 和 refunds/:id/xxx (3段) 必须在 refunds/:id (2段) 前面
+    // 注意路由顺序：refunds/pages、refunds/:id/xxx 须在 refunds/:id 及 POST refunds 前面（非完全匹配时 POST refunds 会前缀匹配多段路径）
     // 订单退款分页
     Route::get('refunds/pages', 'tblOrder.tblOrderRefund/getTblOrderRefundPages');
-    // 申请退款
-    Route::post('refunds', 'tblOrder.tblOrderRefund/applyTblOrderRefund');
     // 用户退货
     Route::post('refunds/:id/return-goods', 'tblOrder.tblOrderRefund/userReturnGoods');
     // 取消退款
     Route::patch('refunds/:id/cancel', 'tblOrder.tblOrderRefund/cancelTblOrderRefund');
+    // 申请退款
+    Route::post('refunds', 'tblOrder.tblOrderRefund/applyTblOrderRefund');
     // 修改退款信息
     Route::put('refunds/:id', 'tblOrder.tblOrderRefund/editTblOrderRefund');
     // 订单退款详情

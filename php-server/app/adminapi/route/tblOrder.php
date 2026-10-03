@@ -11,6 +11,9 @@ Route::group('tbl-order', function () {
     Route::get('orders/pages', 'tblOrder.TblOrder/getTblOrderPages');
     Route::get('orders/export', 'tblOrder.TblOrder/exportTblOrders');
     Route::get('orders/order-status-dict', 'tblOrder.TblOrder/getTblOrderStatusDict');
+    // orders/:id/restore、soft-delete、modify-amount (3段) 必须在 orders/:id (2段) 前面
+    Route::patch('orders/:id/restore', 'tblOrder.TblOrder/restoreTblOrder');
+    Route::patch('orders/:id/soft-delete', 'tblOrder.TblOrder/softDeleteTblOrder');
     Route::patch('orders/:id/modify-amount', 'tblOrder.TblOrder/modifyTblOrderAmount');
     Route::get('orders/:id', 'tblOrder.TblOrder/getTblOrderInfo');
 
@@ -34,12 +37,12 @@ Route::group('tbl-order', function () {
     Route::get('refunds/refund-status-dict', 'tblOrder.TblOrderRefund/getTblOrderRefundStatusDict');
     Route::get('refunds/pages', 'tblOrder.TblOrderRefund/getTblOrderRefundPages');
     Route::get('refunds/list', 'tblOrder.TblOrderRefund/getTblOrderRefundList');
-    Route::post('refunds', 'tblOrder.TblOrderRefund/addTblOrderRefund');
     Route::patch('refunds/:id/agree', 'tblOrder.TblOrderRefund/agreeTblOrderRefund');
     Route::patch('refunds/:id/reject', 'tblOrder.TblOrderRefund/rejectTblOrderRefund');
     Route::patch('refunds/:id/receive-goods', 'tblOrder.TblOrderRefund/receiveGoodsTblOrderRefund');
     Route::post('refunds/:id/retry', 'tblOrder.TblOrderRefund/retryTblOrderRefund');
     Route::get('refunds/:id/logs', 'tblOrder.TblOrderRefund/getTblOrderRefundLogList');
+    Route::post('refunds', 'tblOrder.TblOrderRefund/addTblOrderRefund');
     Route::get('refunds/:id', 'tblOrder.TblOrderRefund/getTblOrderRefundInfo');
 
 })->middleware([

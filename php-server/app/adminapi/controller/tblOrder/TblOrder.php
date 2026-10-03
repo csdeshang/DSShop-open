@@ -122,6 +122,13 @@ class TblOrder extends BaseAdminController
      *         description="商品名称",
      *         @OA\Schema(type="string")
      *     ),
+     *     @OA\Parameter(
+     *         name="is_deleted",
+     *         in="query",
+     *         required=false,
+     *         description="删除状态（0:未删除 1:已删除）",
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(
      *         response=200,
      *         description="操作成功",
@@ -151,6 +158,7 @@ class TblOrder extends BaseAdminController
             'is_refunding' => input('param.is_refunding'),
             'pay_amount_min' => input('param.pay_amount_min'),
             'pay_amount_max' => input('param.pay_amount_max'),
+            'is_deleted' => input('param.is_deleted', ''),
         );
 
 
@@ -184,6 +192,7 @@ class TblOrder extends BaseAdminController
             'is_refunding' => input('param.is_refunding'),
             'pay_amount_min' => input('param.pay_amount_min'),
             'pay_amount_max' => input('param.pay_amount_max'),
+            'is_deleted' => input('param.is_deleted', ''),
         );
 
         // 直接输出文件流并 exit，不走 JSON 包装
@@ -287,6 +296,40 @@ class TblOrder extends BaseAdminController
         $this->validate(['order_id' => $id], 'app\adminapi\controller\tblOrder\validate\TblOrderValidate.info');
         $result = (new TblOrderService())->getTblOrderInfo($id);
         return ds_json_success('操作成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-order/orders/{id}/soft-delete",
+     *     summary="软删除订单",
+     *     tags={"admin-api/tblOrder/TblOrder"},
+     *     @OA\Parameter(name="id", in="path", required=true, description="订单ID", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="删除成功")
+     * )
+     */
+    public function softDeleteTblOrder($id)
+    {
+        $data = ['id' => $id];
+        $this->validate($data, 'app\adminapi\controller\tblOrder\validate\TblOrderValidate.softDelete');
+        $result = (new TblOrderService())->softDeleteTblOrder((int)$id);
+        return ds_json_success('删除成功', $result);
+    }
+
+    /**
+     * @OA\Patch(
+     *     path="/adminapi/tbl-order/orders/{id}/restore",
+     *     summary="恢复已删除的订单",
+     *     tags={"admin-api/tblOrder/TblOrder"},
+     *     @OA\Parameter(name="id", in="path", required=true, description="订单ID", @OA\Schema(type="integer")),
+     *     @OA\Response(response=200, description="恢复成功")
+     * )
+     */
+    public function restoreTblOrder($id)
+    {
+        $data = ['id' => $id];
+        $this->validate($data, 'app\adminapi\controller\tblOrder\validate\TblOrderValidate.restore');
+        $result = (new TblOrderService())->restoreTblOrder((int)$id);
+        return ds_json_success('恢复成功', $result);
     }
 
     /**

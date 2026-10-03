@@ -8,12 +8,14 @@ use app\deshang\base\BaseValidate;
 class TblOrderValidate extends BaseValidate
 {
     protected $rule = [
+        'id' => 'require|integer|gt:0',
         'platform' => 'max:50|checkPlatform',
         'order_status' => 'checkOrderStatus',
         'order_id' => 'require|integer|gt:0',
         'goods_list' => 'require|array',
         'shipping_amount' => 'float|egt:0',
         'order_merge_id' => 'integer|gt:0',
+        'is_deleted' => 'in:0,1',
     ];
 
     protected $message = [
@@ -27,18 +29,24 @@ class TblOrderValidate extends BaseValidate
         'goods_list.array' => '商品列表必须是数组',
         'shipping_amount.float' => '运费必须是数字',
         'shipping_amount.egt' => '运费不能小于0',
+        'id.require' => '订单ID不能为空',
+        'id.integer' => '订单ID必须是整数',
+        'id.gt' => '订单ID必须大于0',
         'order_merge_id.integer' => '合并支付订单ID必须是整数',
         'order_merge_id.gt' => '合并支付订单ID必须大于0',
+        'is_deleted.in' => '删除状态值不正确',
     ];
 
     protected $scene = [
-        'pages' => ['platform', 'order_status'],
+        'pages' => ['platform', 'order_status', 'is_deleted'],
         'statusDict' => ['platform'],
         'info' => ['order_id'],
         'modifyAmount' => ['order_id', 'goods_list', 'shipping_amount'],
         'goodsList' => ['order_id'],
         'logList' => ['order_id'],
         'payLogList' => ['order_id', 'order_merge_id'],
+        'softDelete' => ['id'],
+        'restore' => ['id'],
     ];
 
     public function checkOrderStatus($value, $rule, $data)

@@ -1,5 +1,5 @@
 <template>
-    <uni-popup ref="popupRef" type="bottom" @change="onPopupChange" style="z-index: 99999;">
+    <uni-popup ref="popupRef" type="bottom" @change="onPopupChange" style="z-index: 999;">
         <view class="attachment-manager">
             <!-- 头部 -->
             <view class="header">
@@ -17,14 +17,16 @@
             <!-- 文件类型筛选组件 -->
             <manage-type :search-params="searchParams" @update:search-params="updateSearchParams" />
 
-            <!-- 分类组件 -->
+            <!-- 分类组件：暂不展示，默认 cid=0（全部），不影响列表/上传 -->
+            <!--
             <manage-category ref="categoryRef" :search-params="searchParams"
                 @update:search-params="updateSearchParams" />
+            -->
 
-            <!-- 文件列表组件 -->
-            <manage-list ref="fileListRef" :is-select-mode="isSelectMode" :selected-files="selectedFiles"
-                :search-params="searchParams" @select="handleFileSelect" @selected-files-change="updateSelectedFiles"
-                @delete="handleDeleteSuccess" />
+            <!-- 文件列表组件：小程序自定义组件宿主需在父级分配 flex 高度 -->
+            <manage-list class="manage-list-wrap" ref="fileListRef" :is-select-mode="isSelectMode"
+                :selected-files="selectedFiles" :search-params="searchParams" @select="handleFileSelect"
+                @selected-files-change="updateSelectedFiles" @delete="handleDeleteSuccess" />
         </view>
     </uni-popup>
 </template>
@@ -32,7 +34,7 @@
 <script setup lang="ts" name="DsAttachmentManage">
 import { ref, reactive } from 'vue'
 import ManageType from './manage-type.vue'
-import ManageCategory from './manage-category.vue'
+// import ManageCategory from './manage-category.vue'
 import ManageList from './manage-list.vue'
 
 // 定义组件事件
@@ -49,7 +51,7 @@ const props = defineProps({
 
 // 弹窗引用
 const popupRef = ref<any>(null)
-const categoryRef = ref<any>(null)
+// const categoryRef = ref<any>(null)
 const fileListRef = ref<any>(null)
 
 
@@ -133,6 +135,7 @@ defineExpose({
     position: relative;
 
     .header {
+        flex-shrink: 0;
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -161,6 +164,14 @@ defineExpose({
         .done-btn {
             font-weight: 500;
         }
+    }
+
+    /* 小程序中自定义组件宿主节点必须在此拿到剩余高度，内部 height:100% / z-paging 才生效 */
+    .manage-list-wrap {
+        flex: 1;
+        min-height: 0;
+        height: 0;
+        overflow: hidden;
     }
 }
 </style>

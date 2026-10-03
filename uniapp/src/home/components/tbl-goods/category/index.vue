@@ -21,13 +21,13 @@
         <!-- 右侧子分类 -->
         <scroll-view class="sub-category" scroll-y>
           <!-- 分类标题 -->
-          <view class="sub-category-title">{{ currentMainCategory?.name || '' }}</view>
+          <view class="sub-category-title" @tap="handleItemClick(currentMainCategory)">{{ currentMainCategory?.name || '' }}</view>
 
           <!-- 子分类列表 -->
           <view class="sub-category-list">
             <view v-for="category in currentSubCategories" :key="category.id" class="category-section">
               <!-- 分类标题 -->
-              <view class="section-title" v-if="category.name">
+              <view class="section-title" v-if="category.name" @tap="handleItemClick(category)">
                 {{ category.name }}
               </view>
 
@@ -104,6 +104,7 @@ const handleMainCategoryClick = (category: any) => {
 
 // 处理子分类项目点击
 const handleItemClick = (item: any) => {
+  if (!item?.id) return
   uni.navigateTo({
     url: `/home/platform/${props.platform}/pages/search/goodslist/index?category_id=${item.id}`
   })

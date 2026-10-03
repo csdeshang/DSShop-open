@@ -17,6 +17,16 @@ export function modifyTblOrderAmount(params: Record<string, any>) {
     return request.patch(`${API_BASE_URLS.ADMIN}/tbl-order/orders/${order_id}/modify-amount`, restParams)
 }
 
+/** 软删除订单 */
+export function softDeleteTblOrder(id: number) {
+    return request.patch(`${API_BASE_URLS.ADMIN}/tbl-order/orders/${id}/soft-delete`)
+}
+
+/** 恢复已删除的订单 */
+export function restoreTblOrder(id: number) {
+    return request.patch(`${API_BASE_URLS.ADMIN}/tbl-order/orders/${id}/restore`)
+}
+
 export function getTblOrderGoodsList(params: Record<string, any>) {
     return request.get(`${API_BASE_URLS.ADMIN}/tbl-order/goods/list`, { params })
 }

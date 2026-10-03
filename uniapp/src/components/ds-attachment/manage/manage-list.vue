@@ -2,7 +2,7 @@
     <view class="manage-list-container">
         <!-- 文件列表 -->
         <z-paging ref="filesPaging" v-model="fileList" @query="queryFileList" class="file-list-container"
-            :fixed="false">
+            :fixed="false" height="100%">
             <view class="file-list">
                 <view v-for="file in fileList" :key="file.id" class="file-item"
                     :class="{ selected: selectedFiles.includes(file.id) }" @click="handleFileClick(file)">
@@ -76,6 +76,13 @@ import { getAttachmentFilePages, deleteAttachmentFile } from '@/api/attachment'
 // 直接导入组件
 import ManageListUpload from './manage-list-upload.vue'
 import DsVideoPreview from '../../ds-video-preview/index.vue'
+
+// 让根节点直接参与父级 flex 布局（小程序高度链关键）
+defineOptions({
+    options: {
+        virtualHost: true
+    }
+})
 
 // 定义文件接口
 interface AttachmentFile {
@@ -316,14 +323,18 @@ const handleUploadError = (error: any) => {
 .manage-list-container {
     display: flex;
     flex-direction: column;
-    height: 100%; // 继承父容器高度
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
 }
 
 .file-list-container {
-    flex: 1; // 占据剩余空间
+    flex: 1;
+    min-height: 0;
+    height: 100%;
     background-color: #fff;
-    min-height: 200rpx; // 设置最小高度
-    overflow: hidden; // 防止内容溢出
+    overflow: hidden;
 }
 
 .file-list {

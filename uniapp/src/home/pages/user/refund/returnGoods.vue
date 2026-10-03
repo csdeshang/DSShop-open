@@ -1,7 +1,7 @@
 <template>
   <uni-popup ref="popup" type="bottom" style="z-index: 9999;">
 
-    <view style="min-height:40vh;">
+    <view style="min-height:40vh;background-color: #fff;">
       <view class="ds-popup-header">
         <view class="cancel" @click="close">取消</view>
         <view class="title">填写退货物流</view>

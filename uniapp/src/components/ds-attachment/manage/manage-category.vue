@@ -9,7 +9,8 @@
             全部
         </view>
         <view v-for="cate in categoryList" :key="cate.id" class="category-tab"
-            :class="{ active: searchParams.cid === cate.id }" @click="handleChangeCate(cate.id)">
+            :class="{ active: searchParams.cid === cate.id }" @click="handleChangeCate(cate.id)"
+            @longpress.stop="handleCateAction(cate)">
             {{ cate.name }}
         </view>
         
@@ -103,6 +104,20 @@ const fetchCategoryList = async (type: string) => {
 // 处理分类切换
 const handleChangeCate = (cateId: number) => {
     emit('update:search-params', { ...props.searchParams, cid: cateId })
+}
+
+// 长按分类：编辑 / 删除
+const handleCateAction = (cate: Category) => {
+    uni.showActionSheet({
+        itemList: ['编辑', '删除'],
+        success: (res) => {
+            if (res.tapIndex === 0) {
+                showEditCategory(cate)
+            } else if (res.tapIndex === 1) {
+                confirmDeleteCategory(cate)
+            }
+        }
+    })
 }
 
 // 处理添加分类

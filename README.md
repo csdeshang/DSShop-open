@@ -204,6 +204,17 @@ npm install
 npm run dev
 ```
 
+## 联系我们
+
+- **官方网站**：[https://www.csdeshang.com](https://www.csdeshang.com)
+- **电话咨询**：15364080101（微信同号）
+- **QQ咨询**：858761000
+- **邮箱咨询**：858761000@qq.com
+- **工作时间**：工作日 9:00-18:00
+- **微信咨询**：扫码添加微信
+
+<img src="https://www.csdeshang.com/static/home/pc/images/weixin_qrcode_person_1.jpg" alt="微信二维码" width="200" />
+
 
 ## 致谢
 

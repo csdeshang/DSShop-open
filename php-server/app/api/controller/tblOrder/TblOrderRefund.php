@@ -73,7 +73,7 @@ class TblOrderRefund extends BaseUserController
         $data = array(
             'order_id' => input('param.order_id'),
             'order_goods_id' => input('param.order_goods_id'),
-            'apply_amount' => round(input('param.apply_amount'), 2),
+            'apply_amount' => round((float) input('param.apply_amount', 0), 2),
             'refund_explain' => input('param.refund_explain'),
             'refund_type' =>input('param.refund_type'),
             'refund_images' => input('param.refund_images'),
@@ -121,7 +121,7 @@ class TblOrderRefund extends BaseUserController
     {
         $data = array(
             'id' => $id,
-            'apply_amount' => round(input('param.apply_amount'), 2),
+            'apply_amount' => round((float) input('param.apply_amount', 0), 2),
             'refund_explain' => input('param.refund_explain'),
         );
 

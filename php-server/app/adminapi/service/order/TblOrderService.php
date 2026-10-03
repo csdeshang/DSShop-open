@@ -113,6 +113,11 @@ class TblOrderService extends BaseAdminService
             $condition[] = ['pay_amount', '<=', $data['pay_amount_max']];
         }
 
+        // 删除状态搜索
+        if (isset($data['is_deleted']) && $data['is_deleted'] !== '' && $data['is_deleted'] !== null && in_array((int)$data['is_deleted'], [0, 1], true)) {
+            $condition[] = ['is_deleted', '=', (int)$data['is_deleted']];
+        }
+
         return $condition;
     }
 
@@ -265,6 +270,60 @@ class TblOrderService extends BaseAdminService
         }
 
         return (new DeshangTblOrderService())->changeTblOrderAmount($order, 'store', (int) $this->user_id, $data);
+    }
+
+    /**
+     * 软删除订单
+     *
+     * @param int $id 订单ID
+     * @return int 受影响的行数
+     */
+    public function softDeleteTblOrder(int $id)
+    {
+        $order_info = $this->dao->getOrderInfoById($id);
+        if (empty($order_info)) {
+            throw new CommonException('订单不存在');
+        }
+        if ($order_info['is_deleted'] == 1) {
+            throw new CommonException('订单已被删除');
+        }
+
+        $update_data = [
+            'is_deleted' => 1,
+            'deleted_at' => time(),
+        ];
+        $condition = [
+            ['id', '=', $id],
+            ['is_deleted', '=', 0],
+        ];
+        return $this->dao->updateOrder($condition, $update_data);
+    }
+
+    /**
+     * 恢复订单
+     *
+     * @param int $id 订单ID
+     * @return int 受影响的行数
+     */
+    public function restoreTblOrder(int $id)
+    {
+        $order_info = $this->dao->getOrderInfoById($id);
+        if (empty($order_info)) {
+            throw new CommonException('订单不存在');
+        }
+        if ($order_info['is_deleted'] != 1) {
+            throw new CommonException('订单未被删除，无需恢复');
+        }
+
+        $update_data = [
+            'is_deleted' => 0,
+            'deleted_at' => 0,
+        ];
+        $condition = [
+            ['id', '=', $id],
+            ['is_deleted', '=', 1],
+        ];
+        return $this->dao->updateOrder($condition, $update_data);
     }
 
     public function getTblOrderGoodsList($data): array

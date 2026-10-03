@@ -54,6 +54,13 @@
                     <el-option label="是" value="1" />
                 </el-select>
             </el-form-item>
+            <el-form-item label="删除状态">
+                <el-select v-model="searchParams.is_deleted" placeholder="请选择状态" clearable class="w-[120px]">
+                    <el-option label="全部" value="" />
+                    <el-option label="未删除" value="0" />
+                    <el-option label="已删除" value="1" />
+                </el-select>
+            </el-form-item>
             <el-form-item label="支付金额">
                 <div class="flex items-center gap-2">
                     <el-input v-model="searchParams.pay_amount_min" placeholder="最小金额" clearable class="w-[120px]" />
@@ -107,11 +114,13 @@
             <el-table-column label="下单时间" prop="add_time" width="200"></el-table-column>
 
 
-            <el-table-column label="操作" align="right" fixed="right" width="200">
+            <el-table-column label="操作" align="right" fixed="right" width="240">
                 <template #default="{ row }">
                     <el-button type="primary" link @click="handleModifyPrice(row)" v-if="row.store_available_actions?.includes('editAmount')">订单改价</el-button>
                     <el-button type="primary" link @click="handleDeliveryAdd(row)" v-if="row.store_available_actions?.includes('delivery')">发货</el-button>
                     <el-button type="primary" link @click="handleTblOrderDtail(row.id)">详情</el-button>
+                    <el-button type="danger" link v-if="row.is_deleted != 1" @click="handleSoftDelete(row.id)">删除</el-button>
+                    <el-button type="primary" link v-if="row.is_deleted == 1" @click="handleRestore(row.id)">恢复</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -137,7 +146,7 @@
 <script lang="ts" setup>
 
 import { reactive, ref } from 'vue';
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 import { formatImageUrl, ThumbnailPresets } from '@/utils/image'
 import { downloadBlob } from '@/utils/download'
@@ -145,7 +154,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 import { usePagination } from '@/hooks/usePagination'
-import { getTblOrderPages, getTblOrderStatusDict, exportTblOrders } from '@/pages-admin/main/api/tbl-order/tblOrder'
+import { getTblOrderPages, getTblOrderStatusDict, exportTblOrders, softDeleteTblOrder, restoreTblOrder } from '@/pages-admin/main/api/tbl-order/tblOrder'
 import TblOrderDeliveryAdd from './handle/delivery-add.vue'
 import TblOrderModifyAmount from './handle/modify-amount.vue'
 
@@ -176,7 +185,8 @@ const searchParams = reactive({
     refund_status: '',
     is_refunding: '',
     pay_amount_min: '',
-    pay_amount_max: ''
+    pay_amount_max: '',
+    is_deleted: '0'
 })
 
 const {
@@ -255,6 +265,34 @@ const handleModifyAmountRef = ref<any>()
 const handleModifyPrice = (row: any) => {
     handleModifyAmountRef.value?.setDialogData(row)
     handleModifyAmountRef.value?.openDialog()
+}
+
+/** 软删除订单 */
+const handleSoftDelete = (id: number) => {
+    ElMessageBox.confirm('确定要删除此订单吗？删除后可以恢复。', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        softDeleteTblOrder(id).then(() => {
+            ElMessage.success('删除成功')
+            getTableList()
+        }).catch(() => {})
+    }).catch(() => {})
+}
+
+/** 恢复订单 */
+const handleRestore = (id: number) => {
+    ElMessageBox.confirm('确定要恢复此订单吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        restoreTblOrder(id).then(() => {
+            ElMessage.success('恢复成功')
+            getTableList()
+        }).catch(() => {})
+    }).catch(() => {})
 }
 
 
